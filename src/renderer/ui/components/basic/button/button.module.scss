@@ -1,0 +1,101 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+$borderSize: 1px;
+$padding: 6px;
+$innerHeightS: 14px;
+$fontSizeS: 10px;
+$innerHeightM: 18px;
+$fontSizeM: 12px;
+$innerHeightL: 24px;
+$fontSizeL: 16px;
+
+.button {
+  display: inline-block;
+  background: none;
+  border-radius: 2px;
+  box-sizing: border-box;
+  white-space: nowrap;
+  border: $borderSize solid transparent;
+  &:not(.primary) {
+    color: #3B3B3B;
+  }
+  &.primary {
+    background-color: #005fb8;
+    color: #fff;
+  }
+  &.size-s {
+    height: $innerHeightS + $padding*2;
+    line-height: $innerHeightS;
+    font-size: $fontSizeS;
+    &:not(.only-caption) {
+      padding: $padding - $borderSize;
+    }
+    &.only-caption {
+      padding: ($padding - $borderSize) ($padding * 3);
+    }
+    .button-icon {
+      width: $innerHeightS;
+      height: $innerHeightS;
+    }
+  }
+  &.size-m {
+    height: $innerHeightM + $padding*2;
+    line-height: $innerHeightM;
+    font-size: $fontSizeM;
+    &:not(.only-caption) {
+      padding: $padding - $borderSize;
+    }
+    &.only-caption {
+      padding: ($padding - $borderSize) ($padding * 3);
+    }
+    .button-icon {
+      width: $innerHeightM;
+      height: $innerHeightM;
+    }
+  }
+  &.size-l {
+    height: $innerHeightL + $padding*2;
+    line-height: $innerHeightL;
+    font-size: $fontSizeL;
+    &:not(.only-caption) {
+      padding: $padding - $borderSize;
+    }
+    &.only-caption {
+      padding: ($padding - $borderSize) ($padding * 3);
+    }
+    .button-icon {
+      width: $innerHeightL;
+      height: $innerHeightL;
+    }
+  }
+  &[disabled] {
+    opacity: 0.2;
+  }
+  &:not([disabled]) {
+    cursor: pointer;
+    &:not(.primary) {
+      &:hover, &:active, &:focus-visible {
+        background-color: #A6A6A650;
+      }
+    }
+    &.primary {
+      &:hover, &:active, &:focus-visible {
+        background-color: #0258a8;
+      }
+    }
+  }
+  &[aria-pressed='false'] {
+    border: $borderSize solid #00000000;
+  }
+  &[aria-pressed='true'] {
+    border: $borderSize solid #005FB8;
+    background-color: #005FB840 !important;
+  }
+}
+
+.button-icon {
+  pointer-events: none;
+}

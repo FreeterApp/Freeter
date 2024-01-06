@@ -1,0 +1,22 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.action-bar {
+  display: block;
+  margin: 0;
+  padding: 0 6px;
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-left: 1px solid #ECECEC;
+  background-color: #F8F8F8;
+}
+
+.action-bar-item {
+  display: inline-block;
+  position: relative;
+}

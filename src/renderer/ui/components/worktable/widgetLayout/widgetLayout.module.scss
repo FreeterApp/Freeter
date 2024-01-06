@@ -1,0 +1,54 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.widgetLayout, .no-widgets {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.widgetLayout {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  visibility: hidden;
+
+  &.is-drop-area * {
+    pointer-events: none; // fixes issues caused by dragleave called when dragging over layout items
+  }
+
+  &.is-visible {
+    visibility: visible;
+  }
+
+  &::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+  }
+  &:not(:hover)::-webkit-scrollbar{
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb{
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+  &:hover::-webkit-scrollbar-thumb{
+    opacity: 0;
+  }
+}
+
+.no-widgets {
+  background-color: #FFFFFF;
+}
+
+.edit-mode-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 6px;
+  color: #3B3B3B;
+  width: 24px;
+  height: 24px;
+}

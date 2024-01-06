@@ -1,0 +1,115 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.shelf {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  overflow-x: auto;
+  overflow-y: hidden;
+  top: -1px;
+  left: 0;
+  right: 0px;
+  bottom: -1px;
+  box-sizing: content-box;
+  &.is-drop-area {
+    background-color: #005FB840;
+  }
+  &:not(:hover)::-webkit-scrollbar{
+    display: none;
+  }
+}
+
+.shelf-item {
+  display: inline-block;
+  position: relative;
+  outline-offset: -2px;
+  background-color: #F8F8F8;
+  .shelf-item-caption {
+    font-family: 'Roboto Condensed';
+    color: #000000;
+    display: block;
+    border: 1px solid #ECECEC;
+    box-sizing: border-box;
+    white-space: nowrap;
+    min-width: 120px;
+    height: 62px;
+    padding: 0 12px;
+    font-size: 16px;
+    line-height: 60px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .shelf-item-widget-box {
+    display: block;
+    z-index: 1;
+    position: fixed;
+    top: 58px;
+    border: 1px solid #ECECEC;
+    background-color: #FFF;
+    box-shadow: 0 4px 8px 0 #00000040;
+    box-sizing: border-box;
+    padding: 6px;
+    visibility: hidden;
+  }
+
+  .shelf-item-widget {
+    display: block;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ECECEC;
+  }
+  &:first-child {
+    .shelf-item-caption{
+      border-left-color: transparent;
+    }
+  }
+  &:not(:first-child) {
+    margin-left: -1px;
+  }
+
+  &.is-drop-area {
+    background-color: #005FB840;
+  }
+
+  &:not(.is-drop-area) {
+    &:hover, &:focus-visible, &:focus-within {
+      background-color: #FFF;
+    }
+    &:focus-visible, &:focus-within {
+      background-color: #FFF;
+      .shelf-item-caption {
+        border-bottom-color: #FFF;
+      }
+    }
+  }
+}
+
+.shelf:not(.dont-show-widgets){
+  .shelf-item {
+    &:focus-visible, &:focus-within {
+      .shelf-item-caption {
+        cursor: default;
+      }
+      .shelf-item-widget-box {
+        visibility: visible;
+      }
+    }
+  }
+  &:not(:focus-within) {
+    .shelf-item {
+      &:hover {
+        .shelf-item-widget-box {
+          visibility: visible;
+        }
+      }
+    }
+  }
+}

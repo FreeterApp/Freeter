@@ -1,0 +1,102 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.about-left, .about-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.about-left {
+  left: 0;
+  overflow: hidden;
+  width: 50%;
+  background-color: #F8F8F8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-right {
+  border-left: 1px solid #ECECEC;
+  right:0;
+  width: 50%;
+  background-color: #FFF;
+  padding: 30px 36px;
+  box-sizing: border-box;
+  overflow: auto;
+  h2, h3 {
+    font-family: 'Roboto Condensed';
+    text-align: center;
+  }
+  h2 {
+    font-size: 32px;
+    font-weight: 400;
+  }
+  h3 {
+    font-size: 26px;
+    font-weight: 300;
+  }
+  p {
+    font-size: 14px;
+  }
+  ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 12px;
+    row-gap: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.app-logo {
+  background-color: #FFF;
+  display: inline-block;
+  border: 3px solid #F8F8F8;
+}
+.app-logo-svg {
+  color: #3B3B3B;
+  width: 150px;
+  height: 150px;
+  display: block;
+}
+
+.app-name {
+  font-size: 24px;
+  line-height: 32px;
+  margin-top: 24px;
+}
+
+.app-about {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 24px;
+  > span {
+    display: block;
+    text-align: center;;
+  }
+}
+
+.list-sponsors {
+  li {
+    font-size: 20px;
+  }
+}
+
+.list-backers {
+  li {
+    font-size: 14px;
+    b {
+      font-size: 16px;
+    }
+  }
+}

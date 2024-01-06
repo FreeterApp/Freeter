@@ -1,0 +1,125 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.workflow-switcher-bar {
+  background-color: #F8F8F8;
+  border-bottom: 1px solid #ECECEC;
+  position: fixed;
+  z-index: 2;
+  top: 62px;
+  left: 0;
+  right: 0;
+  box-sizing: content-box;
+  height: 36px;
+}
+
+.workflow-switcher {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  overflow-x: auto;
+  overflow-y: hidden;
+  top: -1px;
+  left: 0px;
+  right: 0px;
+  bottom: -1px;
+  box-sizing: content-box;
+  &.is-drop-area {
+    background-color: #005FB840;
+  }
+  &:not(:hover)::-webkit-scrollbar{
+    display: none;
+  }
+}
+
+.workflow-switcher-action-bar {
+  margin: 0 24px 0 12px;
+  &:first-child {
+    padding-left: 12px;
+  }
+}
+.workflow-switcher.dont-show-action-bar {
+  .workflow-switcher-action-bar {
+    display: none;
+  }
+}
+
+.workflow-switcher-item {
+  position: relative;
+  display: inline-block;
+  &:not(:first-child) {
+    margin-left:-1px;
+  }
+}
+
+.workflow-switcher-item-button,
+.workflow-switcher-item-name-editor {
+  outline-offset: -2px;
+  padding: 0 36px 0 12px;
+  border: 1px solid #ECECEC;
+  box-sizing: border-box;
+  height: 38px;
+  line-height: 36px;
+  font-size: 14px;
+}
+.workflow-switcher-item-button {
+  display: inline-block;
+  background-color: #F8F8F8;
+  white-space: nowrap;
+  min-width: 80px;
+  cursor: pointer;
+}
+
+.workflow-switcher-item-name-editor {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  border-bottom-color: #FFF;
+}
+
+.workflow-switcher-item-action-bar {
+  visibility: hidden;
+  position: absolute;
+  top: 6px;
+  right: 2px;
+  bottom: 6px;
+  background-color: #F8F8F8;
+  border-left: 1px solid #ECECEC;
+}
+
+.workflow-switcher-item {
+  &:hover {
+    > .workflow-switcher-item-button, .workflow-switcher-item-action-bar {
+      background-color: #FFFFFF;
+    }
+  }
+  &:has(> .workflow-switcher-item-button[aria-selected="true"]) {
+    > .workflow-switcher-item-button {
+      background-color: #FFFFFF;
+      border-bottom-color: #FFFFFF;
+    }
+    > .workflow-switcher-item-action-bar {
+      background-color: #FFFFFF;
+    }
+  }
+  &:has(> .workflow-switcher-item-button.is-drop-area) {
+    > .workflow-switcher-item-button {
+      background-color: #005FB840;
+    }
+  }
+}
+
+.workflow-switcher:not(.dont-show-action-bar) {
+  .workflow-switcher-item:hover, .workflow-switcher-item:focus-within {
+    .workflow-switcher-item-action-bar {
+      visibility: visible;
+    }
+  }
+}
+

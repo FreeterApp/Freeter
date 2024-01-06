@@ -1,0 +1,32 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.top-bar {
+  display: flex;
+  position: fixed;
+  z-index: 3;
+  background-color: #F8F8F8;
+  border-top: 1px solid #ECECEC;
+  border-bottom: 1px solid #ECECEC;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.top-bar-section {
+  box-sizing: border-box;
+  padding: 12px;
+  height: 60px;
+  display: flex;
+  &:not(:last-child) {
+    border-right: 1px solid #ECECEC;
+  }
+}
+
+.top-bar-shelf-section {
+  padding: 0;
+  flex-grow: 1;
+  position: relative;
+}

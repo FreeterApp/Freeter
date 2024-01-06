@@ -1,0 +1,21 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.no-projects {
+  background-color: #F8F8F8;
+  position: fixed;
+  top: 62px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.manage-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin: 0 6px;
+  color: #3B3B3B;
+}

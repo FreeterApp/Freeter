@@ -1,0 +1,55 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.settings-screen-panel {
+  padding: 30px 36px;
+  box-sizing: border-box;
+  overflow: auto;
+  &:not(:hover)::-webkit-scrollbar{
+    display: none;
+  }
+
+  font-size: 14px;
+  color: #3B3B3B;
+  fieldset:not(:first-child) {
+    width: 240px;
+    margin-top: 24px;
+  }
+  label {
+    box-sizing: border-box;
+    font-weight: 500;
+    display: inline-block;
+    &[title] {
+      &::after {
+        content: "?";
+        font-size: 12px;
+        line-height: 14px;
+        width: 16px;
+        height: 16px;
+        box-sizing: border-box;
+        text-align: center;
+        vertical-align: middle;
+        display: inline-block;
+        border-radius: 100%;
+        border: 1px solid #3B3B3B;
+        margin-left: 12px;
+        margin-top: -4px;
+      }
+    }
+  }
+  input[type=text], select, textarea {
+    margin-top: 12px;
+    display: block;
+    line-height: 22px;
+    padding: 2px 6px;
+    border: 1px solid #CECECE;
+    background-color: #FFF;
+    width: 240px;
+    box-sizing: border-box;
+  }
+  textarea {
+    height: 120px;
+  }
+}

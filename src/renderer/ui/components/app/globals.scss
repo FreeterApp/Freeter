@@ -1,0 +1,68 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+@use 'fonts';
+
+body {
+  user-select: none;
+  background-color: #F8F8F8;
+}
+body, select, input, textarea, button {
+  font-family: Roboto;
+  font-size: 14px;
+}
+
+button {
+  border: none;
+}
+
+fieldset {
+  display: block;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+select, input, textarea {
+  border: 1px solid #CECECE;
+  border-radius: 2px;
+  background-color: #FFF;
+  color: #3B3B3B;
+  padding: 6px;
+}
+
+select {
+  padding-right: 24px;
+  appearance: none;
+  background-size: 12px 12px;
+  background-image: linear-gradient(45deg, #fff 9px, transparent 0),
+      linear-gradient(-45deg, #fff 9px, transparent 0),
+      linear-gradient(45deg, #3B3B3B 10px, transparent 0),
+      linear-gradient(-45deg, #3B3B3B 10px, transparent 0);
+  background-repeat: no-repeat;
+  background-color: #fff;
+  background-position: calc(100% - 6px) calc(50% + 4px);
+}
+
+*:focus-visible {
+  outline: #005FB8 solid 1px;
+  outline-offset: -1px;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  &:hover {
+    background-color: rgba(100, 100, 100, 0.7);
+  }
+  &:active {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+}

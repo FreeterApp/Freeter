@@ -1,0 +1,7 @@
+.DS_Store
+npm-debug.log
+yarn-error.log
+Thumbs.db
+node_modules/
+build/
+coverage

@@ -1,0 +1,28 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.palette {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 6px;
+  position: fixed;
+  background-color: #F8F8F8;
+  overflow-x: auto;
+  overflow-y: hidden;
+  top: 138px;
+  left: 50%;
+  max-width: 300px;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 8px 0 #00000040;
+  border: 1px solid #ECECEC;
+  border-radius: 2px;
+  &.is-hidden {
+    // The display:none, visibility:hidden block the native drag
+    // Using the transform method to fix that
+    transition: transform 0.01s;
+    transform: translateX(-9999px);
+  }
+}

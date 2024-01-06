@@ -1,0 +1,22 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.settings-preview, .settings-editor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.settings-preview {
+  left: 0;
+  overflow: hidden;
+  width: 40%;
+}
+
+.settings-editor {
+  border-left: 1px solid #ECECEC;
+  right:0;
+  width: 60%;
+}

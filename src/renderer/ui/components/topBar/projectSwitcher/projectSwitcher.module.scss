@@ -1,0 +1,17 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.project-switcher {
+  height: 36px;
+  line-height: 24px;
+  font-family: 'Roboto Condensed';
+  font-size: 16px;
+  min-width: 140px;
+  max-width: 280px;
+  margin-right: 12px;
+  option[disabled] {
+    display: none;
+  }
+}

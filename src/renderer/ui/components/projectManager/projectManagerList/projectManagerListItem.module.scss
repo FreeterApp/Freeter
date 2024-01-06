@@ -1,0 +1,50 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.project-list-item {
+  position: relative;
+}
+.project-list-item-button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  outline-offset: -2px;
+  background-color: #F8F8F8;
+  border: 1px solid transparent;
+  padding: 0 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  white-space: nowrap;
+  font-size: 16px;
+  height: 36px;
+  line-height: 36px;
+  cursor: pointer;
+  &:hover {
+    background-color: #EFEFEF;
+  }
+  &[aria-selected="true"] {
+    background-color: #e4e6f1;
+  }
+  &.is-drop-area {
+    background-color: #005FB840;
+  }
+}
+
+.project-list-item-action-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  &:not(.always-visible) {
+    visibility: hidden;
+  }
+}
+
+.project-list-item:hover, .project-list-item:focus-within {
+  .project-list-item-action-bar {
+    visibility: visible;
+  }
+}

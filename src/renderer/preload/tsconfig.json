@@ -1,0 +1,12 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "module": "ES6",
+    "target": "es2021",
+    "baseUrl": "../../",
+    "paths": {
+      "@/*": ["renderer/*"],
+      "@common/*": ["common/*"]
+    }
+  }
+}

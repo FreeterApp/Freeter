@@ -1,0 +1,158 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+import { CreateSettingsState, SettingsEditorReactComponentProps, ReactComponent } from '@/widgets/types';
+import { debounce } from '@common/helpers/debounce';
+import { useCallback, useState } from 'react';
+
+const settingsSessionScopes = ['app', 'prj', 'wfl', 'wgt'] as const;
+export type SettingsSessionScope = typeof settingsSessionScopes[number];
+function isSettingsSessionScope(val: unknown): val is SettingsSessionScope {
+  if (typeof val !== 'string') {
+    return false;
+  }
+
+  if (settingsSessionScopes.indexOf(val as SettingsSessionScope)>-1) {
+    return true;
+  }
+
+  return true;
+}
+
+const settingsSessionPersist = ['persist', 'temp'] as const;
+export type SettingsSessionPersist = typeof settingsSessionPersist[number];
+function isSettingsSessionPersist(val: unknown): val is SettingsSessionPersist {
+  if (typeof val !== 'string') {
+    return false;
+  }
+
+  if (settingsSessionPersist.indexOf(val as SettingsSessionPersist)>-1) {
+    return true;
+  }
+
+  return true;
+}
+
+const settingsViewMode = ['desktop', 'mobile'] as const;
+export type SettingsViewMode = typeof settingsViewMode[number];
+function isSettingsViewMode(val: unknown): val is SettingsViewMode {
+  if (typeof val !== 'string') {
+    return false;
+  }
+
+  if (settingsViewMode.indexOf(val as SettingsViewMode)>-1) {
+    return true;
+  }
+
+  return true;
+}
+
+export interface Settings {
+  sessionPersist: SettingsSessionPersist;
+  sessionScope: SettingsSessionScope;
+  url: string;
+  viewMode: SettingsViewMode;
+}
+
+export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
+  sessionPersist: isSettingsSessionPersist(settings.sessionPersist) ? settings.sessionPersist : 'persist',
+  sessionScope: isSettingsSessionScope(settings.sessionScope) ? settings.sessionScope : 'prj',
+  url: typeof settings.url === 'string' ? settings.url : '',
+  viewMode: isSettingsViewMode(settings.viewMode) ? settings.viewMode : 'mobile',
+})
+
+const debounceUpdate3s = debounce((fn: () => void) => fn(), 3000);
+
+export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
+  const {updateSettings} = settingsApi;
+  const [url, setUrl] = useState(settings.url);
+  const updateUrl = useCallback((newUrl: string, debounce: boolean) => {
+    setUrl(newUrl);
+    const updateUrlInSettings = () => updateSettings({
+      ...settings,
+      url: newUrl
+    })
+    if (debounce) {
+      debounceUpdate3s(updateUrlInSettings);
+    } else {
+      debounceUpdate3s.cancel();
+      updateUrlInSettings();
+    }
+  }, [settings, updateSettings])
+  return (
+    <>
+      <fieldset>
+        <label
+          htmlFor="webpage-url"
+          title="Type a URL of a webpage or a web app to open in the widget."
+        >
+          URL
+        </label>
+        <input id="webpage-url" type="text" value={url} onChange={e => updateUrl(e.target.value, true)} onBlur={e=>updateUrl(e.target.value, false)} placeholder="Type a URL" />
+      </fieldset>
+      <fieldset>
+        <label
+          htmlFor="webpage-session-scope"
+          title="When you login to a website, the widget stores the data in a session to keep you logged in. Session scope
+                 specifies how the session data should be shared between webpage widgets. By default, the Application scope
+                 is set. This scope shares the session data between all webpage widgets. It enables you to login to a
+                 website with one webpage widget and use the same account in all webpage widgets that have the Application
+                 scope. However sometimes you may need to access a webpage using different accounts. For example, if your
+                 project depends on multiple social media accounts, a narrower scope would be a better fit. Project Scope
+                 will share the data between widgets within the same project. Workflow Scope - between widgets within the
+                 same workflow tab. Widget Scope will not share the session data with other webpage widgets."
+        >
+          Session Scope
+        </label>
+        <select id="webpage-session-scope" value={settings.sessionScope} onChange={e => updateSettings({
+          ...settings,
+          sessionScope: isSettingsSessionScope(e.target.value) ? e.target.value : 'prj'
+        })}>
+          <option value="app">Application</option>
+          <option value="prj">Project</option>
+          <option value="wfl">Workflow</option>
+          <option value="wgt">Widget</option>
+        </select>
+      </fieldset>
+      <fieldset>
+        <label
+          htmlFor="webpage-session-persistence"
+          title="By default, the widget will persist the session data after you exit the application. Set the Temporary mode to clear the session data on exit."
+        >
+          Session Persistence
+        </label>
+        <select id="webpage-session-persistence" value={settings.sessionPersist} onChange={e => updateSettings({
+          ...settings,
+          sessionPersist: isSettingsSessionPersist(e.target.value) ? e.target.value : 'persist'
+        })}>
+          <option value="persist">Persistent</option>
+          <option value="temp">Temporary</option>
+        </select>
+      </fieldset>
+      <fieldset>
+        <label
+          htmlFor="webpage-view-mode"
+          title="By default, the widget will try to open a mobile version of a web app/site where it's supported, to have
+                 a compact size which better fits workflow tabs containing multiple various widget. Set the Desktop mode to
+                 disable it and show the desktop version."
+        >
+          View Mode
+        </label>
+        <select id="webpage-view-mode" value={settings.viewMode} onChange={e => updateSettings({
+          ...settings,
+          viewMode: isSettingsViewMode(e.target.value) ? e.target.value : 'mobile'
+        })}>
+          <option value="desktop">Desktop</option>
+          <option value="mobile">Mobile</option>
+        </select>
+      </fieldset>
+    </>
+  )
+}
+
+export const settingsEditorComp: ReactComponent<SettingsEditorReactComponentProps<Settings>> = {
+  type: 'react',
+  Comp: SettingsEditorComp
+}

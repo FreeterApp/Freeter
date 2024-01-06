@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["es2021"],
+    "module": "CommonJS",
+    "target": "es2021",
+    "baseUrl": "../../",
+    "paths": {
+      "@/*": ["src/main/*"],
+      "@common/*": ["src/common/*"],
+      "@tests/*": ["tests/main/*"],
+      "@testscommon/*": ["tests/common/*"],
+      "@utils/*": ["tests/utils/*"],
+    }
+  }
+}

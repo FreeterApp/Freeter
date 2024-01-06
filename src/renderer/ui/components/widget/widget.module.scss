@@ -1,0 +1,63 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.widget {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #F8F8F8;
+}
+.widget-header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 26px;
+  box-sizing: content-box;
+  background-color: #F8F8F8;
+  border-bottom: 1px solid #ECECEC;
+  overflow: hidden;
+}
+.widget-header-name {
+  font-size: 12px;
+  line-height: 26px;
+  padding: 0 6px;
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.widget-header-action-bar {
+  visibility: hidden;
+  z-index:1; // to overlap WidgetLayoutItem's resize handles
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #F8F8F8;
+  border-left: 1px solid #ECECEC;
+}
+
+.widget:not(.dont-show-action-bar) {
+  &:hover, &:focus-within {
+    .widget-header-action-bar {
+      visibility: visible;
+    }
+  }
+}
+
+.widget-body {
+  position: absolute;
+  left: 0;
+  top: 27px;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}

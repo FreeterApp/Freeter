@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["es2021"],
+    "baseUrl": "../",
+    "paths": {
+      "@common/*": ["common/*"]
+    }
+  }
+}
