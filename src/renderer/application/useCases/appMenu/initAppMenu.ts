@@ -11,11 +11,19 @@ import { ToggleEditModeUseCase } from '@/application/useCases/toggleEditMode';
 import { ToggleMenuBarUseCase } from '@/application/useCases/toggleMenuBar';
 import { OpenApplicationSettingsUseCase } from '@/application/useCases/applicationSettings/openApplicationSettings';
 import { OpenAboutUseCase } from '@/application/useCases/about/openAbout';
+import { ShellProvider } from '@/application/interfaces/shellProvider';
+
+const urlDownload = 'https://freeter.io/v2/download';
+const urlTwitter = 'https://twitter.com/FreeterApp';
+const urlCommunity = 'https://community.freeter.io';
+const urlFeatureRequests = 'https://community.freeter.io/category/6/feature-requests';
+const urlBugReports = 'https://community.freeter.io/category/7/bug-reports';
 
 type Deps = {
   appStore: AppStore;
   appMenu: AppMenuProvider;
   processProvider: ProcessProvider;
+  shellProvider: ShellProvider;
   toggleEditModeUseCase: ToggleEditModeUseCase;
   toggleMenuBarUseCase: ToggleMenuBarUseCase;
   openApplicationSettingsUseCase: OpenApplicationSettingsUseCase;
@@ -27,6 +35,7 @@ export function createInitAppMenuUseCase({
   appStore,
   appMenu,
   processProvider,
+  shellProvider,
   toggleEditModeUseCase,
   toggleMenuBarUseCase,
   openApplicationSettingsUseCase,
@@ -49,6 +58,11 @@ export function createInitAppMenuUseCase({
     doAction: async () => openAboutUseCase()
   }
 
+  const itemCheckUpdates: MenuItem = {
+    doAction: async () => shellProvider.openExternal(urlDownload),
+    label: 'Check for updates...'
+  };
+
   const itemQuit: MenuItem = {
     role: 'quit'
   }
@@ -59,6 +73,8 @@ export function createInitAppMenuUseCase({
       itemAbout,
       itemSeparator,
       itemSettings,
+      itemSeparator,
+      itemCheckUpdates,
       itemSeparator,
       { role: 'hide' },
       { role: 'hideOthers' },
@@ -116,12 +132,36 @@ export function createInitAppMenuUseCase({
     ]
   })
 
+  const itemTwitter: MenuItem = {
+    doAction: async () => shellProvider.openExternal(urlTwitter),
+    label: 'Join us on Twitter'
+  };
+  const itemCommunity: MenuItem = {
+    doAction: async () => shellProvider.openExternal(urlCommunity),
+    label: 'Join Freeter Community'
+  };
+  const itemFeatureRequests: MenuItem = {
+    doAction: async () => shellProvider.openExternal(urlFeatureRequests),
+    label: 'Search Feature Requests'
+  };
+  const itemReportIssue: MenuItem = {
+    doAction: async () => shellProvider.openExternal(urlBugReports),
+    label: 'Report Issues'
+  };
+
   const menuHelp: MenuItem = {
     label: '&Help',
     submenu: [
+      itemTwitter,
+      itemCommunity,
+      itemFeatureRequests,
+      itemReportIssue,
       ...(isMac
         ? []
         : [
+          itemSeparator,
+          itemCheckUpdates,
+          itemSeparator,
           itemAbout
         ]
       )

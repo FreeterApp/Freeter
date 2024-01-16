@@ -5,6 +5,7 @@
 
 import { CloseAboutUseCase } from '@/application/useCases/about/closeAbout';
 import { GetAboutInfoUseCase } from '@/application/useCases/about/getAboutInfo';
+import { OpenSponsorshipUrlUseCase } from '@/application/useCases/about/openSponsorshipUrl';
 import { UseAppState } from '@/ui/hooks/appState';
 import { useCallback, useMemo } from 'react';
 
@@ -12,12 +13,14 @@ type Deps = {
   useAppState: UseAppState;
   closeAboutUseCase: CloseAboutUseCase;
   getAboutInfoUseCase: GetAboutInfoUseCase;
+  openSponsorshipUrlUseCase: OpenSponsorshipUrlUseCase;
 }
 
 export function createAboutViewModelHook({
   useAppState,
   closeAboutUseCase,
   getAboutInfoUseCase,
+  openSponsorshipUrlUseCase,
 }: Deps) {
   function useViewModel() {
     const {
@@ -30,11 +33,16 @@ export function createAboutViewModelHook({
       closeAboutUseCase();
     }, []);
 
+    const onSponsorshipClick = useCallback(() => {
+      openSponsorshipUrlUseCase();
+    }, []);
+
     const aboutInfo = useMemo(() => getAboutInfoUseCase(), []);
 
     return {
       showAbout,
       onCloseClick,
+      onSponsorshipClick,
       aboutInfo,
     }
   }

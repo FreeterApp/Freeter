@@ -20,6 +20,7 @@ export function createAboutComponent({
     const {
       showAbout,
       onCloseClick,
+      onSponsorshipClick,
       aboutInfo,
     } = useAboutViewModel();
 
@@ -48,7 +49,7 @@ export function createAboutComponent({
           <p>
             {`Freeter is a free and open-source software with its ongoing development made possible entirely
               by the support of these awesome sponsors & backers. If you'd like to join them, please consider `}
-            {'sponsoring Freeter\'s development'}.
+            <a href='#' onClick={onSponsorshipClick}>{'sponsoring Freeter\'s development'}</a>.
           </p>
 
           {

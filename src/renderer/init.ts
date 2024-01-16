@@ -111,6 +111,7 @@ import { createCloseAboutUseCase } from '@/application/useCases/about/closeAbout
 import { createOpenAboutUseCase } from '@/application/useCases/about/openAbout';
 import { createGetAboutInfoUseCase } from '@/application/useCases/about/getAboutInfo';
 import { createProductInfoProvider } from '@/infra/productInfoProvider/productInfoProvider';
+import { createOpenSponsorshipUrlUseCase } from '@/application/useCases/about/openSponsorshipUrl';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -266,6 +267,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     processProvider,
     productInfoProvider
   });
+  const openSponsorshipUrlUseCase = createOpenSponsorshipUrlUseCase({ shellProvider });
 
   const getMainHotkeyOptionsUseCase = createGetMainHotkeyOptionsUseCase({
     ...deps,
@@ -284,6 +286,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     ...deps,
     appMenu: appMenuProvider,
     processProvider,
+    shellProvider,
     toggleEditModeUseCase,
     toggleMenuBarUseCase,
     openApplicationSettingsUseCase,
@@ -378,6 +381,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     openAboutUseCase,
     closeAboutUseCase,
     getAboutInfoUseCase,
+    openSponsorshipUrlUseCase,
   }
 }
 
