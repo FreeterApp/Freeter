@@ -68,6 +68,9 @@ if (!app.requestSingleInstanceLock()) {
 } {
   app.on('second-instance', (_event, _commandLine, _workingDirectory, _additionalData) => {
     if (appWindow) {
+      if (!appWindow.isVisible()) {
+        appWindow.show();
+      }
       if (appWindow.isMinimized()) {
         appWindow.restore()
       }
