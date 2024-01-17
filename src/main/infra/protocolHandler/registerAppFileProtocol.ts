@@ -3,37 +3,27 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { registerFileProtocol, registerHttpProtocol } from '@/infra/protocolHandler/protocolHandler';
+import { join } from 'path';
+import { pathToFileURL } from 'url';
+import { net } from 'electron';
+import { registerProtocol } from '@/infra/protocolHandler/protocolHandler';
 import { hostFreeterApp, schemeFreeterFile } from '@common/infra/network';
 
 export function registerAppFileProtocol(devMode: boolean) {
+  let fetchAppFile: (pathname: string) => Promise<Response>;
   if (devMode) {
-    registerHttpProtocol(
-      schemeFreeterFile,
-      (req, callback) => {
-        const urlObj = new URL(req.url);
-        if (urlObj.host !== hostFreeterApp) {
-          callback({ error: -3 } /* NET_ERROR=ABORTED */);
-        }
-
-        callback({ url: 'http://localhost:4000' + urlObj.pathname });
-      },
-      // The 'freeter-file' protocol should be standard in the dev mode:
-      // - to enable the 'react-dev-tools' extension to run.
-      true
-    )
+    fetchAppFile = pathname => net.fetch('http://localhost:4000' + pathname)
   } else {
-    registerFileProtocol(schemeFreeterFile, (req, callback) => {
+    fetchAppFile = pathname => net.fetch(pathToFileURL(join(__dirname, pathname)).toString())
+  }
+  registerProtocol(
+    schemeFreeterFile,
+    req => {
       const urlObj = new URL(req.url);
       if (urlObj.host !== hostFreeterApp) {
-        callback({ error: -3 } /* NET_ERROR=ABORTED */);
+        return new Response(null, { status: 404 });
       }
-
-      // TODO
-      // const relativePath = path.normalize(urlObj.pathname.substring(1));
-      // const appPath = <app exe path>
-      // const filePath = path.join(appPath, relativePath);
-      callback({ error: -3 } /* NET_ERROR=ABORTED */);
-    })
-  }
+      return fetchAppFile(urlObj.pathname)
+    }
+  )
 }
