@@ -1,7 +1,8 @@
 .DS_Store
 npm-debug.log
-yarn-error.log
 Thumbs.db
-node_modules/
+yarn-error.log
 build/
-coverage
+coverage/
+dist/
+node_modules/

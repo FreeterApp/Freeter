@@ -1,10 +1,12 @@
 {
   "name": "freeter",
   "version": "2.0.0-alpha",
-  "main": "index.js",
+  "main": "main.js",
+  "homepage": "https://freeter.io/",
   "repository": "https://github.com/FreeterApp/Freeter.git",
   "author": "Alex Kaul",
   "license": "GPL-3.0-or-later",
+  "description": "Organizer For Those Who Do",
   "scripts": {
     "dev": "rimraf build && yarn run dev:assets && yarn run dev:preload && concurrently --names \"RENDERER,MAIN,RUN\" -c \"blue.bold,magenta.bold,green.bold\" \"yarn run dev:renderer\" \"yarn run dev:main\" \"yarn run dev:run\"",
     "dev:assets": "copyfiles --up 1 src/assets/**/* build/",
@@ -12,11 +14,19 @@
     "dev:renderer": "cross-env NODE_ENV=development webpack-dev-server --config webpack.renderer.config.js",
     "dev:main": "cross-env NODE_ENV=development webpack --watch --config webpack.main.config.js",
     "dev:run": "cross-env NODE_ENV=development nodemon --on-change-only --watch build/main.js --exec \"sleep 3 && electron ./build/main.js\"",
+    "prod": "rimraf build && yarn run prod:assets && concurrently --names \"RENDERER,MAIN,PRELOAD\" -c \"blue.bold,magenta.bold,green.bold\" \"yarn run prod:renderer\" \"yarn run prod:main\" \"yarn run prod:preload\"",
+    "prod:assets": "copyfiles --up 1 src/assets/**/* build/",
+    "prod:preload": "cross-env NODE_ENV=production webpack --config webpack.preload.config.js",
+    "prod:renderer": "cross-env NODE_ENV=production webpack --config webpack.renderer.config.js",
+    "prod:main": "cross-env NODE_ENV=production webpack --config webpack.main.config.js",
+    "prod:run": "electron ./build/main.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --clearCache && cross-env JEST_HIDE_USAGE=1 jest --watch",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix"
+    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
+    "build:pack": "electron-builder --config electron-builder.config.js --dir",
+    "build:dist": "electron-builder --config electron-builder.config.js"
   },
   "devDependencies": {
     "@swc/core": "^1.3.44",
@@ -35,6 +45,7 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.3",
     "electron": "^27.0.0",
+    "electron-builder": "^24.9.1",
     "electron-devtools-installer": "^3.2.0",
     "eslint": "^8.37.0",
     "eslint-plugin-jest-dom": "^5.1.0",
