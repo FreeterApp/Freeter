@@ -24,8 +24,8 @@ jobs:
       - name: Compile
         run: yarn run prod
 
-      - name: Draft or Update Release
-        run: yarn run release
+      - name: Package App and Draft New Release
+        run: yarn run package-draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -46,8 +46,8 @@ jobs:
       - name: Compile
         run: yarn run prod
 
-      - name: Draft or Update Release
-        run: yarn run release
+      - name: Package App and Draft New Release
+        run: yarn run package-draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -68,7 +68,7 @@ jobs:
       - name: Compile
         run: yarn run prod
 
-      - name: Draft or Update Release
-        run: yarn run release
+      - name: Package App and Draft New Release
+        run: yarn run package-draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

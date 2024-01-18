@@ -25,9 +25,7 @@
     "test:watch": "jest --clearCache && cross-env JEST_HIDE_USAGE=1 jest --watch",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
-    "package:pack": "electron-builder --config electron-builder.config.js --dir",
-    "package:dist": "electron-builder --config electron-builder.config.js",
-    "release": "electron-builder --config electron-builder.config.js --publish onTagOrDraft"
+    "package-draft": "electron-builder --config electron-builder.config.js"
   },
   "devDependencies": {
     "@swc/core": "^1.3.44",
