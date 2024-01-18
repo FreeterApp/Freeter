@@ -63,7 +63,6 @@ module.exports = {
             options: {
               jsc: {
                 target: configFileObj.target,
-                baseUrl: './src/',
                 paths: configFileObj.paths,
                 transform: {
                   react: {
