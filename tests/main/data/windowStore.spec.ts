@@ -4,7 +4,7 @@
  */
 
 import { WindowState, prepareWindowState, mergeWindowStateWithPersistentWindowState } from '@/base/state/window';
-import { createWindowStore } from '@/data/WindowStore';
+import { createWindowStore } from '@/data/windowStore';
 import { createStore } from '@common/data/store';
 import { StateStorage } from '@common/data/stateStorage';
 

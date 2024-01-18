@@ -4,7 +4,7 @@
  */
 
 import { ipcSetTrayMenuChannel } from '@common/ipc/channels';
-import { createTrayMenuControllers } from '@/controllers/TrayMenu';
+import { createTrayMenuControllers } from '@/controllers/trayMenu';
 import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
 import { MenuItemsIpc } from '@common/base/menu';
 import { fixtureMenuItemIpcA, fixtureMenuItemIpcB } from '@testscommon/base/fixtures/menu';

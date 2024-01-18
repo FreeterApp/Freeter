@@ -4,7 +4,7 @@
  */
 
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { createApplicationSettingsComponent, createApplicationSettingsViewModelHook} from '@/ui/components/ApplicationSettings'
+import { createApplicationSettingsComponent, createApplicationSettingsViewModelHook} from '@/ui/components/applicationSettings'
 import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
@@ -16,7 +16,6 @@ import { fixtureProcessInfoLinux } from '@testscommon/base/fixtures/process';
 import { ProcessInfo } from '@common/base/process';
 import { fixtureAppConfig } from '@tests/base/fixtures/appConfig';
 import { fixtureApplicationSettings } from '@tests/base/state/fixtures/applicationSettings';
-
 
 async function setup(
   appState: AppState,
