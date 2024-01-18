@@ -19,6 +19,7 @@ module.exports = {
       }
     ],
     icon: 'resources/darwin/freeter.icns',
+    publish: ['github'],
   },
   dmg: {
     background: 'resources/darwin/dmgBg.png',
@@ -41,6 +42,7 @@ module.exports = {
       }
     ],
     icon: 'resources/win32/freeter.ico',
+    publish: ['github'],
   },
   linux: {
     target: [
@@ -50,5 +52,6 @@ module.exports = {
       }
     ],
     icon: 'resources/linux/freeter-icons',
+    publish: ['github'],
   }
 }
