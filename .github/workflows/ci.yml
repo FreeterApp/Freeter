@@ -16,7 +16,7 @@ jobs:
         kind: ["linux", "windows", "macOS"]
         include:
           - kind: linux
-            os: ubuntu-18.04
+            os: ubuntu-latest
             target: linux-x64
           - kind: windows
             os: windows-latest
@@ -24,7 +24,7 @@ jobs:
           - kind: macOS
             os: macos-latest
             target: mac-x64
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
