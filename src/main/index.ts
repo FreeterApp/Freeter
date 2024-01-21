@@ -118,6 +118,7 @@ if (!app.requestSingleInstanceLock()) {
     const openExternalUrlUseCase = createOpenExternalUrlUseCase({ shellProvider });
 
     const getProcessInfoUseCase = createGetProcessInfoUseCase({ processProvider });
+    const { isLinux } = await getProcessInfoUseCase();
 
     const dialogProvider = createDialogProvider();
     const dialogShowMessageBoxUseCase = createShowMessageBoxUseCase({ dialogProvider });
@@ -172,6 +173,7 @@ if (!app.requestSingleInstanceLock()) {
       appWindow = createRendererWindow(
         `${__dirname}/preload.js`,
         `${schemeFreeterFile}://${hostFreeterApp}/index.html`,
+        isLinux ? join(app.getAppPath(), 'assets', 'app-icons', '256.png') : undefined,
         {
           getWindowStateUseCase,
           setWindowStateUseCase

@@ -25,6 +25,7 @@ const defaultWinParams = {
 export function createRendererWindow(
   preload: string,
   url: string,
+  icon: string | undefined,
   deps: {
     getWindowStateUseCase: GetWindowStateUseCase,
     setWindowStateUseCase: SetWindowStateUseCase,
@@ -48,6 +49,7 @@ export function createRendererWindow(
         y
       }
     ),
+    icon,
     minWidth,
     minHeight,
     webPreferences: {
