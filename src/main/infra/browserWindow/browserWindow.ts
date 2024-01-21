@@ -50,6 +50,7 @@ export function createRendererWindow(
       }
     ),
     icon,
+    title: 'Freeter',
     minWidth,
     minHeight,
     webPreferences: {
