@@ -1,10 +1,10 @@
 <p align="center"><img src="https://raw.githubusercontent.com/FreeterApp/Freeter/master/resources/linux/freeter-icons/256x256.png" style="margin-right: 16px; width: 128px; height: 128px"/></p>
 
-**Freeter** is a free and open source organizer for those who work on a computer. Gather all the things you need for your work in one place, grouped by projects and workflows, and have a quick access to them with a `Ctrl/Cmd`+`Shift`+`F` key press or a tray icon. Easily switch between workflows, and stay focused on current things you need to do.
+**Freeter** is a free and open source organizer for those who work on a computer. Gather all the things you need for your work in one place, using widgets grouped by projects and workflows, and have a quick access to them with a `Ctrl/Cmd`+`Shift`+`F` key press or a tray icon. Easily switch between workflows, and stay focused on current things you need to do.
 
 ---
 
-[**Download**][download] | [**Community**][community] | [**Donate**][donate]
+[**Homepage**][home] | [**Download**][download] | [**Community**][community] | [**Donate**][donate]
 
 ## Supported Operating Systems
 
@@ -36,6 +36,7 @@ Done. The built package comes into the `./dist` folder.
 
 Freeter is free software and may be redistributed under the terms specified in the [license].
 
+[home]: https://freeter.io/v2/
 [download]: https://freeter.io/v2/download
 [community]: https://community.freeter.io/
 [donate]: https://freeter.io/v2/sponsor
