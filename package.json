@@ -20,12 +20,13 @@
     "prod:renderer": "cross-env NODE_ENV=production webpack --config webpack.renderer.config.js",
     "prod:main": "cross-env NODE_ENV=production webpack --config webpack.main.config.js",
     "prod:run": "electron ./build/main.js",
+    "package": "electron-builder --config electron-builder.config.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --clearCache && cross-env JEST_HIDE_USAGE=1 jest --watch",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
-    "cd:package-draft": "electron-builder --config electron-builder.config.js",
+    "cd:package-draft": "yarn run package",
     "draft-release": "yarn version && git push && git push --tags"
   },
   "devDependencies": {
