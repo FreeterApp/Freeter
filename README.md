@@ -4,7 +4,7 @@
 
 ---
 
-[**Homepage**][home] | [**Download**][download] | [**Community**][community] | [**Donate**][donate]
+[**Homepage**][home] | [**Download**][download] | [**Community**][community] | [**Donate**][donate] | [**Roadmap**][roadmap]
 
 ## Supported Operating Systems
 
@@ -40,4 +40,5 @@ Freeter is free software and may be redistributed under the terms specified in t
 [download]: https://freeter.io/v2/download
 [community]: https://community.freeter.io/
 [donate]: https://freeter.io/v2/sponsor
+[roadmap]: https://community.freeter.io/topic/2/planned-features
 [license]: https://github.com/FreeterApp/Freeter/blob/master/COPYING
