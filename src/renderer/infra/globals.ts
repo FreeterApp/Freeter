@@ -4,16 +4,10 @@
  */
 
 import { ProductInfoBackers } from '@/base/productInfo';
-import { RendererGlobals } from './interfaces/globals';
 
 declare global {
-  interface Window {
-    freeter: RendererGlobals;
-  }
   const VERSION: string;
   const BUILT_AT: string;
   const COMMIT_HASH: string;
   const BACKERS: ProductInfoBackers;
 }
-
-export const { electronIpcRenderer } = window.freeter;

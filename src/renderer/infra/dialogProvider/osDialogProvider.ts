@@ -5,7 +5,7 @@
 
 import { ipcShowOsMessageBoxChannel, IpcShowOsMessageBoxArgs, IpcShowOsMessageBoxRes } from '@common/ipc/channels';
 import { DialogProvider } from '@/application/interfaces/dialogProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
 export function createOsDialogProvider(): DialogProvider {
   return {

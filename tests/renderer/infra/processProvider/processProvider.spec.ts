@@ -5,9 +5,9 @@
 
 import { ipcGetProcessInfoChannel } from '@common/ipc/channels';
 import { createProcessProvider } from '@/infra/processProvider/processProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
-jest.mock('@/infra/globals');
+jest.mock('@/infra/mainApi/mainApi');
 
 describe('ProcessProvider', () => {
   beforeEach(() => jest.resetAllMocks())

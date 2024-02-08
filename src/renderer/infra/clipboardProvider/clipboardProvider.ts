@@ -4,7 +4,7 @@
  */
 
 import { ipcWriteBookmarkIntoClipboardArgs, ipcWriteBookmarkIntoClipboardChannel, ipcWriteBookmarkIntoClipboardRes, ipcWriteTextIntoClipboardArgs, ipcWriteTextIntoClipboardChannel, ipcWriteTextIntoClipboardRes } from '@common/ipc/channels';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 import { ClipboardProvider } from '@/application/interfaces/clipboardProvider';
 
 export function createClipboardProvider(): ClipboardProvider {

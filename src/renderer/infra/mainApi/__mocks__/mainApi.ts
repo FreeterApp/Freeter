@@ -3,9 +3,9 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { RendererGlobals } from '@/infra/interfaces/globals'
+import { MainApi } from '@/infra/interfaces/mainApi';
 
-const globals: RendererGlobals = {
+const mainApi: MainApi = {
   electronIpcRenderer: {
     invoke: jest.fn(),
     on: jest.fn(),
@@ -15,4 +15,4 @@ const globals: RendererGlobals = {
   }
 }
 
-export const { electronIpcRenderer } = globals;
+export const { electronIpcRenderer } = mainApi;

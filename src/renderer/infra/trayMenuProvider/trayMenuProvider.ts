@@ -5,7 +5,7 @@
 
 import { IpcClickTrayMenuActionArgs, IpcSetTrayMenuArgs, IpcSetTrayMenuRes, ipcClickTrayMenuActionChannel, ipcSetTrayMenuChannel } from '@common/ipc/channels';
 import { TrayMenuProvider } from '@/application/interfaces/trayMenuProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 import { prepareMenuItemsForIpc } from '@/infra/ipc/prepareMenuItemsForIpc';
 import { ClickTrayMenuItemUseCase } from '@/application/useCases/trayMenu/clickTrayMenuItem';
 import { MenuItem } from '@common/base/menu';

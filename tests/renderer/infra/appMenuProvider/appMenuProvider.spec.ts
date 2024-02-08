@@ -7,10 +7,10 @@ import { ipcSetAppMenuChannel, ipcClickAppMenuActionChannel, ipcSetAppMenuAutoHi
 import { MenuItemsIpc, MenuItems } from '@common/base/menu';
 import { prepareMenuItemsForIpc } from '@/infra/ipc/prepareMenuItemsForIpc';
 import { createAppMenuProvider } from '@/infra/appMenuProvider/appMenuProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 import { fixtureMenuItemA, fixtureMenuItemB, fixtureMenuItemC } from '@testscommon/base/fixtures/menu';
 
-jest.mock('@/infra/globals');
+jest.mock('@/infra/mainApi/mainApi');
 
 function setup() {
   const clickAppMenuItemUseCase = jest.fn();

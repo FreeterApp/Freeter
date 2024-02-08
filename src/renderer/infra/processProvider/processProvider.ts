@@ -5,7 +5,7 @@
 
 import { ipcGetProcessInfoArgs, ipcGetProcessInfoChannel, ipcGetProcessInfoRes } from '@common/ipc/channels';
 import { deepFreeze } from '@common/helpers/deepFreeze';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 import { ProcessProvider } from '@/application/interfaces/processProvider';
 
 export async function createProcessProvider(): Promise<ProcessProvider> {

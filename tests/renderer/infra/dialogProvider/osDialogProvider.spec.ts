@@ -5,10 +5,10 @@
 
 import { ipcShowOsMessageBoxChannel } from '@common/ipc/channels';
 import { createOsDialogProvider } from '@/infra/dialogProvider/osDialogProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 import { MessageBoxConfig } from '@common/base/dialog';
 
-jest.mock('@/infra/globals');
+jest.mock('@/infra/mainApi/mainApi');
 
 function setup() {
   const dialogProvider = createOsDialogProvider();

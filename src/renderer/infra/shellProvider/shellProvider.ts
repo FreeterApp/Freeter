@@ -4,7 +4,7 @@
  */
 
 import { ipcShellOpenExternalUrlArgs, ipcShellOpenExternalUrlChannel, ipcShellOpenExternalUrlRes } from '@common/ipc/channels';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 import { ShellProvider } from '@/application/interfaces/shellProvider';
 
 export function createShellProvider(): ShellProvider {
