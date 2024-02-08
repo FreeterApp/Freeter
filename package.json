@@ -28,8 +28,8 @@
     "test:typecheck:main": "tsc --project ./tests/main/tsconfig.json --noEmit",
     "test:typecheck:renderer": "tsc --project ./tests/renderer/tsconfig.json --noEmit",
     "test:typecheck": "concurrently --names \"RENDERER,MAIN,COMMON\" -c \"blue.bold,magenta.bold,green.bold\" \"yarn run test:typecheck:renderer\" \"yarn run test:typecheck:main\" \"yarn run test:typecheck:common\"",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
-    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
+    "lint": "eslint \"{src,tests}/**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"{src,tests}/**/*.{ts,tsx}\" --fix",
     "cd:package-draft": "yarn run package",
     "draft-release": "yarn version && git push && git push --tags"
   },
