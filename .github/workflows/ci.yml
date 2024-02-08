@@ -22,11 +22,14 @@ jobs:
       - name: Install Deps
         run: yarn install
 
-      - name: Run Linter
-        run: yarn run lint
-
       - name: Run Tests
         run: yarn run test
 
       - name: Compile
         run: yarn run prod
+
+      - name: Run Linter
+        run: yarn run lint
+
+      - name: Run Type-checking for Tests
+        run: yarn run test:typecheck
