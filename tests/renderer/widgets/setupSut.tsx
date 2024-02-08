@@ -6,6 +6,7 @@
 import { ReactComponent, SettingsEditorReactComponentProps, WidgetApi, WidgetReactComponentProps, WidgetEnv, EntityId} from '@/widgets/types';
 import { render, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { fixtureProcessInfoLinux } from '@testscommon/base/fixtures/process';
 import React, { useState } from 'react';
 
 function setupSut<T>(compFactory: (settings: T, setVal: (newVal: T) => void) => JSX.Element, initSettings: T) {
@@ -73,7 +74,7 @@ export function setupWidgetSut<T>(reactComp: ReactComponent<WidgetReactComponent
       ...mockWidgetApi.dataStorage
     },
     process: {
-      getProcessInfo: jest.fn(()=>({browser: {name: 'Chrome', ver: '1.2.3'}, os: {name: 'linux', ver: '5.6.7'}})),
+      getProcessInfo: jest.fn(()=>fixtureProcessInfoLinux({browser: {name: 'Chrome', ver: '1.2.3'}, os: {name: 'linux', ver: '5.6.7'}})),
       ...mockWidgetApi.process
     },
     shell: {

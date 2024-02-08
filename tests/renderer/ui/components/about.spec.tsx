@@ -25,6 +25,7 @@ async function setup(
 
   const closeAboutUseCase = jest.fn();
   const getAboutInfoUseCase = jest.fn();
+  const openSponsorshipUrlUseCase = jest.fn();
   getAboutInfoUseCase.mockImplementation(
     opts?.aboutInfo
     ? ()=>opts.aboutInfo
@@ -38,6 +39,7 @@ async function setup(
     useAppState,
     closeAboutUseCase,
     getAboutInfoUseCase,
+    openSponsorshipUrlUseCase,
   })
 
   const About = createAboutComponent({
@@ -52,6 +54,7 @@ async function setup(
     appStore,
     getAboutInfoUseCase,
     closeAboutUseCase,
+    openSponsorshipUrlUseCase,
   }
 }
 

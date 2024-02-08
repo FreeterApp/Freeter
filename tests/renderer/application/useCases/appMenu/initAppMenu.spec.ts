@@ -5,6 +5,7 @@
 
 import { AppMenuProvider } from '@/application/interfaces/appMenuProvider';
 import { ProcessProvider } from '@/application/interfaces/processProvider';
+import { ShellProvider } from '@/application/interfaces/shellProvider';
 import { createInitAppMenuUseCase } from '@/application/useCases/appMenu/initAppMenu';
 import { AppState } from '@/base/state/app';
 import { ProcessInfo } from '@common/base/process';
@@ -23,6 +24,9 @@ async function setup(initState: AppState, opts?: {
   const processProviderMock: ProcessProvider = {
     getProcessInfo: () => opts?.processInfo || fixtureProcessInfoLinux()
   }
+  const shellProviderMock: ShellProvider = {
+    openExternal: jest.fn()
+  }
   const toggleEditModeUseCase = jest.fn();
   const toggleMenuBarUseCase = jest.fn();
   const openApplicationSettingsUseCase = jest.fn();
@@ -31,14 +35,16 @@ async function setup(initState: AppState, opts?: {
     appStore,
     appMenu: appMenuProviderMock,
     processProvider: processProviderMock,
+    shellProvider: shellProviderMock,
     toggleEditModeUseCase,
     toggleMenuBarUseCase,
     openApplicationSettingsUseCase,
-    openAboutUseCase
+    openAboutUseCase,
   });
   return {
     appStore,
     appMenuProviderMock,
+    shellProviderMock,
     initAppMenuUseCase,
     toggleEditModeUseCase,
     toggleMenuBarUseCase,

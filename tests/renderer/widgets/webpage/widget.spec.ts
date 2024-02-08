@@ -10,6 +10,7 @@ import { SetupWidgetSutOptional, setupWidgetSut } from '@tests/widgets/setupSut'
 import { fixtureSettings } from './fixtures';
 import { WidgetEnv, EntityId } from '@/widgets/types';
 import { ProcessInfo, ProcessInfoOsName } from '@common/base/process';
+import { fixtureProcessInfoLinux, fixtureProcessInfoMac, fixtureProcessInfoWin } from '@testscommon/base/fixtures/process';
 
 function setupWebpageWidgetSut(settings: Settings, optional?: SetupWidgetSutOptional) {
   const { comp, ...rest } = setupWidgetSut(widgetComp, settings, optional);
@@ -138,15 +139,15 @@ describe('Webpage Widget', () => {
   })
   describe('webview useragent attribute', () => {
     it.each<[string, SettingsViewMode, ProcessInfo]>([
-      ['Mozilla/5.0 (Macintosh) Chrome/1.2.3', 'desktop', { browser: { name: 'Chrome', ver: '1.2.3' }, os: { name: 'darwin', ver: '5.6.7' } }],
-      ['Mozilla/5.0 (Linux) Chrome/2.3.4', 'desktop', { browser: { name: 'Chrome', ver: '2.3.4' }, os: { name: 'linux', ver: '6.7.8' } }],
-      ['Mozilla/5.0 (Windows) Chrome/3.4.5', 'desktop', { browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'win32', ver: '7.8.9' } }],
-      ['Mozilla/5.0 (-) Chrome/3.4.5', 'desktop', { browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'another-os' as ProcessInfoOsName, ver: '7.8.9' } }],
+      ['Mozilla/5.0 (Macintosh) Chrome/1.2.3', 'desktop', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '1.2.3' }, os: { name: 'darwin', ver: '5.6.7' } })],
+      ['Mozilla/5.0 (Linux) Chrome/2.3.4', 'desktop', fixtureProcessInfoLinux({ browser: { name: 'Chrome', ver: '2.3.4' }, os: { name: 'linux', ver: '6.7.8' } })],
+      ['Mozilla/5.0 (Windows) Chrome/3.4.5', 'desktop', fixtureProcessInfoWin({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'win32', ver: '7.8.9' } })],
+      ['Mozilla/5.0 (-) Chrome/3.4.5', 'desktop', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'another-os' as ProcessInfoOsName, ver: '7.8.9' }, isMac: false })],
 
-      ['Mozilla/5.0 (Linux; Android) Chrome/1.2.3 Mobile', 'mobile', { browser: { name: 'Chrome', ver: '1.2.3' }, os: { name: 'darwin', ver: '5.6.7' } }],
-      ['Mozilla/5.0 (Linux; Android) Chrome/2.3.4 Mobile', 'mobile', { browser: { name: 'Chrome', ver: '2.3.4' }, os: { name: 'linux', ver: '6.7.8' } }],
-      ['Mozilla/5.0 (Linux; Android) Chrome/3.4.5 Mobile', 'mobile', { browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'win32', ver: '7.8.9' } }],
-      ['Mozilla/5.0 (Linux; Android) Chrome/3.4.5 Mobile', 'mobile', { browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'another-os' as ProcessInfoOsName, ver: '7.8.9' } }],
+      ['Mozilla/5.0 (Linux; Android) Chrome/1.2.3 Mobile', 'mobile', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '1.2.3' }, os: { name: 'darwin', ver: '5.6.7' } })],
+      ['Mozilla/5.0 (Linux; Android) Chrome/2.3.4 Mobile', 'mobile', fixtureProcessInfoLinux({ browser: { name: 'Chrome', ver: '2.3.4' }, os: { name: 'linux', ver: '6.7.8' } })],
+      ['Mozilla/5.0 (Linux; Android) Chrome/3.4.5 Mobile', 'mobile', fixtureProcessInfoWin({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'win32', ver: '7.8.9' } })],
+      ['Mozilla/5.0 (Linux; Android) Chrome/3.4.5 Mobile', 'mobile', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'another-os' as ProcessInfoOsName, ver: '7.8.9' }, isMac: false })],
     ])(
       'should be "%s" when the viewMode setting is "%s" and processInfo is "%o"',
       (expectedUserAgent, viewMode, processInfo) => {
