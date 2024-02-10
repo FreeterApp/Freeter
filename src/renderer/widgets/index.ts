@@ -4,10 +4,12 @@
  */
 
 import { WidgetSettings, WidgetType } from '@/widgets/types'
+import commander from './commander';
 import note from './note';
 import webpage from './webpage';
 
 const widgetTypes = [
+  commander,
   note,
   webpage,
 ] as unknown as WidgetType<WidgetSettings>[];
