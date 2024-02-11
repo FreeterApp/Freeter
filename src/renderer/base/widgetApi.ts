@@ -7,6 +7,7 @@ import { EntityId } from '@/base/entity';
 import { WidgetContextMenuFactory } from '@/base/widget';
 import { ActionBarItems } from './actionBar';
 import { ProcessInfo } from '@common/base/process';
+import { OpenDialogResult, OpenDirDialogConfig, OpenFileDialogConfig } from '@common/base/dialog';
 
 interface WidgetApiCommon {
   readonly updateActionBar: (actionBarItems: ActionBarItems) => void;
@@ -70,4 +71,8 @@ export function createWidgetApiFactory(commonFactory: WidgetApiCommonFactory, mo
 
 export interface WidgetSettingsApi<TSettings> {
   readonly updateSettings: (newSettings: TSettings) => void;
+  readonly dialog: {
+    showOpenFileDialog: (cfg: OpenFileDialogConfig) => Promise<OpenDialogResult>;
+    showOpenDirDialog: (cfg: OpenDirDialogConfig) => Promise<OpenDialogResult>;
+  }
 }

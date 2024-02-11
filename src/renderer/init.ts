@@ -182,6 +182,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     idGenerator: uuidv4IdGenerator
   }
 
+  const osDialogProvider = createOsDialogProvider();
+
   const dragWidgetFromWorktableLayoutUseCase = createDragWidgetFromWorktableLayoutUseCase(deps);
   const dragOverWorktableLayoutUseCase = createDragOverWorktableLayoutUseCase(deps);
   const dropOnWorktableLayoutUseCase = createDropOnWorktableLayoutUseCase(deps);
@@ -199,7 +201,10 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const openWidgetSettingsUseCase = createOpenWidgetSettingsUseCase(deps);
   const closeWidgetSettingsUseCase = createCloseWidgetSettingsUseCase(deps);
   const saveWidgetSettingsUseCase = createSaveWidgetSettingsUseCase(deps);
-  const getWidgetSettingsApiUseCase = createGetWidgetSettingsApiUseCase(deps);
+  const getWidgetSettingsApiUseCase = createGetWidgetSettingsApiUseCase({
+    ...deps,
+    dialogProvider: osDialogProvider
+  });
   const updateWidgetCoreSettingsUseCase = createUpdateWidgetCoreSettingsUseCase(deps);
 
   const resizeLayoutItemUseCase = createResizeLayoutItemUseCase(deps);
@@ -207,8 +212,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const resizeLayoutItemEndUseCase = createResizeLayoutItemEndUseCase(deps);
 
   const switchProjectUseCase = createSwitchProjectUseCase(deps);
-
-  const osDialogProvider = createOsDialogProvider();
 
   const switchWorkflowUseCase = createSwitchWorkflowUseCase(deps);
   const addWorkflowUseCase = createAddWorkflowUseCase(deps);
