@@ -59,6 +59,9 @@ import { createSetTrayMenuUseCase } from '@/application/useCases/tray/setTrayMen
 import { createTrayMenuControllers } from '@/controllers/trayMenu';
 import { createBrowserWindowControllers } from '@/controllers/browserWindow';
 import { createShowBrowserWindowUseCase } from '@/application/useCases/browserWindow/showBrowserWindow';
+import { createShowOpenFileDialogUseCase } from '@/application/useCases/dialog/showOpenFileDialog';
+import { createShowSaveFileDialogUseCase } from '@/application/useCases/dialog/showSaveFileDialog';
+import { createShowOpenDirDialogUseCase } from '@/application/useCases/dialog/showOpenDirDialog';
 
 let appWindow: BrowserWindow | null = null; // ref to the app window
 
@@ -122,6 +125,9 @@ if (!app.requestSingleInstanceLock()) {
 
     const dialogProvider = createDialogProvider();
     const dialogShowMessageBoxUseCase = createShowMessageBoxUseCase({ dialogProvider });
+    const showOpenFileDialogUseCase = createShowOpenFileDialogUseCase({ dialogProvider });
+    const showSaveFileDialogUseCase = createShowSaveFileDialogUseCase({ dialogProvider });
+    const showOpenDirDialogUseCase = createShowOpenDirDialogUseCase({ dialogProvider });
 
     const appMenuProvider = createAppMenuProvider();
     const setAppMenuUseCase = createSetAppMenuUseCase({ appMenuProvider });
@@ -148,7 +154,12 @@ if (!app.requestSingleInstanceLock()) {
       ...createClipboardControllers({ writeBookmarkIntoClipboardUseCase, writeTextIntoClipboardUseCase }),
       ...createShellControllers({ openExternalUrlUseCase }),
       ...createProcessControllers({ getProcessInfoUseCase }),
-      ...createDialogControllers({ showMessageBoxUseCase: dialogShowMessageBoxUseCase }),
+      ...createDialogControllers({
+        showMessageBoxUseCase: dialogShowMessageBoxUseCase,
+        showOpenDirDialogUseCase,
+        showOpenFileDialogUseCase,
+        showSaveFileDialogUseCase
+      }),
       ...createAppMenuControllers({ setAppMenuUseCase, setAppMenuAutoHideUseCase }),
       ...createGlobalShortcutControllers({ setMainShortcutUseCase }),
       ...createTrayMenuControllers({ setTrayMenuUseCase }),

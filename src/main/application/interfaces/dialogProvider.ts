@@ -4,7 +4,10 @@
  */
 
 import { BrowserWindow } from '@/application/interfaces/browserWindow';
-import { MessageBoxConfig, MessageBoxResult } from '@common/base/dialog';
+import { OpenDialogResult, MessageBoxConfig, MessageBoxResult, OpenDirDialogConfig, OpenFileDialogConfig, SaveFileDialogConfig, SaveDialogResult } from '@common/base/dialog';
 export interface DialogProvider {
   showMessageBox: (browserWindow: BrowserWindow | null, config: MessageBoxConfig) => Promise<MessageBoxResult>;
+  showOpenFileDialog: (browserWindow: BrowserWindow | null, config: OpenFileDialogConfig) => Promise<OpenDialogResult>;
+  showSaveFileDialog: (browserWindow: BrowserWindow | null, config: SaveFileDialogConfig) => Promise<SaveDialogResult>;
+  showOpenDirDialog: (browserWindow: BrowserWindow | null, config: OpenDirDialogConfig) => Promise<OpenDialogResult>;
 }

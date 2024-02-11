@@ -15,7 +15,10 @@ const providerRetVal: MessageBoxResult = {
 
 function setup() {
   const dialogProviderMock: DialogProvider = {
-    showMessageBox: jest.fn(async () => providerRetVal)
+    showMessageBox: jest.fn(async () => providerRetVal),
+    showOpenDirDialog: jest.fn(),
+    showOpenFileDialog: jest.fn(),
+    showSaveFileDialog: jest.fn(),
   }
   const useCase = createShowMessageBoxUseCase({
     dialogProvider: dialogProviderMock

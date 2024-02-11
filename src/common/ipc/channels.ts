@@ -6,7 +6,7 @@
 import { MenuItemsIpc } from '@common/base/menu';
 import { ProcessInfo } from '@common/base/process';
 import { makeIpcChannelName } from '@common/ipc/ipc';
-import { MessageBoxConfig, MessageBoxResult } from '@common/base/dialog';
+import { MessageBoxConfig, MessageBoxResult, OpenDialogResult, OpenDirDialogConfig, OpenFileDialogConfig, SaveDialogResult, SaveFileDialogConfig } from '@common/base/dialog';
 
 export const ipcAppDataStorageGetTextChannel = makeIpcChannelName('app-data-storage-get-text');
 export type IpcAppDataStorageGetTextArgs = [key: string];
@@ -71,6 +71,18 @@ export type ipcGetProcessInfoRes = ProcessInfo;
 export const ipcShowOsMessageBoxChannel = makeIpcChannelName('show-os-message-box');
 export type IpcShowOsMessageBoxArgs = [config: MessageBoxConfig];
 export type IpcShowOsMessageBoxRes = MessageBoxResult;
+
+export const ipcShowOsOpenFileDialogChannel = makeIpcChannelName('show-os-open-file-dialog');
+export type IpcShowOsOpenFileDialogArgs = [config: OpenFileDialogConfig];
+export type IpcShowOsOpenFileDialogRes = OpenDialogResult;
+
+export const ipcShowOsSaveFileDialogChannel = makeIpcChannelName('show-os-save-file-dialog');
+export type IpcShowOsSaveFileDialogArgs = [config: SaveFileDialogConfig];
+export type IpcShowOsSaveFileDialogRes = SaveDialogResult;
+
+export const ipcShowOsOpenDirDialogChannel = makeIpcChannelName('show-os-open-dir-dialog');
+export type IpcShowOsOpenDirDialogArgs = [config: OpenDirDialogConfig];
+export type IpcShowOsOpenDirDialogRes = OpenDialogResult;
 
 export const ipcSetAppMenuChannel = makeIpcChannelName('set-app-menu');
 export type IpcSetAppMenuArgs = [menuItems: MenuItemsIpc];
