@@ -45,7 +45,14 @@ function SettingsEditorComp({settings: _settings, settingsApi: _settingsApi}: Se
   const addCmd = (settings: Settings) => ({...settings, cmds: addItemToList(settings.cmds, '')})
   const deleteCmd = (settings: Settings, i: number) => ({...settings, cmds: removeItemFromList(settings.cmds, i)})
 
-  const pickDir = async (curDir: string) => '';
+  const pickDir = async (curDir: string) => {
+    const { canceled, filePaths } = await _settingsApi.dialog.showOpenDirDialog({defaultPath: curDir, multiSelect: false})
+    if (canceled) {
+      return null;
+    } else {
+      return filePaths[0];
+    }
+  };
 
   return (
     <>
@@ -62,6 +69,7 @@ function SettingsEditorComp({settings: _settings, settingsApi: _settingsApi}: Se
               ref={(el) => (cmdRefs.current[i] = el!)}
               type="text"
               value={cmd}
+              placeholder='Enter a command-line'
               onChange={e => updateSettings(updCmd(settings, i, e.target.value), true)}
               onBlur={e=>updateSettings(updCmd(settings, i, e.target.value), false)}
             />
@@ -93,7 +101,7 @@ function SettingsEditorComp({settings: _settings, settingsApi: _settingsApi}: Se
             value={settings.cwd}
             onChange={e => updateSettings(updCwd(settings, e.target.value), true)}
             onBlur={e=>updateSettings(updCwd(settings, e.target.value), false)}
-            placeholder="Set Directory"
+            placeholder="Set a directory path"
           />
           <Button
             onClick={async _ => {
