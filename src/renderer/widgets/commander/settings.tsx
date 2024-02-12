@@ -59,7 +59,6 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
               value={cmd}
               placeholder='Enter a command-line'
               onChange={e => updCmd(settings, i, e.target.value)}
-              onBlur={e=>updCmd(settings, i, e.target.value)}
             />
             <Button onClick={_ => deleteCmd(settings, i)} iconSvg={delete14Svg} size='S' title='Delete Command-line'></Button>
           </li>
@@ -80,7 +79,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
           htmlFor="cwd"
           title="Specify a directory path where the command-lines will be executed."
         >
-          Directory to run the command-lines in
+          Working Directory
         </label>
         <div className='flex-row'>
           <input
@@ -88,7 +87,6 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
             type="text"
             value={settings.cwd}
             onChange={e => updCwd(settings, e.target.value)}
-            onBlur={e=>updCwd(settings, e.target.value)}
             placeholder="Set a directory path"
           />
           <Button
