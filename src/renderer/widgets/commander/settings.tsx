@@ -4,8 +4,7 @@
  */
 
 import { Button, CreateSettingsState, List, ReactComponent, SettingsEditorReactComponentProps, addItemToList, browse14Svg, delete14Svg, removeItemFromList } from '@/widgets/types';
-import { debounce } from '@common/helpers/debounce';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface Settings {
   cmds: List<string>;
@@ -17,21 +16,10 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
   cwd: typeof settings.cwd === 'string' ? settings.cwd : ''
 })
 
-function SettingsEditorComp({settings: _settings, settingsApi: _settingsApi}: SettingsEditorReactComponentProps<Settings>) {
+function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
   const cmdRefs = useRef<HTMLInputElement[]>([]);
-  const {updateSettings: _updateSettings} = _settingsApi;
-  const [settings, setSettings] = useState(_settings);
+  const {updateSettings, dialog} = settingsApi;
   const [triggerLastCmdFocus, setTriggerLastCmdFocus] = useState(false);
-  const debUpdateSettings = useMemo(() => debounce(_updateSettings, 3000), [_updateSettings]);
-  const updateSettings = useCallback((settings: Settings, debounce: boolean) => {
-    setSettings(settings);
-    if (debounce) {
-      debUpdateSettings(settings);
-    } else {
-      debUpdateSettings.cancel();
-      _updateSettings(settings);
-    }
-  }, [_updateSettings, debUpdateSettings])
 
   useEffect(() => {
     if (triggerLastCmdFocus) {
@@ -40,13 +28,13 @@ function SettingsEditorComp({settings: _settings, settingsApi: _settingsApi}: Se
     }
   }, [settings.cmds.length, triggerLastCmdFocus])
 
-  const updCwd = (settings: Settings, cwd: string) => ({...settings, cwd});
-  const updCmd = (settings: Settings, i: number, cmd: string) => ({...settings, cmds: settings.cmds.map((_cmd, _i) => i!==_i ? _cmd : cmd)})
-  const addCmd = (settings: Settings) => ({...settings, cmds: addItemToList(settings.cmds, '')})
-  const deleteCmd = (settings: Settings, i: number) => ({...settings, cmds: removeItemFromList(settings.cmds, i)})
+  const updCwd = (settings: Settings, cwd: string) => updateSettings({...settings, cwd});
+  const updCmd = (settings: Settings, i: number, cmd: string) => updateSettings({...settings, cmds: settings.cmds.map((_cmd, _i) => i!==_i ? _cmd : cmd)})
+  const addCmd = (settings: Settings) => updateSettings({...settings, cmds: addItemToList(settings.cmds, '')})
+  const deleteCmd = (settings: Settings, i: number) => updateSettings({...settings, cmds: removeItemFromList(settings.cmds, i)})
 
   const pickDir = async (curDir: string) => {
-    const { canceled, filePaths } = await _settingsApi.dialog.showOpenDirDialog({defaultPath: curDir, multiSelect: false})
+    const { canceled, filePaths } = await dialog.showOpenDirDialog({defaultPath: curDir, multiSelect: false})
     if (canceled) {
       return null;
     } else {
@@ -70,16 +58,16 @@ function SettingsEditorComp({settings: _settings, settingsApi: _settingsApi}: Se
               type="text"
               value={cmd}
               placeholder='Enter a command-line'
-              onChange={e => updateSettings(updCmd(settings, i, e.target.value), true)}
-              onBlur={e=>updateSettings(updCmd(settings, i, e.target.value), false)}
+              onChange={e => updCmd(settings, i, e.target.value)}
+              onBlur={e=>updCmd(settings, i, e.target.value)}
             />
-            <Button onClick={_ => updateSettings(deleteCmd(settings, i), false)} iconSvg={delete14Svg} size='S' title='Delete Command-line'></Button>
+            <Button onClick={_ => deleteCmd(settings, i)} iconSvg={delete14Svg} size='S' title='Delete Command-line'></Button>
           </li>
         ))}
         </ul>
         <Button
           onClick={_ => {
-            updateSettings(addCmd(settings), false);
+            addCmd(settings);
             setTriggerLastCmdFocus(true);
           }}
           caption='Add a command-line'
@@ -99,15 +87,15 @@ function SettingsEditorComp({settings: _settings, settingsApi: _settingsApi}: Se
             id="cwd"
             type="text"
             value={settings.cwd}
-            onChange={e => updateSettings(updCwd(settings, e.target.value), true)}
-            onBlur={e=>updateSettings(updCwd(settings, e.target.value), false)}
+            onChange={e => updCwd(settings, e.target.value)}
+            onBlur={e=>updCwd(settings, e.target.value)}
             placeholder="Set a directory path"
           />
           <Button
             onClick={async _ => {
               const pickedDir = await pickDir(settings.cwd);
               if (pickedDir) {
-                updateSettings(updCwd(settings, pickedDir), false);
+                updCwd(settings, pickedDir);
               }
             }}
             size='S'
