@@ -3,6 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+export type { OpenDialogResult } from '@common/base/dialog';
 export type { WidgetApi, WidgetSettingsApi } from '@/base/widgetApi';
 export type { WidgetType, WidgetSettings, CreateSettingsState } from '@/base/widgetType';
 export type { WidgetMenuItem, WidgetMenuItemRole, WidgetMenuItems, WidgetContextMenuFactory, WidgetEnv } from '@/base/widget';

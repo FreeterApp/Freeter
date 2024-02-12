@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ReactComponent, SettingsEditorReactComponentProps, WidgetApi, WidgetReactComponentProps, WidgetEnv, EntityId} from '@/widgets/types';
+import { ReactComponent, SettingsEditorReactComponentProps, WidgetApi, WidgetReactComponentProps, WidgetEnv, EntityId, WidgetSettingsApi, WidgetSettings} from '@/widgets/types';
 import { render, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { fixtureProcessInfoLinux } from '@testscommon/base/fixtures/process';
@@ -31,14 +31,29 @@ function setupSut<T>(compFactory: (settings: T, setVal: (newVal: T) => void) => 
     comp
   }
 }
-export function setupSettingsSut<T>(reactComp: ReactComponent<SettingsEditorReactComponentProps<T>>, initSettings: T) {
+
+export interface SetupSettingsSutOptional {
+  mockSettingsApi?: {
+    [P in keyof WidgetSettingsApi<WidgetSettings>]?: WidgetSettingsApi<WidgetSettings>[P] extends Record<string, unknown>
+    ? Partial<WidgetSettingsApi<WidgetSettings>[P]>
+    : WidgetSettingsApi<WidgetSettings>[P]
+  }
+}
+
+export function setupSettingsSut<T>(reactComp: ReactComponent<SettingsEditorReactComponentProps<T>>, initSettings: T, optional?: SetupSettingsSutOptional) {
+  const mockSettingsApi = optional?.mockSettingsApi || {};
   const {Comp} = reactComp;
   return setupSut(
     (settings, setVal) => (
       <Comp
         settings={settings}
         settingsApi={{
-          updateSettings: setVal
+          updateSettings: setVal,
+          dialog: {
+            showOpenDirDialog: jest.fn(),
+            showOpenFileDialog: jest.fn(),
+            ...mockSettingsApi.dialog
+          }
         }}
       ></Comp>
     ),
