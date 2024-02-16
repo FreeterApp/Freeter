@@ -47,14 +47,14 @@
     margin: 0;
     padding:0;
   }
-  :global(.flex-row) {
+  .setting-row {
     display: flex;
     align-items: center;
     > *:not(:last-child) {
       margin-right: 6px;
     }
   }
-  fieldset > *, fieldset > ul > li {
+  fieldset > * {
     margin-top: 12px;
   }
   input[type=text], select, textarea {

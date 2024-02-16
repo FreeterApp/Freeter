@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { WidgetType } from '@/widgets/types';
+import { WidgetType } from '@/widgets/appModules';
 import { settingsEditorComp, Settings, createSettingsState } from './settings';
 import { widgetComp } from './widget';
 import { widgetSvg } from './icons';

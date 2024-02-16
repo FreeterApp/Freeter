@@ -9,15 +9,13 @@ import styles from './projectManager.module.scss';
 import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { ProjectManagerSettings } from '@/ui/components/projectManager/projectManagerSettings';
-import { ProjectManagerListProps } from '@/ui/components/projectManager/projectManagerList';
+import { ProjectManagerList } from '@/ui/components/projectManager/projectManagerList';
 
 type Deps = {
-  ProjectManagerList: React.FC<ProjectManagerListProps>
   useProjectManagerViewModel: ProjectManagerViewModelHook;
 }
 
 export function createProjectManagerComponent({
-  ProjectManagerList,
   useProjectManagerViewModel,
 }: Deps) {
   function Component() {

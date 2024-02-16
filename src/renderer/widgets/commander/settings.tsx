@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { Button, CreateSettingsState, List, ReactComponent, SettingsEditorReactComponentProps, addItemToList, browse14Svg, delete14Svg, removeItemFromList } from '@/widgets/types';
+import { Button, CreateSettingsState, List, ReactComponent, SettingsEditorReactComponentProps, addItemToList, browse14Svg, delete14Svg, removeItemFromList, SettingBlock, SettingRow, SettingActions } from '@/widgets/appModules';
 import { useEffect, useRef, useState } from 'react';
 
 export interface Settings {
@@ -44,26 +44,31 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
 
   return (
     <>
-      <fieldset>
-        <label
-          title="Specify the command-lines to run. Each command-line will be executed in a separate shell instance."
-        >
-          Command-lines
-        </label>
-        <ul>
+      <SettingBlock
+        titleForId='cmd0'
+        title='Command-lines'
+        moreInfo='Specify the command-lines to run. Each command-line will be executed in a separate shell instance.'
+      >
         {settings.cmds.map((cmd, i) => (
-          <li key={i} className='flex-row'>
+          <SettingRow key={i}>
             <input
               ref={(el) => (cmdRefs.current[i] = el!)}
+              id={'cmd'+i}
               type="text"
               value={cmd}
               placeholder='Enter a command-line'
               onChange={e => updCmd(settings, i, e.target.value)}
             />
-            <Button onClick={_ => deleteCmd(settings, i)} iconSvg={delete14Svg} size='S' title='Delete Command-line'></Button>
-          </li>
+            <SettingActions
+              actions={[{
+                id: 'DELETE',
+                icon: delete14Svg,
+                title: 'Delete Command-line',
+                doAction: async () => deleteCmd(settings, i)
+              }]}
+            />
+          </SettingRow>
         ))}
-        </ul>
         <Button
           onClick={_ => {
             addCmd(settings);
@@ -72,16 +77,14 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
           caption='Add a command-line'
           primary={true}
         ></Button>
-      </fieldset>
+      </SettingBlock>
 
-      <fieldset>
-        <label
-          htmlFor="cwd"
-          title="Specify a directory path where the command-lines will be executed."
-        >
-          Working Directory
-        </label>
-        <div className='flex-row'>
+      <SettingBlock
+        titleForId='cwd'
+        title='Working Directory'
+        moreInfo='Specify a directory path where the command-lines will be executed.'
+      >
+        <SettingRow>
           <input
             id="cwd"
             type="text"
@@ -89,19 +92,21 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
             onChange={e => updCwd(settings, e.target.value)}
             placeholder="Set a directory path"
           />
-          <Button
-            onClick={async _ => {
-              const pickedDir = await pickDir(settings.cwd);
-              if (pickedDir) {
-                updCwd(settings, pickedDir);
+          <SettingActions
+            actions={[{
+              id: 'SELECT-DIR',
+              icon: browse14Svg,
+              title: 'Select Directory',
+              doAction: async () => {
+                const pickedDir = await pickDir(settings.cwd);
+                if (pickedDir) {
+                  updCwd(settings, pickedDir);
+                }
               }
-            }}
-            size='S'
-            title='Select Directory'
-            iconSvg={browse14Svg}
-          ></Button>
-        </div>
-      </fieldset>
+            }]}
+          />
+        </SettingRow>
+      </SettingBlock>
     </>
   )
 }

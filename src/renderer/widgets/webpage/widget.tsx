@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ContextMenuEvent, ReactComponent, WidgetReactComponentProps } from '@/widgets/types';
+import { ContextMenuEvent, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings } from './settings';
 import styles from './widget.module.scss';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';

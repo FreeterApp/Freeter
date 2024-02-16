@@ -8,7 +8,6 @@ import { DragLeaveTargetUseCase } from '@/application/useCases/dragDrop/dragLeav
 import { DragOverWorkflowSwitcherUseCase } from '@/application/useCases/dragDrop/dragOverWorkflowSwitcher';
 import { DragWorkflowFromWorkflowSwitcherUseCase } from '@/application/useCases/dragDrop/dragWorkflowFromWorkflowSwitcher';
 import { DropOnWorkflowSwitcherUseCase } from '@/application/useCases/dragDrop/dropOnWorkflowSwitcher';
-import { ClickActionBarItemUseCase } from '@/application/useCases/actionBar/clickActionBarItem';
 import { SwitchWorkflowUseCase } from '@/application/useCases/workflowSwitcher/switchWorkflow';
 import { EntityId } from '@/base/entity';
 import { UseAppState } from '@/ui/hooks/appState';
@@ -29,7 +28,6 @@ type Deps = {
   dragLeaveTargetUseCase: DragLeaveTargetUseCase;
   dropOnWorkflowSwitcherUseCase: DropOnWorkflowSwitcherUseCase;
   dragEndUseCase: DragEndUseCase;
-  clickActionBarItemUseCase: ClickActionBarItemUseCase;
   openWorkflowSettingsUseCase: OpenWorkflowSettingsUseCase;
   addWorkflowUseCase: AddWorkflowUseCase;
   renameWorkflowUseCase: RenameWorkflowUseCase;

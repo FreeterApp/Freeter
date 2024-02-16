@@ -7,19 +7,10 @@
 import { EntityId } from '@/base/entity';
 import { findEntityOnList } from '@/base/entityList';
 import { ActionBarItems } from '@/base/actionBar';
-type Deps = {
-  // appStore: AppStore;
-}
 
-export function createClickActionBarItemUseCase(_deps: Deps) {
-  const useCase = (actionBarItems: ActionBarItems, actionBarItemId: EntityId) => {
-    const actionBarItem = findEntityOnList(actionBarItems, actionBarItemId);
-    if (actionBarItem) {
-      actionBarItem.doAction();
-    }
+export function clickActionBarItemUseCase(actionBarItems: ActionBarItems, actionBarItemId: EntityId) {
+  const actionBarItem = findEntityOnList(actionBarItems, actionBarItemId);
+  if (actionBarItem) {
+    actionBarItem.doAction();
   }
-
-  return useCase;
 }
-
-export type ClickActionBarItemUseCase = ReturnType<typeof createClickActionBarItemUseCase>;

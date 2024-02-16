@@ -46,8 +46,8 @@ export function createGetWidgetSettingsApiUseCase({
         });
       },
       dialog: {
-        showOpenDirDialog: async cfg => dialogProvider.showOpenDirDialog(cfg),
-        showOpenFileDialog: async cfg => dialogProvider.showOpenFileDialog(cfg),
+        showOpenDirDialog: cfg => dialogProvider.showOpenDirDialog(cfg),
+        showOpenFileDialog: cfg => dialogProvider.showOpenFileDialog(cfg),
       }
     }
     return settingsApi;

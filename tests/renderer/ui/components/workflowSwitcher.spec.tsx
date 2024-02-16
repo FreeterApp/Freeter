@@ -4,7 +4,7 @@
  */
 
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { createWorkflowSwitcherComponent, createWorkflowSwitcherItemComponent, createWorkflowSwitcherViewModelHook } from '@/ui/components/workflowSwitcher'
+import { createWorkflowSwitcherComponent, createWorkflowSwitcherViewModelHook } from '@/ui/components/workflowSwitcher'
 import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureProjectAInColl, fixtureWorkflowAInColl, fixtureWorkflowBInColl } from '@tests/base/state/fixtures/entitiesState';
@@ -13,9 +13,6 @@ import { fixtureDragDropFromWorkflowSwitcher, fixtureDragDropNotDragging, fixtur
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { AppState } from '@/base/state/app';
 import { fixtureWorkflowSettingsA, fixtureWorkflowSettingsB } from '@tests/base/fixtures/workflow';
-import { createClickActionBarItemUseCase } from '@/application/useCases/actionBar/clickActionBarItem';
-import { createActionBarComponent, createActionBarViewModelHook } from '@/ui/components/basic/actionBar';
-import React from 'react';
 import { createAddWorkflowUseCase } from '@/application/useCases/workflowSwitcher/addWorkflow';
 import userEvent from '@testing-library/user-event';
 import { fixtureWorktableNotResizing, fixtureWorktableResizingItem } from '@tests/base/state/fixtures/worktable';
@@ -25,8 +22,6 @@ const newWorkflowId = 'NEW-WORKFLOW-ID';
 async function setup(
   appState: AppState,
   opts?: {
-    mockRootActionBar?: React.FC,
-    mockItemActionBar?: React.FC,
     mockAddWorkflowUseCase?: jest.Mock
   }
 ) {
@@ -39,18 +34,11 @@ async function setup(
   const dragOverWorkflowSwitcherUseCase = jest.fn();
   const dragLeaveTargetUseCase = jest.fn();
   const dropOnWorkflowSwitcherUseCase = jest.fn();
-  const clickActionBarItemUseCase = createClickActionBarItemUseCase({});
   const openWorkflowSettingsUseCase = jest.fn();
   const addWorkflowUseCase = opts?.mockAddWorkflowUseCase || createAddWorkflowUseCase({appStore, idGenerator: () => newWorkflowId});
   const renameWorkflowUseCase = jest.fn();
   const deleteWorkflowUseCase = jest.fn();
 
-  const ActionBar = createActionBarComponent({
-    useActionBarViewModel: createActionBarViewModelHook({clickActionBarItemUseCase: createClickActionBarItemUseCase({})})
-  })
-  const WorkflowSwitcherItem = createWorkflowSwitcherItemComponent({
-    ActionBar: opts?.mockItemActionBar || ActionBar
-  })
   const useWorkflowSwitcherViewModel = createWorkflowSwitcherViewModelHook({
     useAppState,
     switchWorkflowUseCase,
@@ -59,15 +47,12 @@ async function setup(
     dragOverWorkflowSwitcherUseCase,
     dragWorkflowFromWorkflowSwitcherUseCase,
     dropOnWorkflowSwitcherUseCase,
-    clickActionBarItemUseCase,
     openWorkflowSettingsUseCase,
     addWorkflowUseCase,
     renameWorkflowUseCase,
     deleteWorkflowUseCase,
   })
   const WorkflowSwitcher = createWorkflowSwitcherComponent({
-    ActionBar: opts?.mockRootActionBar || ActionBar,
-    WorkflowSwitcherItem,
     useWorkflowSwitcherViewModel
   })
   const comp = render(
@@ -83,7 +68,6 @@ async function setup(
     dragOverWorkflowSwitcherUseCase,
     dragLeaveTargetUseCase,
     dropOnWorkflowSwitcherUseCase,
-    clickActionBarItemUseCase,
     openWorkflowSettingsUseCase,
     addWorkflowUseCase,
     renameWorkflowUseCase,
@@ -125,7 +109,6 @@ describe('<WorkflowSwitcher />', () => {
 
     it('should display a root action bar', async () => {
       const id = 'P-A';
-      const strActionBar = 'ACTION BAR';
       await setup(
         fixtureAppState({
           entities: {
@@ -134,18 +117,16 @@ describe('<WorkflowSwitcher />', () => {
             }
           },
           ui: {
+            editMode: true,
             projectSwitcher: fixtureProjectSwitcher({
               projectIds: [id],
               currentProjectId: id
             })
           }
-        }),
-        {
-          mockRootActionBar: () => <>{strActionBar}</>
-        }
+        })
       );
 
-      expect(screen.queryAllByText(strActionBar).length).toBe(1);
+      expect(screen.getByRole('button', {name: 'Add Workflow'})).toBeInTheDocument();
     })
 
     it('should display edit-mode actions on a tab, when edit mode is on', async () => {
@@ -576,7 +557,6 @@ describe('<WorkflowSwitcher />', () => {
       const idP = 'P';
       const idWA = 'W-A';
       const idWB = 'W-B';
-      const strActionBar = 'ACTION BAR';
       await setup(
         fixtureAppState({
           entities: {
@@ -589,18 +569,16 @@ describe('<WorkflowSwitcher />', () => {
             }
           },
           ui: {
+            editMode: true,
             projectSwitcher: fixtureProjectSwitcher({
               projectIds: [idP],
               currentProjectId: idP
             })
           }
-        }),
-        {
-          mockItemActionBar: () => <>{strActionBar}</>
-        }
+        })
       );
 
-      expect(screen.queryAllByText(strActionBar).length).toBe(2);
+      expect(screen.getAllByRole('button', {name: 'Workflow Settings'}).length).toBe(2);
     })
 
     it('should display edit-mode actions on a tab, when edit mode is on', async () => {

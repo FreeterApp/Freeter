@@ -5,33 +5,22 @@
 
 import { EntityId } from '@/base/entity';
 import { ActionBarItems } from '@/base/actionBar';
-import { ClickActionBarItemUseCase } from '@/application/useCases/actionBar/clickActionBarItem';
 import { useCallback } from 'react';
-
-type Deps = {
-  clickActionBarItemUseCase: ClickActionBarItemUseCase;
-}
+import { clickActionBarItemUseCase } from '@/application/useCases/actionBar/clickActionBarItem';
 
 export interface ActionBarProps {
   actionBarItems: ActionBarItems;
   className?: string;
 }
 
-export function createActionBarViewModelHook({
-  clickActionBarItemUseCase,
-}: Deps) {
-  return function useActionBarViewModel(props: ActionBarProps) {
-    const { actionBarItems } = props;
-    const onActionBarItemClick = useCallback((actionId: EntityId) => {
-      clickActionBarItemUseCase(actionBarItems, actionId);
-    }, [actionBarItems])
+export function useActionBarViewModel(props: ActionBarProps) {
+  const { actionBarItems } = props;
+  const onActionBarItemClick = useCallback((actionId: EntityId) => {
+    clickActionBarItemUseCase(actionBarItems, actionId);
+  }, [actionBarItems])
 
-    return {
-      ...props,
-      onActionBarItemClick
-    };
-  }
+  return {
+    ...props,
+    onActionBarItemClick
+  };
 }
-
-export type ActionBarViewModelHook = ReturnType<typeof createActionBarViewModelHook>;
-export type ActionBarViewModel = ReturnType<ActionBarViewModelHook>;

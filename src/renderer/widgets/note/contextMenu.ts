@@ -4,7 +4,7 @@
  */
 
 import { copyFullText, labelCopy, labelCopyFullText, labelCut, labelPaste, labelRedo, labelSelectAll, labelUndo } from './actions';
-import { WidgetApi, WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/types';
+import { WidgetApi, WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
 
 export const textAreaContextId = 'textarea';
 export function createContextMenuFactory(elTextArea: HTMLTextAreaElement | null, widgetApi: WidgetApi): WidgetContextMenuFactory {

@@ -3,11 +3,8 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { createClickActionBarItemUseCase } from '@/application/useCases/actionBar/clickActionBarItem';
 import { AppState } from '@/base/state/app';
-import { createActionBarComponent, createActionBarViewModelHook } from '@/ui/components/basic/actionBar';
 import { createProjectManagerComponent, createProjectManagerViewModelHook} from '@/ui/components/projectManager';
-import { createProjectManagerListComponent, createProjectManagerListItemComponent } from '@/ui/components/projectManager/projectManagerList';
 import { createAppStateHook } from '@/ui/hooks/appState';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -30,15 +27,6 @@ async function setup(
   const toggleDeletionInProjectManagerUseCase = jest.fn();
   const updateProjectSettingsInProjectManagerUseCase = jest.fn();
   const updateProjectsOrderInProjectManagerUseCase = jest.fn();
-  const ProjectManagerList = createProjectManagerListComponent({
-    ProjectManagerListItem: createProjectManagerListItemComponent({
-      ActionBar: createActionBarComponent({
-        useActionBarViewModel: createActionBarViewModelHook({
-          clickActionBarItemUseCase: createClickActionBarItemUseCase({})
-        })
-      })
-    })
-  })
   const useProjectManagerViewModel = createProjectManagerViewModelHook({
     useAppState,
     addProjectInProjectManagerUseCase,
@@ -50,7 +38,6 @@ async function setup(
     updateProjectsOrderInProjectManagerUseCase,
   })
   const ProjectManager = createProjectManagerComponent({
-    ProjectManagerList,
     useProjectManagerViewModel
   })
   const comp = render(
