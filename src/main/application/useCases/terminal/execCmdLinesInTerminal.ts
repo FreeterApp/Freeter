@@ -28,7 +28,8 @@ export function createExecCmdLinesInTerminalUseCase({ appsProvider, childProcess
       exec = (cmdLine, cwd) => {
         const [cmd, ...args] = argsFactory(cmdLine);
         spawnDetached(cmd, args, {
-          cwd
+          cwd,
+          shell: true
         })
       }
       break;

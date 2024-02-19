@@ -11,7 +11,7 @@ export function detectDefaultTerminal(): string {
 
   switch (process.platform as ProcessInfoOsName) {
     case 'linux': {
-      for (const terminal of ['gnome-terminal', 'konsole', 'x-terminal-emulator']) {
+      for (const terminal of ['gnome-terminal', 'konsole']) {
         const check = spawnSync('which', [terminal]);
         if (check.status === 0) {
           defTerm = terminal;

@@ -43,8 +43,8 @@ describe('execCmdLinesInTerminalUseCase()', () => {
     useCase(testCmdLines, testCwd);
 
     expect(childProcessProviderMock.spawnDetached).toBeCalledTimes(2);
-    expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(1, testTerminal, ['-e', 'sh', '-c', testCmdLines[0]], { cwd: testCwd });
-    expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(2, testTerminal, ['-e', 'sh', '-c', testCmdLines[1]], { cwd: testCwd });
+    expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(1, testTerminal, ['-e', 'bash', '-c', `"${testCmdLines[0]}; exec bash"`], { cwd: testCwd, shell: true });
+    expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(2, testTerminal, ['-e', 'bash', '-c', `"${testCmdLines[1]}; exec bash"`], { cwd: testCwd, shell: true });
   });
 
   it('should call spawnDetached() with right params for each cmdLine, when exec on win', async () => {

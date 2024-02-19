@@ -3,16 +3,18 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+const escDblQuotes = (str: string) => str.replaceAll('"', '\\"');
+
 export function createArgsFactoryToExecCmdLineInLinuxTerminal(terminal: string) {
   let factory: (cmdLine: string) => string[];
 
   switch (terminal) {
     case 'gnome-terminal': {
-      factory = cmdLine => [terminal, '--', 'sh', '-c', cmdLine];
+      factory = cmdLine => [terminal, '--', 'bash', '-c', `"${escDblQuotes(`${cmdLine}; exec bash`)}"`];
       break;
     }
     default: {
-      factory = cmdLine => [terminal, '-e', 'sh', '-c', cmdLine];
+      factory = cmdLine => [terminal, '-e', 'bash', '-c', `"${escDblQuotes(`${cmdLine}; exec bash`)}"`];
     }
   }
 
@@ -24,7 +26,7 @@ export function createArgsFactoryToExecCmdLineInWinTerminal(terminal: string) {
 
   switch (terminal.toLowerCase()) {
     default: {
-      factory = cmdLine => ['cmd.exe', '/k', '/s', `"${cmdLine}"`];
+      factory = cmdLine => ['cmd.exe', '/k', '/s', `"${escDblQuotes(cmdLine)}"`];
     }
   }
 
@@ -33,7 +35,7 @@ export function createArgsFactoryToExecCmdLineInWinTerminal(terminal: string) {
 
 export function createArgsFactoryToExecCmdLineInMacTerminal() {
   const factory: (cmdLine: string, cwd?: string) => string[] = (cmdLine, cwd) => {
-    const scriptCmdLine = `${cwd ? `cd ${cwd} && ` : ''}${cmdLine}`.replaceAll('"', '\\"');
+    const scriptCmdLine = escDblQuotes(`${cwd ? `cd ${cwd} && ` : ''}${cmdLine}`);
     const script = `\
       if application "Terminal" is running then\n\
         tell application "Terminal"\n\
