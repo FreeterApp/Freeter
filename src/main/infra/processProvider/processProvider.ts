@@ -4,6 +4,7 @@
  */
 
 import { ProcessProvider } from '@/application/interfaces/processProvider';
+import { ProcessInfoOsName } from '@common/base/process';
 
 export function createProcessProvider(): ProcessProvider {
   return {
@@ -13,7 +14,7 @@ export function createProcessProvider(): ProcessProvider {
         ver: process.versions.chrome
       },
       os: {
-        name: process.platform,
+        name: process.platform as ProcessInfoOsName,
         ver: process.getSystemVersion()
       },
       isLinux: process.platform === 'linux',

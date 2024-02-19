@@ -110,3 +110,8 @@ export type IpcClickTrayMenuActionArgs = [actionId: number];
 export const ipcShowBrowserWindowChannel = makeIpcChannelName('show-browser-window');
 export type IpcShowBrowserWindowArgs = [];
 export type IpcShowBrowserWindowRes = void;
+
+
+export const ipcExecCmdLinesInTerminalChannel = makeIpcChannelName('exec-cmd-lines-in-terminal');
+export type IpcExecCmdLinesInTerminalArgs = [cmdLines: string[], cwd?: string];
+export type IpcExecCmdLinesInTerminalRes = void;
