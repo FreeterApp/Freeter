@@ -56,7 +56,7 @@ export function createExecCmdLinesInTerminalUseCase({ appsProvider, childProcess
     }
   }
 
-  return async function execCmdLinesInTerminalUseCase(cmdLines: string[], cwd?: string) {
+  return async function execCmdLinesInTerminalUseCase(cmdLines: ReadonlyArray<string>, cwd?: string) {
     cmdLines.forEach(cmdLine => exec(cmdLine, cwd))
   }
 }

@@ -53,20 +53,20 @@ export type IpcPopupOsContextMenuArgs = [menuItems: MenuItemsIpc];
 export type IpcPopupOsContextMenuRes = number | undefined;
 
 export const ipcShellOpenExternalUrlChannel = makeIpcChannelName('shell-open-external-url');
-export type ipcShellOpenExternalUrlArgs = [url: string];
-export type ipcShellOpenExternalUrlRes = void;
+export type IpcShellOpenExternalUrlArgs = [url: string];
+export type IpcShellOpenExternalUrlRes = void;
 
 export const ipcWriteBookmarkIntoClipboardChannel = makeIpcChannelName('write-bookmark-into-clipboard');
-export type ipcWriteBookmarkIntoClipboardArgs = [title: string, url: string];
-export type ipcWriteBookmarkIntoClipboardRes = void;
+export type IpcWriteBookmarkIntoClipboardArgs = [title: string, url: string];
+export type IpcWriteBookmarkIntoClipboardRes = void;
 
 export const ipcWriteTextIntoClipboardChannel = makeIpcChannelName('write-text-into-clipboard');
-export type ipcWriteTextIntoClipboardArgs = [text: string];
-export type ipcWriteTextIntoClipboardRes = void;
+export type IpcWriteTextIntoClipboardArgs = [text: string];
+export type IpcWriteTextIntoClipboardRes = void;
 
 export const ipcGetProcessInfoChannel = makeIpcChannelName('get-process-info');
-export type ipcGetProcessInfoArgs = [];
-export type ipcGetProcessInfoRes = ProcessInfo;
+export type IpcGetProcessInfoArgs = [];
+export type IpcGetProcessInfoRes = ProcessInfo;
 
 export const ipcShowOsMessageBoxChannel = makeIpcChannelName('show-os-message-box');
 export type IpcShowOsMessageBoxArgs = [config: MessageBoxConfig];
@@ -113,5 +113,5 @@ export type IpcShowBrowserWindowRes = void;
 
 
 export const ipcExecCmdLinesInTerminalChannel = makeIpcChannelName('exec-cmd-lines-in-terminal');
-export type IpcExecCmdLinesInTerminalArgs = [cmdLines: string[], cwd?: string];
+export type IpcExecCmdLinesInTerminalArgs = [cmdLines: ReadonlyArray<string>, cwd?: string];
 export type IpcExecCmdLinesInTerminalRes = void;

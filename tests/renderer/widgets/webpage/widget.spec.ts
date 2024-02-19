@@ -8,7 +8,7 @@ import { widgetComp } from '@/widgets/webpage/widget'
 import { screen } from '@testing-library/react';
 import { SetupWidgetSutOptional, setupWidgetSut } from '@tests/widgets/setupSut'
 import { fixtureSettings } from './fixtures';
-import { WidgetEnv, EntityId } from '@/widgets/types';
+import { WidgetEnv, EntityId } from '@/widgets/appModules';
 import { ProcessInfo, ProcessInfoOsName } from '@common/base/process';
 import { fixtureProcessInfoLinux, fixtureProcessInfoMac, fixtureProcessInfoWin } from '@testscommon/base/fixtures/process';
 

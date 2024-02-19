@@ -10,18 +10,21 @@ import { DataStorageRenderer } from '@/application/interfaces/dataStorage';
 import { EntityId } from '@/base/entity';
 import { WidgetApiModuleName, WidgetApiSetContextMenuFactoryHandler, WidgetApiUpdateActionBarHandler, createWidgetApiFactory } from '@/base/widgetApi';
 import { ObjectManager } from '@common/base/objectManager';
+import { TerminalProvider } from '@/application/interfaces/terminalProvider';
 
 interface Deps {
   clipboardProvider: ClipboardProvider;
   widgetDataStorageManager: ObjectManager<DataStorageRenderer>;
   processProvider: ProcessProvider;
   shellProvider: ShellProvider;
+  terminalProvider: TerminalProvider;
 }
 function _createWidgetApiFactory({
   clipboardProvider,
   processProvider,
   shellProvider,
   widgetDataStorageManager,
+  terminalProvider,
 }: Deps, forPreview: boolean) {
   return createWidgetApiFactory(
     (_widgetId, updateActionBarHandler, setWidgetContextMenuFactoryHandler) => ({
@@ -52,6 +55,9 @@ function _createWidgetApiFactory({
       }),
       shell: () => ({
         openExternalUrl: (url) => shellProvider.openExternal(url)
+      }),
+      terminal: () => ({
+        execCmdLines: (cmdLines, cwd) => terminalProvider.execCmdLines(cmdLines, cwd)
       }),
     }
   )

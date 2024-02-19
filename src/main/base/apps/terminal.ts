@@ -24,7 +24,7 @@ export function createArgsFactoryToExecCmdLineInWinTerminal(terminal: string) {
 
   switch (terminal.toLowerCase()) {
     default: {
-      factory = cmdLine => ['cmd.exe', '/s', '/c', `"${cmdLine}"`];
+      factory = cmdLine => ['cmd.exe', '/k', '/s', `"${cmdLine}"`];
     }
   }
 

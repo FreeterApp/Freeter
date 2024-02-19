@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ReactComponent, SettingsEditorReactComponentProps, WidgetApi, WidgetReactComponentProps, WidgetEnv, EntityId, WidgetSettingsApi, WidgetSettings} from '@/widgets/types';
+import { ReactComponent, SettingsEditorReactComponentProps, WidgetApi, WidgetReactComponentProps, WidgetEnv, EntityId, WidgetSettingsApi, WidgetSettings} from '@/widgets/appModules';
 import { render, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { fixtureProcessInfoLinux } from '@testscommon/base/fixtures/process';
@@ -96,6 +96,10 @@ export function setupWidgetSut<T>(reactComp: ReactComponent<WidgetReactComponent
       openExternalUrl: jest.fn(),
       ...mockWidgetApi.shell
     },
+    terminal: {
+      execCmdLines: jest.fn(),
+      ...mockWidgetApi.terminal
+    }
   };
   return {
     ...setupSut(

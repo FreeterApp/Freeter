@@ -7,7 +7,7 @@ import { fixtureProcessInfoLinux, fixtureProcessInfoMac, fixtureProcessInfoWin }
 import { AppsProvider } from '@/application/interfaces/appsProvider';
 import { ChildProcessProvider } from '@/application/interfaces/childProcessProvider';
 import { ProcessProvider } from '@/application/interfaces/processProvider';
-import { createExecCmdLinesInTerminalUseCase } from '@/application/useCases/apps/execCmdLinesInTerminal';
+import { createExecCmdLinesInTerminalUseCase } from '@/application/useCases/terminal/execCmdLinesInTerminal';
 import { ProcessInfo } from '@common/base/process';
 
 function setup(processInfo: ProcessInfo, defaultTerminal: string) {
@@ -56,8 +56,8 @@ describe('execCmdLinesInTerminalUseCase()', () => {
     useCase(testCmdLines, testCwd);
 
     expect(childProcessProviderMock.spawnDetached).toBeCalledTimes(2);
-    expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(1, 'cmd.exe', ['/s', '/c', `"${testCmdLines[0]}"`], { cwd: testCwd, shell: true });
-    expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(2, 'cmd.exe', ['/s', '/c', `"${testCmdLines[1]}"`], { cwd: testCwd, shell: true });
+    expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(1, 'cmd.exe', ['/k', '/s', `"${testCmdLines[0]}"`], { cwd: testCwd, shell: true });
+    expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(2, 'cmd.exe', ['/k', '/s', `"${testCmdLines[1]}"`], { cwd: testCwd, shell: true });
   });
 
   it('should call spawnDetached() with right params for each cmdLine, when exec on mac', async () => {

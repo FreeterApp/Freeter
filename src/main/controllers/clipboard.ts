@@ -4,7 +4,7 @@
  */
 
 import { Controller } from '@/controllers/controller';
-import { ipcWriteTextIntoClipboardChannel, ipcWriteTextIntoClipboardArgs, ipcWriteTextIntoClipboardRes, ipcWriteBookmarkIntoClipboardChannel, ipcWriteBookmarkIntoClipboardArgs, ipcWriteBookmarkIntoClipboardRes } from '@common/ipc/channels';
+import { ipcWriteTextIntoClipboardChannel, IpcWriteTextIntoClipboardArgs, IpcWriteTextIntoClipboardRes, ipcWriteBookmarkIntoClipboardChannel, IpcWriteBookmarkIntoClipboardArgs, IpcWriteBookmarkIntoClipboardRes } from '@common/ipc/channels';
 import { WriteTextIntoClipboardUseCase } from '@/application/useCases/clipboard/writeTextIntoClipboard';
 import { WriteBookmarkIntoClipboardUseCase } from '@/application/useCases/clipboard/writeBookmarkIntoClipboard';
 
@@ -17,8 +17,8 @@ export function createClipboardControllers({
   writeBookmarkIntoClipboardUseCase,
   writeTextIntoClipboardUseCase,
 }: Deps): [
-    Controller<ipcWriteBookmarkIntoClipboardArgs, ipcWriteBookmarkIntoClipboardRes>,
-    Controller<ipcWriteTextIntoClipboardArgs, ipcWriteTextIntoClipboardRes>,
+    Controller<IpcWriteBookmarkIntoClipboardArgs, IpcWriteBookmarkIntoClipboardRes>,
+    Controller<IpcWriteTextIntoClipboardArgs, IpcWriteTextIntoClipboardRes>,
   ] {
   return [{
     channel: ipcWriteBookmarkIntoClipboardChannel,

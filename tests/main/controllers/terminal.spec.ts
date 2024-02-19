@@ -4,7 +4,7 @@
  */
 
 import { ipcExecCmdLinesInTerminalChannel } from '@common/ipc/channels';
-import { createAppsControllers } from '@/controllers/apps';
+import { createTerminalControllers } from '@/controllers/terminal';
 import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
 
 function setup() {
@@ -12,7 +12,7 @@ function setup() {
 
   const [
     execCmdLinesInTerminalController
-  ] = createAppsControllers({
+  ] = createTerminalControllers({
     execCmdLinesInTerminalUseCase
   })
 

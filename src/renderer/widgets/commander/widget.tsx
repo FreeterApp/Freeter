@@ -7,12 +7,14 @@ import { Button, ReactComponent, WidgetReactComponentProps } from '@/widgets/app
 import { Settings } from './settings';
 import { execCommandSvg } from '@/widgets/commander/icons';
 
-function WidgetComp({settings}: WidgetReactComponentProps<Settings>) {
-  const {cmds} = settings;
+function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) {
+  const { terminal } = widgetApi;
+  const { cwd} = settings;
+  const cmds = settings.cmds.filter(cmd=>cmd!=='');
+
   return cmds.length>0
     ? <Button
-        onClick={_ => {
-        }}
+        onClick={_ => terminal.execCmdLines(cmds, cwd !== '' ? cwd : undefined )}
         iconSvg={execCommandSvg}
         title={`Execute Command-line${cmds.length>1 ? 's' : ''}`}
         size='Fill'

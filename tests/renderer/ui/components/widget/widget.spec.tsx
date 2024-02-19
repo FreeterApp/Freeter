@@ -12,7 +12,7 @@ import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureWidgetTypeAInColl, fixtureWidgetTypeBInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { ActionBarItems, ContextMenuEvent, WidgetReactComponent } from '@/widgets/types';
+import { ActionBarItems, ContextMenuEvent, WidgetReactComponent } from '@/widgets/appModules';
 import { AppState } from '@/base/state/app';
 import { WidgetApi, WidgetApiModuleName } from '@/base/widgetApi';
 import { useEffect } from 'react';

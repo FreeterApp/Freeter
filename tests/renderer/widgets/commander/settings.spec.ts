@@ -4,7 +4,7 @@
  */
 
 import { settingsEditorComp } from '@/widgets/commander/settings';
-import { OpenDialogResult } from '@/widgets/types';
+import { OpenDialogResult } from '@/widgets/appModules';
 import { screen } from '@testing-library/react';
 import { setupSettingsSut } from '@tests/widgets/setupSut'
 import { fixtureSettings } from './fixtures';

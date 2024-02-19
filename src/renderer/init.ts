@@ -108,6 +108,7 @@ import { createOpenAboutUseCase } from '@/application/useCases/about/openAbout';
 import { createGetAboutInfoUseCase } from '@/application/useCases/about/getAboutInfo';
 import { createProductInfoProvider } from '@/infra/productInfoProvider/productInfoProvider';
 import { createOpenSponsorshipUrlUseCase } from '@/application/useCases/about/openSponsorshipUrl';
+import { createTerminalProvider } from '@/infra/terminalProvider/terminalProvider';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -236,11 +237,13 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const shellProvider = createShellProvider();
   const processProvider = await createProcessProvider();
   const widgetDataStorageManager = createObjectManager(async widgetId => prepareDataStorageForRenderer(createWidgetDataStorage(widgetId)))
+  const terminalProvider = createTerminalProvider();
   const getWidgetApiUseCase = createGetWidgetApiUseCase({
     clipboardProvider,
     processProvider,
     shellProvider,
     widgetDataStorageManager,
+    terminalProvider,
   })
   const deleteWidgetUseCase = createDeleteWidgetUseCase({
     ...deps,

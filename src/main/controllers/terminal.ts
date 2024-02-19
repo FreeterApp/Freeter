@@ -5,13 +5,13 @@
 
 import { Controller } from '@/controllers/controller';
 import { IpcExecCmdLinesInTerminalArgs, IpcExecCmdLinesInTerminalRes, ipcExecCmdLinesInTerminalChannel } from '@common/ipc/channels';
-import { ExecCmdLinesInTerminalUseCase } from '@/application/useCases/apps/execCmdLinesInTerminal';
+import { ExecCmdLinesInTerminalUseCase } from '@/application/useCases/terminal/execCmdLinesInTerminal';
 
 type Deps = {
   execCmdLinesInTerminalUseCase: ExecCmdLinesInTerminalUseCase;
 }
 
-export function createAppsControllers({
+export function createTerminalControllers({
   execCmdLinesInTerminalUseCase,
 }: Deps): [
     Controller<IpcExecCmdLinesInTerminalArgs, IpcExecCmdLinesInTerminalRes>,

@@ -32,6 +32,9 @@ interface WidgetApiModules {
   readonly shell: {
     openExternalUrl: (url: string) => void;
   };
+  readonly terminal: {
+    execCmdLines: (cmdLines: ReadonlyArray<string>, cwd?: string) => void;
+  }
 }
 
 export type WidgetApiModuleName = keyof WidgetApiModules;
