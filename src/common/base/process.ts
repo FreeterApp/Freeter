@@ -8,7 +8,7 @@ export interface ProcessInfoBrowser {
   ver: string;
 }
 
-export type ProcessInfoOsName = NodeJS.Platform;
+export type ProcessInfoOsName = 'darwin' | 'linux' | 'win32';
 
 export interface ProcessInfoOs {
   name: ProcessInfoOsName;

@@ -17,3 +17,37 @@ export interface MessageBoxResult {
   response: number;
   checkboxChecked: boolean;
 }
+
+export interface FileDialogFilter {
+  name: string;
+  extensions: string[];
+}
+
+export interface OpenFileDialogConfig {
+  multiSelect?: boolean;
+  defaultPath?: string;
+  filters?: FileDialogFilter[];
+  title?: string;
+}
+
+export interface SaveFileDialogConfig {
+  defaultPath?: string;
+  filters?: FileDialogFilter[];
+  title?: string;
+}
+
+export interface OpenDirDialogConfig {
+  multiSelect?: boolean;
+  defaultPath?: string;
+  title?: string;
+}
+
+export interface OpenDialogResult {
+  canceled: boolean;
+  filePaths: string[];
+}
+
+export interface SaveDialogResult {
+  canceled: boolean;
+  filePath?: string;
+}

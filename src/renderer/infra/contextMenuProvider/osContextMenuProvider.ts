@@ -5,7 +5,7 @@
 
 import { IpcPopupOsContextMenuArgs, IpcPopupOsContextMenuRes, ipcPopupOsContextMenuChannel } from '@common/ipc/channels';
 import { ContextMenuProvider } from '@/application/interfaces/contextMenuProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 import { prepareMenuItemsForIpc } from '@/infra/ipc/prepareMenuItemsForIpc';
 import { ClickContextMenuItemUseCase } from '@/application/useCases/contextMenu/clickContextMenuItem';
 

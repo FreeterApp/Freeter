@@ -5,7 +5,7 @@
 
 import { IpcSetMainShortcutArgs, IpcSetMainShortcutRes, ipcSetMainShortcutChannel } from '@common/ipc/channels';
 import { GlobalShortcutProvider } from '@/application/interfaces/globalShortcutProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
 export function createGlobalShortcutProvider(): GlobalShortcutProvider {
   return {

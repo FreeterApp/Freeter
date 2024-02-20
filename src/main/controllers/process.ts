@@ -4,7 +4,7 @@
  */
 
 import { Controller } from '@/controllers/controller';
-import { ipcGetProcessInfoArgs, ipcGetProcessInfoChannel, ipcGetProcessInfoRes } from '@common/ipc/channels';
+import { IpcGetProcessInfoArgs, ipcGetProcessInfoChannel, IpcGetProcessInfoRes } from '@common/ipc/channels';
 import { GetProcessInfoUseCase } from '@/application/useCases/process/getProcessInfo';
 
 type Deps = {
@@ -14,7 +14,7 @@ type Deps = {
 export function createProcessControllers({
   getProcessInfoUseCase,
 }: Deps): [
-    Controller<ipcGetProcessInfoArgs, ipcGetProcessInfoRes>,
+    Controller<IpcGetProcessInfoArgs, IpcGetProcessInfoRes>,
   ] {
   return [{
     channel: ipcGetProcessInfoChannel,

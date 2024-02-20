@@ -71,6 +71,19 @@ $fontSizeL: 16px;
       height: $innerHeightL;
     }
   }
+  &.size-fill {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    &.only-icon {
+      .button-icon {
+        width: 100%;
+        height: 100%;
+        max-width: 48px;
+        max-height: 48px;
+      }
+    }
+  }
   &[disabled] {
     opacity: 0.2;
   }

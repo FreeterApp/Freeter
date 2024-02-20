@@ -5,7 +5,7 @@
 
 import { IpcShowBrowserWindowArgs, IpcShowBrowserWindowRes, ipcShowBrowserWindowChannel } from '@common/ipc/channels';
 import { BrowserWindowProvider } from '@/application/interfaces/browserWindowProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
 export function createBrowserWindowProvider(): BrowserWindowProvider {
   return {

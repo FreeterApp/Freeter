@@ -8,21 +8,21 @@ import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { fixtureWidgetAInColl, fixtureWidgetBInColl } from '@tests/base/state/fixtures/entitiesState';
-import { DialogProvider } from '@/application/interfaces/dialogProvider';
 import { MessageBoxConfig, MessageBoxResult } from '@common/base/dialog';
 import { deleteWidgetsFromAppState } from '@/base/state/actions';
 import { fixtureWidgetEnvAreaShelf } from '@tests/base/fixtures/widget';
+import { mockDialogProvider } from '@tests/infra/mocks/dialogProvider';
 
 jest.mock('@/base/state/actions');
 const mockedDeleteWidgetsFromAppState = jest.mocked(deleteWidgetsFromAppState);
 
 async function setup(initState: AppState, opts?: { mockShowMessageBoxRes?: number, mockDeleteWidgetsFromAppStateRes?: AppState }) {
   const [appStore] = await fixtureAppStore(initState);
-  const dialogProviderMock: DialogProvider = {
+  const dialogProviderMock = mockDialogProvider({
     showMessageBox: jest.fn().mockResolvedValue({
       response: opts?.mockShowMessageBoxRes !== undefined ? opts.mockShowMessageBoxRes : 1
-    } as MessageBoxResult)
-  }
+    } as MessageBoxResult),
+  })
 
   if (opts?.mockDeleteWidgetsFromAppStateRes) {
     mockedDeleteWidgetsFromAppState.mockClear();

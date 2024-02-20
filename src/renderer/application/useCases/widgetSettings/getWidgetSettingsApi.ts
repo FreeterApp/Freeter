@@ -6,13 +6,16 @@
 import { WidgetSettingsApi } from '@/base/widgetApi';
 import { WidgetSettings } from '@/base/widgetType';
 import { AppStore } from '@/application/interfaces/store';
+import { DialogProvider } from '@/application/interfaces/dialogProvider';
 
 interface Deps {
   appStore: AppStore;
+  dialogProvider: DialogProvider;
 }
 
 export function createGetWidgetSettingsApiUseCase({
-  appStore
+  appStore,
+  dialogProvider,
 }: Deps) {
   function getWidgetSettingsApiUseCase() {
     const settingsApi: WidgetSettingsApi<WidgetSettings> = {
@@ -41,6 +44,10 @@ export function createGetWidgetSettingsApiUseCase({
             }
           }
         });
+      },
+      dialog: {
+        showOpenDirDialog: cfg => dialogProvider.showOpenDirDialog(cfg),
+        showOpenFileDialog: cfg => dialogProvider.showOpenFileDialog(cfg),
       }
     }
     return settingsApi;

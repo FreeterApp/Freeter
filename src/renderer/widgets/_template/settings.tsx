@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { CreateSettingsState, ReactComponent, SettingsEditorReactComponentProps } from '@/widgets/types';
+import { CreateSettingsState, ReactComponent, SettingsEditorReactComponentProps } from '@/widgets/appModules';
 
 export interface Settings {
   text: string;

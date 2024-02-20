@@ -5,7 +5,7 @@
 
 import { IpcAppDataStorageClearArgs, ipcAppDataStorageClearChannel, IpcAppDataStorageClearRes, IpcAppDataStorageDeleteArgs, ipcAppDataStorageDeleteChannel, IpcAppDataStorageDeleteRes, IpcAppDataStorageGetKeysArgs, ipcAppDataStorageGetKeysChannel, IpcAppDataStorageGetKeysRes, IpcAppDataStorageGetTextArgs, ipcAppDataStorageGetTextChannel, IpcAppDataStorageGetTextRes, IpcAppDataStorageSetTextArgs, ipcAppDataStorageSetTextChannel, IpcAppDataStorageSetTextRes } from '@common/ipc/channels';
 import { DataStorage } from '@common/application/interfaces/dataStorage';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
 export function createAppDataStorage(): DataStorage {
   return {

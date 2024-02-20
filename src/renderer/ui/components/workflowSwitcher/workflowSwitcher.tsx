@@ -6,19 +6,14 @@
 import { WorkflowSwitcherViewModelHook } from '@/ui/components/workflowSwitcher/workflowSwitcherViewModel';
 import clsx from 'clsx';
 import styles from './workflowSwitcher.module.scss';
-import React from 'react';
-import { WorkflowSwitcherItemProps } from '@/ui/components/workflowSwitcher/workflowSwitcherItemViewModel';
-import { ActionBarProps } from '@/ui/components/basic/actionBar';
+import { ActionBar } from '@/ui/components/basic/actionBar';
+import { WorkflowSwitcherItem } from '@/ui/components/workflowSwitcher/workflowSwitcherItem';
 
 type Deps = {
-  ActionBar: React.FC<ActionBarProps>;
-  WorkflowSwitcherItem: React.FC<WorkflowSwitcherItemProps>;
   useWorkflowSwitcherViewModel: WorkflowSwitcherViewModelHook;
 }
 
 export function createWorkflowSwitcherComponent({
-  ActionBar,
-  WorkflowSwitcherItem,
   useWorkflowSwitcherViewModel
 }: Deps) {
   function WorkflowSwitcher() {

@@ -4,10 +4,10 @@
  */
 
 import { createBrowserWindowProvider } from '@/infra/browserWindowProvider/browserWindowProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 import { ipcShowBrowserWindowChannel } from '@common/ipc/channels';
 
-jest.mock('@/infra/globals');
+jest.mock('@/infra/mainApi/mainApi');
 
 function setup() {
   const browserWindowProvider = createBrowserWindowProvider();

@@ -5,9 +5,9 @@
 
 import { ipcWriteBookmarkIntoClipboardChannel, ipcWriteTextIntoClipboardChannel } from '@common/ipc/channels';
 import { createClipboardProvider } from '@/infra/clipboardProvider/clipboardProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
-jest.mock('@/infra/globals');
+jest.mock('@/infra/mainApi/mainApi');
 
 describe('ClipboardProvider', () => {
   beforeEach(() => jest.resetAllMocks())

@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '@/widgets/helpers';
-import { ReactComponent, WidgetReactComponentProps } from '@/widgets/types';
+import { ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import styles from './widget.module.scss';
 import { Settings } from './settings';
 import { ChangeEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';

@@ -23,7 +23,7 @@ import { createShelfViewModelHook } from '@/ui/components/topBar/shelf/shelfView
 import { createWorktableComponent } from '@/ui/components/worktable';
 import { createWidgetLayoutComponent, createWidgetLayoutItemComponent } from '@/ui/components/worktable/widgetLayout';
 import { createWidgetLayoutViewModelHook } from '@/ui/components/worktable/widgetLayout/widgetLayoutViewModel';
-import { createWorkflowSwitcherComponent, createWorkflowSwitcherItemComponent, createWorkflowSwitcherViewModelHook } from '@/ui/components/workflowSwitcher';
+import { createWorkflowSwitcherComponent, createWorkflowSwitcherViewModelHook } from '@/ui/components/workflowSwitcher';
 import { createProjectSwitcherComponent, createProjectSwitcherViewModelHook } from '@/ui/components/topBar/projectSwitcher';
 import { createSwitchProjectUseCase } from '@/application/useCases/projectSwitcher/switchProject';
 import { createSwitchWorkflowUseCase } from '@/application/useCases/workflowSwitcher/switchWorkflow';
@@ -47,7 +47,6 @@ import { entityStateActions } from '@/base/state/actions';
 import { createAppStateHook } from '@/ui/hooks/appState';
 import { createAppStateStorage } from '@/data/appStateStorage';
 import { createAppDataStorage } from '@/infra/dataStorage/appDataStorage';
-import { createClickActionBarItemUseCase } from '@/application/useCases/actionBar/clickActionBarItem';
 import { createOsContextMenuProvider } from '@/infra/contextMenuProvider/osContextMenuProvider';
 import { createClickContextMenuItemUseCase } from '@/application/useCases/contextMenu/clickContextMenuItem';
 import { createShowWidgetContextMenuUseCase } from '@/application/useCases/widget/showWidgetContextMenu';
@@ -80,9 +79,6 @@ import { createUpdateProjectsOrderInProjectManagerUseCase } from '@/application/
 import { createCloseProjectManagerUseCase } from '@/application/useCases/projectManager/closeProjectManager';
 import { createManageProjectsButtonComponent, createManageProjectsButtonViewModelHook } from '@/ui/components/topBar/manageProjectsButton';
 import { createOpenProjectManagerUseCase } from '@/application/useCases/projectManager/openProjectManager';
-import { createActionBarComponent, createActionBarViewModelHook } from '@/ui/components/basic/actionBar';
-import { createProjectManagerListComponent } from '@/ui/components/projectManager/projectManagerList';
-import { createProjectManagerListItemComponent } from '@/ui/components/projectManager/projectManagerList/projectManagerListItem';
 import { createAddWorkflowUseCase } from '@/application/useCases/workflowSwitcher/addWorkflow';
 import { createRenameWorkflowUseCase } from '@/application/useCases/workflowSwitcher/renameWorkflow';
 import { createDeleteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/deleteWorkflow';
@@ -112,6 +108,7 @@ import { createOpenAboutUseCase } from '@/application/useCases/about/openAbout';
 import { createGetAboutInfoUseCase } from '@/application/useCases/about/getAboutInfo';
 import { createProductInfoProvider } from '@/infra/productInfoProvider/productInfoProvider';
 import { createOpenSponsorshipUrlUseCase } from '@/application/useCases/about/openSponsorshipUrl';
+import { createTerminalProvider } from '@/infra/terminalProvider/terminalProvider';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -137,7 +134,7 @@ function createStore() {
         appConfig: null
       },
       palette: {
-        widgetTypeIds: ['note', 'webpage']
+        widgetTypeIds: ['commander', 'note', 'webpage']
       },
       projectManager: {
         currentProjectId: '',
@@ -182,6 +179,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     idGenerator: uuidv4IdGenerator
   }
 
+  const osDialogProvider = createOsDialogProvider();
+
   const dragWidgetFromWorktableLayoutUseCase = createDragWidgetFromWorktableLayoutUseCase(deps);
   const dragOverWorktableLayoutUseCase = createDragOverWorktableLayoutUseCase(deps);
   const dropOnWorktableLayoutUseCase = createDropOnWorktableLayoutUseCase(deps);
@@ -199,7 +198,10 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const openWidgetSettingsUseCase = createOpenWidgetSettingsUseCase(deps);
   const closeWidgetSettingsUseCase = createCloseWidgetSettingsUseCase(deps);
   const saveWidgetSettingsUseCase = createSaveWidgetSettingsUseCase(deps);
-  const getWidgetSettingsApiUseCase = createGetWidgetSettingsApiUseCase(deps);
+  const getWidgetSettingsApiUseCase = createGetWidgetSettingsApiUseCase({
+    ...deps,
+    dialogProvider: osDialogProvider
+  });
   const updateWidgetCoreSettingsUseCase = createUpdateWidgetCoreSettingsUseCase(deps);
 
   const resizeLayoutItemUseCase = createResizeLayoutItemUseCase(deps);
@@ -207,8 +209,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const resizeLayoutItemEndUseCase = createResizeLayoutItemEndUseCase(deps);
 
   const switchProjectUseCase = createSwitchProjectUseCase(deps);
-
-  const osDialogProvider = createOsDialogProvider();
 
   const switchWorkflowUseCase = createSwitchWorkflowUseCase(deps);
   const addWorkflowUseCase = createAddWorkflowUseCase(deps);
@@ -228,8 +228,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const clickContextMenuItemUseCase = createClickContextMenuItemUseCase();
   const osContextMenuProvider = createOsContextMenuProvider({ clickContextMenuItemUseCase });
 
-  const clickActionBarItemUseCase = createClickActionBarItemUseCase(deps);
-
   const showWidgetContextMenuUseCase = createShowWidgetContextMenuUseCase({
     ...deps,
     contextMenuProvider: osContextMenuProvider,
@@ -239,11 +237,13 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const shellProvider = createShellProvider();
   const processProvider = await createProcessProvider();
   const widgetDataStorageManager = createObjectManager(async widgetId => prepareDataStorageForRenderer(createWidgetDataStorage(widgetId)))
+  const terminalProvider = createTerminalProvider();
   const getWidgetApiUseCase = createGetWidgetApiUseCase({
     clipboardProvider,
     processProvider,
     shellProvider,
     widgetDataStorageManager,
+    terminalProvider,
   })
   const deleteWidgetUseCase = createDeleteWidgetUseCase({
     ...deps,
@@ -313,7 +313,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     globalShortcut: globalShortcutProvider
   })
 
-
   return {
     dragWidgetFromWorktableLayoutUseCase,
     dragOverWorktableLayoutUseCase,
@@ -350,8 +349,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     toggleMenuBarUseCase,
 
     clickContextMenuItemUseCase,
-
-    clickActionBarItemUseCase,
 
     showWidgetContextMenuUseCase,
 
@@ -401,11 +398,6 @@ function createUI(stateHooks: ReturnType<typeof createUiHooks>, useCases: Awaite
     ...useCases,
   }
 
-  const useActionBarViewModel = createActionBarViewModelHook(deps);
-  const ActionBar = createActionBarComponent({
-    useActionBarViewModel
-  })
-
   const useProjectSwitcherViewModel = createProjectSwitcherViewModelHook(deps);
   const ProjectSwitcher = createProjectSwitcherComponent({
     useProjectSwitcherViewModel
@@ -418,7 +410,6 @@ function createUI(stateHooks: ReturnType<typeof createUiHooks>, useCases: Awaite
 
   const useWidgetViewModel = createWidgetViewModelHook(deps);
   const Widget = createWidgetComponent({
-    ActionBar,
     useWidgetViewModel
   });
 
@@ -475,13 +466,8 @@ function createUI(stateHooks: ReturnType<typeof createUiHooks>, useCases: Awaite
     useWorkflowSettingsViewModel
   })
 
-  const WorkflowSwitcherItem = createWorkflowSwitcherItemComponent({
-    ActionBar
-  })
   const useWorkflowSwitcherViewModel = createWorkflowSwitcherViewModelHook(deps);
   const WorkflowSwitcher = createWorkflowSwitcherComponent({
-    ActionBar,
-    WorkflowSwitcherItem,
     useWorkflowSwitcherViewModel
   })
   const useWorktableViewModel = createWorktableViewModelHook(deps);
@@ -490,15 +476,8 @@ function createUI(stateHooks: ReturnType<typeof createUiHooks>, useCases: Awaite
     useWorktableViewModel
   });
 
-  const ProjectManagerListItem = createProjectManagerListItemComponent({
-    ActionBar
-  })
-  const ProjectManagerList = createProjectManagerListComponent({
-    ProjectManagerListItem
-  })
   const useProjectManagerViewModel = createProjectManagerViewModelHook(deps);
   const ProjectManager = createProjectManagerComponent({
-    ProjectManagerList,
     useProjectManagerViewModel
   })
 

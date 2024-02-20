@@ -15,6 +15,7 @@ const appState: AppState = {
     workflows: {}
   },
   ui: {
+    about: false,
     dragDrop: {},
     editMode: false,
     menuBar: true,

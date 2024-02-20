@@ -4,7 +4,7 @@
  */
 
 import { canGoBack, canGoForward, canGoHome, copyCurrentAddress, copyLinkAddress, goBack, goForward, goHome, labelCopy, labelCopyCurrentAddress, labelCopyImageAddress, labelCopyLinkAddress, labelCut, labelGoBack, labelGoForward, labelGoHome, labelOpenInBrowser, labelOpenLinkInBrowser, labelPaste, labelPasteAsPlainText, labelPrintPage, labelRedo, labelRefresh, labelSaveAs, labelSaveImageAs, labelSaveLinkAs, labelSelectAll, labelUndo, openCurrentInBrowser, openLinkInBrowser, printPage, refresh, saveLink, savePage } from './actions';
-import { WidgetApi, WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/types';
+import { WidgetApi, WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
 import { ContextMenuParams } from 'electron';
 
 function isElectronContextMenuParams(data: unknown): data is ContextMenuParams {

@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { EntityId, WidgetEnv } from '@/widgets/types';
+import { EntityId, WidgetEnv } from '@/widgets/appModules';
 import { SettingsSessionPersist, SettingsSessionScope } from '@/widgets/webpage/settings';
 
 export function createPartition(sessionPersist: SettingsSessionPersist, sessionScope: SettingsSessionScope, env: WidgetEnv, widgetId: EntityId) {

@@ -3,11 +3,13 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { WidgetSettings, WidgetType } from '@/widgets/types'
+import { WidgetSettings, WidgetType } from '@/widgets/appModules'
+import commander from './commander';
 import note from './note';
 import webpage from './webpage';
 
 const widgetTypes = [
+  commander,
   note,
   webpage,
 ] as unknown as WidgetType<WidgetSettings>[];

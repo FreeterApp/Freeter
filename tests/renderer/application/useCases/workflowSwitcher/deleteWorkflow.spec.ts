@@ -9,20 +9,20 @@ import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { fixtureProjectAInColl, fixtureWorkflowAInColl, fixtureWorkflowBInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
-import { DialogProvider } from '@/application/interfaces/dialogProvider';
 import { MessageBoxConfig, MessageBoxResult } from '@common/base/dialog';
 import { deleteWorkflowsFromAppState } from '@/base/state/actions';
+import { mockDialogProvider } from '@tests/infra/mocks/dialogProvider';
 
 jest.mock('@/base/state/actions');
 const mockedDeleteWorkflowsFromAppState = jest.mocked(deleteWorkflowsFromAppState);
 
 async function setup(initState: AppState, opts?: { mockShowMessageBoxRes?: number, mockDeleteWorkflowsFromAppStateRes?: AppState }) {
   const [appStore] = await fixtureAppStore(initState);
-  const dialogProviderMock: DialogProvider = {
+  const dialogProviderMock = mockDialogProvider({
     showMessageBox: jest.fn().mockResolvedValue({
       response: opts?.mockShowMessageBoxRes !== undefined ? opts.mockShowMessageBoxRes : 1
     } as MessageBoxResult)
-  }
+  })
 
   if (opts?.mockDeleteWorkflowsFromAppStateRes) {
     mockedDeleteWorkflowsFromAppState.mockClear();

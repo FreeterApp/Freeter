@@ -12,7 +12,7 @@ import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureWidgetTypeAInColl, fixtureWidgetTypeBInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureWidgetSettings } from '@tests/base/state/fixtures/widgetSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { SettingsEditorReactComponent } from '@/widgets/types';
+import { SettingsEditorReactComponent } from '@/widgets/appModules';
 import { AppState } from '@/base/state/app';
 import userEvent from '@testing-library/user-event';
 

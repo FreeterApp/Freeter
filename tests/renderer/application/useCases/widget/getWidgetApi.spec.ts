@@ -7,6 +7,7 @@ import { ClipboardProvider } from '@/application/interfaces/clipboardProvider';
 import { DataStorageRenderer } from '@/application/interfaces/dataStorage';
 import { ProcessProvider } from '@/application/interfaces/processProvider';
 import { ShellProvider } from '@/application/interfaces/shellProvider';
+import { TerminalProvider } from '@/application/interfaces/terminalProvider';
 import { createGetWidgetApiUseCase } from '@/application/useCases/widget/getWidgetApi';
 import { ActionBarItems } from '@/base/actionBar';
 import { WidgetContextMenuFactory } from '@/base/widget';
@@ -39,11 +40,16 @@ function setup() {
   };
   const widgetDataStorageManager: ObjectManager<jest.MockedObject<DataStorageRenderer>> = createObjectManager(async () => widgetDataStorage)
 
+  const terminalProvider: jest.MockedObject<TerminalProvider> = {
+    execCmdLines: jest.fn()
+  }
+
   const getWidgetApiUseCase = createGetWidgetApiUseCase({
     clipboardProvider,
     processProvider,
     shellProvider,
     widgetDataStorageManager,
+    terminalProvider,
   });
   return {
     clipboardProvider,
@@ -51,6 +57,7 @@ function setup() {
     shellProvider,
     widgetDataStorage,
     widgetDataStorageManager,
+    terminalProvider,
 
     getWidgetApiUseCase
   }
@@ -189,6 +196,19 @@ describe('getWidgetApiUseCase()', () => {
     widgetApi.shell.openExternalUrl('test://url');
     expect(shellProvider.openExternal).toBeCalledTimes(1);
     expect(shellProvider.openExternal).toBeCalledWith('test://url');
+  })
+
+  it('should correctly setup terminal module', () => {
+    const {
+      getWidgetApiUseCase,
+      terminalProvider
+    } = setup()
+
+    const widgetApi = getWidgetApiUseCase(widgetId, false, () => undefined, () => undefined, ['terminal']);
+
+    widgetApi.terminal.execCmdLines(['cmd1', 'cmd2'], 'cwd');
+    expect(terminalProvider.execCmdLines).toBeCalledTimes(1);
+    expect(terminalProvider.execCmdLines).toBeCalledWith(['cmd1', 'cmd2'], 'cwd');
   })
 
 })

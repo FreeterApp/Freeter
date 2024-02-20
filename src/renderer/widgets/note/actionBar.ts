@@ -5,7 +5,7 @@
 
 import { ActionBarItems } from '@/base/actionBar';
 import { canCopyFullText, copyFullText, labelCopyFullText } from './actions';
-import { WidgetApi } from '@/widgets/types';
+import { WidgetApi } from '@/widgets/appModules';
 import { copyFullTextSvg } from './icons';
 
 export function createActionBarItems(elTextArea: HTMLTextAreaElement | null, widgetApi: WidgetApi): ActionBarItems {

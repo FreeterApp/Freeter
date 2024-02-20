@@ -8,7 +8,7 @@ import styles from './button.module.scss';
 import clsx from 'clsx';
 
 export interface ButtonProps extends Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, 'aria-pressed'> {
-  size?: 'S' | 'M' | 'L';
+  size?: 'S' | 'M' | 'L' | 'Fill';
   iconSvg?: string;
   caption?: string;
   pressed?: boolean | undefined;
@@ -32,8 +32,10 @@ export const Button = ({
       size === 'L' && styles['size-l'],
       size === 'M' && styles['size-m'],
       size === 'S' && styles['size-s'],
+      size === 'Fill' && styles['size-fill'],
       primary && styles['primary'],
       !iconSvg && caption && styles['only-caption'],
+      iconSvg && !caption && styles['only-icon'],
       className
     )}
     aria-pressed={pressed}

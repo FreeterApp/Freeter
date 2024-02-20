@@ -5,9 +5,9 @@
 
 import { ipcAppDataStorageClearChannel, ipcAppDataStorageDeleteChannel, ipcAppDataStorageGetKeysChannel, ipcAppDataStorageGetTextChannel, ipcAppDataStorageSetTextChannel } from '@common/ipc/channels';
 import { createAppDataStorage } from '@/infra/dataStorage/appDataStorage';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
-jest.mock('@/infra/globals');
+jest.mock('@/infra/mainApi/mainApi');
 
 describe('AppDataStorage', () => {
   beforeEach(() => jest.resetAllMocks())

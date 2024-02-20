@@ -12,13 +12,11 @@ import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureWidgetTypeAInColl, fixtureWidgetTypeBInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { ActionBarItems, ContextMenuEvent, WidgetReactComponent } from '@/widgets/types';
+import { ActionBarItems, ContextMenuEvent, WidgetReactComponent } from '@/widgets/appModules';
 import { AppState } from '@/base/state/app';
 import { WidgetApi, WidgetApiModuleName } from '@/base/widgetApi';
 import { useEffect } from 'react';
 import { fixtureActionBarItemA, fixtureActionBarItemB, fixtureActionBarItemC, fixtureActionBarItemD } from '@tests/base/fixtures/actionBar';
-import { createActionBarComponent, createActionBarViewModelHook } from '@/ui/components/basic/actionBar';
-import { createClickActionBarItemUseCase } from '@/application/useCases/actionBar/clickActionBarItem';
 import { fixtureDragDropNotDragging } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureWorktableNotResizing, fixtureWorktableResizingItem } from '@tests/base/state/fixtures/worktable';
 
@@ -57,9 +55,6 @@ async function setup({
     }
   );
 
-  const ActionBar = createActionBarComponent({
-    useActionBarViewModel: createActionBarViewModelHook({clickActionBarItemUseCase: createClickActionBarItemUseCase({})})
-  })
   const useWidgetViewModel = createWidgetViewModelHook({
     useAppState,
     openWidgetSettingsUseCase,
@@ -68,7 +63,6 @@ async function setup({
     getWidgetApiUseCase
   })
   const Widget = createWidgetComponent({
-    ActionBar,
     useWidgetViewModel
   })
   const comp = await waitFor(() => render(

@@ -5,7 +5,7 @@
 
 import { IpcClickAppMenuActionArgs, IpcSetAppMenuArgs, IpcSetAppMenuAutoHideArgs, IpcSetAppMenuAutoHideRes, IpcSetAppMenuRes, ipcClickAppMenuActionChannel, ipcSetAppMenuAutoHideChannel, ipcSetAppMenuChannel } from '@common/ipc/channels';
 import { AppMenuProvider } from '@/application/interfaces/appMenuProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 import { prepareMenuItemsForIpc } from '@/infra/ipc/prepareMenuItemsForIpc';
 import { ClickAppMenuItemUseCase } from '@/application/useCases/appMenu/clickAppMenuItem';
 import { MenuItem } from '@common/base/menu';

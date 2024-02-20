@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { GlobalShortcutProvider } from '@/application/interfaces/GlobalShortcutProvider';
+import { GlobalShortcutProvider } from '@/application/interfaces/globalShortcutProvider';
 import { createInitMainShortcutUseCase } from '@/application/useCases/globalShortcut/initMainShortcut';
 import { AppState } from '@/base/state/app';
 import { fixtureAppConfig } from '@tests/base/fixtures/appConfig';

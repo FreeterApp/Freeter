@@ -4,7 +4,7 @@
  */
 
 import { Controller } from '@/controllers/controller';
-import { ipcShellOpenExternalUrlArgs, ipcShellOpenExternalUrlChannel, ipcShellOpenExternalUrlRes } from '@common/ipc/channels';
+import { IpcShellOpenExternalUrlArgs, ipcShellOpenExternalUrlChannel, IpcShellOpenExternalUrlRes } from '@common/ipc/channels';
 import { OpenExternalUrlUseCase } from '@/application/useCases/shell/openExternalUrl';
 
 type Deps = {
@@ -14,7 +14,7 @@ type Deps = {
 export function createShellControllers({
   openExternalUrlUseCase,
 }: Deps): [
-    Controller<ipcShellOpenExternalUrlArgs, ipcShellOpenExternalUrlRes>,
+    Controller<IpcShellOpenExternalUrlArgs, IpcShellOpenExternalUrlRes>,
   ] {
   return [{
     channel: ipcShellOpenExternalUrlChannel,

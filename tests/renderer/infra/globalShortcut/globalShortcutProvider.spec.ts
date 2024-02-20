@@ -5,9 +5,9 @@
 
 import { ipcSetMainShortcutChannel } from '@common/ipc/channels';
 import { createGlobalShortcutProvider } from '@/infra/globalShortcut/globalShortcutProvider';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
-jest.mock('@/infra/globals');
+jest.mock('@/infra/mainApi/mainApi');
 
 function setup() {
   const globalShortcutProvider = createGlobalShortcutProvider();

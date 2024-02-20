@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { WidgetApi } from '@/widgets/types';
+import { WidgetApi } from '@/widgets/appModules';
 
 export const labelCopyFullText = 'Copy Full Text';
 export const labelUndo = 'Undo';

@@ -3,18 +3,16 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ActionBarProps } from '@/ui/components/basic/actionBar';
+import { ActionBar } from '@/ui/components/basic/actionBar';
 import { WidgetProps, WidgetViewModelHook } from '@/ui/components/widget/widgetViewModel';
 import styles from './widget.module.scss';
 import clsx from 'clsx';
 
 type Deps = {
-  ActionBar: React.FC<ActionBarProps>;
   useWidgetViewModel: WidgetViewModelHook;
 }
 
 export function createWidgetComponent({
-  ActionBar,
   useWidgetViewModel
 }: Deps) {
   function Component(props: WidgetProps) {

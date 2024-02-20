@@ -5,9 +5,9 @@
 
 import { ipcWidgetDataStorageClearChannel, ipcWidgetDataStorageDeleteChannel, ipcWidgetDataStorageGetKeysChannel, ipcWidgetDataStorageGetTextChannel, ipcWidgetDataStorageSetTextChannel } from '@common/ipc/channels';
 import { createWidgetDataStorage } from '@/infra/dataStorage/widgetDataStorage';
-import { electronIpcRenderer } from '@/infra/globals';
+import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
-jest.mock('@/infra/globals');
+jest.mock('@/infra/mainApi/mainApi');
 
 describe('WidgetDataStorage', () => {
   beforeEach(() => jest.resetAllMocks())

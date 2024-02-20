@@ -59,6 +59,13 @@ import { createSetTrayMenuUseCase } from '@/application/useCases/tray/setTrayMen
 import { createTrayMenuControllers } from '@/controllers/trayMenu';
 import { createBrowserWindowControllers } from '@/controllers/browserWindow';
 import { createShowBrowserWindowUseCase } from '@/application/useCases/browserWindow/showBrowserWindow';
+import { createShowOpenFileDialogUseCase } from '@/application/useCases/dialog/showOpenFileDialog';
+import { createShowSaveFileDialogUseCase } from '@/application/useCases/dialog/showSaveFileDialog';
+import { createShowOpenDirDialogUseCase } from '@/application/useCases/dialog/showOpenDirDialog';
+import { createTerminalControllers } from '@/controllers/terminal';
+import { createExecCmdLinesInTerminalUseCase } from '@/application/useCases/terminal/execCmdLinesInTerminal';
+import { createAppsProvider } from '@/infra/appsProvider/appsProvider';
+import { createChildProcessProvider } from '@/infra/childProcessProvider/childProcessProvider';
 
 let appWindow: BrowserWindow | null = null; // ref to the app window
 
@@ -122,6 +129,9 @@ if (!app.requestSingleInstanceLock()) {
 
     const dialogProvider = createDialogProvider();
     const dialogShowMessageBoxUseCase = createShowMessageBoxUseCase({ dialogProvider });
+    const showOpenFileDialogUseCase = createShowOpenFileDialogUseCase({ dialogProvider });
+    const showSaveFileDialogUseCase = createShowSaveFileDialogUseCase({ dialogProvider });
+    const showOpenDirDialogUseCase = createShowOpenDirDialogUseCase({ dialogProvider });
 
     const appMenuProvider = createAppMenuProvider();
     const setAppMenuUseCase = createSetAppMenuUseCase({ appMenuProvider });
@@ -134,6 +144,10 @@ if (!app.requestSingleInstanceLock()) {
     const initTrayUseCase = createInitTrayUseCase({ trayProvider, setTrayMenuUseCase });
 
     const showBrowserWindowUseCase = createShowBrowserWindowUseCase();
+
+    const appsProvider = createAppsProvider();
+    const childProcessProvider = createChildProcessProvider();
+    const execCmdLinesInTerminalUseCase = createExecCmdLinesInTerminalUseCase({ appsProvider, childProcessProvider, processProvider })
 
     registerControllers(ipcMain, [
       ...createAppDataStorageControllers({ getTextFromAppDataStorageUseCase, setTextInAppDataStorageUseCase }),
@@ -148,11 +162,17 @@ if (!app.requestSingleInstanceLock()) {
       ...createClipboardControllers({ writeBookmarkIntoClipboardUseCase, writeTextIntoClipboardUseCase }),
       ...createShellControllers({ openExternalUrlUseCase }),
       ...createProcessControllers({ getProcessInfoUseCase }),
-      ...createDialogControllers({ showMessageBoxUseCase: dialogShowMessageBoxUseCase }),
+      ...createDialogControllers({
+        showMessageBoxUseCase: dialogShowMessageBoxUseCase,
+        showOpenDirDialogUseCase,
+        showOpenFileDialogUseCase,
+        showSaveFileDialogUseCase
+      }),
       ...createAppMenuControllers({ setAppMenuUseCase, setAppMenuAutoHideUseCase }),
       ...createGlobalShortcutControllers({ setMainShortcutUseCase }),
       ...createTrayMenuControllers({ setTrayMenuUseCase }),
-      ...createBrowserWindowControllers({ showBrowserWindowUseCase })
+      ...createBrowserWindowControllers({ showBrowserWindowUseCase }),
+      ...createTerminalControllers({ execCmdLinesInTerminalUseCase })
     ])
 
     const [windowStore] = createWindowStore({

@@ -3,28 +3,18 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { ActionBarItems } from '@/base/actionBar';
 import { fixtureActionBarItemA, fixtureActionBarItemB, fixtureActionBarItemC, fixtureActionBarItemD } from '@tests/base/fixtures/actionBar';
-import { createActionBarComponent, createActionBarViewModelHook } from '@/ui/components/basic/actionBar';
+import { ActionBar } from '@/ui/components/basic/actionBar';
+import userEvent from '@testing-library/user-event';
 
 type SetupProps = {
   actionBarItems: ActionBarItems;
-  mocks?: {
-    clickActionBarItemUseCase?: jest.Mock;
-  }
 }
 async function setup({
   actionBarItems,
 }: SetupProps) {
-  const clickActionBarItemUseCase = jest.fn();
-
-  const useActionBarViewModel = createActionBarViewModelHook({
-    clickActionBarItemUseCase
-  })
-  const ActionBar = createActionBarComponent({
-    useActionBarViewModel
-  })
   const comp = render(
     <ActionBar
       actionBarItems={actionBarItems}
@@ -33,7 +23,6 @@ async function setup({
 
   return {
     comp,
-    clickActionBarItemUseCase,
   }
 }
 
@@ -86,33 +75,34 @@ describe('<ActionBar />', () => {
     expect(screen.queryAllByRole('button', {name: testTitle}).length).toBe(1);
   })
 
-  it('should not call clickActionBarItemUseCase when clicking a disabled ActionBarItem', async () => {
+  it('should not exec the doAction when clicking a disabled ActionBarItem', async () => {
     const testTitle = 'TEST TITLE';
-    const {clickActionBarItemUseCase} = await setup({
-      actionBarItems: [fixtureActionBarItemA({title: testTitle, enabled: false})]
+    const action = jest.fn();
+    await setup({
+      actionBarItems: [fixtureActionBarItemA({title: testTitle, enabled: false, doAction: () => action()})]
     });
 
     const elButton = screen.getByTitle(testTitle);
-    fireEvent.click(elButton);
+    await userEvent.click(elButton);
 
-    expect(clickActionBarItemUseCase).not.toBeCalled();
+    expect(action).not.toBeCalled();
   })
 
-  it('should call clickActionBarItemUseCase usecase with right params when clicking an ActionBarItem', async () => {
+  it('should exec the doAction when clicking an ActionBarItem', async () => {
     const testTitle = 'TEST TITLE';
     const actionId = 'ACTION-ID';
+    const action = jest.fn();
     const actionBarItems: ActionBarItems = [
       fixtureActionBarItemA(),
-      fixtureActionBarItemB({title: testTitle, id: actionId})
+      fixtureActionBarItemB({title: testTitle, id: actionId, doAction: () => action()})
     ]
-    const {clickActionBarItemUseCase} = await setup({
+    await setup({
       actionBarItems
     });
 
     const elButton = screen.getByTitle(testTitle);
-    fireEvent.click(elButton);
+    await userEvent.click(elButton);
 
-    expect(clickActionBarItemUseCase).toBeCalledTimes(1);
-    expect(clickActionBarItemUseCase).toBeCalledWith(actionBarItems, actionId);
+    expect(action).toBeCalledTimes(1);
   })
 })

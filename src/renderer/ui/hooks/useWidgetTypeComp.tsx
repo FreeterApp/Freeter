@@ -4,7 +4,7 @@
  */
 
 import { WidgetType } from '@/base/widgetType';
-import { ReactComponent, SettingsEditorReactComponentProps, WidgetReactComponentProps } from '@/widgets/types';
+import { ReactComponent, SettingsEditorReactComponentProps, WidgetReactComponentProps } from '@/widgets/appModules';
 import { FC, useMemo } from 'react';
 
 export function useWidgetTypeComp(widgetType?: WidgetType, comp?: keyof Pick<WidgetType, 'settingsEditorComp'>): FC<SettingsEditorReactComponentProps>;
