@@ -6,6 +6,7 @@
 import { Button, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings } from './settings';
 import { execCommandSvg } from '@/widgets/commander/icons';
+import styles from './widget.module.scss';
 
 function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) {
   const { terminal } = widgetApi;
@@ -19,7 +20,9 @@ function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) 
         title={`Execute Command-line${cmds.length>1 ? 's' : ''}`}
         size='Fill'
       />
-    : 'Command-lines not specified.';
+    : <div className={styles['not-configured']}>
+      Command-lines not specified.
+    </div>
 }
 
 export const widgetComp: ReactComponent<WidgetReactComponentProps<Settings>> = {

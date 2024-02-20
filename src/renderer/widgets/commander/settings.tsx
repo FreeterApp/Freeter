@@ -69,14 +69,16 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
             />
           </SettingRow>
         ))}
-        <Button
-          onClick={_ => {
-            addCmd(settings);
-            setTriggerLastCmdFocus(true);
-          }}
-          caption='Add a command-line'
-          primary={true}
-        ></Button>
+        <div>
+          <Button
+            onClick={_ => {
+              addCmd(settings);
+              setTriggerLastCmdFocus(true);
+            }}
+            caption='Add a command-line'
+            primary={true}
+          ></Button>
+        </div>
       </SettingBlock>
 
       <SettingBlock
