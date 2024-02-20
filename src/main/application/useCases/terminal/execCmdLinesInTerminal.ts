@@ -46,7 +46,7 @@ export function createExecCmdLinesInTerminalUseCase({ appsProvider, childProcess
       break;
     }
     case 'darwin': {
-      const argsFactory = createArgsFactoryToExecCmdLineInMacTerminal();
+      const argsFactory = createArgsFactoryToExecCmdLineInMacTerminal(term);
       exec = (cmdLine, cwd) => {
         const [cmd, ...args] = argsFactory(cmdLine, cwd);
         spawnDetached(cmd, args, {

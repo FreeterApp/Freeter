@@ -35,19 +35,26 @@ export function createArgsFactoryToExecCmdLineInWinTerminal(terminal: string) {
   return factory;
 }
 
-export function createArgsFactoryToExecCmdLineInMacTerminal() {
-  const factory: (cmdLine: string, cwd?: string) => string[] = (cmdLine, cwd) => {
-    const scriptCmdLine = escAppleScriptCmdLine(`${cwd ? `cd ${cwd} && ` : ''}${cmdLine}`);
-    // Without 'launch' Terminal activation will cause it to start with an empty window, if it is not running
-    const script = `\
-      tell application "Terminal"\n\
-        launch\n\
-        activate\n\
-        do script "${scriptCmdLine}"\n\
-      end tell\n\
-    `;
+export function createArgsFactoryToExecCmdLineInMacTerminal(terminal: string) {
+  let factory: (cmdLine: string, cwd?: string) => string[];
 
-    return ['osascript', '-e', script]
+  switch (terminal) {
+    default: {
+      factory = (cmdLine, cwd) => {
+        const scriptCmdLine = escAppleScriptCmdLine(`${cwd ? `cd ${cwd} && ` : ''}${cmdLine}`);
+        // Without 'launch' Terminal activation will cause it to start with an empty window, if it is not running
+        const script = `\
+          tell application "Terminal"\n\
+            launch\n\
+            activate\n\
+            do script "${scriptCmdLine}"\n\
+          end tell\n\
+        `;
+
+        return ['osascript', '-e', script]
+      }
+
+    }
   }
 
   return factory;
