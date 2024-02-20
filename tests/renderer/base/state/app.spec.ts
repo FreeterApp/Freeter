@@ -4,7 +4,7 @@
  */
 
 import { AppState, initAppStateWidgets, createPersistentAppState, mergeAppStateWithPersistentAppState, PersistentAppState } from '@/base/state/app';
-import { CreateSettingsState } from '@/widgets/types';
+import { CreateSettingsState } from '@/widgets/appModules';
 import { fixtureWidgetA } from '@tests/base/fixtures/widget';
 import { fixtureAppConfig } from '@tests/base/fixtures/appConfig';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';

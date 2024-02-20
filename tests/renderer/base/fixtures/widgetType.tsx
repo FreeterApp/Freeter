@@ -4,7 +4,7 @@
  */
 
 import { WidgetSettings, WidgetType } from '@/base/widgetType';
-import { WidgetReactComponent } from '@/widgets/types';
+import { WidgetReactComponent } from '@/widgets/appModules';
 import { deepFreeze } from '@common/helpers/deepFreeze';
 
 export const widgetTypes: WidgetType[] = [{
