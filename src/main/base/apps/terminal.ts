@@ -3,9 +3,9 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-const escDblQuotes = (str: string) => str.replaceAll('"', '\\"');
-const escBashCmdLine = (str: string) => str.replace(/[\\"]/g, '\\$&');
-const escAppleScriptCmdLine = escBashCmdLine;
+const escBackslashesDblQuotes = (str: string) => str.replace(/[\\"]/g, '\\$&');
+const escBashCmdLine = escBackslashesDblQuotes;
+const escAppleScriptCmdLine = escBackslashesDblQuotes;
 
 export function createArgsFactoryToExecCmdLineInLinuxTerminal(terminal: string) {
   let factory: (cmdLine: string) => string[];
@@ -28,7 +28,7 @@ export function createArgsFactoryToExecCmdLineInWinTerminal(terminal: string) {
 
   switch (terminal.toLowerCase()) {
     default: {
-      factory = cmdLine => ['cmd.exe', '/k', '/s', `"${escDblQuotes(cmdLine)}"`];
+      factory = cmdLine => ['cmd.exe', '/s', '/k', `"${cmdLine}"`];
     }
   }
 
