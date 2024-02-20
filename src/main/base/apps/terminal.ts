@@ -4,18 +4,19 @@
  */
 
 const escDblQuotes = (str: string) => str.replaceAll('"', '\\"');
-const escCmdLineSpecChars = (str: string) => str.replace(/[\\"]/g, '\\$&');
+const escBashCmdLine = (str: string) => str.replace(/[\\"]/g, '\\$&');
+const escAppleScriptCmdLine = escBashCmdLine;
 
 export function createArgsFactoryToExecCmdLineInLinuxTerminal(terminal: string) {
   let factory: (cmdLine: string) => string[];
 
   switch (terminal) {
     case 'gnome-terminal': {
-      factory = cmdLine => [terminal, '--', 'bash', '-c', `"${escDblQuotes(`${cmdLine}; exec bash`)}"`];
+      factory = cmdLine => [terminal, '--', 'bash', '-c', `"${escBashCmdLine(`${cmdLine}; exec bash`)}"`];
       break;
     }
     default: {
-      factory = cmdLine => [terminal, '-e', 'bash', '-c', `"${escDblQuotes(`${cmdLine}; exec bash`)}"`];
+      factory = cmdLine => [terminal, '-e', 'bash', '-c', `"${escBashCmdLine(`${cmdLine}; exec bash`)}"`];
     }
   }
 
@@ -36,7 +37,7 @@ export function createArgsFactoryToExecCmdLineInWinTerminal(terminal: string) {
 
 export function createArgsFactoryToExecCmdLineInMacTerminal() {
   const factory: (cmdLine: string, cwd?: string) => string[] = (cmdLine, cwd) => {
-    const scriptCmdLine = escCmdLineSpecChars(`${cwd ? `cd ${cwd} && ` : ''}${cmdLine}`);
+    const scriptCmdLine = escAppleScriptCmdLine(`${cwd ? `cd ${cwd} && ` : ''}${cmdLine}`);
     // Without 'launch' Terminal activation will cause it to start with an empty window, if it is not running
     const script = `\
       tell application "Terminal"\n\
