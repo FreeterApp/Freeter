@@ -4,6 +4,7 @@
  */
 
 const escDblQuotes = (str: string) => str.replaceAll('"', '\\"');
+const escCmdLineSpecChars = (str: string) => str.replace(/[\\"]/g, '\\$&');
 
 export function createArgsFactoryToExecCmdLineInLinuxTerminal(terminal: string) {
   let factory: (cmdLine: string) => string[];
@@ -35,19 +36,14 @@ export function createArgsFactoryToExecCmdLineInWinTerminal(terminal: string) {
 
 export function createArgsFactoryToExecCmdLineInMacTerminal() {
   const factory: (cmdLine: string, cwd?: string) => string[] = (cmdLine, cwd) => {
-    const scriptCmdLine = escDblQuotes(`${cwd ? `cd ${cwd} && ` : ''}${cmdLine}`);
+    const scriptCmdLine = escCmdLineSpecChars(`${cwd ? `cd ${cwd} && ` : ''}${cmdLine}`);
+    // Without 'launch' Terminal activation will cause it to start with an empty window, if it is not running
     const script = `\
-      if application "Terminal" is running then\n\
-        tell application "Terminal"\n\
-            activate\n\
-            do script "${scriptCmdLine}"\n\
-        end tell\n\
-      else\n\
-        tell application "Terminal"\n\
-            activate\n\
-            do script "${scriptCmdLine}" in window 1\n\
-        end tell\n\
-      end if\n\
+      tell application "Terminal"\n\
+        launch\n\
+        activate\n\
+        do script "${scriptCmdLine}"\n\
+      end tell\n\
     `;
 
     return ['osascript', '-e', script]
