@@ -5,7 +5,7 @@
 
 import { ipcSetAppMenuAutoHideChannel, ipcSetAppMenuChannel } from '@common/ipc/channels';
 import { createAppMenuControllers } from '@/controllers/appMenu';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 import { MenuItemsIpc } from '@common/base/menu';
 import { fixtureMenuItemIpcA, fixtureMenuItemIpcB } from '@testscommon/base/fixtures/menu';
 import { WebContents } from '@/application/interfaces/webContents';

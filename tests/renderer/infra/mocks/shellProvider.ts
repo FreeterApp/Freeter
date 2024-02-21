@@ -3,12 +3,11 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import Electron from 'electron';
 import { ShellProvider } from '@/application/interfaces/shellProvider';
 
-export function createShellProvider(): ShellProvider {
-  return {
-    openExternal: (url) => Electron.shell.openExternal(url),
-    openPath: (path) => Electron.shell.openPath(path)
-  }
+const shellProvider: ShellProvider = {
+  openExternal: jest.fn(),
+  openPath: jest.fn()
 }
+
+export const mockShellProvider = (props: Partial<ShellProvider>) => ({ ...shellProvider, ...props });

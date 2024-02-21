@@ -5,11 +5,13 @@
 
 import { WidgetSettings, WidgetType } from '@/widgets/appModules'
 import commander from './commander';
+import fileOpener from './file-opener';
 import note from './note';
 import webpage from './webpage';
 
 const widgetTypes = [
   commander,
+  fileOpener,
   note,
   webpage,
 ] as unknown as WidgetType<WidgetSettings>[];

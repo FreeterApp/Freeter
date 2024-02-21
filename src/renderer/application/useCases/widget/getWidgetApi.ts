@@ -54,7 +54,8 @@ function _createWidgetApiFactory({
         getProcessInfo: () => processProvider.getProcessInfo()
       }),
       shell: () => ({
-        openExternalUrl: (url) => shellProvider.openExternal(url)
+        openExternalUrl: (url) => shellProvider.openExternal(url),
+        openPath: (path) => shellProvider.openPath(path)
       }),
       terminal: () => ({
         execCmdLines: (cmdLines, cwd) => terminalProvider.execCmdLines(cmdLines, cwd)

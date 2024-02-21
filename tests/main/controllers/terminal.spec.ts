@@ -5,7 +5,7 @@
 
 import { ipcExecCmdLinesInTerminalChannel } from '@common/ipc/channels';
 import { createTerminalControllers } from '@/controllers/terminal';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 
 function setup() {
   const execCmdLinesInTerminalUseCase = jest.fn();

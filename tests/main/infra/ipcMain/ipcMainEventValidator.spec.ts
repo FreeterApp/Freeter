@@ -4,7 +4,7 @@
  */
 
 import { createIpcMainEventValidator } from '@/infra/ipcMain/ipcMainEventValidator'
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 
 describe('ipcMainEventValidator()', () => {
   it('should return false for invalid channels', () => {

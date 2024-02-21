@@ -4,7 +4,7 @@
  */
 
 import { registerControllers } from '@/controllers/controller';
-import { mockIpcMain } from '@tests/infra/fixtures/ipcMain';
+import { mockIpcMain } from '@tests/infra/mocks/ipcMain';
 
 function setup() {
   const ipcMain = mockIpcMain();

@@ -5,7 +5,7 @@
 
 import { ipcShowBrowserWindowChannel } from '@common/ipc/channels';
 import { createBrowserWindowControllers } from '@/controllers/browserWindow';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 import { BrowserWindow } from '@/application/interfaces/browserWindow';
 
 function setup() {

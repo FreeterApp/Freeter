@@ -3,14 +3,14 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ShellProvider } from '@/application/interfaces/shellProvider';
 import { createOpenExternalUrlUseCase } from '@/application/useCases/shell/openExternalUrl';
+import { mockShellProvider } from '@tests/infra/mocks/shellProvider';
 
 const providerRetVal = 'provider return value';
 function setup() {
-  const shellProviderMock: ShellProvider = {
+  const shellProviderMock = mockShellProvider({
     openExternal: jest.fn(async () => providerRetVal as unknown as void)
-  }
+  })
   const useCase = createOpenExternalUrlUseCase({
     shellProvider: shellProviderMock
   });

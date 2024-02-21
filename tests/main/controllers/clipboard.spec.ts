@@ -5,7 +5,7 @@
 
 import { ipcWriteBookmarkIntoClipboardChannel, ipcWriteTextIntoClipboardChannel } from '@common/ipc/channels';
 import { createClipboardControllers } from '@/controllers/clipboard';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 
 function setup() {
   const writeBookmarkIntoClipboardUseCase = jest.fn();
