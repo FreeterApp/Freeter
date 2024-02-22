@@ -5,7 +5,7 @@
 
 import { ipcGetProcessInfoChannel } from '@common/ipc/channels';
 import { createProcessControllers } from '@/controllers/process';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 import { ProcessInfo } from '@common/base/process';
 
 const getProcessInfoUseCaseRes = 'get-process-info-return-res';

@@ -5,7 +5,7 @@
 
 import { ipcSetTrayMenuChannel } from '@common/ipc/channels';
 import { createTrayMenuControllers } from '@/controllers/trayMenu';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 import { MenuItemsIpc } from '@common/base/menu';
 import { fixtureMenuItemIpcA, fixtureMenuItemIpcB } from '@testscommon/base/fixtures/menu';
 import { BrowserWindow } from '@/application/interfaces/browserWindow';

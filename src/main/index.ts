@@ -66,6 +66,7 @@ import { createTerminalControllers } from '@/controllers/terminal';
 import { createExecCmdLinesInTerminalUseCase } from '@/application/useCases/terminal/execCmdLinesInTerminal';
 import { createAppsProvider } from '@/infra/appsProvider/appsProvider';
 import { createChildProcessProvider } from '@/infra/childProcessProvider/childProcessProvider';
+import { createOpenPathUseCase } from '@/application/useCases/shell/openPath';
 
 let appWindow: BrowserWindow | null = null; // ref to the app window
 
@@ -123,6 +124,7 @@ if (!app.requestSingleInstanceLock()) {
 
     const shellProvider = createShellProvider();
     const openExternalUrlUseCase = createOpenExternalUrlUseCase({ shellProvider });
+    const openPathUseCase = createOpenPathUseCase({ shellProvider })
 
     const getProcessInfoUseCase = createGetProcessInfoUseCase({ processProvider });
     const { isLinux } = await getProcessInfoUseCase();
@@ -160,7 +162,7 @@ if (!app.requestSingleInstanceLock()) {
       }),
       ...createContextMenuControllers({ popupContextMenuUseCase }),
       ...createClipboardControllers({ writeBookmarkIntoClipboardUseCase, writeTextIntoClipboardUseCase }),
-      ...createShellControllers({ openExternalUrlUseCase }),
+      ...createShellControllers({ openExternalUrlUseCase, openPathUseCase }),
       ...createProcessControllers({ getProcessInfoUseCase }),
       ...createDialogControllers({
         showMessageBoxUseCase: dialogShowMessageBoxUseCase,

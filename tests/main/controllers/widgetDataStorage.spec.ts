@@ -5,7 +5,7 @@
 
 import { ipcWidgetDataStorageClearChannel, ipcWidgetDataStorageDeleteChannel, ipcWidgetDataStorageGetKeysChannel, ipcWidgetDataStorageGetTextChannel, ipcWidgetDataStorageSetTextChannel } from '@common/ipc/channels';
 import { createWidgetDataStorageControllers } from '@/controllers/widgetDataStorage';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 
 const getTextUseCaseRes = 'GET USECASE RESULT';
 const getKeysUseCaseRes = ['KEY1', 'KEY2'];

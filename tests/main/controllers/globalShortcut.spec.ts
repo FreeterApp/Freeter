@@ -5,7 +5,7 @@
 
 import { ipcSetMainShortcutChannel } from '@common/ipc/channels';
 import { createGlobalShortcutControllers } from '@/controllers/globalShortcut';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 import { BrowserWindow } from '@/application/interfaces/browserWindow';
 
 const setMainShortcutUseCaseRes = true;

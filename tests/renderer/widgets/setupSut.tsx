@@ -94,6 +94,7 @@ export function setupWidgetSut<T>(reactComp: ReactComponent<WidgetReactComponent
     },
     shell: {
       openExternalUrl: jest.fn(),
+      openPath: jest.fn(),
       ...mockWidgetApi.shell
     },
     terminal: {

@@ -56,6 +56,10 @@ export const ipcShellOpenExternalUrlChannel = makeIpcChannelName('shell-open-ext
 export type IpcShellOpenExternalUrlArgs = [url: string];
 export type IpcShellOpenExternalUrlRes = void;
 
+export const ipcShellOpenPathChannel = makeIpcChannelName('shell-open-path');
+export type IpcShellOpenPathArgs = [path: string];
+export type IpcShellOpenPathRes = string;
+
 export const ipcWriteBookmarkIntoClipboardChannel = makeIpcChannelName('write-bookmark-into-clipboard');
 export type IpcWriteBookmarkIntoClipboardArgs = [title: string, url: string];
 export type IpcWriteBookmarkIntoClipboardRes = void;

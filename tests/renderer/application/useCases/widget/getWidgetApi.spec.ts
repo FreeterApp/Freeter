@@ -6,7 +6,6 @@
 import { ClipboardProvider } from '@/application/interfaces/clipboardProvider';
 import { DataStorageRenderer } from '@/application/interfaces/dataStorage';
 import { ProcessProvider } from '@/application/interfaces/processProvider';
-import { ShellProvider } from '@/application/interfaces/shellProvider';
 import { TerminalProvider } from '@/application/interfaces/terminalProvider';
 import { createGetWidgetApiUseCase } from '@/application/useCases/widget/getWidgetApi';
 import { ActionBarItems } from '@/base/actionBar';
@@ -14,6 +13,7 @@ import { WidgetContextMenuFactory } from '@/base/widget';
 import { WidgetApi, WidgetApiModuleName } from '@/base/widgetApi';
 import { ObjectManager, createObjectManager } from '@common/base/objectManager';
 import { ProcessInfo } from '@common/base/process';
+import { mockShellProvider } from '@tests/infra/mocks/shellProvider';
 
 const widgetId = 'WIDGET-ID';
 
@@ -25,9 +25,10 @@ function setup() {
   const processProvider: jest.MockedObject<ProcessProvider> = {
     getProcessInfo: jest.fn()
   }
-  const shellProvider: jest.MockedObject<ShellProvider> = {
-    openExternal: jest.fn()
-  }
+  const shellProvider = mockShellProvider({
+    openExternal: jest.fn(),
+    openPath: jest.fn()
+  });
 
   const widgetDataStorage: jest.MockedObject<DataStorageRenderer> = {
     clear: jest.fn(),
@@ -196,6 +197,10 @@ describe('getWidgetApiUseCase()', () => {
     widgetApi.shell.openExternalUrl('test://url');
     expect(shellProvider.openExternal).toBeCalledTimes(1);
     expect(shellProvider.openExternal).toBeCalledWith('test://url');
+
+    widgetApi.shell.openPath('some/file/path');
+    expect(shellProvider.openPath).toBeCalledTimes(1);
+    expect(shellProvider.openPath).toBeCalledWith('some/file/path');
   })
 
   it('should correctly setup terminal module', () => {

@@ -5,7 +5,7 @@
 
 import { ipcShowOsMessageBoxChannel, ipcShowOsOpenDirDialogChannel, ipcShowOsOpenFileDialogChannel, ipcShowOsSaveFileDialogChannel } from '@common/ipc/channels';
 import { createDialogControllers } from '@/controllers/dialog';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 import { MessageBoxConfig, OpenDialogResult, OpenDirDialogConfig, OpenFileDialogConfig, SaveDialogResult, SaveFileDialogConfig } from '@common/base/dialog';
 import { BrowserWindow } from '@/application/interfaces/browserWindow';
 

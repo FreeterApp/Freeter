@@ -5,7 +5,7 @@
 
 import { ipcAppDataStorageGetTextChannel, ipcAppDataStorageSetTextChannel } from '@common/ipc/channels';
 import { createAppDataStorageControllers } from '@/controllers/appDataStorage';
-import { fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 
 const getUseCaseRes = 'GET USECASE RESULT';
 

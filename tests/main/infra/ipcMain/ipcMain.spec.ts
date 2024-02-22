@@ -5,7 +5,7 @@
 
 import { ipcMain as electronIpcMain } from 'electron';
 import { createIpcMain } from '@/infra/ipcMain/ipcMain';
-import { fixtureElectronIpcMainEvent, fixtureIpcMainEvent } from '@tests/infra/fixtures/ipcMain';
+import { fixtureElectronIpcMainEvent, fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 
 jest.mock('electron', () => ({
   ipcMain: {

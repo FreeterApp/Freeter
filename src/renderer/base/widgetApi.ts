@@ -16,8 +16,8 @@ interface WidgetApiCommon {
 
 interface WidgetApiModules {
   readonly clipboard: {
-    writeBookmark: (title: string, url: string) => void;
-    writeText: (text: string) => void;
+    writeBookmark: (title: string, url: string) => Promise<void>;
+    writeText: (text: string) => Promise<void>;
   };
   readonly dataStorage: {
     getText: (key: string) => Promise<string | undefined>;
@@ -30,7 +30,8 @@ interface WidgetApiModules {
     getProcessInfo: () => ProcessInfo;
   };
   readonly shell: {
-    openExternalUrl: (url: string) => void;
+    openExternalUrl: (url: string) => Promise<void>;
+    openPath: (path: string) => Promise<string>;
   };
   readonly terminal: {
     execCmdLines: (cmdLines: ReadonlyArray<string>, cwd?: string) => void;
