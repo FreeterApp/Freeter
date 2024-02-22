@@ -49,10 +49,22 @@ describe('Commander Widget', () => {
     expect(screen.getByRole('button', { name: /open file/i })).toBeInTheDocument();
   })
 
+  it('should not render a button with "Open File" title, when type=folder', () => {
+    setupCommanderWidgetSut(fixtureSettings({ type: SettingsType.Folder, files: ['one', ''], folders: ['one', ''] }));
+
+    expect(screen.queryByRole('button', { name: /open file/i })).not.toBeInTheDocument();
+  })
+
   it('should render a button with "Open Folder" title, if folders has only one non-empty string, when type=folder', () => {
     setupCommanderWidgetSut(fixtureSettings({ type: SettingsType.Folder, files: ['more', 'than', 'one'], folders: ['one', ''] }));
 
     expect(screen.getByRole('button', { name: /open folder/i })).toBeInTheDocument();
+  })
+
+  it('should not render a button with "Open Folder" title, when type=file', () => {
+    setupCommanderWidgetSut(fixtureSettings({ type: SettingsType.File, files: ['one', ''], folders: ['one', ''] }));
+
+    expect(screen.queryByRole('button', { name: /open folder/i })).not.toBeInTheDocument();
   })
 
   it('should render a button with "Open Files" title, if files has multiple non-empty strings, when type=file', () => {
