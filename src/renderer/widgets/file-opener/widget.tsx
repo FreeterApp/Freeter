@@ -5,7 +5,7 @@
 
 import { Button, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings } from './settings';
-import { execCommandSvg } from '@/widgets/file-opener/icons';
+import { openFileSvg, openFolderSvg } from '@/widgets/file-opener/icons';
 import styles from './widget.module.scss';
 import { SettingsType, settingsTypeNamesCapital } from '@/widgets/file-opener/settingsType';
 
@@ -14,11 +14,12 @@ function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) 
   const { files, folders, type } = settings;
 
   const paths = (type === SettingsType.Folder ? folders : files).filter(path=>path!=='');
+  const iconSvg = type === SettingsType.Folder ? openFolderSvg : openFileSvg;
 
   return paths.length>0
     ? <Button
         onClick={_ => paths.forEach(path => shell.openPath(path))}
-        iconSvg={execCommandSvg}
+        iconSvg={iconSvg}
         title={`Open ${settingsTypeNamesCapital[settings.type]}${paths.length>1 ? 's' : ''}`}
         size='Fill'
       />
