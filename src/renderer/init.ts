@@ -134,7 +134,7 @@ function createStore() {
         appConfig: null
       },
       palette: {
-        widgetTypeIds: ['commander', 'file-opener', 'note', 'webpage']
+        widgetTypeIds: ['commander', 'file-opener', 'link-opener', 'note', 'webpage']
       },
       projectManager: {
         currentProjectId: '',
