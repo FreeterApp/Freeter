@@ -3,6 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { ShowContextMenuForTextInputUseCase } from '@/application/useCases/contextMenu/showContextMenuForTextInput';
 import { UseAppState } from '@/ui/hooks/appState';
 import React from 'react';
 
@@ -13,6 +14,7 @@ type Deps = {
   ProjectManager: React.FC;
   ApplicationSettings: React.FC;
   About: React.FC;
+  showContextMenuForTextInputUseCase: ShowContextMenuForTextInputUseCase;
 }
 
 export function createAppViewModelHook({
@@ -22,6 +24,7 @@ export function createAppViewModelHook({
   ProjectManager,
   ApplicationSettings,
   About,
+  showContextMenuForTextInputUseCase,
 }: Deps) {
   function useViewModel() {
     const [
@@ -45,10 +48,22 @@ export function createAppViewModelHook({
 
     const modalScreen = [WidgetSettings({}), WorkflowSettings({}), ProjectManager({}), ApplicationSettings({}), About({})].find(item => item);
 
+    const contextMenuHandler: React.MouseEventHandler<HTMLDivElement> = (e) => {
+      const node = e.target as HTMLElement | null;
+
+      switch (node?.nodeName.toLowerCase()) {
+        case 'input':
+        case 'textarea': {
+          showContextMenuForTextInputUseCase();
+          break;
+        }
+      }
+    }
     return {
       showPalette,
       hasProjects,
-      modalScreen
+      modalScreen,
+      contextMenuHandler
     }
   }
 
