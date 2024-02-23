@@ -94,6 +94,9 @@ export function createWidgetViewModelHook({
     const actionBarItems = editMode ? actionBarItemsEditMode : actionBarItemsViewMode;
 
     const onContextMenuHandler = useCallback((event: ReactContextMenuEvent) => {
+      if (contextMenuFactory) { // prevent default context menu handler
+        event.stopPropagation();
+      }
       showWidgetContextMenuUseCase(widget.id, contextMenuFactory, getContextId(<HTMLElement>event.target), event.nativeEvent.contextData);
     }, [widget.id, contextMenuFactory]);
 

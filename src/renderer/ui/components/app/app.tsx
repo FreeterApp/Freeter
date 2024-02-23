@@ -28,9 +28,9 @@ export function createAppComponent({
   useAppViewModel
 }: Deps) {
   function App() {
-    const {showPalette, modalScreen, hasProjects} = useAppViewModel();
+    const {showPalette, modalScreen, hasProjects, contextMenuHandler} = useAppViewModel();
     return (
-      <>
+      <div onContextMenu={contextMenuHandler}>
         <div data-testid="main-screen" {...{ inert: modalScreen ? '' : undefined }}>
           <TopBar />
           {
@@ -51,7 +51,7 @@ export function createAppComponent({
             {modalScreen}
           </div>
         }
-      </>
+      </div>
     )
   }
   return App;
