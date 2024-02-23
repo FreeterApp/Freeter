@@ -6,12 +6,14 @@
 import { WidgetSettings, WidgetType } from '@/widgets/appModules'
 import commander from './commander';
 import fileOpener from './file-opener';
+import linkOpener from './link-opener';
 import note from './note';
 import webpage from './webpage';
 
 const widgetTypes = [
   commander,
   fileOpener,
+  linkOpener,
   note,
   webpage,
 ] as unknown as WidgetType<WidgetSettings>[];

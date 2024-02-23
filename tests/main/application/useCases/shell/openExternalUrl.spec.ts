@@ -31,4 +31,24 @@ describe('openExternalUrlUseCase()', () => {
     expect(shellProviderMock.openExternal).toBeCalledWith(testUrl);
     expect(res).toBe(providerRetVal);
   });
+
+  it('should prefix the url with https://, when the url does not have the scheme part', async () => {
+    const testUrl = 'freeter.io'
+    const { useCase, shellProviderMock } = setup()
+
+    await useCase(testUrl);
+
+    expect(shellProviderMock.openExternal).toBeCalledTimes(1);
+    expect(shellProviderMock.openExternal).toBeCalledWith('https://' + testUrl);
+  });
+
+  it('should not call openExternal(), when the url is invalid', async () => {
+    const testUrl = 'test^url'
+    const { useCase, shellProviderMock } = setup()
+
+    await useCase(testUrl);
+
+    expect(shellProviderMock.openExternal).not.toBeCalled();
+  });
+
 })

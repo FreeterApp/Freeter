@@ -4,7 +4,7 @@
  */
 
 import { WidgetApi } from '@/widgets/appModules';
-import { sanitizeUrl } from '@/widgets/webpage/helpers';
+import { sanitizeUrl } from '@common/helpers/sanitizeUrl';
 
 export const labelGoHome = 'Go to start page';
 export const labelGoBack = 'Go Back';

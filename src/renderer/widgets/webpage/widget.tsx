@@ -9,7 +9,7 @@ import styles from './widget.module.scss';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 // import { DidFailLoadEvent } from 'electron';
 import { createActionBarItems } from '@/widgets/webpage/actionBar';
-import { sanitizeUrl } from '@/widgets/webpage/helpers';
+import { sanitizeUrl } from '@common/helpers/sanitizeUrl';
 import { createContextMenuFactory } from '@/widgets/webpage/contextMenu';
 import { ContextMenuEvent as ElectronContextMenuEvent } from 'electron';
 import { createPartition } from '@/widgets/webpage/partition';
