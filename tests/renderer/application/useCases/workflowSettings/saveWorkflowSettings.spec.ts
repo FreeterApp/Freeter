@@ -7,6 +7,7 @@ import { createSaveWorkflowSettingsUseCase } from '@/application/useCases/workfl
 import { AppState } from '@/base/state/app';
 import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWorkflowSettings } from '@tests/base/state/fixtures/workflowSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -31,8 +32,13 @@ describe('saveWorkflowSettingsUseCase()', () => {
         }
       },
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: null
+            })
+          }),
+          order: ['about', 'workflowSettings']
         })
       }
     })
@@ -47,7 +53,7 @@ describe('saveWorkflowSettingsUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should save the settings to Workflows state and set workflow=null in Workflow Settings state', async () => {
+  it('should save the settings to Workflows state and reset Workflow Settings state', async () => {
     const workflow = fixtureWorkflowA({
       settings: {
         name: 'Name'
@@ -66,8 +72,13 @@ describe('saveWorkflowSettingsUseCase()', () => {
         }
       },
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: workflowWithNewSettings,
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: workflowWithNewSettings,
+            })
+          }),
+          order: ['about', 'workflowSettings']
         })
       }
     })
@@ -85,9 +96,16 @@ describe('saveWorkflowSettingsUseCase()', () => {
       },
       ui: {
         ...initState.ui,
-        workflowSettings: {
-          ...initState.ui.workflowSettings,
-          workflow: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            workflowSettings: {
+              ...initState.ui.modalScreens.data.workflowSettings,
+              workflow: null
+            }
+          },
+          order: ['about']
         }
       }
     }

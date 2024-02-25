@@ -15,14 +15,8 @@ export function createOpenAboutUseCase({
 }: Deps) {
   const useCase = () => {
     let state = appStore.get();
-    state = modalScreensStateActions.resetAll(state);
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        about: true
-      }
-    })
+    state = modalScreensStateActions.openModalScreen(state, 'about', undefined);
+    appStore.set(state);
   }
 
   return useCase;

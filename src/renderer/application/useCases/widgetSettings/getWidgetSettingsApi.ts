@@ -7,6 +7,7 @@ import { WidgetSettingsApi } from '@/base/widgetApi';
 import { WidgetSettings } from '@/base/widgetType';
 import { AppStore } from '@/application/interfaces/store';
 import { DialogProvider } from '@/application/interfaces/dialogProvider';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 interface Deps {
   appStore: AppStore;
@@ -21,29 +22,22 @@ export function createGetWidgetSettingsApiUseCase({
     const settingsApi: WidgetSettingsApi<WidgetSettings> = {
       updateSettings: (settings: WidgetSettings) => {
         const state = appStore.get();
-        const { widgetInEnv } = state.ui.widgetSettings;
+        const { widgetInEnv } = state.ui.modalScreens.data.widgetSettings;
         if (!widgetInEnv) {
           return;
         }
-        appStore.set({
-          ...state,
-          ui: {
-            ...state.ui,
-            widgetSettings: {
-              ...state.ui.widgetSettings,
-              widgetInEnv: {
-                ...widgetInEnv,
-                widget: {
-                  ...widgetInEnv.widget,
-                  settings: {
-                    ...widgetInEnv.widget.settings,
-                    ...settings
-                  }
-                }
+        appStore.set(modalScreensStateActions.updateModalScreen(state, 'widgetSettings', {
+          widgetInEnv: {
+            ...widgetInEnv,
+            widget: {
+              ...widgetInEnv.widget,
+              settings: {
+                ...widgetInEnv.widget.settings,
+                ...settings
               }
             }
           }
-        });
+        }));
       },
       dialog: {
         showOpenDirDialog: cfg => dialogProvider.showOpenDirDialog(cfg),

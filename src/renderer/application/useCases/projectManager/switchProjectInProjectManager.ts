@@ -5,6 +5,7 @@
 
 import { AppStore } from '@/application/interfaces/store';
 import { EntityId } from '@/base/entity';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -14,16 +15,9 @@ export function createSwitchProjectInProjectManagerUseCase({
 }: Deps) {
   const useCase = (projectId: EntityId) => {
     const state = appStore.get();
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        projectManager: {
-          ...state.ui.projectManager,
-          currentProjectId: projectId
-        }
-      }
-    })
+    appStore.set(modalScreensStateActions.updateModalScreen(state, 'projectManager', {
+      currentProjectId: projectId
+    }));
   }
 
   return useCase;

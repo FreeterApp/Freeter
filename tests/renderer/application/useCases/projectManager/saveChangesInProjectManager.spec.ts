@@ -13,6 +13,7 @@ import { fixtureProjectAInColl } from '@tests/base/state/fixtures/entitiesState'
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 import { addWorkflowToAppState, deleteProjectsFromAppState } from '@/base/state/actions';
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowSettingsA, fixtureWorkflowSettingsB } from '@tests/base/fixtures/workflow';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 
 const newItemId = 'NEW-ITEM-ID';
 jest.mock('@/base/state/actions', () => {
@@ -48,10 +49,15 @@ describe('saveChangesInProjectManagerUseCase()', () => {
   it('should do nothing, if projects is null', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          projects: null,
-          projectIds: ['SOME-ID'],
-          deleteProjectIds: {}
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: null,
+              projectIds: ['SOME-ID'],
+              deleteProjectIds: {}
+            })
+          }),
+          order: ['about', 'projectManager']
         })
       }
     })
@@ -69,10 +75,15 @@ describe('saveChangesInProjectManagerUseCase()', () => {
   it('should do nothing, if projectIds is null', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          projects: fixtureProjectAInColl(),
-          projectIds: null,
-          deleteProjectIds: { 'SOME-ID': true }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: fixtureProjectAInColl(),
+              projectIds: null,
+              deleteProjectIds: { 'SOME-ID': true }
+            })
+          }),
+          order: ['about', 'projectManager']
         })
       }
     })
@@ -90,10 +101,15 @@ describe('saveChangesInProjectManagerUseCase()', () => {
   it('should do nothing, if deleteProjectIds is null', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          projects: fixtureProjectAInColl(),
-          projectIds: [],
-          deleteProjectIds: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: fixtureProjectAInColl(),
+              projectIds: [],
+              deleteProjectIds: null
+            })
+          }),
+          order: ['about', 'projectManager']
         })
       }
     })
@@ -108,7 +124,7 @@ describe('saveChangesInProjectManagerUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should update the projects entities and the projects order in the project switcher, add a new workflow entity to every new project as a current workflow, and set the project manager data to null', async () => {
+  it('should update the projects entities and the projects order in the project switcher, add a new workflow entity to every new project as a current workflow, and reset the project manager data', async () => {
     const workflowA = fixtureWorkflowA();
     const workflowB = fixtureWorkflowB({ id: newItemId + '1', settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }) });
     const workflowC = fixtureWorkflowC({ id: newItemId + '2', settings: fixtureWorkflowSettingsB({ name: 'Workflow 1' }) });
@@ -133,15 +149,20 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           projectIds: [projectA.id],
           currentProjectId: projectA.id
         }),
-        projectManager: fixtureProjectManager({
-          projects: {
-            [projectA.id]: updProjectA,
-            [projectB.id]: projectB,
-            [projectC.id]: projectC,
-          },
-          currentProjectId: projectA.id,
-          projectIds: [projectB.id, projectA.id, projectC.id],
-          deleteProjectIds: {}
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: {
+                [projectA.id]: updProjectA,
+                [projectB.id]: projectB,
+                [projectC.id]: projectC,
+              },
+              currentProjectId: projectA.id,
+              projectIds: [projectB.id, projectA.id, projectC.id],
+              deleteProjectIds: {}
+            })
+          }),
+          order: ['about', 'projectManager']
         })
       }
     })
@@ -175,11 +196,18 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           projectIds: [projectB.id, projectA.id, projectC.id],
           currentProjectId: projectA.id
         },
-        projectManager: {
-          currentProjectId: '',
-          deleteProjectIds: null,
-          projectIds: null,
-          projects: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              currentProjectId: '',
+              deleteProjectIds: null,
+              projectIds: null,
+              projects: null
+            }
+          },
+          order: ['about']
         }
       }
     }
@@ -217,20 +245,25 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           projectIds: [projectA.id, projectB.id],
           currentProjectId: projectA.id
         }),
-        projectManager: fixtureProjectManager({
-          projects: {
-            [projectA.id]: updProjectA,
-            [projectB.id]: projectB,
-            [projectC.id]: projectC,
-            [projectD.id]: projectD,
-          },
-          currentProjectId: projectA.id,
-          projectIds: [projectB.id, projectC.id, projectA.id, projectD.id],
-          deleteProjectIds: {
-            [projectB.id]: true,
-            [projectC.id]: true,
-            [projectD.id]: false,
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: {
+                [projectA.id]: updProjectA,
+                [projectB.id]: projectB,
+                [projectC.id]: projectC,
+                [projectD.id]: projectD,
+              },
+              currentProjectId: projectA.id,
+              projectIds: [projectB.id, projectC.id, projectA.id, projectD.id],
+              deleteProjectIds: {
+                [projectB.id]: true,
+                [projectC.id]: true,
+                [projectD.id]: false,
+              }
+            })
+          }),
+          order: ['about', 'projectManager']
         })
       }
     })
@@ -240,10 +273,10 @@ describe('saveChangesInProjectManagerUseCase()', () => {
         ...initState.entities,
         projects: {
           [projectA.id]: {
-            ...initState.ui.projectManager.projects![projectA.id]!,
+            ...initState.ui.modalScreens.data.projectManager.projects![projectA.id]!,
           },
           [projectD.id]: {
-            ...initState.ui.projectManager.projects![projectD.id]!,
+            ...initState.ui.modalScreens.data.projectManager.projects![projectD.id]!,
             currentWorkflowId: workflowB.id,
             workflowIds: [workflowB.id]
           }
@@ -258,11 +291,18 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           ...initState.ui.projectSwitcher,
           projectIds: [projectA.id, projectD.id],
         },
-        projectManager: {
-          currentProjectId: '',
-          deleteProjectIds: null,
-          projectIds: null,
-          projects: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              currentProjectId: '',
+              deleteProjectIds: null,
+              projectIds: null,
+              projects: null
+            }
+          },
+          order: ['about']
         }
       }
     }
@@ -299,16 +339,21 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           projectIds: [projectA.id, projectB.id],
           currentProjectId: projectA.id
         }),
-        projectManager: fixtureProjectManager({
-          projects: {
-            [projectA.id]: updProjectA,
-            [projectB.id]: projectB,
-          },
-          currentProjectId: projectA.id,
-          projectIds: [projectB.id, projectA.id],
-          deleteProjectIds: {
-            [projectB.id]: false,
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: {
+                [projectA.id]: updProjectA,
+                [projectB.id]: projectB,
+              },
+              currentProjectId: projectA.id,
+              projectIds: [projectB.id, projectA.id],
+              deleteProjectIds: {
+                [projectB.id]: false,
+              }
+            })
+          }),
+          order: ['about', 'projectManager']
         })
       }
     })
@@ -339,14 +384,19 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           projectIds: [projectB.id, projectA.id],
           currentProjectId: 'NO-SUCH-ID'
         }),
-        projectManager: fixtureProjectManager({
-          projects: {
-            [projectA.id]: projectA,
-            [projectB.id]: projectB,
-          },
-          currentProjectId: projectA.id,
-          projectIds: [projectB.id, projectA.id],
-          deleteProjectIds: {}
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: {
+                [projectA.id]: projectA,
+                [projectB.id]: projectB,
+              },
+              currentProjectId: projectA.id,
+              projectIds: [projectB.id, projectA.id],
+              deleteProjectIds: {}
+            })
+          }),
+          order: ['about', 'projectManager']
         })
       }
     })
@@ -366,11 +416,18 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           projectIds: [projectB.id, projectA.id],
           currentProjectId: projectB.id
         },
-        projectManager: {
-          currentProjectId: '',
-          deleteProjectIds: null,
-          projectIds: null,
-          projects: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              currentProjectId: '',
+              deleteProjectIds: null,
+              projectIds: null,
+              projects: null
+            }
+          },
+          order: ['about']
         }
       }
     }
@@ -397,12 +454,17 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           projectIds: [],
           currentProjectId: 'NO-SUCH-ID'
         }),
-        projectManager: fixtureProjectManager({
-          projects: {
-          },
-          currentProjectId: '',
-          projectIds: [],
-          deleteProjectIds: {}
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: {
+              },
+              currentProjectId: '',
+              projectIds: [],
+              deleteProjectIds: {}
+            })
+          }),
+          order: ['about', 'projectManager']
         })
       }
     })
@@ -420,11 +482,18 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           projectIds: [],
           currentProjectId: ''
         },
-        projectManager: {
-          currentProjectId: '',
-          deleteProjectIds: null,
-          projectIds: null,
-          projects: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              currentProjectId: '',
+              deleteProjectIds: null,
+              projectIds: null,
+              projects: null
+            }
+          },
+          order: ['about']
         }
       }
     }

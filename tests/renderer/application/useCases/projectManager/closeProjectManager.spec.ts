@@ -7,6 +7,7 @@ import { createCloseProjectManagerUseCase } from '@/application/useCases/project
 import { AppState } from '@/base/state/app';
 import { fixtureProjectA } from '@tests/base/fixtures/project';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureProjectManager } from '@tests/base/state/fixtures/projectManager';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -22,14 +23,19 @@ async function setup(initState: AppState) {
 }
 
 describe('closeProjectManagerUseCase()', () => {
-  it('should clear the state', async () => {
+  it('should remove the screen from the state', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          currentProjectId: 'SOME-ID',
-          deleteProjectIds: { 'SOME-ID': false },
-          projects: { 'SOME-ID': fixtureProjectA() },
-          projectIds: ['SOME-ID']
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              currentProjectId: 'SOME-ID',
+              deleteProjectIds: { 'SOME-ID': false },
+              projects: { 'SOME-ID': fixtureProjectA() },
+              projectIds: ['SOME-ID']
+            })
+          }),
+          order: ['about', 'projectManager']
         })
       }
     })
@@ -37,11 +43,18 @@ describe('closeProjectManagerUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        projectManager: {
-          currentProjectId: '',
-          deleteProjectIds: null,
-          projects: null,
-          projectIds: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              currentProjectId: '',
+              deleteProjectIds: null,
+              projects: null,
+              projectIds: null
+            }
+          },
+          order: ['about']
         }
       }
     }

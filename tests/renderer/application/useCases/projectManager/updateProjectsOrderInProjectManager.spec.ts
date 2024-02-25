@@ -7,6 +7,7 @@ import { createUpdateProjectsOrderInProjectManagerUseCase } from '@/application/
 import { EntityIdList } from '@/base/entityList';
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureProjectManager } from '@tests/base/state/fixtures/projectManager';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -25,8 +26,12 @@ describe('updateProjectsOrderInProjectManagerUseCase()', () => {
   it('should do nothing, if projectIds is null', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          projectIds: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: null
+            })
+          })
         })
       }
     })
@@ -45,8 +50,12 @@ describe('updateProjectsOrderInProjectManagerUseCase()', () => {
     const newProjectIds: EntityIdList = ['PRJ-ID-2', 'PRJ-ID-1']
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          projectIds: ['PRJ-ID-1', 'PRJ-ID-2']
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projectIds: ['PRJ-ID-1', 'PRJ-ID-2']
+            })
+          })
         })
       }
     })
@@ -54,9 +63,15 @@ describe('updateProjectsOrderInProjectManagerUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        projectManager: {
-          ...initState.ui.projectManager,
-          projectIds: newProjectIds
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              ...initState.ui.modalScreens.data.projectManager,
+              projectIds: newProjectIds
+            }
+          }
         }
       }
     }

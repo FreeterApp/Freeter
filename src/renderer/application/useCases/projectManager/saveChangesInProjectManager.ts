@@ -7,7 +7,7 @@ import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
 import { getOneFromEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';
-import { addWorkflowToAppState, deleteProjectsFromAppState } from '@/base/state/actions';
+import { addWorkflowToAppState, deleteProjectsFromAppState, modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -20,7 +20,7 @@ export function createSaveChangesInProjectManagerUseCase({
   const useCase = () => {
     let state = appStore.get();
     const prevProjects = state.entities.projects;
-    const { deleteProjectIds, projectIds, projects } = state.ui.projectManager;
+    const { deleteProjectIds, projectIds, projects } = state.ui.modalScreens.data.projectManager;
 
     if (projects !== null && projectIds !== null && deleteProjectIds !== null) {
       state = {
@@ -35,14 +35,9 @@ export function createSaveChangesInProjectManagerUseCase({
             ...state.ui.projectSwitcher,
             projectIds
           },
-          projectManager: {
-            currentProjectId: '',
-            deleteProjectIds: null,
-            projectIds: null,
-            projects: null
-          }
         }
       };
+      state = modalScreensStateActions.closeModalScreen(state, 'projectManager');
 
       for (const prjId of projectIds) {
         if (!getOneFromEntityCollection(prevProjects, prjId)) { // newly added project

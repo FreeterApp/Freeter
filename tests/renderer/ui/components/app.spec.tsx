@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { createAppComponent } from '@/ui/components/app/app';
 import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
@@ -12,6 +12,8 @@ import { createAppViewModelHook } from '@/ui/components/app/appViewModel';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureProjectAInColl, fixtureWorkflowAInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
+import { ModalScreenId } from '@/base/state/ui';
+import { fixtureModalScreens } from '@tests/base/state/fixtures/modalScreens';
 
 const strPalette = 'Palette';
 const strTopBar = 'TopBar';
@@ -24,24 +26,16 @@ const strWorktable = 'Worktable';
 const strAbout = 'About';
 const mockPalette = () => <div>{strPalette}</div>;
 const mockTopBar = () => <div>{strTopBar}</div>;
-const mockWidgetSettings = (isRendered: boolean) => isRendered ? () => <div>{strWidgetSettings}</div> : () => null;
-const mockWorkflowSettings = (isRendered: boolean) => isRendered ? () => <div>{strWorkflowSettings}</div> : () => null;
-const mockProjectManager = (isRendered: boolean) => isRendered ? () => <div>{strProjectManager}</div> : () => null;
-const mockApplicationSettings = (isRendered: boolean) => isRendered ? () => <div>{strApplicationSettings}</div> : () => null;
-const mockAbout = (isRendered: boolean) => isRendered ? () => <div>{strAbout}</div> : () => null;
+const mockWidgetSettings = () => <div>{strWidgetSettings}</div>;
+const mockWorkflowSettings = () => <div>{strWorkflowSettings}</div>;
+const mockProjectManager = () => <div>{strProjectManager}</div>;
+const mockApplicationSettings = () => <div>{strApplicationSettings}</div>;
+const mockAbout = () => <div>{strAbout}</div>;
 const mockWorkflowSwitcher = () => <div>{strWorkflowSwitcher}</div>;
 const mockWorktable = () => <div>{strWorktable}</div>;
 
-interface SetupOpts {
-  widgetSettingsIsRendered?: boolean,
-  workflowSettingsIsRendered?: boolean,
-  projectManagerIsRendererd?: boolean;
-  applicationSettingsIsRendered?: boolean;
-  aboutIsRendered?: boolean;
-}
 async function setup(
   appState: AppState,
-  opts?: SetupOpts
 ) {
   const [appStore, appStoreForUi] = await fixtureAppStore(appState);
   const useAppState = createAppStateHook(appStoreForUi);
@@ -50,11 +44,11 @@ async function setup(
 
   const useAppViewModel = createAppViewModelHook({
     useAppState,
-    WidgetSettings: mockWidgetSettings(!!opts?.widgetSettingsIsRendered),
-    WorkflowSettings: mockWorkflowSettings(!!opts?.workflowSettingsIsRendered),
-    ProjectManager: mockProjectManager(!!opts?.projectManagerIsRendererd),
-    ApplicationSettings: mockApplicationSettings(!!opts?.applicationSettingsIsRendered),
-    About: mockAbout(!!opts?.aboutIsRendered),
+    WidgetSettings: mockWidgetSettings,
+    WorkflowSettings: mockWorkflowSettings,
+    ProjectManager: mockProjectManager,
+    ApplicationSettings: mockApplicationSettings,
+    About: mockAbout,
     showContextMenuForTextInputUseCase
   });
 
@@ -181,21 +175,25 @@ describe('<App />', () => {
     expect(screen.queryByText(strWorktable)).not.toBeInTheDocument();
   });
 
-  describe.each<{name: string, opts: SetupOpts}>([
-    {name: 'no modal screen components rendered', opts: {widgetSettingsIsRendered: false, workflowSettingsIsRendered: false, projectManagerIsRendererd: false, applicationSettingsIsRendered: false, aboutIsRendered: false}},
-    {name: '<WidgetSettings> is rendered', opts: {widgetSettingsIsRendered: true, workflowSettingsIsRendered: false, projectManagerIsRendererd: false, applicationSettingsIsRendered: false, aboutIsRendered: false}},
-    {name: '<WorkflowSettings> is rendered', opts: {widgetSettingsIsRendered: false, workflowSettingsIsRendered: true, projectManagerIsRendererd: false, applicationSettingsIsRendered: false, aboutIsRendered: false}},
-    {name: '<ProjectManager> is rendered', opts: {widgetSettingsIsRendered: false, workflowSettingsIsRendered: false, projectManagerIsRendererd: true, applicationSettingsIsRendered: false, aboutIsRendered: false}},
-    {name: '<ApplicationSettings> is rendered', opts: {widgetSettingsIsRendered: false, workflowSettingsIsRendered: false, projectManagerIsRendererd: false, applicationSettingsIsRendered: true, aboutIsRendered: false}},
-    {name: '<About> is rendered', opts: {widgetSettingsIsRendered: false, workflowSettingsIsRendered: false, projectManagerIsRendererd: false, applicationSettingsIsRendered: false, aboutIsRendered: true}},
-  ])('When $name', ({opts}) => {
+  describe.each<{name: string, modalScreen: ModalScreenId | undefined, expectRendered: string}>([
+    {name: 'no modal screens', modalScreen: undefined, expectRendered: ''},
+    {name: 'WidgetSettings', modalScreen: 'widgetSettings', expectRendered: strWidgetSettings},
+    {name: 'WorkflowSettings', modalScreen: 'workflowSettings', expectRendered: strWorkflowSettings},
+    {name: 'ProjectManager', modalScreen: 'projectManager', expectRendered: strProjectManager},
+    {name: 'ApplicationSettings', modalScreen: 'applicationSettings', expectRendered: strApplicationSettings},
+    {name: 'About', modalScreen: 'about', expectRendered: strAbout},
+  ])('When modal screens state = $name', ({modalScreen, expectRendered}) => {
     beforeEach(async ()=> {
-      await setup(fixtureAppState({}), opts);
+      await setup(fixtureAppState({
+        ui: {
+          modalScreens: fixtureModalScreens({
+            order: modalScreen ? [modalScreen] : []
+          })
+        }
+      }));
     })
 
-    const {widgetSettingsIsRendered, workflowSettingsIsRendered, projectManagerIsRendererd, applicationSettingsIsRendered, aboutIsRendered} = opts;
-
-    if (widgetSettingsIsRendered) {
+    if (expectRendered===strWidgetSettings) {
       it('should display WidgetSettings', async () => {
         expect(screen.getByText(strWidgetSettings)).toBeInTheDocument();
       });
@@ -205,7 +203,7 @@ describe('<App />', () => {
       });
     }
 
-    if (workflowSettingsIsRendered) {
+    if (expectRendered===strWorkflowSettings) {
       it('should display WorkflowSettings', async () => {
         expect(screen.getByText(strWorkflowSettings)).toBeInTheDocument();
       });
@@ -215,7 +213,7 @@ describe('<App />', () => {
       });
     }
 
-    if (projectManagerIsRendererd) {
+    if (expectRendered===strProjectManager) {
       it('should display ProjectManager', async () => {
         expect(screen.getByText(strProjectManager)).toBeInTheDocument();
       });
@@ -225,7 +223,7 @@ describe('<App />', () => {
       });
     }
 
-    if (applicationSettingsIsRendered) {
+    if (expectRendered===strApplicationSettings) {
       it('should display ApplicationSettings', async () => {
         expect(screen.getByText(strApplicationSettings)).toBeInTheDocument();
       });
@@ -235,7 +233,7 @@ describe('<App />', () => {
       });
     }
 
-    if (aboutIsRendered) {
+    if (expectRendered===strAbout) {
       it('should display About', async () => {
         expect(screen.getByText(strAbout)).toBeInTheDocument();
       });
@@ -245,7 +243,7 @@ describe('<App />', () => {
       });
     }
 
-    if (widgetSettingsIsRendered || workflowSettingsIsRendered || projectManagerIsRendererd || applicationSettingsIsRendered || aboutIsRendered) {
+    if (modalScreen) {
       it('should make the main screen inert, and show the modal screen area', async () => {
         expect(screen.getByTestId('main-screen')).toHaveAttribute('inert');
         expect(screen.getByTestId('modal-screen')).toBeInTheDocument();
@@ -256,6 +254,33 @@ describe('<App />', () => {
         expect(screen.queryByTestId('modal-screen')).not.toBeInTheDocument();
       })
     }
+  })
+
+  describe('when modal screens state = multiple screens', () => {
+    beforeEach(async ()=> {
+      await setup(fixtureAppState({
+        ui: {
+          modalScreens: fixtureModalScreens({
+            order: ['projectManager', 'applicationSettings', 'about']
+          })
+        }
+      }));
+    })
+
+    it('should render all the modal screen components in the right order', () => {
+      const modals = screen.queryAllByTestId('modal-screen');
+      expect(modals.length).toBe(3);
+      expect(within(modals[0]).getByText(strProjectManager)).toBeInTheDocument()
+      expect(within(modals[1]).getByText(strApplicationSettings)).toBeInTheDocument()
+      expect(within(modals[2]).getByText(strAbout)).toBeInTheDocument()
+    })
+
+    it('should make all the screens inert, excepting the last one', () => {
+      const modals = screen.queryAllByTestId('modal-screen');
+      expect(modals[0]).toHaveAttribute('inert');
+      expect(modals[1]).toHaveAttribute('inert');
+      expect(modals[2]).not.toHaveAttribute('inert');
+    })
   })
 
   describe('when edit mode is on', () => {

@@ -4,6 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -13,17 +14,9 @@ export function createCloseWidgetSettingsUseCase({
   appStore
 }: Deps) {
   const useCase = () => {
-    const state = appStore.get();
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        widgetSettings: {
-          ...state.ui.widgetSettings,
-          widgetInEnv: null
-        }
-      }
-    });
+    let state = appStore.get();
+    state = modalScreensStateActions.closeModalScreen(state, 'widgetSettings');
+    appStore.set(state);
   }
 
   return useCase;

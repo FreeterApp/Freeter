@@ -7,6 +7,7 @@ import { createUpdateProjectSettingsInProjectManagerUseCase } from '@/applicatio
 import { AppState } from '@/base/state/app';
 import { fixtureProjectA, fixtureProjectB, fixtureProjectSettingsA } from '@tests/base/fixtures/project';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureProjectManager } from '@tests/base/state/fixtures/projectManager';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -25,8 +26,12 @@ describe('updateProjectSettingsInProjectManagerUseCase()', () => {
   it('should do nothing, if projects is null', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          projects: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: null
+            })
+          })
         })
       }
     })
@@ -58,11 +63,15 @@ describe('updateProjectSettingsInProjectManagerUseCase()', () => {
       entities: {
       },
       ui: {
-        projectManager: fixtureProjectManager({
-          projects: {
-            [project.id]: project,
-            [projectB.id]: projectB
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: {
+                [project.id]: project,
+                [projectB.id]: projectB
+              }
+            })
+          })
         })
       }
     })
@@ -70,11 +79,17 @@ describe('updateProjectSettingsInProjectManagerUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        projectManager: {
-          ...initState.ui.projectManager,
-          projects: {
-            ...initState.ui.projectManager.projects,
-            [project.id]: projectWithNewSettings
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              ...initState.ui.modalScreens.data.projectManager,
+              projects: {
+                ...initState.ui.modalScreens.data.projectManager.projects,
+                [project.id]: projectWithNewSettings
+              }
+            }
           }
         }
       }

@@ -7,6 +7,7 @@ import { createUpdateWorkflowSettingsUseCase } from '@/application/useCases/work
 import { AppState } from '@/base/state/app';
 import { fixtureWorkflowA, fixtureWorkflowSettingsA } from '@tests/base/fixtures/workflow';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWorkflowSettings } from '@tests/base/state/fixtures/workflowSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -26,8 +27,12 @@ describe('updateWorkflowSettingsUseCase()', () => {
     const newSettings = fixtureWorkflowSettingsA();
     const initState = fixtureAppState({
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: null
+            })
+          })
         })
       }
     })
@@ -49,8 +54,12 @@ describe('updateWorkflowSettingsUseCase()', () => {
     const workflow = fixtureWorkflowA()
     const initState = fixtureAppState({
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow
+            })
+          })
         })
       }
     })
@@ -58,13 +67,19 @@ describe('updateWorkflowSettingsUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        workflowSettings: {
-          ...initState.ui.workflowSettings,
-          workflow: {
-            ...workflow,
-            settings: {
-              ...workflow.settings,
-              ...newSettings
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            workflowSettings: {
+              ...initState.ui.modalScreens.data.workflowSettings,
+              workflow: {
+                ...workflow,
+                settings: {
+                  ...workflow.settings,
+                  ...newSettings
+                }
+              }
             }
           }
         }

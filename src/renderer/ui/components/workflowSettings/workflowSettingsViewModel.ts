@@ -27,7 +27,7 @@ export function createWorkflowSettingsViewModelHook({
     const {
       settings,
     } = useAppState(state => ({
-      settings: state.ui.workflowSettings.workflow?.settings
+      settings: state.ui.modalScreens.data.workflowSettings.workflow?.settings
     }))
 
     const updateSettings = useCallback((updSettings: WorkflowSettings) => {

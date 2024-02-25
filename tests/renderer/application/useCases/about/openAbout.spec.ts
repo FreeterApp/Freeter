@@ -4,16 +4,9 @@
  */
 
 import { createOpenAboutUseCase } from '@/application/useCases/about/openAbout';
-import { modalScreensStateActions } from '@/base/state/actions';
 import { AppState } from '@/base/state/app';
-import { fixtureAppConfig } from '@tests/base/fixtures/appConfig';
-import { fixtureWidgetA, fixtureWidgetEnvAreaShelf } from '@tests/base/fixtures/widget';
-import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
-import { fixtureApplicationSettings } from '@tests/base/state/fixtures/applicationSettings';
-import { fixtureProjectManager } from '@tests/base/state/fixtures/projectManager';
-import { fixtureWidgetSettings } from '@tests/base/state/fixtures/widgetSettings';
-import { fixtureWorkflowSettings } from '@tests/base/state/fixtures/workflowSettings';
+import { fixtureModalScreens } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 async function setup(initState: AppState) {
@@ -28,22 +21,22 @@ async function setup(initState: AppState) {
 }
 
 describe('openAboutUseCase()', () => {
-  it('should set about=true and reset other modals in the app state', async () => {
+  it('should open about screen in the app state, when it is not open', async () => {
     const initState = fixtureAppState({
       ui: {
-        about: false,
-        applicationSettings: fixtureApplicationSettings({ appConfig: fixtureAppConfig() }),
-        projectManager: fixtureProjectManager({ currentProjectId: '', deleteProjectIds: {}, projectIds: [], projects: {} }),
-        widgetSettings: fixtureWidgetSettings({ widgetInEnv: { env: fixtureWidgetEnvAreaShelf(), widget: fixtureWidgetA() } }),
-        workflowSettings: fixtureWorkflowSettings({ workflow: fixtureWorkflowA() })
+        modalScreens: fixtureModalScreens({
+          order: ['applicationSettings']
+        })
       }
     })
-    let expectState = modalScreensStateActions.resetAll(initState);
-    expectState = {
-      ...expectState,
+    const expectState: AppState = {
+      ...initState,
       ui: {
-        ...expectState.ui,
-        about: true
+        ...initState.ui,
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          order: ['applicationSettings', 'about']
+        }
       }
     }
     const {
@@ -57,4 +50,32 @@ describe('openAboutUseCase()', () => {
     expect(newState).toEqual(expectState);
   })
 
+  it('should move the about screen to the end of the order in the app state, when it is open', async () => {
+    const initState = fixtureAppState({
+      ui: {
+        modalScreens: fixtureModalScreens({
+          order: ['about', 'applicationSettings']
+        })
+      }
+    })
+    const expectState: AppState = {
+      ...initState,
+      ui: {
+        ...initState.ui,
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          order: ['applicationSettings', 'about']
+        }
+      }
+    }
+    const {
+      appStore,
+      openAboutUseCase
+    } = await setup(initState)
+
+    openAboutUseCase();
+
+    const newState = appStore.get();
+    expect(newState).toEqual(expectState);
+  })
 })

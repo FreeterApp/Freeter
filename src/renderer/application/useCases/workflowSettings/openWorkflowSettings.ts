@@ -19,17 +19,8 @@ export function createOpenWorkflowSettingsUseCase({
     const workflow = entityStateActions.workflows.getOne(state, workflowId);
 
     if (workflow) {
-      state = modalScreensStateActions.resetAll(state);
-      appStore.set({
-        ...state,
-        ui: {
-          ...state.ui,
-          workflowSettings: {
-            ...state.ui.workflowSettings,
-            workflow
-          }
-        }
-      })
+      state = modalScreensStateActions.openModalScreen(state, 'workflowSettings', { workflow });
+      appStore.set(state);
     }
   }
 

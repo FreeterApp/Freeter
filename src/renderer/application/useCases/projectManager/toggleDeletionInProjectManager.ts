@@ -5,6 +5,7 @@
 
 import { AppStore } from '@/application/interfaces/store';
 import { EntityId } from '@/base/entity';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -15,20 +16,14 @@ export function createToggleDeletionInProjectManagerUseCase({
 }: Deps) {
   const useCase = (projectId: EntityId) => {
     const state = appStore.get();
-    if (state.ui.projectManager.deleteProjectIds) {
-      appStore.set({
-        ...state,
-        ui: {
-          ...state.ui,
-          projectManager: {
-            ...state.ui.projectManager,
-            deleteProjectIds: {
-              ...state.ui.projectManager.deleteProjectIds,
-              [projectId]: !state.ui.projectManager.deleteProjectIds[projectId]
-            },
-          }
-        }
-      });
+    const { deleteProjectIds } = state.ui.modalScreens.data.projectManager;
+    if (deleteProjectIds) {
+      appStore.set(modalScreensStateActions.updateModalScreen(state, 'projectManager', {
+        deleteProjectIds: {
+          ...deleteProjectIds,
+          [projectId]: !deleteProjectIds[projectId]
+        },
+      }));
     }
   }
 

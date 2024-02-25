@@ -4,8 +4,9 @@
  */
 
 import { ShowContextMenuForTextInputUseCase } from '@/application/useCases/contextMenu/showContextMenuForTextInput';
+import { ModalScreenId } from '@/base/state/ui';
 import { UseAppState } from '@/ui/hooks/appState';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 type Deps = {
   useAppState: UseAppState;
@@ -32,13 +33,15 @@ export function createAppViewModelHook({
       projectIds,
       currentProjectId,
       projects,
-      workflows
+      workflows,
+      modalScreensOrder
     ] = useAppState(state => [
       state.ui.editMode,
       state.ui.projectSwitcher.projectIds,
       state.ui.projectSwitcher.currentProjectId,
       state.entities.projects,
-      state.entities.workflows
+      state.entities.workflows,
+      state.ui.modalScreens.order
     ])
 
     const projectList = useAppState.useEntityList(state => state.entities.projects, projectIds);
@@ -46,7 +49,22 @@ export function createAppViewModelHook({
     const currentWorkflow = workflows[projects[currentProjectId]?.currentWorkflowId || ''];
     const showPalette = editMode && !!currentWorkflow;
 
-    const modalScreen = [WidgetSettings({}), WorkflowSettings({}), ProjectManager({}), ApplicationSettings({}), About({})].find(item => item);
+    const modalScreenComps: Record<ModalScreenId, ReactNode> = {
+      about: About({}),
+      applicationSettings: ApplicationSettings({}),
+      projectManager: ProjectManager({}),
+      widgetSettings: WidgetSettings({}),
+      workflowSettings: WorkflowSettings({})
+    }
+
+    const modalScreens = modalScreensOrder.map((id, idx, arr) => {
+      if (modalScreenComps[id]) {
+        return { id, comp: modalScreenComps[id], isLast: idx === arr.length - 1 };
+      } else {
+        return null
+      }
+    })
+    const hasModalScreens = modalScreens.length > 0;
 
     const contextMenuHandler: React.MouseEventHandler<HTMLDivElement> = (e) => {
       const node = e.target as HTMLElement | null;
@@ -62,7 +80,8 @@ export function createAppViewModelHook({
     return {
       showPalette,
       hasProjects,
-      modalScreen,
+      modalScreens,
+      hasModalScreens,
       contextMenuHandler
     }
   }

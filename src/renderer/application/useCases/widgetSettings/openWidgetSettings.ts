@@ -20,23 +20,16 @@ export function createOpenWidgetSettingsUseCase({
     const widget = entityStateActions.widgets.getOne(state, widgetId);
 
     if (widget) {
-      state = modalScreensStateActions.resetAll(state);
-      appStore.set({
-        ...state,
-        ui: {
-          ...state.ui,
-          widgetSettings: {
-            ...state.ui.widgetSettings,
-            widgetInEnv: {
-              widget,
-              env: {
-                ...env,
-                isPreview: true
-              }
-            }
+      state = modalScreensStateActions.openModalScreen(state, 'widgetSettings', {
+        widgetInEnv: {
+          widget,
+          env: {
+            ...env,
+            isPreview: true
           }
         }
-      })
+      });
+      appStore.set(state);
     }
   }
 

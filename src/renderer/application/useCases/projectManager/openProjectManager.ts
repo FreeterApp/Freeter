@@ -18,20 +18,13 @@ export function createOpenProjectManagerUseCase({
     const projects = state.entities.projects;
     const { currentProjectId, projectIds } = state.ui.projectSwitcher;
 
-    state = modalScreensStateActions.resetAll(state);
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        projectManager: {
-          ...state.ui.projectManager,
-          currentProjectId,
-          projects,
-          deleteProjectIds: {},
-          projectIds
-        }
-      }
-    })
+    state = modalScreensStateActions.openModalScreen(state, 'projectManager', {
+      currentProjectId,
+      projects,
+      deleteProjectIds: {},
+      projectIds
+    });
+    appStore.set(state);
   }
 
   return useCase;

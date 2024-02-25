@@ -4,6 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { modalScreensStateActions } from '@/base/state/actions';
 import { WorkflowSettings } from '@/base/workflow';
 
 type Deps = {
@@ -15,23 +16,11 @@ export function createUpdateWorkflowSettingsUseCase({
 }: Deps) {
   const useCase = (settings: WorkflowSettings) => {
     const state = appStore.get();
-    const { workflow } = state.ui.workflowSettings;
+    const { workflow } = state.ui.modalScreens.data.workflowSettings;
     if (!workflow) {
       return;
     }
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        workflowSettings: {
-          ...state.ui.workflowSettings,
-          workflow: {
-            ...workflow,
-            settings
-          }
-        }
-      }
-    });
+    appStore.set(modalScreensStateActions.updateModalScreen(state, 'workflowSettings', { workflow: { ...workflow, settings } }));
   }
 
   return useCase;

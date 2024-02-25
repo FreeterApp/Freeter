@@ -15,24 +15,23 @@ const appState: AppState = {
     workflows: {}
   },
   ui: {
-    about: false,
     dragDrop: {},
     editMode: false,
     menuBar: true,
     appConfig: {
       mainHotkey: ''
     },
-    applicationSettings: {
-      appConfig: null
+    modalScreens: {
+      data: {
+        applicationSettings: { appConfig: null },
+        projectManager: { currentProjectId: '', deleteProjectIds: null, projectIds: null, projects: null },
+        widgetSettings: { widgetInEnv: null },
+        workflowSettings: { workflow: null },
+      },
+      order: []
     },
     palette: {
       widgetTypeIds: []
-    },
-    projectManager: {
-      currentProjectId: '',
-      deleteProjectIds: null,
-      projectIds: null,
-      projects: null
     },
     projectSwitcher: {
       currentProjectId: '',
@@ -40,12 +39,6 @@ const appState: AppState = {
     },
     shelf: {
       widgetList: []
-    },
-    widgetSettings: {
-      widgetInEnv: null
-    },
-    workflowSettings: {
-      workflow: null
     },
     worktable: {}
   }

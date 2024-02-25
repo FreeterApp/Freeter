@@ -5,6 +5,7 @@
 
 import { AppStore } from '@/application/interfaces/store';
 import { AppConfig } from '@/base/appConfig';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -15,19 +16,12 @@ export function createUpdateApplicationSettingsUseCase({
 }: Deps) {
   const useCase = (appConfig: AppConfig) => {
     const state = appStore.get();
-    if (!state.ui.applicationSettings.appConfig) {
+    if (!state.ui.modalScreens.data.applicationSettings.appConfig) {
       return;
     }
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        applicationSettings: {
-          ...state.ui.applicationSettings,
-          appConfig
-        }
-      }
-    });
+    appStore.set(modalScreensStateActions.updateModalScreen(state, 'applicationSettings', {
+      appConfig
+    }));
   }
 
   return useCase;

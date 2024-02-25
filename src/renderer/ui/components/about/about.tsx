@@ -18,14 +18,12 @@ export function createAboutComponent({
 }: Deps) {
   function Component() {
     const {
-      showAbout,
       onCloseClick,
       onSponsorshipClick,
       aboutInfo,
     } = useAboutViewModel();
 
     return (
-      showAbout &&
       <ModalScreen
         buttons={[
           {id: 'close', caption: 'Close', primary: true, onClick: onCloseClick},

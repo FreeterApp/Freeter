@@ -34,7 +34,7 @@ export function createWidgetSettingsViewModelHook({
       widgetInEnv,
       widgetType
     } = useAppState(state => {
-      const { widgetInEnv } = state.ui.widgetSettings;
+      const { widgetInEnv } = state.ui.modalScreens.data.widgetSettings;
       const widgetType = widgetInEnv ? state.entities.widgetTypes[widgetInEnv.widget.type] : undefined;
       return {
         widgetInEnv,

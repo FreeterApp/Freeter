@@ -7,6 +7,7 @@ import { createOpenWidgetSettingsUseCase } from '@/application/useCases/widgetSe
 import { AppState } from '@/base/state/app';
 import { fixtureWidgetA, fixtureWidgetEnvAreaShelf } from '@tests/base/fixtures/widget';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWidgetSettings } from '@tests/base/state/fixtures/widgetSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -24,7 +25,7 @@ async function setup(initState: AppState) {
 }
 
 describe('openWidgetSettingsUseCase()', () => {
-  it('should set widgetInEnv with isPreview=true to the state, if the widget id exists', async () => {
+  it('should correctly update the state, when the widget id exists and the screen is not open', async () => {
     const widget = fixtureWidgetA({ id: widgetId })
     const env = fixtureWidgetEnvAreaShelf();
     const initState = fixtureAppState({
@@ -34,8 +35,13 @@ describe('openWidgetSettingsUseCase()', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: null
+            })
+          }),
+          order: ['about']
         })
       }
     })
@@ -43,15 +49,76 @@ describe('openWidgetSettingsUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        widgetSettings: {
-          ...initState.ui.widgetSettings,
-          widgetInEnv: {
-            widget,
-            env: {
-              ...env,
-              isPreview: true
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            widgetSettings: {
+              ...initState.ui.modalScreens.data.widgetSettings,
+              widgetInEnv: {
+                widget,
+                env: {
+                  ...env,
+                  isPreview: true
+                }
+              }
             }
-          }
+          },
+          order: ['about', 'widgetSettings']
+        }
+      }
+    }
+    const {
+      appStore,
+      openWidgetSettingsUseCase
+    } = await setup(initState)
+
+    openWidgetSettingsUseCase(widgetId, env);
+
+    const newState = appStore.get();
+    expect(newState).toEqual(expectState);
+  })
+
+  it('should correctly update the state, when the widget id exists and the screen is already open', async () => {
+    const widget = fixtureWidgetA({ id: widgetId })
+    const env = fixtureWidgetEnvAreaShelf();
+    const initState = fixtureAppState({
+      entities: {
+        widgets: {
+          [widgetId]: widget
+        }
+      },
+      ui: {
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: null
+            })
+          }),
+          order: ['widgetSettings', 'about']
+        })
+      }
+    })
+    const expectState: AppState = {
+      ...initState,
+      ui: {
+        ...initState.ui,
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            widgetSettings: {
+              ...initState.ui.modalScreens.data.widgetSettings,
+              widgetInEnv: {
+                widget,
+                env: {
+                  ...env,
+                  isPreview: true
+                }
+              }
+            }
+          },
+          order: ['about', 'widgetSettings']
         }
       }
     }
@@ -76,8 +143,13 @@ describe('openWidgetSettingsUseCase()', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: null
+            })
+          }),
+          order: ['about']
         })
       }
     })

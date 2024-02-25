@@ -7,6 +7,7 @@ import { createCloseWidgetSettingsUseCase } from '@/application/useCases/widgetS
 import { AppState } from '@/base/state/app';
 import { fixtureWidgetA, fixtureWidgetEnvAreaShelf } from '@tests/base/fixtures/widget';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWidgetSettings } from '@tests/base/state/fixtures/widgetSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -22,14 +23,19 @@ async function setup(initState: AppState) {
 }
 
 describe('closeWidgetSettingsUseCase()', () => {
-  it('should remove widgetInEnv from the state', async () => {
+  it('should remove the screen from the state', async () => {
     const initState = fixtureAppState({
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: fixtureWidgetA(),
-            env: fixtureWidgetEnvAreaShelf(),
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA(),
+                env: fixtureWidgetEnvAreaShelf(),
+              }
+            })
+          }),
+          order: ['about', 'widgetSettings']
         })
       }
     })
@@ -37,9 +43,16 @@ describe('closeWidgetSettingsUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        widgetSettings: {
-          ...initState.ui.widgetSettings,
-          widgetInEnv: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            widgetSettings: {
+              ...initState.ui.modalScreens.data.widgetSettings,
+              widgetInEnv: null
+            }
+          },
+          order: ['about']
         }
       }
     }

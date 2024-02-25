@@ -4,6 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -13,14 +14,9 @@ export function createCloseAboutUseCase({
   appStore
 }: Deps) {
   const useCase = () => {
-    const state = appStore.get();
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        about: false
-      }
-    });
+    let state = appStore.get();
+    state = modalScreensStateActions.closeModalScreen(state, 'about');
+    appStore.set(state);
   }
 
   return useCase;

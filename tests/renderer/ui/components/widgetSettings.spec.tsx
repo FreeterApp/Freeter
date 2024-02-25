@@ -15,6 +15,7 @@ import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { SettingsEditorReactComponent } from '@/widgets/appModules';
 import { AppState } from '@/base/state/app';
 import userEvent from '@testing-library/user-event';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 
 const widgetId = 'WIDGET-ID';
 const widgetTypeId = 'WIDGET-TYPE-ID';
@@ -72,8 +73,12 @@ describe('<WidgetSettings />', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: null
+            })
+          })
         })
       }
     }));
@@ -90,11 +95,15 @@ describe('<WidgetSettings />', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: fixtureWidgetA({type: 'NO-SUCH-TYPE'}),
-            env: fixtureWidgetEnvAreaShelf()
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA({type: 'NO-SUCH-TYPE'}),
+                env: fixtureWidgetEnvAreaShelf()
+              }
+            })
+          })
         })
       }
     }));
@@ -113,11 +122,15 @@ describe('<WidgetSettings />', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: fixtureWidgetA({id: widgetId, type: widgetTypeId}),
-            env: fixtureWidgetEnvAreaShelf()
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA({id: widgetId, type: widgetTypeId}),
+                env: fixtureWidgetEnvAreaShelf()
+              }
+            })
+          })
         })
       }
     }));
@@ -137,11 +150,15 @@ describe('<WidgetSettings />', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: fixtureWidgetA({id: widgetId, type: widgetTypeId, coreSettings: fixtureWidgetCoreSettingsA({name: coreSetVal})}),
-            env: fixtureWidgetEnvAreaShelf()
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA({id: widgetId, type: widgetTypeId, coreSettings: fixtureWidgetCoreSettingsA({name: coreSetVal})}),
+                env: fixtureWidgetEnvAreaShelf()
+              }
+            })
+          })
         })
       }
     }));
@@ -165,11 +182,15 @@ describe('<WidgetSettings />', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: fixtureWidgetA({id: widgetId, type: widgetTypeId}),
-            env: fixtureWidgetEnvAreaShelf()
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA({id: widgetId, type: widgetTypeId}),
+                env: fixtureWidgetEnvAreaShelf()
+              }
+            })
+          })
         })
       }
     }));
@@ -194,17 +215,21 @@ describe('<WidgetSettings />', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: fixtureWidgetA({
-              id: widgetId,
-              type: widgetTypeId,
-              settings: {
-                prop: someValue
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA({
+                  id: widgetId,
+                  type: widgetTypeId,
+                  settings: {
+                    prop: someValue
+                  }
+                }),
+                env: fixtureWidgetEnvAreaShelf()
               }
-            }),
-            env: fixtureWidgetEnvAreaShelf()
-          }
+            })
+          })
         })
       }
     }));
@@ -225,16 +250,20 @@ describe('<WidgetSettings />', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: fixtureWidgetA({
-              type: widgetTypeId,
-              settings: {
-                prop: someValue
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA({
+                  type: widgetTypeId,
+                  settings: {
+                    prop: someValue
+                  }
+                }),
+                env: fixtureWidgetEnvAreaShelf()
               }
-            }),
-            env: fixtureWidgetEnvAreaShelf()
-          }
+            })
+          })
         })
       }
     }));
@@ -253,14 +282,18 @@ describe('<WidgetSettings />', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: fixtureWidgetA({
-              id: widgetId,
-              type: widgetTypeId
-            }),
-            env: fixtureWidgetEnvAreaShelf()
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA({
+                  id: widgetId,
+                  type: widgetTypeId
+                }),
+                env: fixtureWidgetEnvAreaShelf()
+              }
+            })
+          })
         })
       }
     }));
@@ -287,14 +320,18 @@ describe('<WidgetSettings />', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: fixtureWidgetA({
-              id: widgetId,
-              type: widgetTypeId
-            }),
-            env: fixtureWidgetEnvAreaShelf()
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA({
+                  id: widgetId,
+                  type: widgetTypeId
+                }),
+                env: fixtureWidgetEnvAreaShelf()
+              }
+            })
+          })
         })
       }
     }));
@@ -328,14 +365,18 @@ describe('<WidgetSettings />', () => {
           }
         },
         ui: {
-          widgetSettings: fixtureWidgetSettings({
-            widgetInEnv: {
-              widget: fixtureWidgetA({
-                id: widgetId,
-                type: widgetTypeId
-              }),
-              env: fixtureWidgetEnvAreaShelf()
-            }
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              widgetSettings: fixtureWidgetSettings({
+                widgetInEnv: {
+                  widget: fixtureWidgetA({
+                    id: widgetId,
+                    type: widgetTypeId
+                  }),
+                  env: fixtureWidgetEnvAreaShelf()
+                }
+              })
+            })
           })
         }
       }),
@@ -362,11 +403,15 @@ describe('<WidgetSettings />', () => {
           }
         },
         ui: {
-          widgetSettings: fixtureWidgetSettings({
-            widgetInEnv: {
-              widget: fixtureWidgetA({id: widgetId, type: widgetTypeId, coreSettings}),
-              env: fixtureWidgetEnvAreaShelf()
-            }
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              widgetSettings: fixtureWidgetSettings({
+                widgetInEnv: {
+                  widget: fixtureWidgetA({id: widgetId, type: widgetTypeId, coreSettings}),
+                  env: fixtureWidgetEnvAreaShelf()
+                }
+              })
+            })
           })
         }
       }));
@@ -388,11 +433,15 @@ describe('<WidgetSettings />', () => {
           }
         },
         ui: {
-          widgetSettings: fixtureWidgetSettings({
-            widgetInEnv: {
-              widget: fixtureWidgetA({id: widgetId, type: widgetTypeId, coreSettings}),
-              env: fixtureWidgetEnvAreaShelf()
-            }
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              widgetSettings: fixtureWidgetSettings({
+                widgetInEnv: {
+                  widget: fixtureWidgetA({id: widgetId, type: widgetTypeId, coreSettings}),
+                  env: fixtureWidgetEnvAreaShelf()
+                }
+              })
+            })
           })
         }
       }));

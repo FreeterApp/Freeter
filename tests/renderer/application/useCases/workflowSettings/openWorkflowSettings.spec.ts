@@ -7,6 +7,7 @@ import { createOpenWorkflowSettingsUseCase } from '@/application/useCases/workfl
 import { AppState } from '@/base/state/app';
 import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWorkflowSettings } from '@tests/base/state/fixtures/workflowSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -24,7 +25,7 @@ async function setup(initState: AppState) {
 }
 
 describe('openWorkflowSettingsUseCase()', () => {
-  it('should set workflow to the state, if the workflow id exists', async () => {
+  it('should correctly update the state, when the workflow id exists and the screen is not open', async () => {
     const workflow = fixtureWorkflowA({ id: workflowId })
     const initState = fixtureAppState({
       entities: {
@@ -33,8 +34,13 @@ describe('openWorkflowSettingsUseCase()', () => {
         }
       },
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: null
+            })
+          }),
+          order: ['about']
         })
       }
     })
@@ -42,10 +48,64 @@ describe('openWorkflowSettingsUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        workflowSettings: {
-          ...initState.ui.workflowSettings,
-          workflow
+        modalScreens: fixtureModalScreens({
+          ...initState.ui.modalScreens,
+          data: fixtureModalScreensData({
+            ...initState.ui.modalScreens.data,
+            workflowSettings: fixtureWorkflowSettings({
+              ...initState.ui.modalScreens.data.workflowSettings,
+              workflow
+            })
+          }),
+          order: ['about', 'workflowSettings']
+        })
+      }
+    }
+    const {
+      appStore,
+      openWorkflowSettingsUseCase
+    } = await setup(initState)
+
+    openWorkflowSettingsUseCase(workflowId);
+
+    const newState = appStore.get();
+    expect(newState).toEqual(expectState);
+  })
+
+  it('should correctly update the state, when the workflow id exists and the screen is already open', async () => {
+    const workflow = fixtureWorkflowA({ id: workflowId })
+    const initState = fixtureAppState({
+      entities: {
+        workflows: {
+          [workflowId]: workflow
         }
+      },
+      ui: {
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: null
+            })
+          }),
+          order: ['workflowSettings', 'about']
+        })
+      }
+    })
+    const expectState: AppState = {
+      ...initState,
+      ui: {
+        ...initState.ui,
+        modalScreens: fixtureModalScreens({
+          ...initState.ui.modalScreens,
+          data: fixtureModalScreensData({
+            ...initState.ui.modalScreens.data,
+            workflowSettings: fixtureWorkflowSettings({
+              ...initState.ui.modalScreens.data.workflowSettings,
+              workflow
+            })
+          }),
+          order: ['about', 'workflowSettings']
+        })
       }
     }
     const {
@@ -68,8 +128,13 @@ describe('openWorkflowSettingsUseCase()', () => {
         }
       },
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: null
+            })
+          }),
+          order: ['about']
         })
       }
     })

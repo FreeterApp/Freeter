@@ -7,6 +7,7 @@ import { createUpdateWidgetCoreSettingsUseCase } from '@/application/useCases/wi
 import { AppState } from '@/base/state/app';
 import { fixtureWidgetA, fixtureWidgetCoreSettingsA, fixtureWidgetEnvAreaShelf } from '@tests/base/fixtures/widget';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWidgetSettings } from '@tests/base/state/fixtures/widgetSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -26,8 +27,12 @@ describe('updateWidgetCoreSettingsUseCase()', () => {
     const newSettings = fixtureWidgetCoreSettingsA();
     const initState = fixtureAppState({
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: null
+            })
+          })
         })
       }
     })
@@ -49,11 +54,15 @@ describe('updateWidgetCoreSettingsUseCase()', () => {
     const widget = fixtureWidgetA()
     const initState = fixtureAppState({
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget,
-            env: fixtureWidgetEnvAreaShelf(),
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget,
+                env: fixtureWidgetEnvAreaShelf(),
+              }
+            })
+          })
         })
       }
     })
@@ -61,15 +70,21 @@ describe('updateWidgetCoreSettingsUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        widgetSettings: {
-          ...initState.ui.widgetSettings,
-          widgetInEnv: {
-            ...initState.ui.widgetSettings.widgetInEnv!,
-            widget: {
-              ...widget,
-              coreSettings: {
-                ...widget.coreSettings,
-                ...newSettings
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            widgetSettings: {
+              ...initState.ui.modalScreens.data.widgetSettings,
+              widgetInEnv: {
+                ...initState.ui.modalScreens.data.widgetSettings.widgetInEnv!,
+                widget: {
+                  ...widget,
+                  coreSettings: {
+                    ...widget.coreSettings,
+                    ...newSettings
+                  }
+                }
               }
             }
           }
