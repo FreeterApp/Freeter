@@ -4,6 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -13,19 +14,9 @@ export function createCloseProjectManagerUseCase({
   appStore
 }: Deps) {
   const useCase = () => {
-    const state = appStore.get();
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        projectManager: {
-          currentProjectId: '',
-          deleteProjectIds: null,
-          projects: null,
-          projectIds: null
-        }
-      }
-    });
+    let state = appStore.get();
+    state = modalScreensStateActions.closeModalScreen(state, 'projectManager');
+    appStore.set(state);
   }
 
   return useCase;

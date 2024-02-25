@@ -5,23 +5,16 @@
 
 import { render, screen, fireEvent } from '@testing-library/react';
 import { createAboutComponent, createAboutViewModelHook} from '@/ui/components/about'
-import { createAppStateHook } from '@/ui/hooks/appState';
-import { fixtureAppState } from '@tests/base/state/fixtures/appState';
-import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { AppState } from '@/base/state/app';
 import { fixtureProcessInfoBrowser } from '@testscommon/base/fixtures/process';
 import { GetAboutInfoUseCase } from '@/application/useCases/about/getAboutInfo';
 import { fixtureProductInfo, fixtureProductInfoBackers } from '@tests/base/fixtures/productInfo';
 
 
 async function setup(
-  appState: AppState,
   opts?: {
     aboutInfo?: ReturnType<GetAboutInfoUseCase>
   }
 ) {
-  const [appStore, appStoreForUi] = await fixtureAppStore(appState);
-  const useAppState = createAppStateHook(appStoreForUi);
 
   const closeAboutUseCase = jest.fn();
   const getAboutInfoUseCase = jest.fn();
@@ -36,7 +29,6 @@ async function setup(
   )
 
   const useAboutViewModel = createAboutViewModelHook({
-    useAppState,
     closeAboutUseCase,
     getAboutInfoUseCase,
     openSponsorshipUrlUseCase,
@@ -51,7 +43,6 @@ async function setup(
 
   return {
     comp,
-    appStore,
     getAboutInfoUseCase,
     closeAboutUseCase,
     openSponsorshipUrlUseCase,
@@ -59,32 +50,8 @@ async function setup(
 }
 
 describe('<About />', () => {
-  it('should not display the about screen, if the about state is false', async () => {
-    await setup(fixtureAppState({
-      ui: {
-        about: false
-      }
-    }));
-
-    expect(screen.queryByText('About Freeter')).not.toBeInTheDocument();
-  })
-
-  it('should display the about screen, if the about state is true', async () => {
-    await setup(fixtureAppState({
-      ui: {
-        about: true
-      }
-    }));
-
-    expect(screen.queryByText('About Freeter')).toBeInTheDocument();
-  })
-
   it('should call a right usecase when clicking the close button', async () => {
-    const {closeAboutUseCase} = await setup(fixtureAppState({
-      ui: {
-        about: true
-      }
-    }));
+    const {closeAboutUseCase} = await setup();
 
     const elButton = screen.getByRole('button', {
       name: /close/i
@@ -103,11 +70,7 @@ describe('<About />', () => {
     const commitHash = 'TEST-COMMIT-HASH';
     const version = 'TEST-VERSION';
 
-    await setup(fixtureAppState({
-      ui: {
-        about: true
-      }
-    }), {
+    await setup({
       aboutInfo: {
         browser: fixtureProcessInfoBrowser({ver: browserVer}),
         productInfo: fixtureProductInfo({
@@ -129,11 +92,7 @@ describe('<About />', () => {
     const nameB = 'TEST NAME B';
     const nameC = 'TEST NAME C';
 
-    await setup(fixtureAppState({
-      ui: {
-        about: true
-      }
-    }), {
+    await setup({
       aboutInfo: {
         browser: fixtureProcessInfoBrowser(),
         productInfo: fixtureProductInfo({

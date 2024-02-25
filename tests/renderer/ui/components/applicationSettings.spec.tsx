@@ -16,6 +16,7 @@ import { fixtureProcessInfoLinux } from '@testscommon/base/fixtures/process';
 import { ProcessInfo } from '@common/base/process';
 import { fixtureAppConfig } from '@tests/base/fixtures/appConfig';
 import { fixtureApplicationSettings } from '@tests/base/state/fixtures/applicationSettings';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 
 async function setup(
   appState: AppState,
@@ -66,8 +67,12 @@ describe('<ApplicationSettings />', () => {
     await setup(fixtureAppState({
       ui: {
         appConfig: fixtureAppConfig(),
-        applicationSettings: fixtureApplicationSettings({
-          appConfig: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            applicationSettings: fixtureApplicationSettings({
+              appConfig: null
+            })
+          })
         })
       }
     }));
@@ -79,8 +84,12 @@ describe('<ApplicationSettings />', () => {
     await setup(fixtureAppState({
       ui: {
         appConfig: fixtureAppConfig(),
-        applicationSettings: fixtureApplicationSettings({
-          appConfig: fixtureAppConfig(),
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            applicationSettings: fixtureApplicationSettings({
+              appConfig: fixtureAppConfig(),
+            })
+          })
         })
       }
     }));
@@ -91,8 +100,12 @@ describe('<ApplicationSettings />', () => {
   it('should call a right usecase when clicking the close button', async () => {
     const {closeApplicationSettingsUseCase} = await setup(fixtureAppState({
       ui: {
-        applicationSettings: fixtureApplicationSettings({
-          appConfig: fixtureAppConfig(),
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            applicationSettings: fixtureApplicationSettings({
+              appConfig: fixtureAppConfig(),
+            })
+          })
         })
       }
     }));
@@ -111,8 +124,12 @@ describe('<ApplicationSettings />', () => {
   it('should call a right usecase with right params when clicking the save button', async () => {
     const {saveApplicationSettingsUseCase} = await setup(fixtureAppState({
       ui: {
-        applicationSettings: fixtureApplicationSettings({
-          appConfig: fixtureAppConfig()
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            applicationSettings: fixtureApplicationSettings({
+              appConfig: fixtureAppConfig(),
+            })
+          })
         })
       }
     }));
@@ -133,8 +150,12 @@ describe('<ApplicationSettings />', () => {
       const appConfig = fixtureAppConfig({mainHotkey: ''});
       const {getMainHotkeyOptionsUseCase, appStore} = await setup(fixtureAppState({
         ui: {
-          applicationSettings: fixtureApplicationSettings({
-            appConfig,
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              applicationSettings: fixtureApplicationSettings({
+                appConfig,
+              })
+            })
           })
         }
       }));
@@ -145,8 +166,12 @@ describe('<ApplicationSettings />', () => {
       const appConfig2 = fixtureAppConfig({mainHotkey: mainHotkeyOptions[1].value});
       act(() => appStore.set(fixtureAppState({
         ui: {
-          applicationSettings: fixtureApplicationSettings({
-            appConfig: appConfig2,
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              applicationSettings: fixtureApplicationSettings({
+                appConfig: appConfig2,
+              })
+            })
           })
         }
       })))
@@ -159,8 +184,12 @@ describe('<ApplicationSettings />', () => {
       const appConfig = fixtureAppConfig({ mainHotkey: curHotkey });
       const {updateApplicationSettingsUseCase, getMainHotkeyOptionsUseCase} = await setup(fixtureAppState({
         ui: {
-          applicationSettings: fixtureApplicationSettings({
-            appConfig,
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              applicationSettings: fixtureApplicationSettings({
+                appConfig,
+              })
+            })
           })
         }
       }));

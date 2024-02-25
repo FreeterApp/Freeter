@@ -15,17 +15,10 @@ export function createOpenApplicationSettingsUseCase({
 }: Deps) {
   const useCase = () => {
     let state = appStore.get();
-    state = modalScreensStateActions.resetAll(state);
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        applicationSettings: {
-          ...state.ui.applicationSettings,
-          appConfig: state.ui.appConfig
-        }
-      }
-    })
+    state = modalScreensStateActions.openModalScreen(state, 'applicationSettings', {
+      appConfig: state.ui.appConfig
+    });
+    appStore.set(state);
   }
 
   return useCase;

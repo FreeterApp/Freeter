@@ -48,7 +48,7 @@ export function createProjectManagerViewModelHook({
       projects,
       renderProjectManager,
     } = useAppState(state => {
-      const { currentProjectId, deleteProjectIds, projectIds, projects } = state.ui.projectManager
+      const { currentProjectId, deleteProjectIds, projectIds, projects } = state.ui.modalScreens.data.projectManager
       let currentProjectSettings: ProjectSettings | null = null;
       const renderProjectManager = (deleteProjectIds !== null && projectIds !== null && projects !== null);
       if (currentProjectId && projects) {

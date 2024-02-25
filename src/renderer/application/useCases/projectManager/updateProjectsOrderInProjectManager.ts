@@ -5,6 +5,7 @@
 
 import { AppStore } from '@/application/interfaces/store';
 import { EntityIdList } from '@/base/entityList';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -15,20 +16,13 @@ export function createUpdateProjectsOrderInProjectManagerUseCase({
 }: Deps) {
   const useCase = (projectIds: EntityIdList) => {
     const state = appStore.get();
-    if (state.ui.projectManager.projectIds === null) {
+    if (state.ui.modalScreens.data.projectManager.projectIds === null) {
       return;
     }
 
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        projectManager: {
-          ...state.ui.projectManager,
-          projectIds
-        }
-      }
-    });
+    appStore.set(modalScreensStateActions.updateModalScreen(state, 'projectManager', {
+      projectIds
+    }));
   }
 
   return useCase;

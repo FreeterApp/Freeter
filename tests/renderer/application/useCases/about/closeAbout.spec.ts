@@ -6,6 +6,7 @@
 import { createCloseAboutUseCase } from '@/application/useCases/about/closeAbout';
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 async function setup(initState: AppState) {
@@ -20,17 +21,23 @@ async function setup(initState: AppState) {
 }
 
 describe('closeAboutUseCase()', () => {
-  it('should set about=false to the app state', async () => {
+  it('should remove about from the modal screens state', async () => {
     const initState = fixtureAppState({
       ui: {
-        about: true
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData(),
+          order: ['applicationSettings', 'about', 'projectManager']
+        })
       }
     })
     const expectState: AppState = {
       ...initState,
       ui: {
         ...initState.ui,
-        about: false
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          order: ['applicationSettings', 'projectManager']
+        }
       }
     }
     const {

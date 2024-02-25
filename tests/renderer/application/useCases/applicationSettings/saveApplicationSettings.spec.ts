@@ -8,6 +8,7 @@ import { AppState } from '@/base/state/app';
 import { fixtureAppConfig } from '@tests/base/fixtures/appConfig';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureApplicationSettings } from '@tests/base/state/fixtures/applicationSettings';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 async function setup(initState: AppState) {
@@ -25,8 +26,13 @@ describe('saveApplicationSettingsUseCase()', () => {
   it('should do nothing, if appConfig in application settings is null', async () => {
     const initState = fixtureAppState({
       ui: {
-        applicationSettings: fixtureApplicationSettings({
-          appConfig: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            applicationSettings: fixtureApplicationSettings({
+              appConfig: null
+            })
+          }),
+          order: ['about', 'applicationSettings']
         })
       }
     })
@@ -41,7 +47,7 @@ describe('saveApplicationSettingsUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should save the appConfig from Application Settings to UI state and set appConfig=null in Application Settings state', async () => {
+  it('should save the appConfig from Application Settings to UI state and reset Application Settings state', async () => {
     const appConfig = fixtureAppConfig({
       mainHotkey: 'Accelerator'
     });
@@ -52,8 +58,13 @@ describe('saveApplicationSettingsUseCase()', () => {
     const initState = fixtureAppState({
       ui: {
         appConfig,
-        applicationSettings: fixtureApplicationSettings({
-          appConfig: newAppConfig,
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            applicationSettings: fixtureApplicationSettings({
+              appConfig: newAppConfig,
+            })
+          }),
+          order: ['about', 'applicationSettings']
         })
       }
     })
@@ -62,9 +73,16 @@ describe('saveApplicationSettingsUseCase()', () => {
       ui: {
         ...initState.ui,
         appConfig: newAppConfig,
-        applicationSettings: {
-          ...initState.ui.applicationSettings,
-          appConfig: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            applicationSettings: {
+              ...initState.ui.modalScreens.data.applicationSettings,
+              appConfig: null
+            }
+          },
+          order: ['about']
         }
       }
     }

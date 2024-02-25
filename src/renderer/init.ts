@@ -127,21 +127,31 @@ function createStore() {
       dragDrop: {},
       editMode: false,
       menuBar: true,
-      about: false,
       appConfig: {
         mainHotkey: 'CmdOrCtrl+Shift+F'
       },
-      applicationSettings: {
-        appConfig: null
+      modalScreens: {
+        data: {
+          applicationSettings: {
+            appConfig: null
+          },
+          projectManager: {
+            currentProjectId: '',
+            deleteProjectIds: null,
+            projects: null,
+            projectIds: null
+          },
+          widgetSettings: {
+            widgetInEnv: null
+          },
+          workflowSettings: {
+            workflow: null
+          },
+        },
+        order: []
       },
       palette: {
         widgetTypeIds: ['commander', 'file-opener', 'link-opener', 'note', 'webpage']
-      },
-      projectManager: {
-        currentProjectId: '',
-        deleteProjectIds: null,
-        projects: null,
-        projectIds: null
       },
       projectSwitcher: {
         projectIds: [],
@@ -149,12 +159,6 @@ function createStore() {
       },
       shelf: {
         widgetList: []
-      },
-      widgetSettings: {
-        widgetInEnv: null
-      },
-      workflowSettings: {
-        workflow: null
       },
       worktable: {}
     }

@@ -32,7 +32,7 @@ export function createApplicationSettingsViewModelHook({
     const {
       appConfig,
     } = useAppState(state => ({
-      appConfig: state.ui.applicationSettings.appConfig
+      appConfig: state.ui.modalScreens.data.applicationSettings.appConfig
     }))
 
     const updateSettings = useCallback((newAppConfig: AppConfig) => {

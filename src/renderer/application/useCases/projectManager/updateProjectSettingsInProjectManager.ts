@@ -7,6 +7,7 @@ import { AppStore } from '@/application/interfaces/store';
 import { EntityId } from '@/base/entity';
 import { updateOneInEntityCollection } from '@/base/entityCollection';
 import { ProjectSettings } from '@/base/project';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -17,23 +18,17 @@ export function createUpdateProjectSettingsInProjectManagerUseCase({
 }: Deps) {
   const useCase = (projectId: EntityId, settings: ProjectSettings) => {
     const state = appStore.get();
-    if (state.ui.projectManager.projects === null) {
+    const { projects } = state.ui.modalScreens.data.projectManager;
+    if (projects === null) {
       return;
     }
 
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        projectManager: {
-          ...state.ui.projectManager,
-          projects: updateOneInEntityCollection(state.ui.projectManager.projects, {
-            id: projectId,
-            changes: { settings }
-          })
-        }
-      }
-    });
+    appStore.set(modalScreensStateActions.updateModalScreen(state, 'projectManager', {
+      projects: updateOneInEntityCollection(projects, {
+        id: projectId,
+        changes: { settings }
+      })
+    }));
   }
 
   return useCase;

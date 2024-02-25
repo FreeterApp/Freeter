@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event';
 import { fixtureProjectSettingsA, fixtureProjectSettingsB } from '@tests/base/fixtures/project';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureProjectAInColl, fixtureProjectBInColl, fixtureProjectCInColl } from '@tests/base/state/fixtures/entitiesState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureProjectManager } from '@tests/base/state/fixtures/projectManager';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -63,10 +64,14 @@ describe('<ProjectManager />', () => {
   it('should not display the project manager, if the deleteProjectIds is null', async () => {
     await setup(fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: null,
-          projects: {},
-          projectIds: []
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: null,
+              projects: {},
+              projectIds: []
+            })
+          })
         })
       }
     }));
@@ -77,10 +82,14 @@ describe('<ProjectManager />', () => {
   it('should not display the project manager, if the projects is null', async () => {
     await setup(fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: {},
-          projects: null,
-          projectIds: []
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: {},
+              projects: null,
+              projectIds: []
+            })
+          })
         })
       }
     }));
@@ -91,10 +100,14 @@ describe('<ProjectManager />', () => {
   it('should not display the project manager, if the projectIds is null', async () => {
     await setup(fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: {},
-          projects: {},
-          projectIds: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: {},
+              projects: {},
+              projectIds: null
+            })
+          })
         })
       }
     }));
@@ -105,10 +118,14 @@ describe('<ProjectManager />', () => {
   it('should display the project manager, if all the required params are not null', async () => {
     await setup(fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: {},
-          projects: {},
-          projectIds: []
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: {},
+              projects: {},
+              projectIds: []
+            })
+          })
         })
       }
     }));
@@ -119,10 +136,14 @@ describe('<ProjectManager />', () => {
   it('should call a right usecase when clicking the cancel button', async () => {
     const {closeProjectManagerUseCase} = await setup(fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: {},
-          projects: {},
-          projectIds: []
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: {},
+              projects: {},
+              projectIds: []
+            })
+          })
         })
       }
     }));
@@ -141,10 +162,14 @@ describe('<ProjectManager />', () => {
   it('should call a right usecase with right params when clicking the ok button', async () => {
     const {saveChangesInProjectManagerUseCase} = await setup(fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: {},
-          projects: {},
-          projectIds: []
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: {},
+              projects: {},
+              projectIds: []
+            })
+          })
         })
       }
     }));
@@ -164,10 +189,14 @@ describe('<ProjectManager />', () => {
     it('should display a tablist', async () => {
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {},
-            projectIds: []
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {},
+                projectIds: []
+              })
+            })
           })
         }
       }));
@@ -177,10 +206,14 @@ describe('<ProjectManager />', () => {
     it('should display 0 tabs, when there are 0 projects', async () => {
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {},
-            projectIds: []
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {},
+                projectIds: []
+              })
+            })
           })
         }
       }));
@@ -192,13 +225,17 @@ describe('<ProjectManager />', () => {
       const idB = 'P-B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-            },
-            projectIds: [idA, idB]
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                },
+                projectIds: [idA, idB]
+              })
+            })
           })
         }
       }));
@@ -212,13 +249,17 @@ describe('<ProjectManager />', () => {
       const nameB = 'PROJECT NAME B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
-              ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
-            },
-            projectIds: [idA, idB]
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
+                  ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
+                },
+                projectIds: [idA, idB]
+              })
+            })
           })
         }
       }));
@@ -231,13 +272,17 @@ describe('<ProjectManager />', () => {
       const idB = 'P-B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-            },
-            projectIds: [idA, idB]
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                },
+                projectIds: [idA, idB]
+              })
+            })
           })
         }
       }));
@@ -250,13 +295,17 @@ describe('<ProjectManager />', () => {
       const idB = 'P-B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-            },
-            projectIds: [idA, idB]
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                },
+                projectIds: [idA, idB]
+              })
+            })
           })
         }
       }));
@@ -270,14 +319,18 @@ describe('<ProjectManager />', () => {
       const idC = 'P-C';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {[idA]: true, [idC]: true},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-              ...fixtureProjectCInColl({id: idC}),
-            },
-            projectIds: [idA, idB, idC]
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {[idA]: true, [idC]: true},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                  ...fixtureProjectCInColl({id: idC}),
+                },
+                projectIds: [idA, idB, idC]
+              })
+            })
           })
         }
       }));
@@ -293,13 +346,17 @@ describe('<ProjectManager />', () => {
       const idB = 'P-B';
       const {toggleDeletionInProjectManagerUseCase} = await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-            },
-            projectIds: [idA, idB]
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                },
+                projectIds: [idA, idB]
+              })
+            })
           })
         }
       }));
@@ -318,13 +375,17 @@ describe('<ProjectManager />', () => {
       const nameB = 'PROJECT NAME B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
-              ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
-            },
-            projectIds: [idA, idB]
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
+                  ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
+                },
+                projectIds: [idA, idB]
+              })
+            })
           })
         }
       }));
@@ -339,14 +400,18 @@ describe('<ProjectManager />', () => {
       const idB = 'P-B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-            },
-            projectIds: [idA, idB],
-            currentProjectId: idB
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                },
+                projectIds: [idA, idB],
+                currentProjectId: idB
+              })
+            })
           })
         }
       }));
@@ -361,14 +426,18 @@ describe('<ProjectManager />', () => {
       const idB = 'P-B';
       const {switchProjectInProjectManagerUseCase} = await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-            },
-            projectIds: [idA, idB],
-            currentProjectId: idA
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                },
+                projectIds: [idA, idB],
+                currentProjectId: idA
+              })
+            })
           })
         }
       }))
@@ -382,10 +451,14 @@ describe('<ProjectManager />', () => {
     it('should display Add Project button', async () => {
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {},
-            projectIds: []
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {},
+                projectIds: []
+              })
+            })
           })
         }
       }));
@@ -398,10 +471,14 @@ describe('<ProjectManager />', () => {
     it('should call a right usecase with right params, when clicking Add Project button', async () => {
       const {addProjectInProjectManagerUseCase} = await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {},
-            projectIds: []
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {},
+                projectIds: []
+              })
+            })
           })
         }
       }));
@@ -420,15 +497,19 @@ describe('<ProjectManager />', () => {
       const idC = 'P-C';
       const {updateProjectsOrderInProjectManagerUseCase} = await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-              ...fixtureProjectCInColl({id: idC})
-            },
-            projectIds: [idA, idB, idC],
-            currentProjectId: idA
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                  ...fixtureProjectCInColl({id: idC})
+                },
+                projectIds: [idA, idB, idC],
+                currentProjectId: idA
+              })
+            })
           })
         }
       }))
@@ -477,15 +558,19 @@ describe('<ProjectManager />', () => {
       const idC = 'P-C';
       const {updateProjectsOrderInProjectManagerUseCase} = await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-              ...fixtureProjectCInColl({id: idC})
-            },
-            projectIds: [idA, idB, idC],
-            currentProjectId: idA
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                  ...fixtureProjectCInColl({id: idC})
+                },
+                projectIds: [idA, idB, idC],
+                currentProjectId: idA
+              })
+            })
           })
         }
       }))
@@ -532,14 +617,18 @@ describe('<ProjectManager />', () => {
       const idB = 'P-B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-            },
-            projectIds: [idA, idB],
-            currentProjectId: ''
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                },
+                projectIds: [idA, idB],
+                currentProjectId: ''
+              })
+            })
           })
         }
       }));
@@ -552,14 +641,18 @@ describe('<ProjectManager />', () => {
       const idB = 'P-B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-            },
-            projectIds: [idA, idB],
-            currentProjectId: idA
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                },
+                projectIds: [idA, idB],
+                currentProjectId: idA
+              })
+            })
           })
         }
       }));
@@ -574,14 +667,18 @@ describe('<ProjectManager />', () => {
       const nameB = 'PROJECT NAME B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
-              ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
-            },
-            projectIds: [idA, idB],
-            currentProjectId: idA
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
+                  ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
+                },
+                projectIds: [idA, idB],
+                currentProjectId: idA
+              })
+            })
           })
         }
       }));
@@ -596,14 +693,18 @@ describe('<ProjectManager />', () => {
       const nameB = 'PROJECT NAME B';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
-              ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
-            },
-            projectIds: [idA, idB],
-            currentProjectId: idB
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
+                  ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
+                },
+                projectIds: [idA, idB],
+                currentProjectId: idB
+              })
+            })
           })
         }
       }));
@@ -615,13 +716,17 @@ describe('<ProjectManager />', () => {
       const idA = 'P-A';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-            },
-            projectIds: [idA],
-            currentProjectId: idA
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                },
+                projectIds: [idA],
+                currentProjectId: idA
+              })
+            })
           })
         }
       }));
@@ -634,14 +739,18 @@ describe('<ProjectManager />', () => {
       const idB = 'P-B';
       const initState = fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-              ...fixtureProjectBInColl({id: idB}),
-            },
-            projectIds: [idA, idB],
-            currentProjectId: idA
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                  ...fixtureProjectBInColl({id: idB}),
+                },
+                projectIds: [idA, idB],
+                currentProjectId: idA
+              })
+            })
           })
         }
       })
@@ -652,9 +761,15 @@ describe('<ProjectManager />', () => {
           ...initState,
           ui: {
             ...initState.ui,
-            projectManager: {
-              ...initState.ui.projectManager,
-              currentProjectId: idB
+            modalScreens: {
+              ...initState.ui.modalScreens,
+              data: {
+                ...initState.ui.modalScreens.data,
+                projectManager: {
+                  ...initState.ui.modalScreens.data.projectManager,
+                  currentProjectId: idB
+                }
+              }
             }
           }
         })
@@ -667,13 +782,17 @@ describe('<ProjectManager />', () => {
       const idA = 'P-A';
       await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA}),
-            },
-            projectIds: [idA],
-            currentProjectId: idA
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA}),
+                },
+                projectIds: [idA],
+                currentProjectId: idA
+              })
+            })
           })
         }
       }));
@@ -695,14 +814,18 @@ describe('<ProjectManager />', () => {
       const settings = fixtureProjectSettingsA({ name: nameA });
       const {updateProjectSettingsInProjectManagerUseCase} = await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
-              ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
-            },
-            projectIds: [idA, idB],
-            currentProjectId: idA
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
+                  ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
+                },
+                projectIds: [idA, idB],
+                currentProjectId: idA
+              })
+            })
           })
         }
       }));
@@ -726,14 +849,18 @@ describe('<ProjectManager />', () => {
       const settings = fixtureProjectSettingsB({ name: nameB });
       const {updateProjectSettingsInProjectManagerUseCase} = await setup(fixtureAppState({
         ui: {
-          projectManager: fixtureProjectManager({
-            deleteProjectIds: {},
-            projects: {
-              ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
-              ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
-            },
-            projectIds: [idA, idB],
-            currentProjectId: idB
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              projectManager: fixtureProjectManager({
+                deleteProjectIds: {},
+                projects: {
+                  ...fixtureProjectAInColl({id: idA, settings: fixtureProjectSettingsA({name: nameA})}),
+                  ...fixtureProjectBInColl({id: idB, settings: fixtureProjectSettingsB({name: nameB})}),
+                },
+                projectIds: [idA, idB],
+                currentProjectId: idB
+              })
+            })
           })
         }
       }));

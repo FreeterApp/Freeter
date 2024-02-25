@@ -6,6 +6,7 @@
 import { createSwitchProjectInProjectManagerUseCase } from '@/application/useCases/projectManager/switchProjectInProjectManager';
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureProjectManager } from '@tests/base/state/fixtures/projectManager';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -25,8 +26,12 @@ describe('switchProjectInProjectManagerUseCase()', () => {
     const testId = 'TEST-ID';
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          currentProjectId: 'SOME-ID'
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              currentProjectId: 'SOME-ID'
+            })
+          })
         })
       }
     })
@@ -34,9 +39,15 @@ describe('switchProjectInProjectManagerUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        projectManager: {
-          ...initState.ui.projectManager,
-          currentProjectId: testId
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              ...initState.ui.modalScreens.data.projectManager,
+              currentProjectId: testId
+            }
+          }
         }
       }
     }

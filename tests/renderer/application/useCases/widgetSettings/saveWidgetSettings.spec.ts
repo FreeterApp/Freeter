@@ -7,6 +7,7 @@ import { createSaveWidgetSettingsUseCase } from '@/application/useCases/widgetSe
 import { AppState } from '@/base/state/app';
 import { fixtureWidgetA, fixtureWidgetEnvAreaShelf } from '@tests/base/fixtures/widget';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWidgetSettings } from '@tests/base/state/fixtures/widgetSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -31,8 +32,13 @@ describe('saveWidgetSettingsUseCase()', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: null
+            })
+          }),
+          order: ['about', 'widgetSettings']
         })
       }
     })
@@ -47,7 +53,7 @@ describe('saveWidgetSettingsUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should save the settings to Widgets state and set widgetInEnv=null in Widget Settings state', async () => {
+  it('should save the settings to Widgets state and reset Widget Settings state', async () => {
     const widget = fixtureWidgetA({
       coreSettings: {
         name: 'Name A'
@@ -72,11 +78,16 @@ describe('saveWidgetSettingsUseCase()', () => {
         }
       },
       ui: {
-        widgetSettings: fixtureWidgetSettings({
-          widgetInEnv: {
-            widget: widgetWithNewSettings,
-            env: fixtureWidgetEnvAreaShelf()
-          }
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: widgetWithNewSettings,
+                env: fixtureWidgetEnvAreaShelf()
+              }
+            })
+          }),
+          order: ['about', 'widgetSettings']
         })
       }
     })
@@ -95,9 +106,16 @@ describe('saveWidgetSettingsUseCase()', () => {
       },
       ui: {
         ...initState.ui,
-        widgetSettings: {
-          ...initState.ui.widgetSettings,
-          widgetInEnv: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            widgetSettings: {
+              ...initState.ui.modalScreens.data.widgetSettings,
+              widgetInEnv: null
+            }
+          },
+          order: ['about']
         }
       }
     }

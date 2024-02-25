@@ -13,6 +13,7 @@ import { fixtureWorkflowSettings } from '@tests/base/state/fixtures/workflowSett
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { AppState } from '@/base/state/app';
 import userEvent from '@testing-library/user-event';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 
 const workflowId = 'Workflow-ID';
 
@@ -59,8 +60,12 @@ describe('<WorkflowSettings />', () => {
         }
       },
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: null
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: null
+            })
+          })
         })
       }
     }));
@@ -79,8 +84,12 @@ describe('<WorkflowSettings />', () => {
         }
       },
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: fixtureWorkflowA({id: workflowId}),
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: fixtureWorkflowA({id: workflowId}),
+            })
+          })
         })
       }
     }));
@@ -99,10 +108,14 @@ describe('<WorkflowSettings />', () => {
         }
       },
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: fixtureWorkflowA({
-            id: workflowId,
-          }),
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: fixtureWorkflowA({
+                id: workflowId,
+              }),
+            })
+          })
         })
       }
     }));
@@ -129,10 +142,14 @@ describe('<WorkflowSettings />', () => {
         }
       },
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: fixtureWorkflowA({
-            id: workflowId,
-          }),
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: fixtureWorkflowA({
+                id: workflowId,
+              }),
+            })
+          })
         })
       }
     }));
@@ -163,8 +180,12 @@ describe('<WorkflowSettings />', () => {
           }
         },
         ui: {
-          workflowSettings: fixtureWorkflowSettings({
-            workflow: fixtureWorkflowA({id: workflowId, settings}),
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              workflowSettings: fixtureWorkflowSettings({
+                workflow: fixtureWorkflowA({id: workflowId, settings}),
+              })
+            })
           })
         }
       }));
@@ -186,8 +207,12 @@ describe('<WorkflowSettings />', () => {
           }
         },
         ui: {
-          workflowSettings: fixtureWorkflowSettings({
-            workflow: fixtureWorkflowA({id: workflowId, settings}),
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              workflowSettings: fixtureWorkflowSettings({
+                workflow: fixtureWorkflowA({id: workflowId, settings}),
+              })
+            })
           })
         }
       }));

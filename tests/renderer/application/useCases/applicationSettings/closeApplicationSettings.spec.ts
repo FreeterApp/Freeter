@@ -8,6 +8,7 @@ import { AppState } from '@/base/state/app';
 import { fixtureAppConfig } from '@tests/base/fixtures/appConfig';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureApplicationSettings } from '@tests/base/state/fixtures/applicationSettings';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 async function setup(initState: AppState) {
@@ -22,11 +23,16 @@ async function setup(initState: AppState) {
 }
 
 describe('closeApplicationSettingsUseCase()', () => {
-  it('should remove appConfig from the state', async () => {
+  it('should remove the screen from the state', async () => {
     const initState = fixtureAppState({
       ui: {
-        applicationSettings: fixtureApplicationSettings({
-          appConfig: fixtureAppConfig()
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            applicationSettings: fixtureApplicationSettings({
+              appConfig: fixtureAppConfig()
+            })
+          }),
+          order: ['about', 'applicationSettings']
         })
       }
     })
@@ -34,10 +40,17 @@ describe('closeApplicationSettingsUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        applicationSettings: {
-          ...initState.ui.applicationSettings,
-          appConfig: null
-        }
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            applicationSettings: {
+              ...initState.ui.modalScreens.data.applicationSettings,
+              appConfig: null
+            }
+          },
+          order: ['about']
+        },
       }
     }
     const {

@@ -7,6 +7,7 @@ import { createCloseWorkflowSettingsUseCase } from '@/application/useCases/workf
 import { AppState } from '@/base/state/app';
 import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWorkflowSettings } from '@tests/base/state/fixtures/workflowSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -22,11 +23,16 @@ async function setup(initState: AppState) {
 }
 
 describe('closeWorkflowSettingsUseCase()', () => {
-  it('should remove widgetInEnv from the state', async () => {
+  it('should remove the screen from the state', async () => {
     const initState = fixtureAppState({
       ui: {
-        workflowSettings: fixtureWorkflowSettings({
-          workflow: fixtureWorkflowA()
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            workflowSettings: fixtureWorkflowSettings({
+              workflow: fixtureWorkflowA()
+            })
+          }),
+          order: ['about', 'workflowSettings']
         })
       }
     })
@@ -34,9 +40,16 @@ describe('closeWorkflowSettingsUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        workflowSettings: {
-          ...initState.ui.workflowSettings,
-          workflow: null
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            workflowSettings: {
+              ...initState.ui.modalScreens.data.workflowSettings,
+              workflow: null
+            },
+          },
+          order: ['about']
         }
       }
     }

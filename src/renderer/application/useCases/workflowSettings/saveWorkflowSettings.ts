@@ -4,7 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
-import { entityStateActions } from '@/base/state/actions';
+import { entityStateActions, modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -15,7 +15,7 @@ export function createSaveWorkflowSettingsUseCase({
 }: Deps) {
   const useCase = () => {
     let state = appStore.get();
-    const { workflow } = state.ui.workflowSettings;
+    const { workflow } = state.ui.modalScreens.data.workflowSettings;
     if (!workflow) {
       return;
     }
@@ -25,16 +25,7 @@ export function createSaveWorkflowSettingsUseCase({
         settings: workflow.settings
       }
     })
-    state = {
-      ...state,
-      ui: {
-        ...state.ui,
-        workflowSettings: {
-          ...state.ui.workflowSettings,
-          workflow: null
-        }
-      }
-    }
+    state = modalScreensStateActions.closeModalScreen(state, 'workflowSettings');
     appStore.set(state);
   }
 

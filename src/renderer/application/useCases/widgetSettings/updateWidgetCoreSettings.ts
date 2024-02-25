@@ -4,6 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { modalScreensStateActions } from '@/base/state/actions';
 import { WidgetCoreSettings } from '@/base/widget';
 
 type Deps = {
@@ -15,29 +16,22 @@ export function createUpdateWidgetCoreSettingsUseCase({
 }: Deps) {
   const useCase = (coreSettings: WidgetCoreSettings) => {
     const state = appStore.get();
-    const { widgetInEnv } = state.ui.widgetSettings;
+    const { widgetInEnv } = state.ui.modalScreens.data.widgetSettings;
     if (!widgetInEnv) {
       return;
     }
-    appStore.set({
-      ...state,
-      ui: {
-        ...state.ui,
-        widgetSettings: {
-          ...state.ui.widgetSettings,
-          widgetInEnv: {
-            ...widgetInEnv,
-            widget: {
-              ...widgetInEnv.widget,
-              coreSettings: {
-                ...widgetInEnv.widget.coreSettings,
-                ...coreSettings
-              }
-            }
+    appStore.set(modalScreensStateActions.updateModalScreen(state, 'widgetSettings', {
+      widgetInEnv: {
+        ...widgetInEnv,
+        widget: {
+          ...widgetInEnv.widget,
+          coreSettings: {
+            ...widgetInEnv.widget.coreSettings,
+            ...coreSettings
           }
         }
       }
-    });
+    }));
   }
 
   return useCase;

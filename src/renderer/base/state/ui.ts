@@ -7,6 +7,7 @@ import { AppConfig } from '@/base/appConfig';
 import { EntityId } from '@/base/entity';
 import { EntityCollection } from '@/base/entityCollection';
 import { EntityIdList } from '@/base/entityList';
+import { List } from '@/base/list';
 import { Project } from '@/base/project';
 import { WidgetInEnv } from '@/base/widget';
 import { WidgetLayoutItemWH, WidgetLayoutItemXY } from '@/base/widgetLayout';
@@ -128,19 +129,31 @@ export interface WorktableState {
   resizingItem?: WorktableResizingItemState;
 }
 
+export interface ModalScreensDataState {
+  about?: void; // no data - key is used for consistency
+  applicationSettings: ApplicationSettingsState;
+  projectManager: ProjectManagerState;
+  widgetSettings: WidgetSettingsState;
+  workflowSettings: WorkflowSettingsState;
+}
+
+export type ModalScreenId = keyof ModalScreensDataState;
+export type ModalScreenData<I extends ModalScreenId> = ModalScreensDataState[I];
+
+export interface ModalScreensState {
+  data: ModalScreensDataState;
+  order: List<ModalScreenId>;
+}
+
 export interface UiState {
   editMode: boolean;
   menuBar: boolean;
-  about: boolean;
   appConfig: AppConfig;
-  applicationSettings: ApplicationSettingsState;
   dragDrop: DragDropState;
+  modalScreens: ModalScreensState;
   palette: PaletteState;
-  projectManager: ProjectManagerState;
   projectSwitcher: ProjectSwitcherState;
   shelf: ShelfState;
-  widgetSettings: WidgetSettingsState;
-  workflowSettings: WorkflowSettingsState;
   worktable: WorktableState;
 }
 
@@ -149,21 +162,31 @@ export function createUiState(): UiState {
     dragDrop: {},
     editMode: false,
     menuBar: true,
-    about: false,
     appConfig: {
       mainHotkey: 'CmdOrCtrl+Shift+F'
     },
-    applicationSettings: {
-      appConfig: null
+    modalScreens: {
+      data: {
+        applicationSettings: {
+          appConfig: null
+        },
+        projectManager: {
+          currentProjectId: '',
+          deleteProjectIds: null,
+          projects: null,
+          projectIds: null
+        },
+        widgetSettings: {
+          widgetInEnv: null
+        },
+        workflowSettings: {
+          workflow: null
+        },
+      },
+      order: []
     },
     palette: {
       widgetTypeIds: []
-    },
-    projectManager: {
-      currentProjectId: '',
-      deleteProjectIds: null,
-      projects: null,
-      projectIds: null
     },
     projectSwitcher: {
       currentProjectId: '',
@@ -171,12 +194,6 @@ export function createUiState(): UiState {
     },
     shelf: {
       widgetList: []
-    },
-    widgetSettings: {
-      widgetInEnv: null
-    },
-    workflowSettings: {
-      workflow: null
     },
     worktable: {}
   }

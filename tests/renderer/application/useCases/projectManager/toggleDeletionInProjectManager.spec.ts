@@ -6,6 +6,7 @@
 import { createToggleDeletionInProjectManagerUseCase } from '@/application/useCases/projectManager/toggleDeletionInProjectManager';
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureProjectManager } from '@tests/base/state/fixtures/projectManager';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -26,8 +27,12 @@ describe('toggleDeletionInProjectManagerUseCase()', () => {
   it('should do nothing, if deleteProjectIds is null', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: null,
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: null,
+            })
+          })
         })
       }
     })
@@ -46,8 +51,12 @@ describe('toggleDeletionInProjectManagerUseCase()', () => {
   it('should set true for the specified project id, when the current value is undefined', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: { 'some-project': true },
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: { 'some-project': true },
+            })
+          })
         })
       }
     })
@@ -55,12 +64,18 @@ describe('toggleDeletionInProjectManagerUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        projectManager: {
-          ...initState.ui.projectManager,
-          deleteProjectIds: {
-            ...initState.ui.projectManager.deleteProjectIds,
-            [projectId]: true
-          },
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              ...initState.ui.modalScreens.data.projectManager,
+              deleteProjectIds: {
+                ...initState.ui.modalScreens.data.projectManager.deleteProjectIds,
+                [projectId]: true
+              },
+            }
+          }
         }
       }
     }
@@ -78,11 +93,15 @@ describe('toggleDeletionInProjectManagerUseCase()', () => {
   it('should set true for the specified project id, when the current value is false', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: {
-            'some-project': true,
-            [projectId]: false
-          },
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: {
+                'some-project': true,
+                [projectId]: false
+              },
+            })
+          })
         })
       }
     })
@@ -90,12 +109,18 @@ describe('toggleDeletionInProjectManagerUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        projectManager: {
-          ...initState.ui.projectManager,
-          deleteProjectIds: {
-            ...initState.ui.projectManager.deleteProjectIds,
-            [projectId]: true
-          },
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              ...initState.ui.modalScreens.data.projectManager,
+              deleteProjectIds: {
+                ...initState.ui.modalScreens.data.projectManager.deleteProjectIds,
+                [projectId]: true
+              },
+            }
+          }
         }
       }
     }
@@ -113,11 +138,15 @@ describe('toggleDeletionInProjectManagerUseCase()', () => {
   it('should set false for the specified project id, when the current value is true', async () => {
     const initState = fixtureAppState({
       ui: {
-        projectManager: fixtureProjectManager({
-          deleteProjectIds: {
-            'some-project': true,
-            [projectId]: true
-          },
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              deleteProjectIds: {
+                'some-project': true,
+                [projectId]: true
+              },
+            })
+          })
         })
       }
     })
@@ -125,12 +154,18 @@ describe('toggleDeletionInProjectManagerUseCase()', () => {
       ...initState,
       ui: {
         ...initState.ui,
-        projectManager: {
-          ...initState.ui.projectManager,
-          deleteProjectIds: {
-            ...initState.ui.projectManager.deleteProjectIds,
-            [projectId]: false
-          },
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              ...initState.ui.modalScreens.data.projectManager,
+              deleteProjectIds: {
+                ...initState.ui.modalScreens.data.projectManager.deleteProjectIds,
+                [projectId]: false
+              },
+            }
+          }
         }
       }
     }

@@ -9,6 +9,7 @@ import { AppState } from '@/base/state/app';
 import { OpenDialogResult, OpenDirDialogConfig, OpenFileDialogConfig } from '@common/base/dialog';
 import { fixtureWidgetA, fixtureWidgetEnvAreaShelf } from '@tests/base/fixtures/widget';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
+import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWidgetSettings } from '@tests/base/state/fixtures/widgetSettings';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
@@ -41,8 +42,12 @@ describe('getWidgetSettingsApiUseCase()', () => {
       }
       const initState = fixtureAppState({
         ui: {
-          widgetSettings: fixtureWidgetSettings({
-            widgetInEnv: null
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              widgetSettings: fixtureWidgetSettings({
+                widgetInEnv: null
+              })
+            })
           })
         }
       })
@@ -65,11 +70,15 @@ describe('getWidgetSettingsApiUseCase()', () => {
       const widget = fixtureWidgetA()
       const initState = fixtureAppState({
         ui: {
-          widgetSettings: fixtureWidgetSettings({
-            widgetInEnv: {
-              widget,
-              env: fixtureWidgetEnvAreaShelf(),
-            }
+          modalScreens: fixtureModalScreens({
+            data: fixtureModalScreensData({
+              widgetSettings: fixtureWidgetSettings({
+                widgetInEnv: {
+                  widget,
+                  env: fixtureWidgetEnvAreaShelf(),
+                }
+              })
+            })
           })
         }
       })
@@ -77,15 +86,21 @@ describe('getWidgetSettingsApiUseCase()', () => {
         ...initState,
         ui: {
           ...initState.ui,
-          widgetSettings: {
-            ...initState.ui.widgetSettings,
-            widgetInEnv: {
-              ...initState.ui.widgetSettings.widgetInEnv!,
-              widget: {
-                ...widget,
-                settings: {
-                  ...widget.settings,
-                  ...newSettings
+          modalScreens: {
+            ...initState.ui.modalScreens,
+            data: {
+              ...initState.ui.modalScreens.data,
+              widgetSettings: {
+                ...initState.ui.modalScreens.data.widgetSettings,
+                widgetInEnv: {
+                  ...initState.ui.modalScreens.data.widgetSettings.widgetInEnv!,
+                  widget: {
+                    ...widget,
+                    settings: {
+                      ...widget.settings,
+                      ...newSettings
+                    }
+                  }
                 }
               }
             }

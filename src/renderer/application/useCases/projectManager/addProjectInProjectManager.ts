@@ -7,6 +7,7 @@ import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
 import { addOneToEntityCollection, getEntitiesArrayFromEntityCollection } from '@/base/entityCollection';
 import { createProject, generateProjectName } from '@/base/project';
+import { modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -18,21 +19,17 @@ export function createAddProjectInProjectManagerUseCase({
 }: Deps) {
   const useCase = () => {
     const state = appStore.get();
-    if (state.ui.projectManager.projects !== null && state.ui.projectManager.projectIds !== null) {
+    const { projectIds, projects } = state.ui.modalScreens.data.projectManager;
+    if (projects !== null && projectIds !== null) {
       const newItemId = idGenerator();
-      const newProject = createProject(newItemId, generateProjectName(getEntitiesArrayFromEntityCollection(state.ui.projectManager.projects).map(item => item?.settings.name || '')))
-      appStore.set({
-        ...state,
-        ui: {
-          ...state.ui,
-          projectManager: {
-            ...state.ui.projectManager,
-            currentProjectId: newItemId,
-            projects: addOneToEntityCollection(state.ui.projectManager.projects, newProject),
-            projectIds: [...state.ui.projectManager.projectIds, newItemId]
-          }
-        }
-      })
+      const newProject = createProject(newItemId, generateProjectName(getEntitiesArrayFromEntityCollection(projects).map(item => item?.settings.name || '')))
+
+      appStore.set(modalScreensStateActions.updateModalScreen(state, 'projectManager', {
+        currentProjectId: newItemId,
+        projects: addOneToEntityCollection(projects, newProject),
+        projectIds: [...projectIds, newItemId]
+      }));
+
       return newItemId;
     }
     return undefined;

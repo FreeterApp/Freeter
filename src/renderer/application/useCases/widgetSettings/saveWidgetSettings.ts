@@ -4,7 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
-import { entityStateActions } from '@/base/state/actions';
+import { entityStateActions, modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
@@ -15,7 +15,7 @@ export function createSaveWidgetSettingsUseCase({
 }: Deps) {
   const useCase = () => {
     let state = appStore.get();
-    const { widgetInEnv } = state.ui.widgetSettings;
+    const { widgetInEnv } = state.ui.modalScreens.data.widgetSettings;
     if (!widgetInEnv) {
       return;
     }
@@ -28,16 +28,7 @@ export function createSaveWidgetSettingsUseCase({
         settings: widget.settings
       }
     })
-    state = {
-      ...state,
-      ui: {
-        ...state.ui,
-        widgetSettings: {
-          ...state.ui.widgetSettings,
-          widgetInEnv: null
-        }
-      }
-    }
+    state = modalScreensStateActions.closeModalScreen(state, 'widgetSettings');
     appStore.set(state);
   }
 

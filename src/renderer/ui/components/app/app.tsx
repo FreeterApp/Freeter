@@ -28,10 +28,10 @@ export function createAppComponent({
   useAppViewModel
 }: Deps) {
   function App() {
-    const {showPalette, modalScreen, hasProjects, contextMenuHandler} = useAppViewModel();
+    const {showPalette, modalScreens, hasModalScreens, hasProjects, contextMenuHandler} = useAppViewModel();
     return (
       <div onContextMenu={contextMenuHandler}>
-        <div data-testid="main-screen" {...{ inert: modalScreen ? '' : undefined }}>
+        <div data-testid="main-screen" {...{ inert: hasModalScreens ? '' : undefined }}>
           <TopBar />
           {
             hasProjects
@@ -46,10 +46,11 @@ export function createAppComponent({
           {showPalette && <Palette />}
         </div>
         {
-          modalScreen &&
-          <div data-testid="modal-screen">
-            {modalScreen}
-          </div>
+          modalScreens.map(scr => (
+            scr && <div key={scr.id} data-testid="modal-screen" {...{ inert: !scr.isLast ? '' : undefined }}>
+              {scr.comp}
+            </div>
+          ))
         }
       </div>
     )
