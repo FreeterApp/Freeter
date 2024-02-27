@@ -22,6 +22,8 @@ interface WidgetApiModules {
   readonly dataStorage: {
     getText: (key: string) => Promise<string | undefined>;
     setText: (key: string, value: string) => Promise<void>;
+    getJson: (key: string) => Promise<unknown | undefined>;
+    setJson: (key: string, value: unknown) => Promise<void>;
     remove: (key: string) => Promise<void>;
     clear: () => Promise<void>;
     getKeys: () => Promise<string[]>;

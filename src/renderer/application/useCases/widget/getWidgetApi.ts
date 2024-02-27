@@ -44,8 +44,10 @@ function _createWidgetApiFactory({
         const widgetDataStorage = widgetDataStorageManager.getObject(widgetId);
         return {
           clear: async () => (await widgetDataStorage).clear(),
+          getJson: async (key) => (await widgetDataStorage).getJson(key),
           getText: async (key) => (await widgetDataStorage).getText(key),
           remove: async (key) => (await widgetDataStorage).deleteItem(key),
+          setJson: async (key, value) => (await widgetDataStorage).setJson(key, value),
           setText: async (key, value) => (await widgetDataStorage).setText(key, value),
           getKeys: async () => (await widgetDataStorage).getKeys()
         }

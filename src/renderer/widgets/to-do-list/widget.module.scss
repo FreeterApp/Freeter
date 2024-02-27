@@ -1,0 +1,47 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+$item-height: 32px;
+
+.todo-list {
+  display: block;
+  width: 100%;
+}
+.todo-list-item {
+  white-space: nowrap;
+  > label {
+    cursor: pointer;
+    height: $item-height;
+    line-height: $item-height;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    > span:last-child {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+  &.is-done {
+    text-decoration: line-through;
+    opacity: 0.8;
+  }
+  &:hover, &:active, &:focus-visible {
+    background-color: #A6A6A650;
+  }
+}
+.todo-list-item-editor {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: $item-height;
+  line-height: $item-height;
+  border: none;
+  background: none;
+}
+.todo-list-add-item-editor{
+  text-indent: 22px;
+}

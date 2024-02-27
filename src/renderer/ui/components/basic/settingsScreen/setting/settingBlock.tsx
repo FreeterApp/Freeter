@@ -22,6 +22,8 @@ export const SettingBlock = ({
     >
       {title}
     </label>
-    { children }
+    <div>
+      { children }
+    </div>
   </fieldset>
 )

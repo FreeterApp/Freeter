@@ -16,26 +16,31 @@
   fieldset:not(:first-child) {
     margin-top: 24px;
   }
-  label {
-    box-sizing: border-box;
-    font-weight: 500;
-    display: inline-block;
-    &[title] {
-      &::after {
-        content: "?";
-        font-size: 12px;
-        line-height: 14px;
-        width: 16px;
-        height: 16px;
-        box-sizing: border-box;
-        text-align: center;
-        vertical-align: middle;
-        display: inline-block;
-        border-radius: 100%;
-        border: 1px solid #3B3B3B;
-        margin-left: 12px;
-        margin-top: -4px;
+  fieldset {
+    > label {
+      box-sizing: border-box;
+      font-weight: 500;
+      display: inline-block;
+      &[title] {
+        &::after {
+          content: "?";
+          font-size: 12px;
+          line-height: 14px;
+          width: 16px;
+          height: 16px;
+          box-sizing: border-box;
+          text-align: center;
+          vertical-align: middle;
+          display: inline-block;
+          border-radius: 100%;
+          border: 1px solid #3B3B3B;
+          margin-left: 12px;
+          margin-top: -4px;
+        }
       }
+    }
+    > div > * {
+      margin-top: 12px;
     }
   }
   ul {
@@ -53,9 +58,6 @@
     > *:not(:last-child) {
       margin-right: 6px;
     }
-  }
-  fieldset > * {
-    margin-top: 12px;
   }
   input[type=text], select, textarea {
     display: block;

@@ -45,6 +45,49 @@ select {
   background-position: calc(100% - 6px) calc(50% + 4px);
 }
 
+input[type="checkbox"] {
+  appearance: none;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  margin: 0;
+  font: inherit;
+  color: #3B3B3B;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #3B3B3B;
+  border-radius: 1px;
+  transform: translateY(-0.075em);
+  margin-right: 6px;
+}
+
+input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 10px;
+  height: 10px;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  transform: scale(0) translate(-50%, -50%);
+  transform-origin: bottom left;
+  box-shadow: inset 12px 12px #3B3B3B;
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1) translate(-50%, -50%);
+}
+
+input[type="checkbox"]:focus {
+  outline: 1px solid #005FB8;
+  outline-offset: 2px;
+}
+
+input[type="checkbox"]:disabled {
+  opacity: 0.3;
+}
+
 *:focus-visible {
   outline: #005FB8 solid 1px;
   outline-offset: -1px;
@@ -66,3 +109,10 @@ select {
     background-color: rgba(0, 0, 0, 0.6);
   }
 }
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
