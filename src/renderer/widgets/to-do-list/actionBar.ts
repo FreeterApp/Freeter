@@ -4,25 +4,29 @@
  */
 
 import { ActionBarItems } from '@/base/actionBar';
-import { activateItemInput, labelAddItem, labelMarkAllIncomplete, markAllIncomplete } from './actions';
+import { labelAddItemTop, labelMarkAllIncomplete, markAllIncomplete, showEditor } from './actions';
 import { copyFullTextSvg } from './icons';
-import { GetToDoListState, SetToDoListState } from '@/widgets/to-do-list/state';
+import { GetToDoListState, SetEditorVisibilityState, SetToDoListState } from '@/widgets/to-do-list/state';
 
-export function createActionBarItems(elAddItemInput: HTMLInputElement | null, getState: GetToDoListState, setState: SetToDoListState): ActionBarItems {
-  return (!elAddItemInput) ? [] : [
+export function createActionBarItems(
+  getToDoListState: GetToDoListState,
+  setToDoListState: SetToDoListState,
+  setEditingItemState: SetEditorVisibilityState
+): ActionBarItems {
+  return [
     {
       enabled: true,
       icon: copyFullTextSvg,
-      id: 'ADD-ITEM',
-      title: labelAddItem,
-      doAction: async () => activateItemInput(elAddItemInput)
+      id: 'ADD-ITEM-AT-TOP',
+      title: labelAddItemTop,
+      doAction: async () => showEditor('add-top', setEditingItemState)
     },
     {
       enabled: true,
       icon: copyFullTextSvg,
       id: 'MARK-ALL-INCOMPLETE',
       title: labelMarkAllIncomplete,
-      doAction: async () => markAllIncomplete(getState, setState)
+      doAction: async () => markAllIncomplete(getToDoListState, setToDoListState)
     }
   ];
 }

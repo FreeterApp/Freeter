@@ -34,7 +34,7 @@ $item-height: 32px;
       overflow: hidden;
     }
   }
-  &.is-done:not(.is-edit-mode) {
+  &.is-done:not(.is-editor) {
     text-decoration: line-through;
     opacity: 0.8;
   }
@@ -46,7 +46,7 @@ $item-height: 32px;
   transform: translateY(-50%);
   visibility: hidden;
 }
-.todo-list-item:not(.is-edit-mode) {
+.todo-list-item:not(.is-editor) {
   &:hover, &:active, &:focus-within {
     background-color: #A6A6A650;
     &.is-done {
@@ -72,5 +72,5 @@ $item-height: 32px;
 .todo-list-edit-item-editor{
   padding-left: 3px;
   margin-left: -3px;
-  padding-right: 0;
+  padding-right: 6px;
 }

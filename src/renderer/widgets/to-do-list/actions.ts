@@ -4,9 +4,10 @@
  */
 
 import { List, addItemToList, moveItemInList, removeItemFromList } from '@/widgets/appModules';
-import { SetToDoListState, GetToDoListState, ToDoListItem, ToDoListState, SetEditingItemState } from '@/widgets/to-do-list/state';
+import { SetToDoListState, GetToDoListState, ToDoListItem, ToDoListState, SetEditorVisibilityState } from '@/widgets/to-do-list/state';
 
-export const labelAddItem = 'Add Item';
+export const labelAddItemTop = 'Add Item at Top';
+export const labelAddItemBottom = 'Add Item at Bottom';
 export const labelMarkAllIncomplete = 'Mark All as Incomplete';
 export const labelMarkAllComplete = 'Mark All as Complete';
 export const labelMarkIncomplete = 'Mark as Incomplete';
@@ -29,9 +30,9 @@ function createToDoListItem(list: ToDoListState, text: string, idx?: number): [T
   return [updList, newItem];
 }
 
-export function addItem(text: string, getState: GetToDoListState, setState: SetToDoListState) {
+export function addItem(text: string, atTop: boolean, getState: GetToDoListState, setState: SetToDoListState) {
   if (text) {
-    setState(createToDoListItem(getState(), text)[0])
+    setState(createToDoListItem(getState(), text, atTop ? 0 : undefined)[0])
   }
 }
 
@@ -101,20 +102,6 @@ export function markComplete(itemId: number, toBottom: boolean, getState: GetToD
   })
 }
 
-export function scrollToItemInput(elItemInput: HTMLInputElement) {
-  elItemInput.scrollIntoView();
-}
-export function focusItemInput(elItemInput: HTMLInputElement) {
-  elItemInput.focus();
-}
-export function selectAllInItemInput(elItemInput: HTMLInputElement) {
-  elItemInput.select();
-}
-export function activateItemInput(elItemInput: HTMLInputElement) {
-  scrollToItemInput(elItemInput);
-  focusItemInput(elItemInput);
-}
-
-export function setItemEditMode(id: number | null, setState: SetEditingItemState) {
+export function showEditor(id: number | 'add-top' | null, setState: SetEditorVisibilityState) {
   setState(id);
 }

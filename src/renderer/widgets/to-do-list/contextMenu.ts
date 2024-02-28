@@ -3,26 +3,31 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { GetToDoListState, SetEditingItemState, SetToDoListState } from '@/widgets/to-do-list/state';
-import { activateItemInput, deleteCompleted, deleteItem, setItemEditMode, labelAddItem, labelDeleteCompleted, labelDeleteItem, labelEditItem, labelMarkAllComplete, labelMarkAllIncomplete, labelMarkComplete, labelMarkIncomplete, markAllComplete, markAllIncomplete, markComplete, markIncomplete } from './actions';
+import { GetToDoListState, SetEditorVisibilityState, SetToDoListState } from '@/widgets/to-do-list/state';
+import { deleteCompleted, deleteItem, showEditor, labelAddItemTop, labelDeleteCompleted, labelDeleteItem, labelEditItem, labelMarkAllComplete, labelMarkAllIncomplete, labelMarkComplete, labelMarkIncomplete, markAllComplete, markAllIncomplete, markComplete, markIncomplete, labelAddItemBottom } from './actions';
 import { WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
 import { Settings } from '@/widgets/to-do-list/settings';
+import { activateItemInput } from '@/widgets/to-do-list/dom';
 
 export const listContextId = 'list';
 export function createContextMenuFactory(
-  elAddItemInput: HTMLInputElement | null,
+  elAddItemBottomInput: HTMLInputElement | null,
   settings: Settings,
   getToDoListState: GetToDoListState,
   setToDoListState: SetToDoListState,
-  setEditingItemState: SetEditingItemState
+  setEditingItemState: SetEditorVisibilityState
 ): WidgetContextMenuFactory {
   return (contextId) => {
     let ctxMenuItems: WidgetMenuItem[] = []
-    if (elAddItemInput) {
+    if (elAddItemBottomInput) {
       const ctxCommonItems: WidgetMenuItem[] = [
         {
-          label: labelAddItem,
-          doAction: async () => activateItemInput(elAddItemInput)
+          label: labelAddItemTop,
+          doAction: async () => showEditor('add-top', setEditingItemState)
+        },
+        {
+          label: labelAddItemBottom,
+          doAction: async () => activateItemInput(elAddItemBottomInput)
         },
         { type: 'separator' },
         {
@@ -57,7 +62,7 @@ export function createContextMenuFactory(
                   : async () => markComplete(itemId, settings.doneToBottom, getToDoListState, setToDoListState)
               }, {
                 label: labelEditItem,
-                doAction: async () => setItemEditMode(itemId, setEditingItemState)
+                doAction: async () => showEditor(itemId, setEditingItemState)
               }, {
                 label: labelDeleteItem,
                 doAction: async () => deleteItem(itemId, getToDoListState, setToDoListState)

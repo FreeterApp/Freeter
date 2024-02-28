@@ -13,9 +13,9 @@ export interface ToDoListState {
   nextItemId: number;
 }
 
-export type EditingItemState = number | null;
+export type EditorVisibilityState = number | 'add-top' | null;
 
 export type GetToDoListState = () => ToDoListState;
 export type SetToDoListState = (newState: ToDoListState) => void;
 
-export type SetEditingItemState = (newState: EditingItemState) => void;
+export type SetEditorVisibilityState = (newState: EditorVisibilityState) => void;
