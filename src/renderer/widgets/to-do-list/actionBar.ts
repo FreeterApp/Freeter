@@ -4,18 +4,25 @@
  */
 
 import { ActionBarItems } from '@/base/actionBar';
-import { canCopyFullText, copyFullText, labelCopyFullText } from './actions';
-import { WidgetApi } from '@/widgets/appModules';
+import { activateAddItemInput, labelAddItem, labelMarkAllIncomplete, markAllIncomplete } from './actions';
 import { copyFullTextSvg } from './icons';
+import { GetToDoListState, SetToDoListState } from '@/widgets/to-do-list/state';
 
-export function createActionBarItems(elTextArea: HTMLTextAreaElement | null, widgetApi: WidgetApi): ActionBarItems {
-  return (!elTextArea) ? [] : [
+export function createActionBarItems(elAddItemInput: HTMLInputElement | null, getState: GetToDoListState, setState: SetToDoListState): ActionBarItems {
+  return (!elAddItemInput) ? [] : [
     {
-      enabled: canCopyFullText(),
+      enabled: true,
       icon: copyFullTextSvg,
-      id: 'COPY-FULL-TEXT',
-      title: labelCopyFullText,
-      doAction: async () => copyFullText(elTextArea, widgetApi)
+      id: 'ADD-ITEM',
+      title: labelAddItem,
+      doAction: async () => activateAddItemInput(elAddItemInput)
+    },
+    {
+      enabled: true,
+      icon: copyFullTextSvg,
+      id: 'MARK-ALL-INCOMPLETE',
+      title: labelMarkAllIncomplete,
+      doAction: async () => markAllIncomplete(getState, setState)
     }
   ];
 }

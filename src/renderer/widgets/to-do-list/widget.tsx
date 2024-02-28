@@ -8,31 +8,22 @@ import { ActionBar, ActionBarItems, List, ReactComponent, WidgetReactComponentPr
 import styles from './widget.module.scss';
 import { Settings } from './settings';
 import { ChangeEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createContextMenuFactory, textAreaContextId } from '@/widgets/note/contextMenu';
-import { createActionBarItems } from '@/widgets/note/actionBar';
+import { createContextMenuFactory, textAreaContextId } from '@/widgets/to-do-list/contextMenu';
+import { createActionBarItems } from '@/widgets/to-do-list/actionBar';
 import clsx from 'clsx';
+import { scrollToAddItemInput } from '@/widgets/to-do-list/actions';
+import { ToDoListItem, ToDoListState } from '@/widgets/to-do-list/state';
 
 const dataKey = 'todo';
 
-interface ToDoListItem {
-  id: number;
-  text: string;
-  isDone: boolean;
-}
-
-interface ToDoList {
-  items: List<ToDoListItem>;
-  nextItemId: number;
-}
-
-function createToDoListItem(list: ToDoList, text: string, idx?: number): [ToDoList, ToDoListItem] {
+function createToDoListItem(list: ToDoListState, text: string, idx?: number): [ToDoListState, ToDoListItem] {
   const id = list.nextItemId;
   const newItem: ToDoListItem = {
     id,
     text: text.replace(/\s+/g, ' '),
     isDone: false
   }
-  const updList: ToDoList = {
+  const updList: ToDoListState = {
     nextItemId: id+1,
     items: addItemToList(list.items, newItem, idx)
   }
@@ -44,24 +35,20 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
   const {doneToBottom} = settings
   const {updateActionBar, setContextMenuFactory, dataStorage} = widgetApi;
   const [isLoaded, setIsLoaded] = useState(false);
-  const [toDoList, setToDoList] = useState<ToDoList>({
+  const [scrollToAddInput, setScrollToAddInput] = useState(false);
+  const [toDoList, setToDoList] = useState<ToDoListState>({
     items: [],
     nextItemId: 1
   });
 
-  useEffect(() => {
-    if (isLoaded) {
-      // updateActionBar(createActionBarItems(textAreaRef.current, widgetApi));
-      // setContextMenuFactory(createContextMenuFactory(textAreaRef.current, widgetApi));
-    }
-  }, [isLoaded, updateActionBar, setContextMenuFactory, widgetApi]);
+  const getToDoList = useCallback(() => toDoList, [toDoList]);
 
-  const saveData = useMemo(() => debounce((data: ToDoList) => dataStorage.setJson(dataKey, data), 3000), [dataStorage]);
+  const saveData = useMemo(() => debounce((data: ToDoListState) => dataStorage.setJson(dataKey, data), 3000), [dataStorage]);
 
   const loadData = useCallback(async function () {
-    const loadedData = await dataStorage.getJson(dataKey) as ToDoList|undefined;
+    const loadedData = await dataStorage.getJson(dataKey) as ToDoListState|undefined;
     if (typeof loadedData === 'object' && loadedData && Array.isArray(loadedData.items) && typeof loadedData.nextItemId === 'number') {
-      const sanitizedData: ToDoList = {
+      const sanitizedData: ToDoListState = {
         items: loadedData.items.map(({id, text, isDone }) => {
           if(typeof id === 'number' && typeof text === 'string' && typeof isDone === 'boolean') {
             return { id, text, isDone }
@@ -82,10 +69,24 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
     }
   }, [isLoaded, loadData])
 
-  const setToDoListAndSave = useCallback((toDoList: ToDoList)=>{
+  const setToDoListAndSave = useCallback((toDoList: ToDoListState)=>{
     setToDoList(toDoList);
     saveData(toDoList);
   }, [saveData])
+
+  useEffect(() => {
+    if (isLoaded) {
+      updateActionBar(createActionBarItems(addItemInputRef.current, getToDoList, setToDoListAndSave));
+      // setContextMenuFactory(createContextMenuFactory(textAreaRef.current, widgetApi));
+    }
+  }, [isLoaded, updateActionBar, setContextMenuFactory, getToDoList, setToDoListAndSave]);
+
+  useEffect(() => {
+    if (scrollToAddInput && addItemInputRef.current) {
+      scrollToAddItemInput(addItemInputRef.current);
+      setScrollToAddInput(false);
+    }
+  }, [scrollToAddInput])
 
   const addItem = useCallback((text: string) => {
     if(text) {
@@ -127,6 +128,7 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
     if (e.key === 'Enter') {
       addItem((e.target as HTMLInputElement).value);
       (e.target as HTMLInputElement).value='';
+      setScrollToAddInput(true);
     }
   }, [addItem])
 

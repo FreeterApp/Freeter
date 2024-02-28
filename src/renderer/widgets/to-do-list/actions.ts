@@ -4,19 +4,40 @@
  */
 
 import { WidgetApi } from '@/widgets/appModules';
+import { ToDoListState, SetToDoListState, GetToDoListState } from '@/widgets/to-do-list/state';
 
-export const labelCopyFullText = 'Copy Full Text';
-export const labelUndo = 'Undo';
-export const labelRedo = 'Redo';
-export const labelCut = 'Cut';
-export const labelCopy = 'Copy';
-export const labelPaste = 'Paste';
-export const labelSelectAll = 'Select All';
+export const labelAddItem = 'Add Item';
+export const labelMarkAllIncomplete = 'Mark All as Incomplete';
+// export const labelUndo = 'Undo';
+// export const labelRedo = 'Redo';
+// export const labelCut = 'Cut';
+// export const labelCopy = 'Copy';
+// export const labelPaste = 'Paste';
+// export const labelSelectAll = 'Select All';
 
-export function canCopyFullText() {
-  return true;
+// export function canCopyFullText() {
+//   return true;
+// }
+export function markAllIncomplete(getState: GetToDoListState, setState: SetToDoListState) {
+  const state = getState();
+  setState({
+    ...state,
+    items: state.items.map(item => ({ ...item, isDone: false }))
+  })
 }
 
-export function copyFullText(elTextArea: HTMLTextAreaElement, widgetApi: WidgetApi) {
-  widgetApi.clipboard.writeText(elTextArea.value);
+export function markAllComplete(getState: GetToDoListState, setState: SetToDoListState) {
+  const state = getState();
+  setState({
+    ...state,
+    items: state.items.map(item => ({ ...item, isDone: true }))
+  })
+}
+
+export function scrollToAddItemInput(elAddItemInput: HTMLElement) {
+  elAddItemInput.scrollIntoView();
+}
+export function activateAddItemInput(elAddItemInput: HTMLElement) {
+  scrollToAddItemInput(elAddItemInput);
+  elAddItemInput.focus();
 }
