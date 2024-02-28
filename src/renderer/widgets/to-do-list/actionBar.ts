@@ -4,7 +4,7 @@
  */
 
 import { ActionBarItems } from '@/base/actionBar';
-import { activateAddItemInput, labelAddItem, labelMarkAllIncomplete, markAllIncomplete } from './actions';
+import { activateItemInput, labelAddItem, labelMarkAllIncomplete, markAllIncomplete } from './actions';
 import { copyFullTextSvg } from './icons';
 import { GetToDoListState, SetToDoListState } from '@/widgets/to-do-list/state';
 
@@ -15,7 +15,7 @@ export function createActionBarItems(elAddItemInput: HTMLInputElement | null, ge
       icon: copyFullTextSvg,
       id: 'ADD-ITEM',
       title: labelAddItem,
-      doAction: async () => activateAddItemInput(elAddItemInput)
+      doAction: async () => activateItemInput(elAddItemInput)
     },
     {
       enabled: true,

@@ -18,8 +18,10 @@ $item-height: 32px;
 .todo-list-item {
   white-space: nowrap;
   position: relative;
-  > label {
+  label, input[type="checkbox"] {
     cursor: pointer;
+  }
+  label {
     height: $item-height;
     line-height: $item-height;
     padding: 0 6px;
@@ -32,7 +34,7 @@ $item-height: 32px;
       overflow: hidden;
     }
   }
-  &.is-done {
+  &.is-done:not(.is-edit-mode) {
     text-decoration: line-through;
     opacity: 0.8;
   }
@@ -44,8 +46,8 @@ $item-height: 32px;
   transform: translateY(-50%);
   visibility: hidden;
 }
-.todo-list-item {
-  &:hover, &:active, &:focus-visible {
+.todo-list-item:not(.is-edit-mode) {
+  &:hover, &:active, &:focus-within {
     background-color: #A6A6A650;
     &.is-done {
       .done-item-actionbar {
@@ -59,10 +61,16 @@ $item-height: 32px;
   box-sizing: border-box;
   width: 100%;
   height: $item-height;
-  line-height: $item-height;
+  // line-height: $item-height-6px;
+  // padding
   border: none;
   background: none;
 }
 .todo-list-add-item-editor{
   text-indent: 22px;
+}
+.todo-list-edit-item-editor{
+  padding-left: 3px;
+  margin-left: -3px;
+  padding-right: 0;
 }

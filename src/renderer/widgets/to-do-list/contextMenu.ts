@@ -3,55 +3,73 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { labelAddItem } from './actions';
-import { WidgetApi, WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
+import { GetToDoListState, SetEditingItemState, SetToDoListState } from '@/widgets/to-do-list/state';
+import { activateItemInput, deleteCompleted, deleteItem, setItemEditMode, labelAddItem, labelDeleteCompleted, labelDeleteItem, labelEditItem, labelMarkAllComplete, labelMarkAllIncomplete, labelMarkComplete, labelMarkIncomplete, markAllComplete, markAllIncomplete, markComplete, markIncomplete } from './actions';
+import { WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
+import { Settings } from '@/widgets/to-do-list/settings';
 
-export const textAreaContextId = 'textarea';
-export function createContextMenuFactory(elTextArea: HTMLTextAreaElement | null, widgetApi: WidgetApi): WidgetContextMenuFactory {
+export const listContextId = 'list';
+export function createContextMenuFactory(
+  elAddItemInput: HTMLInputElement | null,
+  settings: Settings,
+  getToDoListState: GetToDoListState,
+  setToDoListState: SetToDoListState,
+  setEditingItemState: SetEditingItemState
+): WidgetContextMenuFactory {
   return (contextId) => {
-    const items: WidgetMenuItem[] = []
-    // if (elTextArea) {
-    //   const itemsGroup: WidgetMenuItem[] = [
-    //     {
-    //       doAction: async () => copyFullText(elTextArea, widgetApi),
-    //       label: labelCopyFullText
-    //     }
-    //   ]
-    //   items.push(...itemsGroup);
+    let ctxMenuItems: WidgetMenuItem[] = []
+    if (elAddItemInput) {
+      const ctxCommonItems: WidgetMenuItem[] = [
+        {
+          label: labelAddItem,
+          doAction: async () => activateItemInput(elAddItemInput)
+        },
+        { type: 'separator' },
+        {
+          label: labelMarkAllIncomplete,
+          doAction: async () => markAllIncomplete(getToDoListState, setToDoListState)
+        },
+        {
+          label: labelMarkAllComplete,
+          doAction: async () => markAllComplete(getToDoListState, setToDoListState)
+        },
+        { type: 'separator' },
+        {
+          label: labelDeleteCompleted,
+          doAction: async () => deleteCompleted(getToDoListState, setToDoListState)
+        },
+      ]
+      if (contextId === listContextId) {
+        ctxMenuItems = ctxCommonItems;
+      } else {
+        const itemId = Number(contextId);
+        const { items } = getToDoListState();
+        if (!isNaN(itemId)) {
+          const itemIdx = items.findIndex(item => item.id === itemId);
+          if (itemIdx > -1) {
+            const item = items[itemIdx];
 
-    //   if (contextId === textAreaContextId) {
-    //     const itemsGroup: WidgetMenuItem[] = [
-    //       { type: 'separator' },
-    //       {
-    //         label: labelUndo,
-    //         role: 'undo'
-    //       }, {
-    //         label: labelRedo,
-    //         role: 'redo'
-    //       },
-    //       { type: 'separator' },
-    //       {
-    //         label: labelCut,
-    //         role: 'cut',
-    //       },
-    //       {
-    //         label: labelCopy,
-    //         role: 'copy',
-    //       },
-    //       {
-    //         label: labelPaste,
-    //         role: 'paste',
-    //       },
-    //       {
-    //         label: labelSelectAll,
-    //         role: 'selectAll',
-    //       }
-    //     ]
+            ctxMenuItems = [
+              {
+                label: item.isDone ? labelMarkIncomplete : labelMarkComplete,
+                doAction: item.isDone
+                  ? async () => markIncomplete(itemId, getToDoListState, setToDoListState)
+                  : async () => markComplete(itemId, settings.doneToBottom, getToDoListState, setToDoListState)
+              }, {
+                label: labelEditItem,
+                doAction: async () => setItemEditMode(itemId, setEditingItemState)
+              }, {
+                label: labelDeleteItem,
+                doAction: async () => deleteItem(itemId, getToDoListState, setToDoListState)
+              },
+              { type: 'separator' },
+              ...ctxCommonItems
+            ];
+          }
+        }
+      }
+    }
 
-    //     items.push(...itemsGroup);
-    //   }
-    // }
-
-    return items;
+    return ctxMenuItems;
   }
 }

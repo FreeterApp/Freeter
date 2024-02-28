@@ -4,37 +4,24 @@
  */
 
 import { debounce } from '@/widgets/helpers';
-import { ActionBar, ActionBarItems, List, ReactComponent, WidgetReactComponentProps, addItemToList, delete14Svg, moveItemInList, removeItemFromList } from '@/widgets/appModules';
+import { ActionBar, ActionBarItems, ReactComponent, WidgetReactComponentProps, delete14Svg } from '@/widgets/appModules';
 import styles from './widget.module.scss';
 import { Settings } from './settings';
-import { ChangeEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createContextMenuFactory, textAreaContextId } from '@/widgets/to-do-list/contextMenu';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createContextMenuFactory, listContextId } from '@/widgets/to-do-list/contextMenu';
 import { createActionBarItems } from '@/widgets/to-do-list/actionBar';
 import clsx from 'clsx';
-import { scrollToAddItemInput } from '@/widgets/to-do-list/actions';
-import { ToDoListItem, ToDoListState } from '@/widgets/to-do-list/state';
+import { addItem, deleteItem, editItem, focusItemInput, markComplete, markIncomplete, scrollToItemInput, selectAllInItemInput, setItemEditMode } from '@/widgets/to-do-list/actions';
+import { EditingItemState, ToDoListItem, ToDoListState, maxTextLength } from '@/widgets/to-do-list/state';
 
 const dataKey = 'todo';
 
-function createToDoListItem(list: ToDoListState, text: string, idx?: number): [ToDoListState, ToDoListItem] {
-  const id = list.nextItemId;
-  const newItem: ToDoListItem = {
-    id,
-    text: text.replace(/\s+/g, ' '),
-    isDone: false
-  }
-  const updList: ToDoListState = {
-    nextItemId: id+1,
-    items: addItemToList(list.items, newItem, idx)
-  }
-  return [updList, newItem];
-}
-
 function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) {
   const addItemInputRef = useRef<HTMLInputElement>(null);
-  const {doneToBottom} = settings
+  const editItemInputRef = useRef<HTMLInputElement>(null);
   const {updateActionBar, setContextMenuFactory, dataStorage} = widgetApi;
   const [isLoaded, setIsLoaded] = useState(false);
+  const [editingItem, setEditingItem] = useState<EditingItemState>(null);
   const [scrollToAddInput, setScrollToAddInput] = useState(false);
   const [toDoList, setToDoList] = useState<ToDoListState>({
     items: [],
@@ -77,60 +64,55 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
   useEffect(() => {
     if (isLoaded) {
       updateActionBar(createActionBarItems(addItemInputRef.current, getToDoList, setToDoListAndSave));
-      // setContextMenuFactory(createContextMenuFactory(textAreaRef.current, widgetApi));
     }
-  }, [isLoaded, updateActionBar, setContextMenuFactory, getToDoList, setToDoListAndSave]);
+  }, [getToDoList, isLoaded, setToDoListAndSave, updateActionBar]);
+
+  useEffect(() => {
+    if (isLoaded) {
+      setContextMenuFactory(createContextMenuFactory(addItemInputRef.current, settings, getToDoList, setToDoListAndSave, setEditingItem));
+    }
+  }, [getToDoList, isLoaded, setContextMenuFactory, setToDoListAndSave, settings]);
 
   useEffect(() => {
     if (scrollToAddInput && addItemInputRef.current) {
-      scrollToAddItemInput(addItemInputRef.current);
+      scrollToItemInput(addItemInputRef.current);
       setScrollToAddInput(false);
     }
   }, [scrollToAddInput])
 
-  const addItem = useCallback((text: string) => {
-    if(text) {
-      setToDoListAndSave(createToDoListItem(toDoList, text)[0])
+  useEffect(() => {
+    if (editingItem!==null && editItemInputRef.current) {
+      focusItemInput(editItemInputRef.current);
+      selectAllInItemInput(editItemInputRef.current);
     }
-  }, [setToDoListAndSave, toDoList])
-
-  const deleteItem = useCallback((id: number) => {
-    const idx = toDoList.items.findIndex(item => id===item.id);
-    if(idx>-1) {
-      setToDoListAndSave({
-        ...toDoList,
-        items: removeItemFromList(toDoList.items, idx)
-      })
-    }
-  }, [setToDoListAndSave, toDoList])
-
-  const toggleItem = useCallback((id: number) => {
-    let updItems: List<ToDoListItem> = toDoList.items.map(item => item.id===id
-      ? {...item, isDone: !item.isDone}
-      : item)
-    if(doneToBottom) {
-      const itemIdx = updItems.findIndex(item => item.id===id);
-      if(itemIdx>-1 && updItems[itemIdx].isDone) {
-        updItems = moveItemInList(updItems, itemIdx, undefined);
-      }
-    }
-    setToDoListAndSave({
-      ...toDoList,
-      items: updItems
-    })
-  }, [doneToBottom, setToDoListAndSave, toDoList])
+  }, [editingItem])
 
   const addItemInputBlurHandler: React.FocusEventHandler<HTMLInputElement> = useCallback(e => {
-    addItem(e.target.value);
+    addItem(e.target.value, getToDoList, setToDoListAndSave);
     e.target.value='';
-  }, [addItem])
+  }, [getToDoList, setToDoListAndSave])
+
   const addItemInputKeyDownHandler: React.KeyboardEventHandler<HTMLInputElement> = useCallback(e => {
     if (e.key === 'Enter') {
-      addItem((e.target as HTMLInputElement).value);
+      addItem((e.target as HTMLInputElement).value, getToDoList, setToDoListAndSave);
       (e.target as HTMLInputElement).value='';
       setScrollToAddInput(true);
     }
-  }, [addItem])
+  }, [getToDoList, setToDoListAndSave])
+
+  const editItemInputBlurHandler = useCallback((e: React.FocusEvent<HTMLInputElement, Element>, itemId: number) => {
+    editItem(itemId, e.target.value, getToDoList, setToDoListAndSave);
+    setItemEditMode(null, setEditingItem);
+  }, [getToDoList, setToDoListAndSave])
+
+  const editItemInputKeyDownHandler = useCallback((e: React.KeyboardEvent<HTMLInputElement>, itemId: number) => {
+    if (e.key === 'Enter') {
+      editItem(itemId, (e.target as HTMLInputElement).value, getToDoList, setToDoListAndSave);
+      setItemEditMode(null, setEditingItem);
+    } else if (e.key === 'Escape') {
+      setItemEditMode(null, setEditingItem);
+    }
+  }, [getToDoList, setToDoListAndSave])
 
   const createDoneActionBarItems: (itemId: number) => ActionBarItems = useCallback((itemId) => [{
     enabled: true,
@@ -138,29 +120,45 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
     id: 'DELETE-ITEM',
     title: 'Delete Item',
     doAction: async () => {
-      deleteItem(itemId);
+      deleteItem(itemId, getToDoList, setToDoListAndSave);
     }
-  }], [deleteItem])
-
+  }], [getToDoList, setToDoListAndSave])
 
   return (
     isLoaded
-    ? <div className={styles['todo-list-viewport']}>
+    ? <div className={styles['todo-list-viewport']} data-widget-context={listContextId}>
         <ul
           className={styles['todo-list']}
         >
           {toDoList.items.map(item=>(
             <li
               key={item.id}
-              className={clsx(styles['todo-list-item'], item.isDone && styles['is-done'])}
+              className={clsx(styles['todo-list-item'], item.isDone && styles['is-done'], editingItem === item.id && styles['is-edit-mode'])}
+              data-widget-context={item.id}
             >
               <label title={item.text}>
                 <span>
-                  <input type='checkbox' checked={item.isDone} onChange={_ => toggleItem(item.id)}/>
+                  <input
+                    type='checkbox'
+                    checked={item.isDone}
+                    onChange={
+                      _ => item.isDone
+                        ? markIncomplete(item.id, getToDoList, setToDoListAndSave)
+                        : markComplete(item.id, settings.doneToBottom, getToDoList, setToDoListAndSave)
+                    }/>
                 </span>
-                <span>
-                  {item.text}
-                </span>
+                {editingItem === item.id
+                  ? <input
+                      type="text"
+                      ref={editItemInputRef}
+                      className={clsx(styles['todo-list-item-editor'], styles['todo-list-edit-item-editor'])}
+                      onBlur={e => editItemInputBlurHandler(e, item.id)}
+                      onKeyDown={e => editItemInputKeyDownHandler(e, item.id)}
+                      defaultValue={item.text}
+                      maxLength={maxTextLength}
+                    />
+                  : <span>{item.text}</span>
+                }
               </label>
               {item.isDone &&
                 <ActionBar
@@ -178,27 +176,11 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
           className={clsx(styles['todo-list-item-editor'], styles['todo-list-add-item-editor'])}
           onBlur={addItemInputBlurHandler}
           onKeyDown={addItemInputKeyDownHandler}
-          maxLength={1000}
+          maxLength={maxTextLength}
         />
       </div>
-    // ? <textarea
-    //     ref={textAreaRef}
-    //     className={styles['textarea']}
-    //     defaultValue={loadedNote.current}
-    //     onChange={handleChange}
-    //     placeholder='Write a note here'
-    //     data-widget-context={textAreaContextId}
-    //   ></textarea>
     : <>Loading To-Do List...</>
   )
-
-  // const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  // const loadedNote = useRef('');
-
-  // const handleChange = useCallback<ChangeEventHandler<HTMLTextAreaElement>>((e) => {
-  //   const newNote = e.target.value;
-  //   saveNote(newNote)
-  // }, [saveNote])
 }
 
 export const widgetComp: ReactComponent<WidgetReactComponentProps<Settings>> = {
