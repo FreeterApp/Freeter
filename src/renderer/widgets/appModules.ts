@@ -16,13 +16,13 @@ export type {
   WidgetReactComponent,
   WidgetReactComponentProps,
 } from '@/ui/types/widgetType';
-export type {
-  ContextMenuEvent
-} from '@/ui/types/events';
+export type { ContextMenuEvent } from '@/ui/types/events';
+export type { List } from '@/base/list';
+export type { SettingActionsProps, SettingBlockProps, SettingRowProps } from '@/ui/components/basic/settingsScreen/setting';
+
 export { browse14Svg, delete14Svg } from '@/ui/assets/images/appIcons';
 
-export type { List } from '@/base/list';
 export { addItemToList, moveItemInList, removeItemFromList } from '@/base/list';
+export { ActionBar } from '@/ui/components/basic/actionBar';
 export { Button } from '@/ui/components/basic/button';
-export type { SettingActionsProps, SettingBlockProps, SettingRowProps } from '@/ui/components/basic/settingsScreen/setting';
 export { SettingActions, SettingBlock, SettingRow } from '@/ui/components/basic/settingsScreen/setting';

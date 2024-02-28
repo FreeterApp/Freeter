@@ -4,7 +4,7 @@
  */
 
 import { debounce } from '@/widgets/helpers';
-import { List, ReactComponent, WidgetReactComponentProps, addItemToList, moveItemInList } from '@/widgets/appModules';
+import { ActionBar, ActionBarItems, List, ReactComponent, WidgetReactComponentProps, addItemToList, delete14Svg, moveItemInList, removeItemFromList } from '@/widgets/appModules';
 import styles from './widget.module.scss';
 import { Settings } from './settings';
 import { ChangeEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -93,6 +93,16 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
     }
   }, [setToDoListAndSave, toDoList])
 
+  const deleteItem = useCallback((id: number) => {
+    const idx = toDoList.items.findIndex(item => id===item.id);
+    if(idx>-1) {
+      setToDoListAndSave({
+        ...toDoList,
+        items: removeItemFromList(toDoList.items, idx)
+      })
+    }
+  }, [setToDoListAndSave, toDoList])
+
   const toggleItem = useCallback((id: number) => {
     let updItems: List<ToDoListItem> = toDoList.items.map(item => item.id===id
       ? {...item, isDone: !item.isDone}
@@ -103,11 +113,11 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
         updItems = moveItemInList(updItems, itemIdx, undefined);
       }
     }
-    setToDoList({
+    setToDoListAndSave({
       ...toDoList,
       items: updItems
     })
-  }, [doneToBottom, toDoList])
+  }, [doneToBottom, setToDoListAndSave, toDoList])
 
   const addItemInputBlurHandler: React.FocusEventHandler<HTMLInputElement> = useCallback(e => {
     addItem(e.target.value);
@@ -119,6 +129,17 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
       (e.target as HTMLInputElement).value='';
     }
   }, [addItem])
+
+  const createDoneActionBarItems: (itemId: number) => ActionBarItems = useCallback((itemId) => [{
+    enabled: true,
+    icon: delete14Svg,
+    id: 'DELETE-ITEM',
+    title: 'Delete Item',
+    doAction: async () => {
+      deleteItem(itemId);
+    }
+  }], [deleteItem])
+
 
   return (
     isLoaded
@@ -139,6 +160,12 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
                   {item.text}
                 </span>
               </label>
+              {item.isDone &&
+                <ActionBar
+                  actionBarItems={createDoneActionBarItems(item.id)}
+                  className={styles['done-item-actionbar']}
+                ></ActionBar>
+              }
             </li>
           ))}
         </ul>
