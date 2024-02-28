@@ -82,11 +82,16 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
     }
   }, [isLoaded, loadData])
 
+  const setToDoListAndSave = useCallback((toDoList: ToDoList)=>{
+    setToDoList(toDoList);
+    saveData(toDoList);
+  }, [saveData])
+
   const addItem = useCallback((text: string) => {
     if(text) {
-      setToDoList(createToDoListItem(toDoList, text)[0])
+      setToDoListAndSave(createToDoListItem(toDoList, text)[0])
     }
-  }, [toDoList])
+  }, [setToDoListAndSave, toDoList])
 
   const toggleItem = useCallback((id: number) => {
     let updItems: List<ToDoListItem> = toDoList.items.map(item => item.id===id
