@@ -143,7 +143,7 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
 
   return (
     isLoaded
-    ? <div>
+    ? <div className={styles['todo-list-viewport']}>
         <ul
           className={styles['todo-list']}
         >

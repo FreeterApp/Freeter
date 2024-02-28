@@ -5,6 +5,12 @@
 
 $item-height: 32px;
 
+.todo-list-viewport {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
 .todo-list {
   display: block;
   width: 100%;
