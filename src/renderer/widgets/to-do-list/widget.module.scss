@@ -39,6 +39,9 @@ $item-height: 32px;
     text-decoration: line-through;
     opacity: 0.8;
   }
+  &.is-drop-area {
+    background-color: #005FB840;
+  }
 }
 .done-item-actionbar {
   position: absolute;
@@ -73,4 +76,12 @@ $item-height: 32px;
   margin-left: -3px;
   margin-top: -2px;
   padding-right: 6px;
+}
+
+.todo-list.is-drag-state {
+  .todo-list-item {
+    * {
+      pointer-events: none; // fixes flicks when dragging item over checkbox
+    }
+  }
 }

@@ -4,10 +4,10 @@
  */
 
 import { debounce } from '@/widgets/helpers';
-import { ActionBar, ActionBarItems, ReactComponent, WidgetReactComponentProps, delete14Svg } from '@/widgets/appModules';
+import { ActionBar, ActionBarItems, ReactComponent, WidgetReactComponentProps, delete14Svg, moveItemInList } from '@/widgets/appModules';
 import styles from './widget.module.scss';
 import { Settings } from './settings';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { DragEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createContextMenuFactory, listContextId } from '@/widgets/to-do-list/contextMenu';
 import { createActionBarItems } from '@/widgets/to-do-list/actionBar';
 import clsx from 'clsx';
@@ -28,6 +28,11 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
     items: [],
     nextItemId: 1
   });
+  const [dragState, setDragState] = useState<{
+    draggingItemId: number | null;
+    draggingOverItemId: number | null;
+  } | null>(null);
+
 
   const getToDoList = useCallback(() => toDoList, [toDoList]);
 
@@ -135,6 +140,62 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
     }
   }], [getToDoList, setToDoListAndSave])
 
+  const itemDragStartHandler = useCallback((_evt: DragEvent<HTMLElement>, itemId: number) => {
+    setDragState({
+      draggingItemId: itemId,
+      draggingOverItemId: null
+    })
+  }, [])
+
+  const itemDragEndHandler = useCallback((_evt: DragEvent<HTMLElement>, _itemId: number) => {
+    setDragState(null);
+  }, [])
+
+  const itemDragEnterHandler = useCallback((_evt: DragEvent<HTMLElement>, itemId: number) => {
+    if (dragState) {
+      setDragState({
+        ...dragState,
+        draggingOverItemId: itemId
+      });
+    }
+  }, [dragState])
+
+  const itemDragLeaveHandler = useCallback((_evt: DragEvent<HTMLElement>, _itemId: number) => {
+    if (dragState) {
+      setDragState({
+        ...dragState,
+        draggingOverItemId: null
+      });
+    }
+  }, [dragState])
+
+  const itemDragOverHandler = useCallback((evt: DragEvent<HTMLElement>, itemId: number) => {
+    if (dragState !== null) {
+      if (dragState.draggingOverItemId !== itemId) {
+        setDragState({
+          ...dragState,
+          draggingOverItemId: itemId
+        });
+      }
+      evt.preventDefault();
+      evt.dataTransfer.dropEffect = 'move';
+    }
+  }, [dragState])
+
+  const itemDropHandler = useCallback((_evt: DragEvent<HTMLElement>, itemId: number) => {
+    if (dragState?.draggingItemId) {
+      const { draggingItemId } = dragState;
+      const sourceIdx = toDoList.items.findIndex(item => item.id === draggingItemId);
+      const targetIdx = toDoList.items.findIndex(item => item.id === itemId);
+      if (sourceIdx !== -1 && targetIdx !== -1) {
+        setToDoListAndSave({
+          ...toDoList,
+          items: moveItemInList(toDoList.items, sourceIdx, targetIdx)
+        })
+      }
+    }
+  }, [dragState, toDoList, setToDoListAndSave])
+
   return (
     isLoaded
     ? <div className={styles['todo-list-viewport']} data-widget-context={listContextId}>
@@ -148,13 +209,20 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
           maxLength={maxTextLength}
         />}
         <ul
-          className={styles['todo-list']}
+          className={clsx(styles['todo-list'], dragState && styles['is-drag-state'])}
         >
           {toDoList.items.map(item=>(
             <li
               key={item.id}
-              className={clsx(styles['todo-list-item'], item.isDone && styles['is-done'], activeItemEditorState?.id === item.id && styles['is-editor'])}
+              className={clsx(styles['todo-list-item'], item.isDone && styles['is-done'], activeItemEditorState?.id === item.id && styles['is-editor'], dragState?.draggingOverItemId===item.id && styles['is-drop-area'])}
               data-widget-context={item.id}
+              draggable={true}
+              onDragStart={e=>itemDragStartHandler(e, item.id)}
+              onDragEnd={e=>itemDragEndHandler(e, item.id)}
+              onDragEnter={e=>itemDragEnterHandler(e, item.id)}
+              onDragLeave={e=>itemDragLeaveHandler(e, item.id)}
+              onDragOver={e=>itemDragOverHandler(e, item.id)}
+              onDrop={e=>itemDropHandler(e, item.id)}
             >
               <label title={item.text}>
                 <span>
