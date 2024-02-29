@@ -1,0 +1,87 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+$item-height: 32px;
+
+.todo-list-viewport {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+.todo-list {
+  display: block;
+  width: 100%;
+}
+.todo-list-item {
+  white-space: nowrap;
+  position: relative;
+  label, input[type="checkbox"] {
+    cursor: pointer;
+  }
+  label {
+    height: $item-height;
+    line-height: $item-height;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    > span:last-child {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: pre;
+    }
+  }
+  &.is-done:not(.is-editor) {
+    text-decoration: line-through;
+    opacity: 0.8;
+  }
+  &.is-drop-area {
+    background-color: #005FB840;
+  }
+}
+.done-item-actionbar {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  visibility: hidden;
+}
+.todo-list-item:not(.is-editor) {
+  &:hover, &:active, &:focus-within {
+    background-color: #A6A6A650;
+    &.is-done {
+      .done-item-actionbar {
+        visibility: visible;
+      }
+    }
+  }
+}
+.todo-list-item-editor {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: $item-height;
+  border: none;
+  background: none;
+}
+.todo-list-add-item-editor{
+  text-indent: 22px;
+}
+.todo-list-edit-item-editor{
+  padding-left: 3px;
+  margin-left: -3px;
+  margin-top: -2px;
+  padding-right: 6px;
+}
+
+.todo-list.is-drag-state {
+  .todo-list-item {
+    * {
+      pointer-events: none; // fixes flicks when dragging item over checkbox
+    }
+  }
+}

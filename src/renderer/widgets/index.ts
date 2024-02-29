@@ -8,6 +8,7 @@ import commander from './commander';
 import fileOpener from './file-opener';
 import linkOpener from './link-opener';
 import note from './note';
+import toDoList from './to-do-list';
 import webpage from './webpage';
 
 const widgetTypes = [
@@ -15,6 +16,7 @@ const widgetTypes = [
   fileOpener,
   linkOpener,
   note,
+  toDoList,
   webpage,
 ] as unknown as WidgetType<WidgetSettings>[];
 

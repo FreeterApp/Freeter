@@ -86,6 +86,8 @@ export function setupWidgetSut<T>(reactComp: ReactComponent<WidgetReactComponent
       getText: jest.fn(),
       remove: jest.fn(),
       setText: jest.fn(),
+      getJson: jest.fn(),
+      setJson: jest.fn(),
       ...mockWidgetApi.dataStorage
     },
     process: {
