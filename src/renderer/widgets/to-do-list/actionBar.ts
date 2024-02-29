@@ -5,8 +5,8 @@
 
 import { ActionBarItems } from '@/base/actionBar';
 import { labelAddItemTop, labelMarkAllIncomplete, markAllIncomplete, activateItemEditor } from './actions';
-import { copyFullTextSvg } from './icons';
 import { GetToDoListState, SetActiveItemEditorState, SetToDoListState } from '@/widgets/to-do-list/state';
+import { addTaskSvg, uncheckAllSvg } from '@/widgets/to-do-list/icons';
 
 export function createActionBarItems(
   getToDoListState: GetToDoListState,
@@ -16,14 +16,14 @@ export function createActionBarItems(
   return [
     {
       enabled: true,
-      icon: copyFullTextSvg,
+      icon: addTaskSvg,
       id: 'ADD-ITEM-AT-TOP',
       title: labelAddItemTop,
       doAction: async () => activateItemEditor('add-top', setActiveItemEditorState)
     },
     {
       enabled: true,
-      icon: copyFullTextSvg,
+      icon: uncheckAllSvg,
       id: 'MARK-ALL-INCOMPLETE',
       title: labelMarkAllIncomplete,
       doAction: async () => markAllIncomplete(getToDoListState, setToDoListState)
