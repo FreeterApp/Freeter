@@ -61,8 +61,6 @@ $item-height: 32px;
   box-sizing: border-box;
   width: 100%;
   height: $item-height;
-  // line-height: $item-height-6px;
-  // padding
   border: none;
   background: none;
 }
@@ -72,5 +70,6 @@ $item-height: 32px;
 .todo-list-edit-item-editor{
   padding-left: 3px;
   margin-left: -3px;
+  margin-top: -2px;
   padding-right: 6px;
 }

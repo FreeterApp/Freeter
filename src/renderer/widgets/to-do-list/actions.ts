@@ -4,7 +4,7 @@
  */
 
 import { List, addItemToList, moveItemInList, removeItemFromList } from '@/widgets/appModules';
-import { SetToDoListState, GetToDoListState, ToDoListItem, ToDoListState, SetEditorVisibilityState } from '@/widgets/to-do-list/state';
+import { SetToDoListState, GetToDoListState, ToDoListItem, ToDoListState, SetActiveItemEditorState, ItemEditorId } from '@/widgets/to-do-list/state';
 
 export const labelAddItemTop = 'Add Item at Top';
 export const labelAddItemBottom = 'Add Item at Bottom';
@@ -102,6 +102,6 @@ export function markComplete(itemId: number, toBottom: boolean, getState: GetToD
   })
 }
 
-export function showEditor(id: number | 'add-top' | null, setState: SetEditorVisibilityState) {
-  setState(id);
+export function activateItemEditor(id: ItemEditorId, setActiveItemEditorState: SetActiveItemEditorState) {
+  setActiveItemEditorState({ id });
 }

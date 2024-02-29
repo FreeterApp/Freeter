@@ -4,14 +4,14 @@
  */
 
 import { ActionBarItems } from '@/base/actionBar';
-import { labelAddItemTop, labelMarkAllIncomplete, markAllIncomplete, showEditor } from './actions';
+import { labelAddItemTop, labelMarkAllIncomplete, markAllIncomplete, activateItemEditor } from './actions';
 import { copyFullTextSvg } from './icons';
-import { GetToDoListState, SetEditorVisibilityState, SetToDoListState } from '@/widgets/to-do-list/state';
+import { GetToDoListState, SetActiveItemEditorState, SetToDoListState } from '@/widgets/to-do-list/state';
 
 export function createActionBarItems(
   getToDoListState: GetToDoListState,
   setToDoListState: SetToDoListState,
-  setEditingItemState: SetEditorVisibilityState
+  setActiveItemEditorState: SetActiveItemEditorState
 ): ActionBarItems {
   return [
     {
@@ -19,7 +19,7 @@ export function createActionBarItems(
       icon: copyFullTextSvg,
       id: 'ADD-ITEM-AT-TOP',
       title: labelAddItemTop,
-      doAction: async () => showEditor('add-top', setEditingItemState)
+      doAction: async () => activateItemEditor('add-top', setActiveItemEditorState)
     },
     {
       enabled: true,

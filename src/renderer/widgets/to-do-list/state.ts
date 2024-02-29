@@ -13,9 +13,10 @@ export interface ToDoListState {
   nextItemId: number;
 }
 
-export type EditorVisibilityState = number | 'add-top' | null;
+export type ItemEditorId = 'add-top' | number | 'add-bottom'; // number = item id to edit
+export type ActiveItemEditorState = { id: ItemEditorId } | null;
 
 export type GetToDoListState = () => ToDoListState;
 export type SetToDoListState = (newState: ToDoListState) => void;
 
-export type SetEditorVisibilityState = (newState: EditorVisibilityState) => void;
+export type SetActiveItemEditorState = (newState: ActiveItemEditorState) => void;

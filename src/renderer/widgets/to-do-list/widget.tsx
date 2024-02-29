@@ -11,8 +11,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createContextMenuFactory, listContextId } from '@/widgets/to-do-list/contextMenu';
 import { createActionBarItems } from '@/widgets/to-do-list/actionBar';
 import clsx from 'clsx';
-import { addItem, deleteItem, editItem, markComplete, markIncomplete, showEditor } from '@/widgets/to-do-list/actions';
-import { EditorVisibilityState, ToDoListItem, ToDoListState, maxTextLength } from '@/widgets/to-do-list/state';
+import { addItem, deleteItem, editItem, markComplete, markIncomplete } from '@/widgets/to-do-list/actions';
+import { ActiveItemEditorState, ToDoListItem, ToDoListState, maxTextLength } from '@/widgets/to-do-list/state';
 import { focusItemInput, scrollToItemInput, selectAllInItemInput } from '@/widgets/to-do-list/dom';
 
 const dataKey = 'todo';
@@ -23,8 +23,7 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
   const editItemInputRef = useRef<HTMLInputElement>(null);
   const {updateActionBar, setContextMenuFactory, dataStorage} = widgetApi;
   const [isLoaded, setIsLoaded] = useState(false);
-  const [editorVisibilityState, setEditorVisibilityState] = useState<EditorVisibilityState>(null);
-  const [scrollToAddInput, setScrollToAddInput] = useState<'top'|'bottom'|null>(null);
+  const [activeItemEditorState, setActiveItemEditorState] = useState<ActiveItemEditorState>(null);
   const [toDoList, setToDoList] = useState<ToDoListState>({
     items: [],
     nextItemId: 1
@@ -65,47 +64,38 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
 
   useEffect(() => {
     if (isLoaded) {
-      updateActionBar(createActionBarItems(getToDoList, setToDoListAndSave, setEditorVisibilityState));
+      updateActionBar(createActionBarItems(getToDoList, setToDoListAndSave, setActiveItemEditorState));
     }
   }, [getToDoList, isLoaded, setToDoListAndSave, updateActionBar]);
 
   useEffect(() => {
     if (isLoaded) {
       setContextMenuFactory(
-        createContextMenuFactory(addItemBottomInputRef.current, settings, getToDoList, setToDoListAndSave, setEditorVisibilityState)
+        createContextMenuFactory(settings, getToDoList, setToDoListAndSave, setActiveItemEditorState)
         );
     }
   }, [getToDoList, isLoaded, setContextMenuFactory, setToDoListAndSave, settings]);
 
   useEffect(() => {
-    if (scrollToAddInput !== null) {
-      if (scrollToAddInput === 'top' && addItemTopInputRef.current) {
-        scrollToItemInput(addItemTopInputRef.current);
-      } else if (scrollToAddInput === 'bottom' && addItemBottomInputRef.current) {
-        scrollToItemInput(addItemBottomInputRef.current);
-      }
-      setScrollToAddInput(null);
-    }
-  }, [scrollToAddInput])
-
-  useEffect(() => {
-    if (editorVisibilityState!==null) {
-      if (editorVisibilityState==='add-top' && addItemTopInputRef.current) {
+    if (activeItemEditorState!==null) {
+      if (activeItemEditorState.id==='add-top' && addItemTopInputRef.current) {
         focusItemInput(addItemTopInputRef.current);
         scrollToItemInput(addItemTopInputRef.current);
+      } else if (activeItemEditorState.id==='add-bottom' && addItemBottomInputRef.current) {
+        focusItemInput(addItemBottomInputRef.current);
+        scrollToItemInput(addItemBottomInputRef.current);
       } else if (editItemInputRef.current) {
         focusItemInput(editItemInputRef.current);
         selectAllInItemInput(editItemInputRef.current);
       }
     }
-  }, [editorVisibilityState])
+  }, [activeItemEditorState])
 
   const addItemInputBlurHandler = useCallback((e: React.FocusEvent<HTMLInputElement, Element>, isTop: boolean) => {
     addItem(e.target.value, isTop, getToDoList, setToDoListAndSave);
+    e.target.value='';
     if(isTop) {
-      showEditor(null, setEditorVisibilityState);
-    } else {
-      e.target.value='';
+      setActiveItemEditorState(null);
     }
   }, [getToDoList, setToDoListAndSave])
 
@@ -113,21 +103,25 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
     if (e.key === 'Enter') {
       addItem((e.target as HTMLInputElement).value, isTop, getToDoList, setToDoListAndSave);
       (e.target as HTMLInputElement).value='';
-      setScrollToAddInput(isTop ? 'top' : 'bottom');
+      setActiveItemEditorState(isTop ? {id: 'add-top'} : {id: 'add-bottom'});
+    } else if (e.key === 'Escape') {
+      (e.target as HTMLInputElement).value='';
+      setActiveItemEditorState(null);
     }
   }, [getToDoList, setToDoListAndSave])
 
   const editItemInputBlurHandler = useCallback((e: React.FocusEvent<HTMLInputElement, Element>, itemId: number) => {
     editItem(itemId, e.target.value, getToDoList, setToDoListAndSave);
-    showEditor(null, setEditorVisibilityState);
+    setActiveItemEditorState(null);
   }, [getToDoList, setToDoListAndSave])
 
   const editItemInputKeyDownHandler = useCallback((e: React.KeyboardEvent<HTMLInputElement>, itemId: number) => {
     if (e.key === 'Enter') {
       editItem(itemId, (e.target as HTMLInputElement).value, getToDoList, setToDoListAndSave);
-      showEditor(null, setEditorVisibilityState);
+      setActiveItemEditorState(null);
     } else if (e.key === 'Escape') {
-      showEditor(null, setEditorVisibilityState);
+      (e.target as HTMLInputElement).value='';
+      setActiveItemEditorState(null);
     }
   }, [getToDoList, setToDoListAndSave])
 
@@ -144,7 +138,7 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
   return (
     isLoaded
     ? <div className={styles['todo-list-viewport']} data-widget-context={listContextId}>
-        {editorVisibilityState==='add-top' && <input
+        {activeItemEditorState?.id==='add-top' && <input
           type="text"
           placeholder="Add an item"
           ref={addItemTopInputRef}
@@ -159,7 +153,7 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
           {toDoList.items.map(item=>(
             <li
               key={item.id}
-              className={clsx(styles['todo-list-item'], item.isDone && styles['is-done'], editorVisibilityState === item.id && styles['is-editor'])}
+              className={clsx(styles['todo-list-item'], item.isDone && styles['is-done'], activeItemEditorState?.id === item.id && styles['is-editor'])}
               data-widget-context={item.id}
             >
               <label title={item.text}>
@@ -173,7 +167,7 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
                         : markComplete(item.id, settings.doneToBottom, getToDoList, setToDoListAndSave)
                     }/>
                 </span>
-                {editorVisibilityState === item.id
+                {activeItemEditorState?.id === item.id
                   ? <input
                       type="text"
                       ref={editItemInputRef}
