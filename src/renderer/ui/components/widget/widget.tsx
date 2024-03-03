@@ -45,6 +45,7 @@ export function createWidgetComponent({
 
     return <div
       className={clsx(styles.widget, dontShowActionBar && styles['dont-show-action-bar'])}
+      onContextMenu={onContextMenuHandler}
     >
       <div className={styles['widget-header']}>
         <div className={styles['widget-header-name']}>{widgetName}</div>
@@ -53,7 +54,7 @@ export function createWidgetComponent({
           className={styles['widget-header-action-bar']}
         ></ActionBar>
       </div>
-      <div className={styles['widget-body']} onContextMenu={onContextMenuHandler} data-widget-context="" {...{ inert: editMode ? '' : undefined }}>
+      <div className={styles['widget-body']} data-widget-context="" {...{ inert: editMode ? '' : undefined }}>
         <WidgetComp id={widget.id} env={env} settings={widget.settings} widgetApi={widgetApi}></WidgetComp>
       </div>
     </div>

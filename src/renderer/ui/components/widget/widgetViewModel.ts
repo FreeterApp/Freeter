@@ -15,6 +15,7 @@ import { GetWidgetApiUseCase } from '@/application/useCases/widget/getWidgetApi'
 import { delete14Svg, settings14Svg } from '@/ui/assets/images/appIcons';
 import { OpenWidgetSettingsUseCase } from '@/application/useCases/widgetSettings/openWidgetSettings';
 import { DeleteWidgetUseCase } from '@/application/useCases/widget/deleteWidget';
+import { EntityId } from '@/base/entity';
 
 type Deps = {
   useAppState: UseAppState;
@@ -48,6 +49,40 @@ export function createWidgetViewModelHook({
   openWidgetSettingsUseCase,
   deleteWidgetUseCase,
 }: Deps) {
+  const createActionBarItemsEditMode: (id: EntityId, env: WidgetEnv) => ActionBarItems = (id, env) => [{
+    enabled: true,
+    icon: settings14Svg,
+    id: 'WIDGET-SETTINGS',
+    title: 'Widget Settings',
+    doAction: async () => {
+      openWidgetSettingsUseCase(id, env);
+    }
+  }, {
+    enabled: true,
+    icon: delete14Svg,
+    id: 'DELETE-WIDGET',
+    title: 'Delete Widget',
+    doAction: async () => {
+      deleteWidgetUseCase(id, env);
+    }
+  }]
+
+  const createContextMenuFactoryEditMode: (id: EntityId, env: WidgetEnv) => WidgetContextMenuFactory = (id, env) => () => [{
+    enabled: true,
+    label: 'Widget Settings',
+    doAction: async () => {
+      openWidgetSettingsUseCase(id, env);
+    }
+  }, {
+    type: 'separator'
+  }, {
+    enabled: true,
+    label: 'Delete Widget',
+    doAction: async () => {
+      deleteWidgetUseCase(id, env);
+    }
+  }]
+
   function useViewModel(props: WidgetProps) {
     const { widget, env } = props;
     const [
@@ -60,7 +95,7 @@ export function createWidgetViewModelHook({
       state.ui.worktable.resizingItem
     ])
     const [actionBarItemsViewMode, setActionBarItemsViewMode] = useState<ActionBarItems>([]);
-    const [contextMenuFactory, setContextMenuFactory] = useState<WidgetContextMenuFactory | undefined>(undefined);
+    const [contextMenuFactoryViewMode, setContextMenuFactoryViewMode] = useState<WidgetContextMenuFactory | undefined>(undefined);
 
     const widgetType = useAppState.useWithStrictEq(state => entityStateActions.widgetTypes.getOne(state, widget.type));
     const WidgetComp = useWidgetTypeComp(widgetType, 'widgetComp');
@@ -68,37 +103,28 @@ export function createWidgetViewModelHook({
       widget.id,
       !!env.isPreview,
       setActionBarItemsViewMode,
-      (factory: WidgetContextMenuFactory | undefined) => setContextMenuFactory(() => factory),
+      (factory: WidgetContextMenuFactory | undefined) => setContextMenuFactoryViewMode(() => factory),
       widgetType?.requiresApi || []
     ), [env.isPreview, widget.id, widgetType?.requiresApi])
 
     const widgetName = getWidgetDisplayName(widget, widgetType);
 
-    const actionBarItemsEditMode = useMemo<ActionBarItems>(() => [{
-      enabled: true,
-      icon: settings14Svg,
-      id: 'WIDGET-SETTINGS',
-      title: 'Widget Settings',
-      doAction: async () => {
-        openWidgetSettingsUseCase(widget.id, env);
-      }
-    }, {
-      enabled: true,
-      icon: delete14Svg,
-      id: 'DELETE-WIDGET',
-      title: 'Delete Widget',
-      doAction: async () => {
-        deleteWidgetUseCase(widget.id, env);
-      }
-    }], [env, widget.id])
-    const actionBarItems = editMode ? actionBarItemsEditMode : actionBarItemsViewMode;
+    const actionBarItems: ActionBarItems = useMemo(
+      () => editMode
+        ? createActionBarItemsEditMode(widget.id, env)
+        : actionBarItemsViewMode,
+      [actionBarItemsViewMode, editMode, env, widget.id]
+    );
 
     const onContextMenuHandler = useCallback((event: ReactContextMenuEvent) => {
+      const contextMenuFactory = editMode
+        ? createContextMenuFactoryEditMode(widget.id, env)
+        : contextMenuFactoryViewMode;
       if (contextMenuFactory) { // prevent default context menu handler
         event.stopPropagation();
       }
       showWidgetContextMenuUseCase(widget.id, contextMenuFactory, getContextId(<HTMLElement>event.target), event.nativeEvent.contextData);
-    }, [widget.id, contextMenuFactory]);
+    }, [contextMenuFactoryViewMode, editMode, env, widget.id]);
 
     const dontShowActionBar = !!resizingItem || !!dragDropFrom;
 

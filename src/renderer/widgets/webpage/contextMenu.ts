@@ -18,147 +18,152 @@ function isElectronContextMenuParams(data: unknown): data is ContextMenuParams {
 export function createContextMenuFactory(elWebview: Electron.WebviewTag | null, widgetApi: WidgetApi, homeUrl: string): WidgetContextMenuFactory {
   return (_contextId, contextData) => {
     const items: WidgetMenuItem[] = []
-    if (elWebview && homeUrl && isElectronContextMenuParams(contextData)) {
-      const editFlags = contextData.editFlags;
-      const hasText = contextData.selectionText.length > 0;
-
-      // link context
-      if (contextData.linkURL) {
-        if (items.length) {
-          items.push({ type: 'separator' })
+    if (elWebview && homeUrl) {
+      const defaultItems: WidgetMenuItem[] = [
+        {
+          doAction: async () => goHome(elWebview, homeUrl),
+          enabled: canGoHome(elWebview, homeUrl),
+          label: labelGoHome
+        }, {
+          doAction: async () => goBack(elWebview),
+          enabled: canGoBack(elWebview),
+          label: labelGoBack
+        }, {
+          doAction: async () => goForward(elWebview),
+          enabled: canGoForward(elWebview),
+          label: labelGoForward
+        }, {
+          doAction: async () => refresh(elWebview),
+          label: labelRefresh
+        }, {
+          type: 'separator'
+        }, {
+          doAction: async () => openCurrentInBrowser(elWebview, widgetApi),
+          label: labelOpenInBrowser
+        }, {
+          doAction: async () => savePage(elWebview),
+          label: labelSaveAs
+        }, {
+          doAction: async () => copyCurrentAddress(elWebview, widgetApi),
+          label: labelCopyCurrentAddress
+        }, {
+          doAction: async () => printPage(elWebview),
+          label: labelPrintPage
         }
-        const itemsGroup: WidgetMenuItem[] = [
-          {
-            doAction: async () => openLinkInBrowser(contextData.linkURL, widgetApi),
-            label: labelOpenLinkInBrowser
-          }, {
-            doAction: async () => saveLink(contextData.linkURL, elWebview),
-            label: labelSaveLinkAs
-          }, {
-            doAction: async () => copyLinkAddress(contextData.linkText, contextData.linkURL, widgetApi),
-            label: labelCopyLinkAddress
+      ]
+
+      if (!contextData) {
+        items.push(...defaultItems);
+      } else if (isElectronContextMenuParams(contextData)) {
+        const editFlags = contextData.editFlags;
+        const hasText = contextData.selectionText.length > 0;
+
+        // link context
+        if (contextData.linkURL) {
+          if (items.length) {
+            items.push({ type: 'separator' })
           }
-        ]
+          const itemsGroup: WidgetMenuItem[] = [
+            {
+              doAction: async () => openLinkInBrowser(contextData.linkURL, widgetApi),
+              label: labelOpenLinkInBrowser
+            }, {
+              doAction: async () => saveLink(contextData.linkURL, elWebview),
+              label: labelSaveLinkAs
+            }, {
+              doAction: async () => copyLinkAddress(contextData.linkText, contextData.linkURL, widgetApi),
+              label: labelCopyLinkAddress
+            }
+          ]
 
-        items.push(...itemsGroup);
-      }
-
-      // image context
-      if (contextData.mediaType === 'image') {
-        if (items.length) {
-          items.push({ type: 'separator' })
+          items.push(...itemsGroup);
         }
-        const itemsGroup: WidgetMenuItem[] = [
-          {
-            doAction: async () => saveLink(contextData.srcURL, elWebview),
-            label: labelSaveImageAs
-            // }, {
-            //   doAction: async () => copy(elWebview),
-            //   label: labelCopyImage
-          }, {
-            doAction: async () => copyLinkAddress(contextData.titleText, contextData.srcURL, widgetApi),
-            label: labelCopyImageAddress
+
+        // image context
+        if (contextData.mediaType === 'image') {
+          if (items.length) {
+            items.push({ type: 'separator' })
           }
-        ]
+          const itemsGroup: WidgetMenuItem[] = [
+            {
+              doAction: async () => saveLink(contextData.srcURL, elWebview),
+              label: labelSaveImageAs
+              // }, {
+              //   doAction: async () => copy(elWebview),
+              //   label: labelCopyImage
+            }, {
+              doAction: async () => copyLinkAddress(contextData.titleText, contextData.srcURL, widgetApi),
+              label: labelCopyImageAddress
+            }
+          ]
 
-        items.push(...itemsGroup);
-      }
-
-      // if no specific context, then show default one
-      if (!contextData.linkURL && contextData.mediaType === 'none' && !contextData.isEditable && !hasText) {
-        if (items.length) {
-          items.push({ type: 'separator' })
+          items.push(...itemsGroup);
         }
-        const itemsGroup: WidgetMenuItem[] = [
-          {
-            doAction: async () => goHome(elWebview, homeUrl),
-            enabled: canGoHome(elWebview, homeUrl),
-            label: labelGoHome
-          }, {
-            doAction: async () => goBack(elWebview),
-            enabled: canGoBack(elWebview),
-            label: labelGoBack
-          }, {
-            doAction: async () => goForward(elWebview),
-            enabled: canGoForward(elWebview),
-            label: labelGoForward
-          }, {
-            doAction: async () => refresh(elWebview),
-            label: labelRefresh
-          }, {
-            type: 'separator'
-          }, {
-            doAction: async () => openCurrentInBrowser(elWebview, widgetApi),
-            label: labelOpenInBrowser
-          }, {
-            doAction: async () => savePage(elWebview),
-            label: labelSaveAs
-          }, {
-            doAction: async () => copyCurrentAddress(elWebview, widgetApi),
-            label: labelCopyCurrentAddress
-          }, {
-            doAction: async () => printPage(elWebview),
-            label: labelPrintPage
+
+        // if no specific context, then show default one
+        if (!contextData.linkURL && contextData.mediaType === 'none' && !contextData.isEditable && !hasText) {
+          if (items.length) {
+            items.push({ type: 'separator' })
           }
-        ]
 
-        items.push(...itemsGroup);
-      }
-
-      // editable context
-      if (contextData.isEditable) {
-        if (items.length) {
-          items.push({ type: 'separator' })
+          items.push(...defaultItems);
         }
-        const itemsGroup: WidgetMenuItem[] = [
-          {
-            enabled: editFlags.canUndo,
-            label: labelUndo,
-            role: 'undo'
-          }, {
-            enabled: editFlags.canRedo,
-            label: labelRedo,
-            role: 'redo'
-          }
-        ]
 
-        items.push(...itemsGroup);
-      }
-
-      // editable or text context
-      if (contextData.isEditable || hasText) {
-        if (items.length) {
-          items.push({ type: 'separator' })
-        }
+        // editable context
         if (contextData.isEditable) {
-          items.push({
-            enabled: editFlags.canCut && hasText,
-            label: labelCut,
-            role: 'cut',
-          })
+          if (items.length) {
+            items.push({ type: 'separator' })
+          }
+          const itemsGroup: WidgetMenuItem[] = [
+            {
+              enabled: editFlags.canUndo,
+              label: labelUndo,
+              role: 'undo'
+            }, {
+              enabled: editFlags.canRedo,
+              label: labelRedo,
+              role: 'redo'
+            }
+          ]
+
+          items.push(...itemsGroup);
         }
+
+        // editable or text context
         if (contextData.isEditable || hasText) {
-          items.push({
-            enabled: editFlags.canCopy && hasText,
-            label: labelCopy,
-            role: 'copy',
-          })
-        }
-        if (contextData.isEditable) {
-          items.push({
-            enabled: editFlags.canPaste,
-            label: labelPaste,
-            role: 'paste',
-          })
-          items.push({
-            enabled: editFlags.canPaste,
-            label: labelPasteAsPlainText,
-            role: 'pasteAndMatchStyle',
-          })
-          items.push({
-            label: labelSelectAll,
-            role: 'selectAll',
-          })
+          if (items.length) {
+            items.push({ type: 'separator' })
+          }
+          if (contextData.isEditable) {
+            items.push({
+              enabled: editFlags.canCut && hasText,
+              label: labelCut,
+              role: 'cut',
+            })
+          }
+          if (contextData.isEditable || hasText) {
+            items.push({
+              enabled: editFlags.canCopy && hasText,
+              label: labelCopy,
+              role: 'copy',
+            })
+          }
+          if (contextData.isEditable) {
+            items.push({
+              enabled: editFlags.canPaste,
+              label: labelPaste,
+              role: 'paste',
+            })
+            items.push({
+              enabled: editFlags.canPaste,
+              label: labelPasteAsPlainText,
+              role: 'pasteAndMatchStyle',
+            })
+            items.push({
+              label: labelSelectAll,
+              role: 'selectAll',
+            })
+          }
         }
       }
     }
