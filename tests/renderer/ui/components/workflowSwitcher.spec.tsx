@@ -38,6 +38,7 @@ async function setup(
   const addWorkflowUseCase = opts?.mockAddWorkflowUseCase || createAddWorkflowUseCase({appStore, idGenerator: () => newWorkflowId});
   const renameWorkflowUseCase = jest.fn();
   const deleteWorkflowUseCase = jest.fn();
+  const showContextMenuUseCase = jest.fn();
 
   const useWorkflowSwitcherViewModel = createWorkflowSwitcherViewModelHook({
     useAppState,
@@ -51,6 +52,7 @@ async function setup(
     addWorkflowUseCase,
     renameWorkflowUseCase,
     deleteWorkflowUseCase,
+    showContextMenuUseCase,
   })
   const WorkflowSwitcher = createWorkflowSwitcherComponent({
     useWorkflowSwitcherViewModel
@@ -72,6 +74,7 @@ async function setup(
     addWorkflowUseCase,
     renameWorkflowUseCase,
     deleteWorkflowUseCase,
+    showContextMenuUseCase,
   }
 }
 

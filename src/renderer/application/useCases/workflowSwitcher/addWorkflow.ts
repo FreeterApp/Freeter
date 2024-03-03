@@ -5,6 +5,7 @@
 
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
+import { EntityId } from '@/base/entity';
 import { addWorkflowToAppState } from '@/base/state/actions';
 
 type Deps = {
@@ -15,10 +16,10 @@ export function createAddWorkflowUseCase({
   appStore,
   idGenerator
 }: Deps) {
-  const useCase = () => {
+  const useCase = (posByWorkflowId?: EntityId) => {
     const state = appStore.get();
     const { currentProjectId } = state.ui.projectSwitcher;
-    const [newState, newItem] = addWorkflowToAppState(state, currentProjectId, idGenerator());
+    const [newState, newItem] = addWorkflowToAppState(state, currentProjectId, idGenerator(), posByWorkflowId);
     if (newItem) {
       appStore.set(newState);
       return newItem.id;

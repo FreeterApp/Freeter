@@ -42,7 +42,7 @@ describe('addWorkflowToAppState()', () => {
     expect(gotItem).toBeNull();
   })
 
-  it('should correctly update the state and return the new item', () => {
+  it('should correctly update the state and return the new item, when posByWorkflowId is not specified', () => {
     const newWorkflowId = 'NEW-WORKFLOW-ID';
     const initState = fixtureAppState({
       entities: {
@@ -76,6 +76,45 @@ describe('addWorkflowToAppState()', () => {
     };
 
     const [gotState, gotItem] = addWorkflowToAppState(initState, projectId1, newWorkflowId);
+
+    expect(gotState).toStrictEqual(expectState);
+    expect(gotItem).toBe(gotState.entities.workflows[newWorkflowId]);
+  })
+
+  it('should correctly update the state and return the new item, when posByWorkflowId is specified', () => {
+    const newWorkflowId = 'NEW-WORKFLOW-ID';
+    const initState = fixtureAppState({
+      entities: {
+        projects: {
+          ...fixtureProjectAInColl({ id: projectId1, workflowIds: [workflowId1, workflowId2], currentWorkflowId: workflowId1 }),
+          ...fixtureProjectBInColl()
+        },
+        workflows: {
+          ...fixtureWorkflowAInColl({ id: workflowId1, settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }) }),
+          ...fixtureWorkflowBInColl({ id: workflowId2, settings: fixtureWorkflowSettingsA({ name: 'Workflow 2' }) }),
+        }
+      },
+    })
+    const expectState: AppState = {
+      ...initState,
+      entities: {
+        ...initState.entities,
+        projects: {
+          ...initState.entities.projects,
+          [projectId1]: {
+            ...initState.entities.projects[projectId1]!,
+            workflowIds: [workflowId1, newWorkflowId, workflowId2],
+            currentWorkflowId: newWorkflowId
+          }
+        },
+        workflows: {
+          ...initState.entities.workflows,
+          [newWorkflowId]: expect.objectContaining({ id: newWorkflowId, settings: { name: 'Workflow 3' } })
+        }
+      }
+    };
+
+    const [gotState, gotItem] = addWorkflowToAppState(initState, projectId1, newWorkflowId, workflowId2);
 
     expect(gotState).toStrictEqual(expectState);
     expect(gotItem).toBe(gotState.entities.workflows[newWorkflowId]);

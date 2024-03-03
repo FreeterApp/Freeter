@@ -40,7 +40,7 @@ async function setup(
   const [appStore, appStoreForUi] = await fixtureAppStore(appState);
   const useAppState = createAppStateHook(appStoreForUi);
 
-  const showContextMenuForTextInputUseCase = jest.fn();
+  const showContextMenuUseCase = jest.fn();
 
   const useAppViewModel = createAppViewModelHook({
     useAppState,
@@ -49,7 +49,7 @@ async function setup(
     ProjectManager: mockProjectManager,
     ApplicationSettings: mockApplicationSettings,
     About: mockAbout,
-    showContextMenuForTextInputUseCase
+    showContextMenuUseCase
   });
 
   const App = createAppComponent({
@@ -66,7 +66,7 @@ async function setup(
   return {
     comp,
     appStore,
-    showContextMenuForTextInputUseCase
+    showContextMenuUseCase
   }
 }
 

@@ -5,13 +5,10 @@
 
 import { EntityId } from '@/base/entity';
 import { ActionBarItems } from '@/base/actionBar';
-import { delete14Svg, settings14Svg } from '@/ui/assets/images/appIcons';
 import React, { DragEvent, MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
 
-export interface WorkflowSwitcherItemActionBarActions {
-  openSettings: (itemId: EntityId) => void;
-  delete: (itemId: EntityId) => void;
-}
+export type ItemActionBarItemsFactory = (id: EntityId) => ActionBarItems;
+
 export interface WorkflowSwitcherItemProps {
   id: string;
   name: string;
@@ -19,8 +16,9 @@ export interface WorkflowSwitcherItemProps {
   isCurrent: boolean;
   isDropArea: boolean;
   isEditNameMode: boolean;
-  actionBarActions: WorkflowSwitcherItemActionBarActions;
+  actionBarItemsFactory: ItemActionBarItemsFactory;
   onClick: (evt: MouseEvent<HTMLElement>, itemId: EntityId) => void;
+  onContextMenu: (evt: MouseEvent<HTMLElement>, itemId: EntityId) => void;
   onDragStart: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
   onDragEnd: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
   onDragEnter: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
@@ -33,13 +31,18 @@ export interface WorkflowSwitcherItemProps {
 
 export function useWorkflowSwitcherItemViewModel(props: WorkflowSwitcherItemProps) {
   const {
-    id, name, isEditMode, isCurrent, onClick,
+    id, name, isEditMode, isCurrent, onClick, onContextMenu,
     isDropArea, onDragStart, onDragEnd, onDragEnter, onDragLeave,
-    onDragOver, onDrop, actionBarActions, isEditNameMode, onEditName, onFinishEditName } = props;
+    onDragOver, onDrop, actionBarItemsFactory, isEditNameMode, onEditName, onFinishEditName } = props;
 
   const onClickHandler = useCallback((evt: MouseEvent<HTMLElement>) => {
     onClick(evt, id);
   }, [id, onClick])
+
+  const onContextMenuHandler = useCallback((evt: MouseEvent<HTMLElement>) => {
+    evt.stopPropagation();
+    onContextMenu(evt, id);
+  }, [id, onContextMenu])
 
   const onDragStartHandler = useCallback((evt: DragEvent<HTMLElement>) => {
     onDragStart(evt, id);
@@ -92,25 +95,8 @@ export function useWorkflowSwitcherItemViewModel(props: WorkflowSwitcherItemProp
     }
   }, [isEditNameMode])
 
-  const actionBarItemsEditMode = useMemo<ActionBarItems>(() => [{
-    enabled: true,
-    icon: settings14Svg,
-    id: 'WORKFLOW-SETTINGS',
-    title: 'Workflow Settings',
-    doAction: async () => {
-      actionBarActions.openSettings(id);
-    }
-  }, {
-    enabled: true,
-    icon: delete14Svg,
-    id: 'DELETE-WORKFLOW',
-    title: 'Delete Workflow',
-    doAction: async () => {
-      actionBarActions.delete(id);
-    }
-  }], [actionBarActions, id])
 
-  const actionBarItems = useMemo(() => isEditMode ? actionBarItemsEditMode : [], [actionBarItemsEditMode, isEditMode]);
+  const actionBarItems = useMemo(() => actionBarItemsFactory(id), [actionBarItemsFactory, id]);
 
   return {
     id,
@@ -119,6 +105,7 @@ export function useWorkflowSwitcherItemViewModel(props: WorkflowSwitcherItemProp
     isCurrent,
     isDropArea,
     onClickHandler,
+    onContextMenuHandler,
     onDragStartHandler,
     onDragEndHandler,
     onDragEnterHandler,
