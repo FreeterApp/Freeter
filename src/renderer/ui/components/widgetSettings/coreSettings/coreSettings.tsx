@@ -4,6 +4,7 @@
  */
 
 import { CoreSettingsProps, useCoreSettingsViewModel } from '@/ui/components/widgetSettings/coreSettings/coreSettingsViewModel';
+import { SettingBlock } from '@/widgets/appModules';
 
 export function CoreSettings(props: CoreSettingsProps) {
   const {
@@ -12,14 +13,14 @@ export function CoreSettings(props: CoreSettingsProps) {
   } = useCoreSettingsViewModel(props);
 
   return (<>
-    <fieldset>
-      <label htmlFor="name">
-        Name
-      </label>
+    <SettingBlock
+      titleForId='name'
+      title='Name'
+    >
       <input id="name" type="text" value={coreSettings.name} onChange={e => updateCoreSettings({
         ...coreSettings,
         name: e.target.value
       })}/>
-    </fieldset>
+    </SettingBlock>
   </>)
 }

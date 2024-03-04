@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import styles from './workflowSettings.module.scss';
 import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
+import { SettingBlock } from '@/widgets/appModules';
 
 type Deps = {
   useWorkflowSettingsViewModel: WorkflowSettingsViewModelHook;
@@ -28,15 +29,16 @@ export function createWorkflowSettingsComponent({
     if (settings) {
       return (<SettingsScreen title='Workflow Settings' onOkClick={onSaveClickHandler} onCancelClick={onCloseClickHandler}>
         <div className={clsx(settingsScreenStyles['settings-screen-panel'], styles['settings-editor'])}>
-          <fieldset>
-            <label htmlFor="name">
-              Name
-            </label>
+          <SettingBlock
+            titleForId='name'
+            title='Name'
+          >
             <input id="name" type="text" value={settings.name} onChange={e => updateSettings({
               ...settings,
               name: e.target.value
             })}/>
-          </fieldset>
+
+          </SettingBlock>
         </div>
       </SettingsScreen>)
     } else {
