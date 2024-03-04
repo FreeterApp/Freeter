@@ -16,6 +16,7 @@ export function WorkflowSwitcherItem (props: WorkflowSwitcherItemProps) {
     isEditMode,
     isDropArea,
     onClickHandler,
+    onContextMenuHandler,
     onDragStartHandler,
     onDragEndHandler,
     onDragEnterHandler,
@@ -31,7 +32,10 @@ export function WorkflowSwitcherItem (props: WorkflowSwitcherItemProps) {
   } = useWorkflowSwitcherItemViewModel(props);
 
   return (
-    <div className={styles['workflow-switcher-item']}>
+    <div
+      className={styles['workflow-switcher-item']}
+      onContextMenu={onContextMenuHandler}
+    >
       <button
         role="tab"
         aria-selected={isCurrent}

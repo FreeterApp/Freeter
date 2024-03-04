@@ -6,13 +6,15 @@
 import { EntityId } from '@/base/entity';
 import { addOneToEntityCollection, getManyFromEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList, mapIdListToEntityList, removeIdFromListAtIndex } from '@/base/entityList';
+import { addItemToList, findIndexOrUndef } from '@/base/list';
 import { AppState } from '@/base/state/app';
 import { Workflow, createWorkflow, generateWorkflowName } from '@/base/workflow';
 
 export function addWorkflowToAppState(
   appState: AppState,
   ownerProjectId: EntityId,
-  newWorkflowId: EntityId
+  newWorkflowId: EntityId,
+  posByWorkflowId?: EntityId
 ): [appState: AppState, newWorkflow: Workflow | null] {
   const ownerProject = getOneFromEntityCollection(appState.entities.projects, ownerProjectId);
   if (!ownerProject) {
@@ -20,6 +22,7 @@ export function addWorkflowToAppState(
   }
 
   const newWorkflow = createWorkflow(newWorkflowId, generateWorkflowName(mapIdListToEntityList(appState.entities.workflows, ownerProject.workflowIds).map(item => item?.settings.name || '')));
+  const posIdx = posByWorkflowId !== undefined ? findIndexOrUndef(ownerProject.workflowIds, posByWorkflowId) : undefined
   const newState = {
     ...appState,
     entities: {
@@ -28,7 +31,7 @@ export function addWorkflowToAppState(
         id: ownerProjectId,
         changes: {
           currentWorkflowId: newWorkflowId,
-          workflowIds: [...ownerProject.workflowIds, newWorkflowId]
+          workflowIds: addItemToList(ownerProject.workflowIds, newWorkflowId, posIdx)
         }
       }),
       workflows: addOneToEntityCollection(appState.entities.workflows, newWorkflow)

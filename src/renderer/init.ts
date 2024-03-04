@@ -109,7 +109,7 @@ import { createGetAboutInfoUseCase } from '@/application/useCases/about/getAbout
 import { createProductInfoProvider } from '@/infra/productInfoProvider/productInfoProvider';
 import { createOpenSponsorshipUrlUseCase } from '@/application/useCases/about/openSponsorshipUrl';
 import { createTerminalProvider } from '@/infra/terminalProvider/terminalProvider';
-import { createShowContextMenuForTextInputUseCase } from '@/application/useCases/contextMenu/showContextMenuForTextInput';
+import { createShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -318,7 +318,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     globalShortcut: globalShortcutProvider
   })
 
-  const showContextMenuForTextInputUseCase = createShowContextMenuForTextInputUseCase({ contextMenu: osContextMenuProvider })
+  const showContextMenuUseCase = createShowContextMenuUseCase({ contextMenu: osContextMenuProvider })
 
   return {
     dragWidgetFromWorktableLayoutUseCase,
@@ -387,7 +387,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     getAboutInfoUseCase,
     openSponsorshipUrlUseCase,
 
-    showContextMenuForTextInputUseCase,
+    showContextMenuUseCase,
   }
 }
 

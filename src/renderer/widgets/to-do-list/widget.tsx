@@ -8,7 +8,7 @@ import { ActionBar, ActionBarItems, ReactComponent, WidgetReactComponentProps, d
 import styles from './widget.module.scss';
 import { Settings } from './settings';
 import { DragEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createContextMenuFactory, listContextId } from '@/widgets/to-do-list/contextMenu';
+import { createContextMenuFactory } from '@/widgets/to-do-list/contextMenu';
 import { createActionBarItems } from '@/widgets/to-do-list/actionBar';
 import clsx from 'clsx';
 import { addItem, deleteItem, editItem, markComplete, markIncomplete } from '@/widgets/to-do-list/actions';
@@ -198,7 +198,7 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
 
   return (
     isLoaded
-    ? <div className={styles['todo-list-viewport']} data-widget-context={listContextId}>
+    ? <div className={styles['todo-list-viewport']} data-widget-context="">
         {activeItemEditorState?.id==='add-top' && <input
           type="text"
           placeholder="Add an item"

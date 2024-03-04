@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { addItemToList, moveItemInList, removeItemFromList } from '@/base/list';
+import { addItemToList, findIndexOrUndef, moveItemInList, removeItemFromList } from '@/base/list';
 
 describe('List', () => {
   describe('addItemToList()', () => {
@@ -120,5 +120,31 @@ describe('List', () => {
       expect(newList).toEqual([list[0], list[2], list[3], list[1]]);
     })
 
+  })
+
+  describe('findIndexOrUndef()', () => {
+    it('should return the index of the item on the list, if it exists', () => {
+      const list = [
+        'A',
+        'B',
+        'C'
+      ];
+
+      const gotIdx = findIndexOrUndef(list, 'B');
+
+      expect(gotIdx).toBe(1);
+    })
+
+    it('should return undefinex, if the item does not exist on the list', () => {
+      const list = [
+        'A',
+        'B',
+        'C'
+      ];
+
+      const gotIdx = findIndexOrUndef(list, 'D');
+
+      expect(gotIdx).toBeUndefined();
+    })
   })
 })

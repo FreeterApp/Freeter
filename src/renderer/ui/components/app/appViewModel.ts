@@ -3,7 +3,8 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ShowContextMenuForTextInputUseCase } from '@/application/useCases/contextMenu/showContextMenuForTextInput';
+import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
+import { contextMenuForTextInput } from '@/base/contextMenu';
 import { ModalScreenId } from '@/base/state/ui';
 import { UseAppState } from '@/ui/hooks/appState';
 import React, { ReactNode } from 'react';
@@ -15,7 +16,7 @@ type Deps = {
   ProjectManager: React.FC;
   ApplicationSettings: React.FC;
   About: React.FC;
-  showContextMenuForTextInputUseCase: ShowContextMenuForTextInputUseCase;
+  showContextMenuUseCase: ShowContextMenuUseCase;
 }
 
 export function createAppViewModelHook({
@@ -25,7 +26,7 @@ export function createAppViewModelHook({
   ProjectManager,
   ApplicationSettings,
   About,
-  showContextMenuForTextInputUseCase,
+  showContextMenuUseCase,
 }: Deps) {
   function useViewModel() {
     const [
@@ -72,7 +73,7 @@ export function createAppViewModelHook({
       switch (node?.nodeName.toLowerCase()) {
         case 'input':
         case 'textarea': {
-          showContextMenuForTextInputUseCase();
+          showContextMenuUseCase(contextMenuForTextInput);
           break;
         }
       }

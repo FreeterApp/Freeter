@@ -82,7 +82,7 @@ describe('addWorkflowUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should add a new workflow with a right name as a last item and a current item in the current project state, and return the id of the new item', async () => {
+  it('should add a new workflow with a right name as a last item and a current item in the current project state, and return the id of the new item, when the posByWorkflow is not specified', async () => {
     const workflowA = fixtureWorkflowA({ settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }) });
     const workflowB = fixtureWorkflowB({ settings: fixtureWorkflowSettingsB({ name: 'Workflow 2' }) });
     const workflowC = fixtureWorkflowC({ settings: fixtureWorkflowSettingsC({ name: 'Workflow 1' }) });
@@ -131,6 +131,61 @@ describe('addWorkflowUseCase()', () => {
     } = await setup(initState)
 
     const res = addWorkflowUseCase();
+
+    const newState = appStore.get();
+    expect(newState).toEqual(expectState);
+    expect(res).toBe(newItemId);
+  })
+
+  it('should add a new workflow with a right name at the index of posByWorkflowId item as a current item in the current project state, and return the id of the new item, when the posByWorkflow is specified', async () => {
+    const workflowA = fixtureWorkflowA({ settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }) });
+    const workflowB = fixtureWorkflowB({ settings: fixtureWorkflowSettingsB({ name: 'Workflow 1' }) });
+    const workflowC = fixtureWorkflowC({ settings: fixtureWorkflowSettingsC({ name: 'Workflow 2' }) });
+    const projectA = fixtureProjectA({ workflowIds: [workflowA.id] });
+    const projectB = fixtureProjectB({ workflowIds: [workflowB.id, workflowC.id] });
+    const initState = fixtureAppState({
+      entities: {
+        projects: {
+          [projectA.id]: projectA,
+          [projectB.id]: projectB,
+        },
+        workflows: {
+          [workflowA.id]: workflowA,
+          [workflowB.id]: workflowB,
+          [workflowC.id]: workflowC,
+        }
+      },
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          currentProjectId: projectB.id,
+          projectIds: [projectA.id, projectB.id]
+        })
+      }
+    })
+    const expectState: AppState = {
+      ...initState,
+      entities: {
+        ...initState.entities,
+        projects: {
+          ...initState.entities.projects,
+          [projectB.id]: {
+            ...initState.entities.projects[projectB.id]!,
+            currentWorkflowId: newItemId,
+            workflowIds: [workflowB.id, newItemId, workflowC.id]
+          }
+        },
+        workflows: {
+          ...initState.entities.workflows,
+          [newItemId]: expect.objectContaining({ id: newItemId, settings: { name: 'Workflow 3' } })
+        }
+      },
+    }
+    const {
+      appStore,
+      addWorkflowUseCase
+    } = await setup(initState)
+
+    const res = addWorkflowUseCase(workflowC.id);
 
     const newState = appStore.get();
     expect(newState).toEqual(expectState);

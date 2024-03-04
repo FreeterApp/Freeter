@@ -36,8 +36,10 @@ export function createWorkflowSwitcherComponent({
       onDragLeave,
       onDragOver,
       onDrop,
+      onContextMenu,
+      onItemContextMenu,
       actionBarItems,
-      itemActionBarActions,
+      itemActionBarItemsFactory,
       dontShowActionBar,
     } = useWorkflowSwitcherViewModel();
 
@@ -54,6 +56,7 @@ export function createWorkflowSwitcherComponent({
           onDragLeave={onDragLeave}
           onDragOver={onDragOver}
           onDrop={onDrop}
+          onContextMenu={onContextMenu}
         >
           {workflows.map(item => (
             <WorkflowSwitcherItem
@@ -73,7 +76,8 @@ export function createWorkflowSwitcherComponent({
               onDragLeave={onItemDragLeave}
               onDragOver={onItemDragOver}
               onDrop={onItemDrop}
-              actionBarActions={itemActionBarActions}
+              onContextMenu={onItemContextMenu}
+              actionBarItemsFactory={itemActionBarItemsFactory}
             />
           ))}
           <ActionBar

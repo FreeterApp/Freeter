@@ -1,0 +1,21 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+import { ContextMenuProvider } from '@/application/interfaces/contextMenuProvider';
+import { MenuItems } from '@common/base/menu';
+
+type Deps = {
+  contextMenu: ContextMenuProvider;
+}
+
+export function createShowContextMenuUseCase({
+  contextMenu
+}: Deps) {
+  const showContextMenu = (menuItems: MenuItems) => contextMenu.show(menuItems);
+
+  return showContextMenu;
+}
+
+export type ShowContextMenuUseCase = ReturnType<typeof createShowContextMenuUseCase>;

@@ -55,3 +55,11 @@ export function moveItemInList<T>(list: List<T>, fromIndex: number, toIndex?: nu
   newList.splice(toIndex ?? newList.length - 1, 0, newList.splice(fromIndex, 1)[0]);
   return newList;
 }
+
+export function findIndexOrUndef<T>(list: List<T>, item: T): number | undefined {
+  const idx = list.indexOf(item);
+  if (idx < 0) {
+    return undefined;
+  }
+  return idx;
+}

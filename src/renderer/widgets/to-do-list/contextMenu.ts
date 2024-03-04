@@ -8,7 +8,6 @@ import { deleteCompleted, deleteItem, activateItemEditor, labelAddItemTop, label
 import { WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
 import { Settings } from '@/widgets/to-do-list/settings';
 
-export const listContextId = 'list';
 export function createContextMenuFactory(
   settings: Settings,
   getToDoListState: GetToDoListState,
@@ -41,7 +40,7 @@ export function createContextMenuFactory(
         doAction: async () => deleteCompleted(getToDoListState, setToDoListState)
       },
     ]
-    if (contextId === listContextId) {
+    if (contextId === '') {
       ctxMenuItems = ctxCommonItems;
     } else {
       const itemId = Number(contextId);
