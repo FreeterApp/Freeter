@@ -6,9 +6,9 @@
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureProjectAInColl, fixtureProjectBInColl, fixtureWorkflowAInColl, fixtureWorkflowBInColl, fixtureWorkflowCInColl, fixtureWorkflowDInColl, fixtureWidgetAInColl, fixtureWidgetBInColl, fixtureWidgetCInColl, fixtureWidgetDInColl } from '@tests/base/state/fixtures/entitiesState';
-import { addWorkflowToAppState, deleteWorkflowsFromAppState } from '@/base/state/actions';
+import { CopyEntityResult, addWorkflowToAppState, copyWorkflowsInAppState, deleteWorkflowsFromAppState } from '@/base/state/actions';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC, fixtureWidgetLayoutItemD } from '@tests/base/fixtures/widgetLayout';
-import { fixtureWorkflowSettingsA } from '@tests/base/fixtures/workflow';
+import { fixtureWorkflowSettingsA, fixtureWorkflowSettingsB, fixtureWorkflowSettingsC } from '@tests/base/fixtures/workflow';
 
 const projectId1 = 'PROJECT-ID1';
 const projectId2 = 'PROJECT-ID2';
@@ -394,5 +394,302 @@ describe('deleteWorkflowsFromAppState()', () => {
     const gotState = deleteWorkflowsFromAppState(initState, projectId1, [workflowId2, workflowId3, workflowId4]);
 
     expect(gotState).toEqual(expectState);
+  })
+})
+
+describe('copyWorkflowsInAppState()', () => {
+  it('should do nothing, if the "to" project does not exist', () => {
+    const initState = fixtureAppState({
+      entities: {
+        projects: {
+          ...fixtureProjectAInColl({ id: projectId1, workflowIds: [workflowId1, workflowId2] }),
+        },
+        workflows: {
+          ...fixtureWorkflowAInColl({
+            id: workflowId1,
+            layout: [fixtureWidgetLayoutItemA({ widgetId: widgetId1 })]
+          }),
+          ...fixtureWorkflowBInColl({
+            id: workflowId2,
+            layout: [fixtureWidgetLayoutItemB({ widgetId: widgetId2 })]
+          }),
+        }
+      },
+    })
+    const expectState = initState;
+
+    const { newState, newWidgetIds, newWorkflowIds } = copyWorkflowsInAppState(initState, [workflowId1, workflowId2], 'NO-SUCH-ID', null, () => '', true);
+
+    expect(newState).toBe(expectState);
+    expect(newWidgetIds).toEqual([]);
+    expect(newWorkflowIds).toEqual([]);
+  })
+
+  it('should do nothing, if the workflow ids do not exist', () => {
+    const initState = fixtureAppState({
+      entities: {
+        projects: {
+          ...fixtureProjectAInColl({ id: projectId1, workflowIds: [workflowId1, workflowId2] }),
+        },
+        workflows: {
+          ...fixtureWorkflowAInColl({
+            id: workflowId1,
+            layout: [fixtureWidgetLayoutItemA({ widgetId: widgetId1 })]
+          }),
+          ...fixtureWorkflowBInColl({
+            id: workflowId2,
+            layout: [fixtureWidgetLayoutItemB({ widgetId: widgetId2 })]
+          }),
+        }
+      },
+    })
+    const expectState = initState;
+
+    const { newState, newWidgetIds, newWorkflowIds } = copyWorkflowsInAppState(initState, ['NO-SUCH-ID', 'NO-SUCH-ID2'], projectId2, null, () => '', true);
+
+    expect(newState).toBe(expectState);
+    expect(newWidgetIds).toEqual([]);
+    expect(newWorkflowIds).toEqual([]);
+  })
+
+  it('should correctly copy the specified workflows', () => {
+    const initState = fixtureAppState({
+      entities: {
+        projects: {
+          ...fixtureProjectAInColl({ id: projectId1, workflowIds: [workflowId1, workflowId2, workflowId3] }),
+        },
+        workflows: {
+          ...fixtureWorkflowAInColl({
+            id: workflowId1,
+            layout: [fixtureWidgetLayoutItemA({ widgetId: widgetId1 }), fixtureWidgetLayoutItemB({ widgetId: widgetId2 })]
+          }),
+          ...fixtureWorkflowBInColl({
+            id: workflowId2,
+            layout: [fixtureWidgetLayoutItemC({ widgetId: widgetId3 })]
+          }),
+          ...fixtureWorkflowCInColl({
+            id: workflowId3,
+            layout: [fixtureWidgetLayoutItemD({ widgetId: widgetId4 })]
+          }),
+        },
+        widgets: {
+          ...fixtureWidgetAInColl({ id: widgetId1 }),
+          ...fixtureWidgetBInColl({ id: widgetId2 }),
+          ...fixtureWidgetCInColl({ id: widgetId3 }),
+          ...fixtureWidgetDInColl({ id: widgetId4 }),
+        },
+      },
+    })
+    const getId = (num: number) => `NEW-ID-${num}`
+    let id = 1;
+    const mockIdGen = jest.fn(() => getId(id++))
+    const expectNewWflIds: CopyEntityResult[] = [
+      { newId: getId(5), origId: workflowId1 },
+      { newId: getId(8), origId: workflowId2 },
+    ];
+    const expectNewWgtIds: CopyEntityResult[] = [
+      { newId: getId(1), origId: widgetId1 },
+      { newId: getId(3), origId: widgetId2 },
+      { newId: getId(6), origId: widgetId3 },
+    ];
+    const expectState: AppState = {
+      ...initState,
+      entities: {
+        ...initState.entities,
+        projects: {
+          ...initState.entities.projects,
+          [projectId1]: {
+            ...initState.entities.projects[projectId1]!,
+            workflowIds: [...initState.entities.projects[projectId1]!.workflowIds, getId(5), getId(8)],
+            currentWorkflowId: getId(5)
+          },
+        },
+        workflows: {
+          ...initState.entities.workflows,
+          [getId(5)]: {
+            ...initState.entities.workflows[workflowId1]!,
+            id: getId(5),
+            layout: [
+              { ...initState.entities.workflows[workflowId1]!.layout[0], id: getId(2), widgetId: getId(1) },
+              { ...initState.entities.workflows[workflowId1]!.layout[1], id: getId(4), widgetId: getId(3) },
+            ]
+          },
+          [getId(8)]: {
+            ...initState.entities.workflows[workflowId2]!,
+            id: getId(8),
+            layout: [
+              { ...initState.entities.workflows[workflowId2]!.layout[0], id: getId(7), widgetId: getId(6) },
+            ]
+          },
+        },
+        widgets: {
+          ...initState.entities.widgets,
+          [getId(1)]: {
+            ...initState.entities.widgets[widgetId1]!,
+            id: getId(1)
+          },
+          [getId(3)]: {
+            ...initState.entities.widgets[widgetId2]!,
+            id: getId(3)
+          },
+          [getId(6)]: {
+            ...initState.entities.widgets[widgetId3]!,
+            id: getId(6)
+          },
+        }
+      }
+    };
+
+    const { newState, newWidgetIds, newWorkflowIds } = copyWorkflowsInAppState(initState, [workflowId1, workflowId2], projectId1, null, mockIdGen, true);
+
+    expect(newState).toEqual(expectState);
+    expect(newWorkflowIds).toEqual(expectNewWflIds)
+    expect(newWidgetIds).toEqual(expectNewWgtIds)
+  })
+
+  it('should correctly set the workflowIds in the target project, when the target workflow position is specified', () => {
+    const targetId = 'TARGET-ID'
+    const initState = fixtureAppState({
+      entities: {
+        projects: {
+          ...fixtureProjectAInColl({ id: projectId1, workflowIds: [workflowId1, targetId, workflowId2] }),
+        },
+        workflows: {
+          ...fixtureWorkflowAInColl({
+            id: workflowId1,
+            layout: []
+          }),
+          ...fixtureWorkflowBInColl({
+            id: workflowId2,
+            layout: []
+          }),
+          ...fixtureWorkflowCInColl({
+            id: targetId,
+            layout: []
+          }),
+        },
+      },
+    })
+    const getId = (num: number) => `NEW-ID-${num}`
+    let id = 1;
+    const mockIdGen = jest.fn(() => getId(id++))
+    const expectNewWflIds: CopyEntityResult[] = [
+      { newId: getId(1), origId: workflowId1 },
+      { newId: getId(2), origId: workflowId2 },
+    ];
+    const expectNewWgtIds: CopyEntityResult[] = [];
+    const expectState: AppState = {
+      ...initState,
+      entities: {
+        ...initState.entities,
+        projects: {
+          ...initState.entities.projects,
+          [projectId1]: {
+            ...initState.entities.projects[projectId1]!,
+            workflowIds: [workflowId1, getId(1), getId(2), targetId, workflowId2],
+            currentWorkflowId: getId(1)
+          },
+        },
+        workflows: {
+          ...initState.entities.workflows,
+          [getId(1)]: {
+            ...initState.entities.workflows[workflowId1]!,
+            id: getId(1),
+          },
+          [getId(2)]: {
+            ...initState.entities.workflows[workflowId2]!,
+            id: getId(2),
+          },
+        },
+      }
+    };
+
+    const { newState, newWidgetIds, newWorkflowIds } = copyWorkflowsInAppState(initState, [workflowId1, workflowId2], projectId1, targetId, mockIdGen, true);
+
+    expect(newState).toEqual(expectState);
+    expect(newWorkflowIds).toEqual(expectNewWflIds)
+    expect(newWidgetIds).toEqual(expectNewWgtIds)
+  })
+
+  it('should add "Copy X" to the workflow copies, when keepNamesAsIs=false', () => {
+    const wflName1 = 'Workflow 1'
+    const wflName2 = 'Workflow 2'
+    const initState = fixtureAppState({
+      entities: {
+        projects: {
+          ...fixtureProjectAInColl({ id: projectId1, workflowIds: [workflowId1, workflowId2, workflowId3] }),
+        },
+        workflows: {
+          ...fixtureWorkflowAInColl({
+            id: workflowId1,
+            layout: [],
+            settings: fixtureWorkflowSettingsA({
+              name: wflName1
+            })
+          }),
+          ...fixtureWorkflowBInColl({
+            id: workflowId2,
+            layout: [],
+            settings: fixtureWorkflowSettingsB({
+              name: wflName2
+            })
+          }),
+          ...fixtureWorkflowCInColl({
+            id: workflowId3,
+            layout: [],
+            settings: fixtureWorkflowSettingsC({
+              name: wflName1 + ' Copy 1'
+            })
+          }),
+        },
+      },
+    })
+    const getId = (num: number) => `NEW-ID-${num}`
+    let id = 1;
+    const mockIdGen = jest.fn(() => getId(id++))
+    const expectNewWflIds: CopyEntityResult[] = [
+      { newId: getId(1), origId: workflowId1 },
+      { newId: getId(2), origId: workflowId2 },
+    ];
+    const expectNewWgtIds: CopyEntityResult[] = [];
+    const expectState: AppState = {
+      ...initState,
+      entities: {
+        ...initState.entities,
+        projects: {
+          ...initState.entities.projects,
+          [projectId1]: {
+            ...initState.entities.projects[projectId1]!,
+            workflowIds: [workflowId1, workflowId2, workflowId3, getId(1), getId(2)],
+            currentWorkflowId: getId(1)
+          },
+        },
+        workflows: {
+          ...initState.entities.workflows,
+          [getId(1)]: {
+            ...initState.entities.workflows[workflowId1]!,
+            id: getId(1),
+            settings: {
+              ...initState.entities.workflows[workflowId1]!.settings,
+              name: wflName1 + ' Copy 2'
+            }
+          },
+          [getId(2)]: {
+            ...initState.entities.workflows[workflowId2]!,
+            id: getId(2),
+            settings: {
+              ...initState.entities.workflows[workflowId2]!.settings,
+              name: wflName2 + ' Copy 1'
+            }
+          },
+        },
+      }
+    };
+
+    const { newState, newWidgetIds, newWorkflowIds } = copyWorkflowsInAppState(initState, [workflowId1, workflowId2], projectId1, null, mockIdGen, false);
+
+    expect(newState).toEqual(expectState);
+    expect(newWorkflowIds).toEqual(expectNewWflIds)
+    expect(newWidgetIds).toEqual(expectNewWgtIds)
   })
 })
