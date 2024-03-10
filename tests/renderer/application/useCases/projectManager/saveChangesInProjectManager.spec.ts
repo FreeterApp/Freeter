@@ -11,9 +11,13 @@ import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { fixtureProjectA, fixtureProjectB, fixtureProjectC, fixtureProjectD, fixtureProjectSettingsA } from '@tests/base/fixtures/project';
 import { fixtureProjectAInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
-import { addWorkflowToAppState, deleteProjectsFromAppState } from '@/base/state/actions';
+import { addWorkflowToAppState, copyProjectContentInAppState, deleteProjectsFromAppState } from '@/base/state/actions';
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowSettingsA, fixtureWorkflowSettingsB } from '@tests/base/fixtures/workflow';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
+import { ObjectManager } from '@common/base/objectManager';
+import { DataStorageRenderer } from '@/application/interfaces/dataStorage';
+import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetCoreSettingsA, fixtureWidgetCoreSettingsB } from '@tests/base/fixtures/widget';
+import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB } from '@tests/base/fixtures/widgetLayout';
 
 const newItemId = 'NEW-ITEM-ID';
 jest.mock('@/base/state/actions', () => {
@@ -21,23 +25,31 @@ jest.mock('@/base/state/actions', () => {
   return {
     ...actual,
     addWorkflowToAppState: jest.fn(actual.addWorkflowToAppState),
+    copyProjectContentInAppState: jest.fn(actual.copyProjectContentInAppState),
     deleteProjectsFromAppState: jest.fn(actual.deleteProjectsFromAppState)
   }
 })
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
+  const widgetDataStorageManagerMock: ObjectManager<DataStorageRenderer> = {
+    copyObjectData: jest.fn(),
+    getObject: jest.fn(),
+  };
   let i = 1;
   const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase({
     appStore,
+    widgetDataStorageManager: widgetDataStorageManagerMock,
     idGenerator: () => newItemId + (i++)
   });
 
   return {
     appStore,
     addWorkflowToAppState,
+    copyProjectContentInAppState,
     deleteProjectsFromAppState,
-    saveChangesInProjectManagerUseCase
+    saveChangesInProjectManagerUseCase,
+    widgetDataStorageManagerMock
   }
 }
 
@@ -54,7 +66,8 @@ describe('saveChangesInProjectManagerUseCase()', () => {
             projectManager: fixtureProjectManager({
               projects: null,
               projectIds: ['SOME-ID'],
-              deleteProjectIds: {}
+              deleteProjectIds: {},
+              duplicateProjectIds: {}
             })
           }),
           order: ['about', 'projectManager']
@@ -80,7 +93,8 @@ describe('saveChangesInProjectManagerUseCase()', () => {
             projectManager: fixtureProjectManager({
               projects: fixtureProjectAInColl(),
               projectIds: null,
-              deleteProjectIds: { 'SOME-ID': true }
+              deleteProjectIds: { 'SOME-ID': true },
+              duplicateProjectIds: {}
             })
           }),
           order: ['about', 'projectManager']
@@ -106,7 +120,8 @@ describe('saveChangesInProjectManagerUseCase()', () => {
             projectManager: fixtureProjectManager({
               projects: fixtureProjectAInColl(),
               projectIds: [],
-              deleteProjectIds: null
+              deleteProjectIds: null,
+              duplicateProjectIds: {}
             })
           }),
           order: ['about', 'projectManager']
@@ -124,13 +139,41 @@ describe('saveChangesInProjectManagerUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should update the projects entities and the projects order in the project switcher, add a new workflow entity to every new project as a current workflow, and reset the project manager data', async () => {
+  it('should do nothing, if duplicateProjectIds is null', async () => {
+    const initState = fixtureAppState({
+      ui: {
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: fixtureProjectAInColl(),
+              projectIds: [],
+              deleteProjectIds: {},
+              duplicateProjectIds: null
+            })
+          }),
+          order: ['about', 'projectManager']
+        })
+      }
+    })
+    const {
+      appStore,
+      saveChangesInProjectManagerUseCase
+    } = await setup(initState)
+
+    const expectState = appStore.get();
+    saveChangesInProjectManagerUseCase();
+
+    expect(appStore.get()).toBe(expectState);
+  })
+
+  it('should update the projects entities and the projects order in the project switcher, add a new workflow entity to every new non-duplicate project as a current workflow, and reset the project manager data', async () => {
     const workflowA = fixtureWorkflowA();
     const workflowB = fixtureWorkflowB({ id: newItemId + '1', settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }) });
     const workflowC = fixtureWorkflowC({ id: newItemId + '2', settings: fixtureWorkflowSettingsB({ name: 'Workflow 1' }) });
-    const projectA = fixtureProjectA();
+    const projectA = fixtureProjectA({ currentWorkflowId: '', workflowIds: [] });
     const projectB = fixtureProjectB({ currentWorkflowId: '', workflowIds: [] });
     const projectC = fixtureProjectC({ currentWorkflowId: '', workflowIds: [] });
+    const projectD = fixtureProjectD({ currentWorkflowId: '', workflowIds: [] });
 
     const updProjectA = fixtureProjectA({
       settings: fixtureProjectSettingsA({ name: 'New Name' })
@@ -156,10 +199,12 @@ describe('saveChangesInProjectManagerUseCase()', () => {
                 [projectA.id]: updProjectA,
                 [projectB.id]: projectB,
                 [projectC.id]: projectC,
+                [projectD.id]: projectD
               },
               currentProjectId: projectA.id,
-              projectIds: [projectB.id, projectA.id, projectC.id],
-              deleteProjectIds: {}
+              projectIds: [projectB.id, projectA.id, projectC.id, projectD.id],
+              deleteProjectIds: {},
+              duplicateProjectIds: { [projectD.id]: projectA.id }
             })
           }),
           order: ['about', 'projectManager']
@@ -186,14 +231,15 @@ describe('saveChangesInProjectManagerUseCase()', () => {
             ...projectC,
             workflowIds: [workflowC.id],
             currentWorkflowId: workflowC.id
-          }
+          },
+          [projectD.id]: projectD
         },
       },
       ui: {
         ...initState.ui,
         projectSwitcher: {
           ...initState.ui.projectSwitcher,
-          projectIds: [projectB.id, projectA.id, projectC.id],
+          projectIds: [projectB.id, projectA.id, projectC.id, projectD.id],
           currentProjectId: projectA.id
         },
         modalScreens: {
@@ -203,6 +249,7 @@ describe('saveChangesInProjectManagerUseCase()', () => {
             projectManager: {
               currentProjectId: '',
               deleteProjectIds: null,
+              duplicateProjectIds: null,
               projectIds: null,
               projects: null
             }
@@ -260,7 +307,8 @@ describe('saveChangesInProjectManagerUseCase()', () => {
                 [projectB.id]: true,
                 [projectC.id]: true,
                 [projectD.id]: false,
-              }
+              },
+              duplicateProjectIds: {}
             })
           }),
           order: ['about', 'projectManager']
@@ -298,6 +346,7 @@ describe('saveChangesInProjectManagerUseCase()', () => {
             projectManager: {
               currentProjectId: '',
               deleteProjectIds: null,
+              duplicateProjectIds: null,
               projectIds: null,
               projects: null
             }
@@ -350,7 +399,8 @@ describe('saveChangesInProjectManagerUseCase()', () => {
               projectIds: [projectB.id, projectA.id],
               deleteProjectIds: {
                 [projectB.id]: false,
-              }
+              },
+              duplicateProjectIds: {}
             })
           }),
           order: ['about', 'projectManager']
@@ -366,6 +416,160 @@ describe('saveChangesInProjectManagerUseCase()', () => {
     saveChangesInProjectManagerUseCase();
 
     expect(deleteProjectsFromAppState).not.toBeCalled()
+  })
+
+  it('should update state with copyProjectContentInAppState (for duplicate projects ids) and copy widget data with widgetDataStorageManager\'s copyObjectData, when there are duplicate projects', async () => {
+    const widgetA = fixtureWidgetA({ coreSettings: fixtureWidgetCoreSettingsA({ name: 'Widget 1' }) })
+    const widgetACopy = fixtureWidgetA({ id: newItemId + '1', coreSettings: fixtureWidgetCoreSettingsA({ name: 'Widget 1' }) })
+    const widgetB = fixtureWidgetB({ coreSettings: fixtureWidgetCoreSettingsB({ name: 'Widget 2' }) })
+    const widgetBCopy = fixtureWidgetB({ id: newItemId + '3', coreSettings: fixtureWidgetCoreSettingsB({ name: 'Widget 2' }) })
+    const workflowA = fixtureWorkflowA({ settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }), layout: [fixtureWidgetLayoutItemA({ widgetId: widgetA.id }), fixtureWidgetLayoutItemB({ widgetId: widgetB.id })] });
+    const workflowACopy = fixtureWorkflowA({ id: newItemId + '5', settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }), layout: [fixtureWidgetLayoutItemA({ id: newItemId + '2', widgetId: widgetACopy.id }), fixtureWidgetLayoutItemB({ id: newItemId + '4', widgetId: widgetBCopy.id })] });
+    const projectA = fixtureProjectA({ currentWorkflowId: workflowA.id, workflowIds: [workflowA.id] });
+    const projectACopy = fixtureProjectA({ id: newItemId + '6', currentWorkflowId: workflowACopy.id, workflowIds: [workflowACopy.id] });
+    const initState = fixtureAppState({
+      entities: {
+        widgets: {
+          [widgetA.id]: widgetA,
+          [widgetB.id]: widgetB
+        },
+        workflows: {
+          [workflowA.id]: workflowA,
+        },
+        projects: {
+          [projectA.id]: projectA,
+        }
+      },
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          projectIds: [projectA.id],
+          currentProjectId: projectA.id
+        }),
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: {
+                [projectA.id]: projectA,
+                [projectACopy.id]: {
+                  ...projectA,
+                  id: projectACopy.id,
+                  currentWorkflowId: '',
+                  workflowIds: []
+                }
+              },
+              currentProjectId: projectA.id,
+              projectIds: [projectA.id, projectACopy.id],
+              deleteProjectIds: {},
+              duplicateProjectIds: {
+                [projectACopy.id]: projectA.id
+              }
+            })
+          }),
+          order: ['about', 'projectManager']
+        })
+      }
+    })
+    const expectState: AppState = {
+      ...initState,
+      entities: {
+        ...initState.entities,
+        projects: {
+          ...initState.entities.projects,
+          [projectACopy.id]: projectACopy
+        },
+        workflows: {
+          ...initState.entities.workflows,
+          [workflowACopy.id]: workflowACopy
+        },
+        widgets: {
+          ...initState.entities.widgets,
+          [widgetACopy.id]: widgetACopy,
+          [widgetBCopy.id]: widgetBCopy
+        }
+      },
+      ui: {
+        ...initState.ui,
+        projectSwitcher: {
+          ...initState.ui.projectSwitcher,
+          projectIds: [projectA.id, projectACopy.id],
+        },
+        modalScreens: {
+          ...initState.ui.modalScreens,
+          data: {
+            ...initState.ui.modalScreens.data,
+            projectManager: {
+              currentProjectId: '',
+              deleteProjectIds: null,
+              duplicateProjectIds: null,
+              projectIds: null,
+              projects: null
+            }
+          },
+          order: ['about']
+        }
+      }
+    }
+
+    const {
+      appStore,
+      copyProjectContentInAppState,
+      widgetDataStorageManagerMock,
+      saveChangesInProjectManagerUseCase
+    } = await setup(initState)
+
+    await saveChangesInProjectManagerUseCase();
+
+    expect(copyProjectContentInAppState).toBeCalledTimes(1);
+    expect(widgetDataStorageManagerMock.copyObjectData).toBeCalledTimes(2)
+    expect(appStore.get()).toStrictEqual(expectState);
+  });
+
+  it('should not update state with copyProjectContentInAppState nor call the widgetDataStorageManager\'s copyObjectData, when there are no project duplicates', async () => {
+    const projectA = fixtureProjectA();
+    const projectB = fixtureProjectB();
+    const updProjectA = fixtureProjectA({
+      settings: fixtureProjectSettingsA({ name: 'New Name' })
+    })
+    const initState = fixtureAppState({
+      entities: {
+        projects: {
+          [projectA.id]: projectA,
+          [projectB.id]: projectB,
+        }
+      },
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          projectIds: [projectA.id, projectB.id],
+          currentProjectId: projectA.id
+        }),
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            projectManager: fixtureProjectManager({
+              projects: {
+                [projectA.id]: updProjectA,
+                [projectB.id]: projectB,
+              },
+              currentProjectId: projectA.id,
+              projectIds: [projectB.id, projectA.id],
+              deleteProjectIds: {},
+              duplicateProjectIds: {}
+            })
+          }),
+          order: ['about', 'projectManager']
+        })
+      }
+    })
+
+    const {
+      copyProjectContentInAppState,
+      saveChangesInProjectManagerUseCase,
+      widgetDataStorageManagerMock
+    } = await setup(initState)
+
+    await saveChangesInProjectManagerUseCase();
+
+    expect(copyProjectContentInAppState).not.toBeCalled()
+    expect(widgetDataStorageManagerMock.copyObjectData).not.toBeCalled()
   })
 
   it('should update the current project id = first project on the list, when the id does not exist', async () => {
@@ -393,7 +597,8 @@ describe('saveChangesInProjectManagerUseCase()', () => {
               },
               currentProjectId: projectA.id,
               projectIds: [projectB.id, projectA.id],
-              deleteProjectIds: {}
+              deleteProjectIds: {},
+              duplicateProjectIds: {}
             })
           }),
           order: ['about', 'projectManager']
@@ -423,6 +628,7 @@ describe('saveChangesInProjectManagerUseCase()', () => {
             projectManager: {
               currentProjectId: '',
               deleteProjectIds: null,
+              duplicateProjectIds: null,
               projectIds: null,
               projects: null
             }
@@ -461,7 +667,8 @@ describe('saveChangesInProjectManagerUseCase()', () => {
               },
               currentProjectId: '',
               projectIds: [],
-              deleteProjectIds: {}
+              deleteProjectIds: {},
+              duplicateProjectIds: {}
             })
           }),
           order: ['about', 'projectManager']
@@ -489,6 +696,7 @@ describe('saveChangesInProjectManagerUseCase()', () => {
             projectManager: {
               currentProjectId: '',
               deleteProjectIds: null,
+              duplicateProjectIds: null,
               projectIds: null,
               projects: null
             }

@@ -48,6 +48,10 @@ export const ipcWidgetDataStorageGetKeysChannel = makeIpcChannelName('widget-dat
 export type IpcWidgetDataStorageGetKeysArgs = [widgetId: string];
 export type IpcWidgetDataStorageGetKeysRes = string[];
 
+export const ipcCopyWidgetDataStorageChannel = makeIpcChannelName('copt-widget-data-storage');
+export type IpcCopyWidgetDataStorageArgs = [srcWidgetId: string, toWidgetId: string];
+export type IpcCopyWidgetDataStorageRes = boolean;
+
 export const ipcPopupOsContextMenuChannel = makeIpcChannelName('popup-os-context-menu');
 export type IpcPopupOsContextMenuArgs = [menuItems: MenuItemsIpc];
 export type IpcPopupOsContextMenuRes = number | undefined;

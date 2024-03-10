@@ -22,7 +22,8 @@ export function createOpenProjectManagerUseCase({
       currentProjectId,
       projects,
       deleteProjectIds: {},
-      projectIds
+      projectIds,
+      duplicateProjectIds: {}
     });
     appStore.set(state);
   }

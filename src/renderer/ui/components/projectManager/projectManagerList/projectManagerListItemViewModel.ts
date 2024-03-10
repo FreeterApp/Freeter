@@ -6,12 +6,12 @@
 import { ActionBarItems } from '@/base/actionBar';
 import { EntityId } from '@/base/entity';
 import { Project } from '@/base/project';
-import { delete14Svg } from '@/ui/assets/images/appIcons';
+import { delete14Svg, duplicate14Svg } from '@/ui/assets/images/appIcons';
 import { DragEvent, MouseEvent, useCallback, useMemo } from 'react';
 
 export type ProjectManagerListItemOnMouseEvent = (evt: MouseEvent<HTMLElement>, projectId: EntityId) => void;
 export type ProjectManagerListItemOnDragEvent = (evt: DragEvent<HTMLElement>, projectId: EntityId) => void;
-export type ProjectManagerListItemDeleteProjectAction = (itemId: EntityId) => void;
+export type ProjectManagerListItemProjectAction = (itemId: EntityId) => void;
 
 export interface ProjectManagerListItemProps {
   project: Project;
@@ -25,7 +25,8 @@ export interface ProjectManagerListItemProps {
   onDragLeave: ProjectManagerListItemOnDragEvent;
   onDragOver: ProjectManagerListItemOnDragEvent;
   onDrop: ProjectManagerListItemOnDragEvent;
-  deleteProjectAction: ProjectManagerListItemDeleteProjectAction;
+  duplicateProjectAction: ProjectManagerListItemProjectAction;
+  deleteProjectAction: ProjectManagerListItemProjectAction;
 }
 
 export function useProjectManagerListItemViewModel(props: ProjectManagerListItemProps) {
@@ -35,6 +36,7 @@ export function useProjectManagerListItemViewModel(props: ProjectManagerListItem
     onClick,
     project,
     deleteProjectAction,
+    duplicateProjectAction,
     isDropArea,
     onDragEnd,
     onDragEnter,
@@ -80,6 +82,14 @@ export function useProjectManagerListItemViewModel(props: ProjectManagerListItem
 
   const actionBarItems = useMemo<ActionBarItems>(() => [{
     enabled: true,
+    icon: duplicate14Svg,
+    id: 'DUPLICATE-PROJECT',
+    title: 'Duplicate Project',
+    doAction: async () => {
+      duplicateProjectAction(id);
+    }
+  }, {
+    enabled: true,
     pressed: hasDeletionMark,
     icon: delete14Svg,
     id: 'DELETE-PROJECT',
@@ -87,7 +97,7 @@ export function useProjectManagerListItemViewModel(props: ProjectManagerListItem
     doAction: async () => {
       deleteProjectAction(id);
     }
-  }], [deleteProjectAction, id, hasDeletionMark])
+  }], [hasDeletionMark, duplicateProjectAction, id, deleteProjectAction])
 
   return {
     name,

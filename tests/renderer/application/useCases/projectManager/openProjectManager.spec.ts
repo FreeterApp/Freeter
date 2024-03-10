@@ -45,7 +45,8 @@ describe('openProjectManagerUseCase()', () => {
             projectManager: fixtureProjectManager({
               currentProjectId: '',
               deleteProjectIds: null,
-              projects: null
+              projects: null,
+              duplicateProjectIds: null
             }),
           }),
           order: ['about']
@@ -67,6 +68,7 @@ describe('openProjectManagerUseCase()', () => {
             projectManager: {
               currentProjectId: projectId2,
               deleteProjectIds: {},
+              duplicateProjectIds: {},
               projects: {
                 [projectA.id]: projectA,
                 [projectB.id]: projectB,
@@ -108,6 +110,7 @@ describe('openProjectManagerUseCase()', () => {
             projectManager: fixtureProjectManager({
               currentProjectId: '',
               deleteProjectIds: null,
+              duplicateProjectIds: null,
               projects: null
             }),
           }),
@@ -130,6 +133,7 @@ describe('openProjectManagerUseCase()', () => {
             projectManager: {
               currentProjectId: projectId2,
               deleteProjectIds: {},
+              duplicateProjectIds: {},
               projects: {
                 [projectA.id]: projectA,
                 [projectB.id]: projectB,

@@ -4,12 +4,13 @@
  */
 
 import { ClearWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/clearWidgetDataStorage';
+import { CopyWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/copyWidgetDataStorage';
 import { DeleteInWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/deleteInWidgetDataStorage';
 import { GetKeysFromWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/getKeysFromWidgetDataStorage';
 import { GetTextFromWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/getTextFromWidgetDataStorage';
 import { SetTextInWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/setTextInWidgetDataStorage';
 import { Controller } from '@/controllers/controller';
-import { IpcWidgetDataStorageClearArgs, ipcWidgetDataStorageClearChannel, IpcWidgetDataStorageClearRes, IpcWidgetDataStorageDeleteArgs, ipcWidgetDataStorageDeleteChannel, IpcWidgetDataStorageDeleteRes, IpcWidgetDataStorageGetKeysArgs, ipcWidgetDataStorageGetKeysChannel, IpcWidgetDataStorageGetKeysRes, IpcWidgetDataStorageGetTextArgs, ipcWidgetDataStorageGetTextChannel, IpcWidgetDataStorageGetTextRes, IpcWidgetDataStorageSetTextArgs, ipcWidgetDataStorageSetTextChannel, IpcWidgetDataStorageSetTextRes } from '@common/ipc/channels';
+import { IpcCopyWidgetDataStorageArgs, ipcCopyWidgetDataStorageChannel, IpcCopyWidgetDataStorageRes, IpcWidgetDataStorageClearArgs, ipcWidgetDataStorageClearChannel, IpcWidgetDataStorageClearRes, IpcWidgetDataStorageDeleteArgs, ipcWidgetDataStorageDeleteChannel, IpcWidgetDataStorageDeleteRes, IpcWidgetDataStorageGetKeysArgs, ipcWidgetDataStorageGetKeysChannel, IpcWidgetDataStorageGetKeysRes, IpcWidgetDataStorageGetTextArgs, ipcWidgetDataStorageGetTextChannel, IpcWidgetDataStorageGetTextRes, IpcWidgetDataStorageSetTextArgs, ipcWidgetDataStorageSetTextChannel, IpcWidgetDataStorageSetTextRes } from '@common/ipc/channels';
 
 type Deps = {
   getTextFromWidgetDataStorageUseCase: GetTextFromWidgetDataStorageUseCase;
@@ -17,6 +18,7 @@ type Deps = {
   deleteInWidgetDataStorageUseCase: DeleteInWidgetDataStorageUseCase;
   clearWidgetDataStorageUseCase: ClearWidgetDataStorageUseCase;
   getKeysFromWidgetDataStorageUseCase: GetKeysFromWidgetDataStorageUseCase;
+  copyWidgetDataStorageUseCase: CopyWidgetDataStorageUseCase;
 }
 
 export function createWidgetDataStorageControllers({
@@ -25,12 +27,14 @@ export function createWidgetDataStorageControllers({
   clearWidgetDataStorageUseCase,
   deleteInWidgetDataStorageUseCase,
   getKeysFromWidgetDataStorageUseCase,
+  copyWidgetDataStorageUseCase,
 }: Deps): [
     Controller<IpcWidgetDataStorageGetTextArgs, IpcWidgetDataStorageGetTextRes>,
     Controller<IpcWidgetDataStorageSetTextArgs, IpcWidgetDataStorageSetTextRes>,
     Controller<IpcWidgetDataStorageDeleteArgs, IpcWidgetDataStorageDeleteRes>,
     Controller<IpcWidgetDataStorageClearArgs, IpcWidgetDataStorageClearRes>,
     Controller<IpcWidgetDataStorageGetKeysArgs, IpcWidgetDataStorageGetKeysRes>,
+    Controller<IpcCopyWidgetDataStorageArgs, IpcCopyWidgetDataStorageRes>
   ] {
   return [{
     channel: ipcWidgetDataStorageGetTextChannel,
@@ -47,5 +51,8 @@ export function createWidgetDataStorageControllers({
   }, {
     channel: ipcWidgetDataStorageGetKeysChannel,
     handle: async (_event, widgetId) => getKeysFromWidgetDataStorageUseCase(widgetId)
+  }, {
+    channel: ipcCopyWidgetDataStorageChannel,
+    handle: async (_event, srcWidgetId, destWidgetId) => copyWidgetDataStorageUseCase(srcWidgetId, destWidgetId)
   }]
 }

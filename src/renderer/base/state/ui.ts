@@ -75,6 +75,12 @@ export interface ProjectManagerState {
   projectIds: EntityIdList | null;
   deleteProjectIds: Record<EntityId, boolean> | null;
   currentProjectId: EntityId;
+  /**
+   * Marks projects to duplicate data on Save.
+   * key = new project id (copy content to)
+   * value = existing project id (copy content from)
+   */
+  duplicateProjectIds: Record<EntityId, EntityId> | null;
 }
 
 export interface ProjectSwitcherState {
@@ -174,7 +180,8 @@ export function createUiState(): UiState {
           currentProjectId: '',
           deleteProjectIds: null,
           projects: null,
-          projectIds: null
+          projectIds: null,
+          duplicateProjectIds: null
         },
         widgetSettings: {
           widgetInEnv: null

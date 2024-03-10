@@ -15,7 +15,7 @@ import { registerControllers } from '@/controllers/controller';
 import { createAppDataStorageControllers } from '@/controllers/appDataStorage';
 import { createGetTextFromAppDataStorageUseCase } from '@/application/useCases/appDataStorage/getTextFromAppDataStorage';
 import { createSetTextInAppDataStorageUseCase } from '@/application/useCases/appDataStorage/setTextInAppDataStorage';
-import { createFileDataStorage } from '@/infra/dataStorage/fileDataStorage';
+import { copyFileDataStorage, createFileDataStorage } from '@/infra/dataStorage/fileDataStorage';
 import { createContextMenuControllers } from '@/controllers/contextMenu';
 import { createPopupContextMenuUseCase } from '@/application/useCases/contextMenu/popupContextMenu';
 import { createContextMenuProvider } from '@/infra/contextMenuProvider/contextMenuProvider';
@@ -67,6 +67,7 @@ import { createExecCmdLinesInTerminalUseCase } from '@/application/useCases/term
 import { createAppsProvider } from '@/infra/appsProvider/appsProvider';
 import { createChildProcessProvider } from '@/infra/childProcessProvider/childProcessProvider';
 import { createOpenPathUseCase } from '@/application/useCases/shell/openPath';
+import { createCopyWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/copyWidgetDataStorage';
 
 let appWindow: BrowserWindow | null = null; // ref to the app window
 
@@ -106,14 +107,17 @@ if (!app.requestSingleInstanceLock()) {
     const getTextFromAppDataStorageUseCase = createGetTextFromAppDataStorageUseCase({ appDataStorage });
     const setTextInAppDataStorageUseCase = createSetTextInAppDataStorageUseCase({ appDataStorage });
 
+    const getWidgetDataStoragePath = (id: string) => join(app.getPath('appData'), 'freeter2', 'freeter-data', 'widgets', id);
     const widgetDataStorageManager = createObjectManager(
-      (id) => createFileDataStorage('string', join(app.getPath('appData'), 'freeter2', 'freeter-data', 'widgets', id))
+      (id) => createFileDataStorage('string', getWidgetDataStoragePath(id)),
+      (fromId, toId) => copyFileDataStorage(getWidgetDataStoragePath(fromId), getWidgetDataStoragePath(toId))
     );
     const getTextFromWidgetDataStorageUseCase = createGetTextFromWidgetDataStorageUseCase({ widgetDataStorageManager });
     const setTextInWidgetDataStorageUseCase = createSetTextInWidgetDataStorageUseCase({ widgetDataStorageManager });
     const deleteInWidgetDataStorageUseCase = createDeleteInWidgetDataStorageUseCase({ widgetDataStorageManager });
     const clearWidgetDataStorageUseCase = createClearWidgetDataStorageUseCase({ widgetDataStorageManager });
     const getKeysFromWidgetDataStorageUseCase = createGetKeysFromWidgetDataStorageUseCase({ widgetDataStorageManager });
+    const copyWidgetDataStorageUseCase = createCopyWidgetDataStorageUseCase({ widgetDataStorageManager });
 
     const contextMenuProvider = createContextMenuProvider();
     const popupContextMenuUseCase = createPopupContextMenuUseCase({ contextMenuProvider });
@@ -159,6 +163,7 @@ if (!app.requestSingleInstanceLock()) {
         clearWidgetDataStorageUseCase,
         deleteInWidgetDataStorageUseCase,
         getKeysFromWidgetDataStorageUseCase,
+        copyWidgetDataStorageUseCase,
       }),
       ...createContextMenuControllers({ popupContextMenuUseCase }),
       ...createClipboardControllers({ writeBookmarkIntoClipboardUseCase, writeTextIntoClipboardUseCase }),

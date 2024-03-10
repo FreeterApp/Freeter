@@ -10,7 +10,8 @@ const projectManagerState: ProjectManagerState = {
   currentProjectId: '',
   deleteProjectIds: null,
   projects: null,
-  projectIds: null
+  projectIds: null,
+  duplicateProjectIds: null
 }
 
 export const fixtureProjectManager = (testData?: Partial<ProjectManagerState>): ProjectManagerState => deepFreeze({

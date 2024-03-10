@@ -23,6 +23,7 @@ export function ProjectManagerList(props: ProjectManagerListProps) {
     onAddProjectClick,
     deleteProjectAction,
     deleteProjectIds,
+    duplicateProjectAction,
   } = useProjectManagerListViewModel(props);
 
   return (<div role="tablist">
@@ -41,6 +42,7 @@ export function ProjectManagerList(props: ProjectManagerListProps) {
         project={item}
         key={item.id}
         deleteProjectAction={deleteProjectAction}
+        duplicateProjectAction={duplicateProjectAction}
       ></ProjectManagerListItem>
     ))}
     <div className={styles['project-list-actions']}>

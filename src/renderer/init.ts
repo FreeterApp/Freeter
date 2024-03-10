@@ -59,7 +59,7 @@ import { DataStorage } from '@common/application/interfaces/dataStorage';
 import { setTextOnlyIfChanged } from '@common/infra/dataStorage/setTextOnlyIfChanged';
 import { withJson } from '@common/infra/dataStorage/withJson';
 import { createObjectManager } from '@common/base/objectManager';
-import { createWidgetDataStorage } from '@/infra/dataStorage/widgetDataStorage';
+import { copyWidgetDataStorage, createWidgetDataStorage } from '@/infra/dataStorage/widgetDataStorage';
 import { createWorktableViewModelHook } from '@/ui/components/worktable/worktableViewModel';
 import { createAppViewModelHook } from '@/ui/components/app/appViewModel';
 import { createUpdateWidgetCoreSettingsUseCase } from '@/application/useCases/widgetSettings/updateWidgetCoreSettings';
@@ -110,6 +110,7 @@ import { createProductInfoProvider } from '@/infra/productInfoProvider/productIn
 import { createOpenSponsorshipUrlUseCase } from '@/application/useCases/about/openSponsorshipUrl';
 import { createTerminalProvider } from '@/infra/terminalProvider/terminalProvider';
 import { createShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
+import { createDuplicateProjectInProjectManagerUseCase } from '@/application/useCases/projectManager/duplicateProjectInProjectManager';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -139,7 +140,8 @@ function createStore() {
             currentProjectId: '',
             deleteProjectIds: null,
             projects: null,
-            projectIds: null
+            projectIds: null,
+            duplicateProjectIds: null
           },
           widgetSettings: {
             widgetInEnv: null
@@ -241,7 +243,10 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const clipboardProvider = createClipboardProvider();
   const shellProvider = createShellProvider();
   const processProvider = await createProcessProvider();
-  const widgetDataStorageManager = createObjectManager(async widgetId => prepareDataStorageForRenderer(createWidgetDataStorage(widgetId)))
+  const widgetDataStorageManager = createObjectManager(
+    async widgetId => prepareDataStorageForRenderer(createWidgetDataStorage(widgetId)),
+    copyWidgetDataStorage
+  )
   const terminalProvider = createTerminalProvider();
   const getWidgetApiUseCase = createGetWidgetApiUseCase({
     clipboardProvider,
@@ -256,9 +261,13 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   })
 
   const addProjectInProjectManagerUseCase = createAddProjectInProjectManagerUseCase(deps);
-  const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase(deps);
+  const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase({
+    ...deps,
+    widgetDataStorageManager
+  });
   const switchProjectInProjectManagerUseCase = createSwitchProjectInProjectManagerUseCase(deps);
   const toggleDeletionInProjectManagerUseCase = createToggleDeletionInProjectManagerUseCase(deps);
+  const duplicateProjectInProjectManagerUseCase = createDuplicateProjectInProjectManagerUseCase(deps);
   const updateProjectSettingsInProjectManagerUseCase = createUpdateProjectSettingsInProjectManagerUseCase(deps);
   const updateProjectsOrderInProjectManagerUseCase = createUpdateProjectsOrderInProjectManagerUseCase(deps);
   const closeProjectManagerUseCase = createCloseProjectManagerUseCase(deps);
@@ -366,6 +375,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     saveChangesInProjectManagerUseCase,
     switchProjectInProjectManagerUseCase,
     toggleDeletionInProjectManagerUseCase,
+    duplicateProjectInProjectManagerUseCase,
     updateProjectSettingsInProjectManagerUseCase,
     updateProjectsOrderInProjectManagerUseCase,
     closeProjectManagerUseCase,
