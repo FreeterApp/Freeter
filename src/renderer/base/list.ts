@@ -63,3 +63,12 @@ export function findIndexOrUndef<T>(list: List<T>, item: T): number | undefined 
   }
   return idx;
 }
+
+export function addOrMoveItemInList<T>(list: List<T>, item: T, toIndex = 0): List<T> {
+  const idx = list.indexOf(item);
+  if (idx < 0) {
+    return addItemToList(list, item, toIndex);
+  } else {
+    return moveItemInList(list, idx, toIndex);
+  }
+}
