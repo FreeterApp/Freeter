@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { addItemToList, addOrMoveItemInList, findIndexOrUndef, moveItemInList, removeItemFromList } from '@/base/list';
+import { addItemToList, addOrMoveItemInList, findIndexOrUndef, limitListLength, moveItemInList, removeItemFromList } from '@/base/list';
 
 describe('List', () => {
   describe('addItemToList()', () => {
@@ -171,6 +171,38 @@ describe('List', () => {
       const newList = addOrMoveItemInList(list, list[2], 1);
 
       expect(newList).toEqual([list[0], list[2], list[1]]);
+    })
+  })
+
+  describe('limitListLength()', () => {
+    it('should remove items at the end of the list to fit the specified length, and return the removed items', () => {
+      const list = [
+        'A',
+        'B',
+        'C',
+        'D',
+        'E'
+      ];
+
+      const [newList, deleted] = limitListLength(list, 3);
+
+      expect(newList).toEqual([list[0], list[1], list[2]]);
+      expect(deleted).toEqual([list[3], list[4]]);
+    })
+
+    it('should do nothing and return empty array of deleted items, when the list fits the specified length', () => {
+      const list = [
+        'A',
+        'B',
+        'C',
+        'D',
+        'E'
+      ];
+
+      const [newList, deleted] = limitListLength(list, 10);
+
+      expect(newList === list).toBe(true);
+      expect(deleted).toEqual([]);
     })
   })
 })

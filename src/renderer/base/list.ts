@@ -72,3 +72,12 @@ export function addOrMoveItemInList<T>(list: List<T>, item: T, toIndex = 0): Lis
     return moveItemInList(list, idx, toIndex);
   }
 }
+
+export function limitListLength<T>(list: List<T>, num: number): [newList: List<T>, deletedItems: T[]] {
+  if (list.length <= num) {
+    return [list, []];
+  }
+  const newList = list.slice();
+  const deleted = newList.splice(num);
+  return [newList, deleted];
+}
