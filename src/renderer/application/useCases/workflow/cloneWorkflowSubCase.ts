@@ -5,9 +5,8 @@
 
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { CloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
-import { EntityId } from '@/base/entity';
-import { addOneToEntityCollection } from '@/base/entityCollection';
-import { EntitiesState } from '@/base/state/entities';
+import { WorkflowEntityDeps } from '@/base/state/entities';
+import { Widget } from '@/base/widget';
 import { WidgetLayoutItem } from '@/base/widgetLayout';
 import { Workflow } from '@/base/workflow';
 
@@ -20,22 +19,16 @@ export function createCloneWorkflowSubCase({
   idGenerator,
 }: Deps) {
   async function subCase(
-    workflowId: EntityId,
-    entitiesState: EntitiesState
-  ): Promise<[newWorkflowId: EntityId | null, newEntitiesState: EntitiesState]> {
-    const { workflows } = entitiesState;
-    const workflow = workflows[workflowId];
-    if (!workflow) {
-      return [null, entitiesState];
-    }
-
-    let newEntitiesState = entitiesState;
+    workflow: Workflow,
+    deps: WorkflowEntityDeps
+  ): Promise<[newWorkflow: Workflow, newWidgets: Widget[]]> {
+    const newWidgets: Widget[] = [];
     const newWgtLayout: WidgetLayoutItem[] = [];
     for (const wgtLayoutItem of workflow.layout) {
-      const [newWgtLayoutItem, newEntities] = await cloneWidgetLayoutItemSubCase(wgtLayoutItem, newEntitiesState);
-      if (newWgtLayoutItem !== null) {
-        newEntitiesState = newEntities;
-        newWgtLayout.push(newWgtLayoutItem)
+      const [newLayoutItem, newWgt] = await cloneWidgetLayoutItemSubCase(wgtLayoutItem, deps);
+      if (newLayoutItem !== null && newWgt !== null) {
+        newWidgets.push(newWgt);
+        newWgtLayout.push(newLayoutItem)
       }
     }
     const newWorkflow: Workflow = {
@@ -43,12 +36,8 @@ export function createCloneWorkflowSubCase({
       id: idGenerator(),
       layout: newWgtLayout
     }
-    newEntitiesState = {
-      ...newEntitiesState,
-      workflows: addOneToEntityCollection(newEntitiesState.workflows, newWorkflow)
-    }
 
-    return [newWorkflow.id, newEntitiesState];
+    return [newWorkflow, newWidgets];
   }
 
   return subCase;

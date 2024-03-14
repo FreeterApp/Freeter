@@ -5,9 +5,6 @@
 
 import { DataStorageRenderer } from '@/application/interfaces/dataStorage';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
-import { EntityId } from '@/base/entity';
-import { addOneToEntityCollection } from '@/base/entityCollection';
-import { EntitiesState } from '@/base/state/entities';
 import { Widget } from '@/base/widget';
 import { ObjectManager } from '@common/base/objectManager';
 
@@ -19,23 +16,13 @@ export function createCloneWidgetSubCase({
   widgetDataStorageManager,
   idGenerator,
 }: Deps) {
-  const subCase: (widgetId: EntityId, entitiesState: EntitiesState) => Promise<[EntityId | null, EntitiesState]> = async (widgetId, entitiesState) => {
-    const { widgets } = entitiesState;
-    const widget = widgets[widgetId];
-    if (!widget) {
-      return [null, entitiesState];
-    }
-
+  async function subCase(widget: Widget): Promise<Widget> {
     const newWidget: Widget = {
       ...widget,
       id: idGenerator()
     }
-    const newEntitiesState: EntitiesState = {
-      ...entitiesState,
-      widgets: addOneToEntityCollection(entitiesState.widgets, newWidget)
-    }
     await widgetDataStorageManager.copyObjectData(widget.id, newWidget.id);
-    return [newWidget.id, newEntitiesState];
+    return newWidget;
   }
 
   return subCase;

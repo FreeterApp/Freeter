@@ -6,23 +6,39 @@
 import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
 import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
-import { fixtureEntitiesState, fixtureWidgetAInColl, fixtureWidgetBInColl } from '@tests/base/state/fixtures/entitiesState';
-import { CloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';
-import { EntitiesState } from '@/base/state/entities';
+import { WorkflowEntityDeps } from '@/base/state/entities';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
+import { fixtureWidgetA, fixtureWidgetB } from '@tests/base/fixtures/widget';
+import { Widget } from '@/base/widget';
+import { Workflow } from '@/base/workflow';
 
 function setup() {
-  const idGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-ID');
-  const cloneWidgetLayoutItemSubCase: jest.MockedFn<CloneWidgetLayoutItemSubCase> = jest.fn().mockImplementation(async (_item, state) => [null, state]);
+  const workflowIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-WF-ID');
+  const widgetIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-W-ID')
+  const widgetLayoutItemIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-WL-ID')
+  const cloneWidgetSubCase = createCloneWidgetSubCase({
+    idGenerator: widgetIdGeneratorMock,
+    widgetDataStorageManager: {
+      copyObjectData: jest.fn(),
+      getObject: jest.fn()
+    }
+  })
+  const cloneWidgetLayoutItemSubCase = createCloneWidgetLayoutItemSubCase({
+    cloneWidgetSubCase,
+    idGenerator: widgetLayoutItemIdGeneratorMock
+  })
   const cloneWorkflowSubCase = createCloneWorkflowSubCase({
-    idGenerator: idGeneratorMock,
-    cloneWidgetLayoutItemSubCase
+    cloneWidgetLayoutItemSubCase,
+    idGenerator: workflowIdGeneratorMock
   });
 
   return {
     cloneWorkflowSubCase,
-    idGeneratorMock,
-    cloneWidgetLayoutItemSubCase
+    workflowIdGeneratorMock,
+    widgetIdGeneratorMock,
+    widgetLayoutItemIdGeneratorMock,
   }
 }
 
@@ -31,75 +47,46 @@ beforeEach(() => {
 })
 
 describe('cloneWorkflowSubCase()', () => {
-  it('should return null id and unchanged entities state, if there is no workflow id in the entities state', async () => {
-    const initState = fixtureEntitiesState({
-      workflows: {}
-    })
-    const {
-      cloneWorkflowSubCase
-    } = setup()
-    const expectState = initState;
-
-    const [gotId, gotState] = await cloneWorkflowSubCase('NO-SUCH-ID', initState);
-
-    expect(gotId).toBeNull();
-    expect(gotState).toBe(expectState);
-  })
-
-  it('should correctly clone Workflow in the entities state', async () => {
+  it('should correctly clone Workflow in the entities state and return new entities', async () => {
+    const widgetA = fixtureWidgetA()
+    const widgetAClone: Widget = { ...widgetA, id: widgetA.id + 'CLONE' }
+    const widgetB = fixtureWidgetB()
+    const widgetBClone: Widget = { ...widgetB, id: widgetB.id + 'CLONE' }
     const workflow = fixtureWorkflowA({
-      id: 'WORKFLOW-ID', layout: [
-        fixtureWidgetLayoutItemA({ id: 'WL-A' }),
-        fixtureWidgetLayoutItemB({ id: 'WL-B' }),
-        fixtureWidgetLayoutItemC({ id: 'WL-C' }),
+      layout: [
+        fixtureWidgetLayoutItemA({ widgetId: widgetA.id }),
+        fixtureWidgetLayoutItemB({ widgetId: 'NO-SUCH-ID' }),
+        fixtureWidgetLayoutItemC({ widgetId: widgetB.id }),
       ]
     })
-    const newWorkflow = fixtureWorkflowA({
-      id: 'NEW-WORKFLOW-ID', layout: [
-        fixtureWidgetLayoutItemA({ id: 'NEW-WL-A' }),
-        fixtureWidgetLayoutItemC({ id: 'NEW-WL-C' }),
+    const workflowClone: Workflow = {
+      ...workflow,
+      id: workflow.id + 'CLONE', layout: [
+        { ...workflow.layout[0], id: workflow.layout[0].id + 'CLONE', widgetId: widgetAClone.id },
+        { ...workflow.layout[2], id: workflow.layout[2].id + 'CLONE', widgetId: widgetBClone.id },
       ]
-    })
-    const initState = fixtureEntitiesState({
-      workflows: {
-        [workflow.id]: workflow
-      }
-    })
-    const {
-      cloneWorkflowSubCase,
-      cloneWidgetLayoutItemSubCase,
-      idGeneratorMock
-    } = setup()
-    const stateAfterCloneWLItemA = fixtureEntitiesState({
-      ...initState,
+    }
+    const workflowEntitydeps: WorkflowEntityDeps = {
       widgets: {
-        ...initState.widgets,
-        ...fixtureWidgetAInColl()
-      }
-    })
-    const stateAfterCloneWLItemB = stateAfterCloneWLItemA;
-    const stateAfterCloneWLItemC = fixtureEntitiesState({
-      ...initState,
-      widgets: {
-        ...initState.widgets,
-        ...fixtureWidgetBInColl()
-      }
-    })
-    const stateFinal: EntitiesState = {
-      ...stateAfterCloneWLItemC,
-      workflows: {
-        ...stateAfterCloneWLItemC.workflows,
-        [newWorkflow.id]: newWorkflow
+        [widgetA.id]: widgetA,
+        [widgetB.id]: widgetB,
       }
     }
-    cloneWidgetLayoutItemSubCase.mockResolvedValueOnce([newWorkflow.layout[0], stateAfterCloneWLItemA]);
-    cloneWidgetLayoutItemSubCase.mockResolvedValueOnce([null, stateAfterCloneWLItemB]);
-    cloneWidgetLayoutItemSubCase.mockResolvedValueOnce([newWorkflow.layout[1], stateAfterCloneWLItemC]);
-    idGeneratorMock.mockImplementationOnce(() => newWorkflow.id)
+    const {
+      cloneWorkflowSubCase,
+      workflowIdGeneratorMock,
+      widgetIdGeneratorMock,
+      widgetLayoutItemIdGeneratorMock
+    } = setup()
+    workflowIdGeneratorMock.mockReturnValueOnce(workflowClone.id);
+    widgetLayoutItemIdGeneratorMock.mockReturnValueOnce(workflowClone.layout[0].id);
+    widgetLayoutItemIdGeneratorMock.mockReturnValueOnce(workflowClone.layout[1].id);
+    widgetIdGeneratorMock.mockReturnValueOnce(widgetAClone.id);
+    widgetIdGeneratorMock.mockReturnValueOnce(widgetBClone.id);
 
-    const [gotId, gotState] = await cloneWorkflowSubCase(workflow.id, initState);
+    const [gotWfl, newWidgets] = await cloneWorkflowSubCase(workflow, workflowEntitydeps);
 
-    expect(gotId).toBe(newWorkflow.id);
-    expect(gotState).toEqual(stateFinal);
+    expect(gotWfl).toEqual(workflowClone);
+    expect(newWidgets).toEqual([widgetAClone, widgetBClone]);
   })
 })

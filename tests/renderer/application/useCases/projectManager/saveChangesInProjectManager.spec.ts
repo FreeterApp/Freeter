@@ -14,11 +14,16 @@ import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitch
 import { addWorkflowToAppState, deleteProjectsFromAppState } from '@/base/state/actions';
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowSettingsA, fixtureWorkflowSettingsB } from '@tests/base/fixtures/workflow';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
-import { CloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
+import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
 import { Workflow } from '@/base/workflow';
-import { EntitiesState } from '@/base/state/entities';
-import { EntityId } from '@/base/entity';
 import { Project } from '@/base/project';
+import { IdGenerator } from '@/application/interfaces/idGenerator';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
+import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetC } from '@tests/base/fixtures/widget';
+import { Widget } from '@/base/widget';
+import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';
+import { WidgetLayoutItem } from '@/base/widgetLayout';
 
 const newItemId = 'NEW-ITEM-ID';
 jest.mock('@/base/state/actions', () => {
@@ -33,11 +38,29 @@ jest.mock('@/base/state/actions', () => {
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
   let i = 1;
-  const cloneWorkflowSubCaseMock: jest.MockedFn<CloneWorkflowSubCase> = jest.fn().mockImplementation(async (_id, state) => [null, state]);
+  const projectIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newItemId + (i++))
+  const workflowIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newItemId + (i++))
+  const widgetIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newItemId + (i++))
+  const widgetLayoutItemIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newItemId + (i++))
+  const cloneWidgetSubCase = createCloneWidgetSubCase({
+    idGenerator: widgetIdGeneratorMock,
+    widgetDataStorageManager: {
+      copyObjectData: jest.fn(),
+      getObject: jest.fn()
+    }
+  })
+  const cloneWidgetLayoutItemSubCase = createCloneWidgetLayoutItemSubCase({
+    cloneWidgetSubCase,
+    idGenerator: widgetLayoutItemIdGeneratorMock
+  })
+  const cloneWorkflowSubCase = createCloneWorkflowSubCase({
+    cloneWidgetLayoutItemSubCase,
+    idGenerator: workflowIdGeneratorMock
+  });
   const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase({
     appStore,
-    cloneWorkflowSubCase: cloneWorkflowSubCaseMock,
-    idGenerator: () => newItemId + (i++)
+    cloneWorkflowSubCase,
+    idGenerator: projectIdGeneratorMock
   });
 
   return {
@@ -45,7 +68,10 @@ async function setup(initState: AppState) {
     addWorkflowToAppState,
     deleteProjectsFromAppState,
     saveChangesInProjectManagerUseCase,
-    cloneWorkflowSubCaseMock,
+    projectIdGeneratorMock,
+    workflowIdGeneratorMock,
+    widgetLayoutItemIdGeneratorMock,
+    widgetIdGeneratorMock
   }
 }
 
@@ -414,11 +440,23 @@ describe('saveChangesInProjectManagerUseCase()', () => {
     expect(deleteProjectsFromAppState).not.toBeCalled()
   })
 
-  it('should clone workflows for duplicate projects ids with cloneWorkflowSubCase, when there are duplicate projects', async () => {
-    const workflowA = fixtureWorkflowA();
-    const workflowAClone: Workflow = { ...workflowA, id: workflowA.id + 'CLONE' };
-    const workflowB = fixtureWorkflowB();
-    const workflowBClone: Workflow = { ...workflowB, id: workflowB.id + 'CLONE' };
+  it('should correctly clone workflows for duplicate projects ids, when there are duplicate projects', async () => {
+    const widgetA = fixtureWidgetA();
+    const widgetAClone: Widget = { ...widgetA, id: widgetA.id + 'CLONE' };
+    const widgetB = fixtureWidgetB();
+    const widgetBClone: Widget = { ...widgetB, id: widgetB.id + 'CLONE' };
+    const widgetC = fixtureWidgetC();
+    const widgetCClone: Widget = { ...widgetC, id: widgetC.id + 'CLONE' };
+    const widgetLayoutItemA = fixtureWidgetLayoutItemA({ widgetId: widgetA.id });
+    const widgetLayoutItemAClone: WidgetLayoutItem = { ...widgetLayoutItemA, id: widgetLayoutItemA.id + 'CLONE', widgetId: widgetAClone.id };
+    const widgetLayoutItemB = fixtureWidgetLayoutItemB({ widgetId: widgetB.id });
+    const widgetLayoutItemBClone: WidgetLayoutItem = { ...widgetLayoutItemB, id: widgetLayoutItemB.id + 'CLONE', widgetId: widgetBClone.id };
+    const widgetLayoutItemC = fixtureWidgetLayoutItemC({ widgetId: widgetC.id });
+    const widgetLayoutItemCClone: WidgetLayoutItem = { ...widgetLayoutItemC, id: widgetLayoutItemC.id + 'CLONE', widgetId: widgetCClone.id };
+    const workflowA = fixtureWorkflowA({ layout: [widgetLayoutItemA, widgetLayoutItemB] });
+    const workflowAClone: Workflow = { ...workflowA, id: workflowA.id + 'CLONE', layout: [widgetLayoutItemAClone, widgetLayoutItemBClone] };
+    const workflowB = fixtureWorkflowB({ layout: [widgetLayoutItemC] });
+    const workflowBClone: Workflow = { ...workflowB, id: workflowB.id + 'CLONE', layout: [widgetLayoutItemCClone] };
     const workflowC = fixtureWorkflowC();
     const workflowCClone: Workflow = { ...workflowC, id: workflowC.id + 'CLONE' };
     const projectA = fixtureProjectA({ currentWorkflowId: workflowA.id, workflowIds: [workflowA.id] });
@@ -438,7 +476,12 @@ describe('saveChangesInProjectManagerUseCase()', () => {
           [projectA.id]: projectA,
           [projectB.id]: projectB,
           [projectC.id]: projectC,
-        }
+        },
+        widgets: {
+          [widgetA.id]: widgetA,
+          [widgetB.id]: widgetB,
+          [widgetC.id]: widgetC
+        },
       },
       ui: {
         projectSwitcher: fixtureProjectSwitcher({
@@ -485,11 +528,28 @@ describe('saveChangesInProjectManagerUseCase()', () => {
         })
       }
     })
-    const preSubCaseState: AppState = {
+
+    const expectState: AppState = {
       ...initState,
       entities: {
         ...initState.entities,
-        projects: initState.ui.modalScreens.data.projectManager.projects!,
+        projects: {
+          ...initState.ui.modalScreens.data.projectManager.projects!,
+          [projectAClone.id]: projectAClone,
+          [projectBClone.id]: projectBClone
+        },
+        workflows: {
+          ...initState.entities.workflows,
+          [workflowAClone.id]: workflowAClone,
+          [workflowBClone.id]: workflowBClone,
+          [workflowCClone.id]: workflowCClone
+        },
+        widgets: {
+          ...initState.entities.widgets,
+          [widgetAClone.id]: widgetAClone,
+          [widgetBClone.id]: widgetBClone,
+          [widgetCClone.id]: widgetCClone
+        }
       },
       ui: {
         ...initState.ui,
@@ -513,113 +573,30 @@ describe('saveChangesInProjectManagerUseCase()', () => {
         }
       }
     }
-    const subCaseCallParams1: [EntityId, EntitiesState] = [workflowA.id, preSubCaseState.entities];
-    const subCaseCallRes1: [EntityId, EntitiesState] = [workflowAClone.id, {
-      ...subCaseCallParams1[1],
-      workflows: {
-        ...subCaseCallParams1[1].workflows,
-        [workflowAClone.id]: workflowAClone
-      }
-    }]
-    const subCaseCallParams2: [EntityId, EntitiesState] = [workflowB.id, {
-      ...subCaseCallRes1[1],
-      projects: {
-        ...subCaseCallRes1[1].projects,
-        [projectAClone.id]: projectAClone
-      }
-    }];
-    const subCaseCallRes2: [EntityId, EntitiesState] = [workflowBClone.id, {
-      ...subCaseCallParams2[1],
-      workflows: {
-        ...subCaseCallParams2[1].workflows,
-        [workflowBClone.id]: workflowBClone
-      }
-    }]
-    const subCaseCallParams3: [EntityId, EntitiesState] = [workflowC.id, subCaseCallRes2[1]];
-    const subCaseCallRes3: [EntityId, EntitiesState] = [workflowCClone.id, {
-      ...subCaseCallParams3[1],
-      projects: {
-        ...subCaseCallParams3[1].projects,
-        [projectBClone.id]: projectBClone
-      },
-      workflows: {
-        ...subCaseCallParams3[1].workflows,
-        [workflowCClone.id]: workflowCClone
-      }
-    }]
-    const subCaseCallParams4: [EntityId, EntitiesState] = ['NO-SUCH-ID', subCaseCallRes3[1]];
-    const subCaseCallRes4: [null, EntitiesState] = [null, subCaseCallParams4[1]]
-
-    const finalState: AppState = {
-      ...preSubCaseState,
-      entities: subCaseCallRes4[1]
-    }
 
     const {
       appStore,
-      cloneWorkflowSubCaseMock,
+      projectIdGeneratorMock,
+      widgetIdGeneratorMock,
+      widgetLayoutItemIdGeneratorMock,
+      workflowIdGeneratorMock,
       saveChangesInProjectManagerUseCase
     } = await setup(initState)
-    cloneWorkflowSubCaseMock.mockResolvedValueOnce(subCaseCallRes1);
-    cloneWorkflowSubCaseMock.mockResolvedValueOnce(subCaseCallRes2);
-    cloneWorkflowSubCaseMock.mockResolvedValueOnce(subCaseCallRes3);
-    cloneWorkflowSubCaseMock.mockResolvedValueOnce(subCaseCallRes4);
+    projectIdGeneratorMock.mockReturnValueOnce(projectAClone.id);
+    workflowIdGeneratorMock.mockReturnValueOnce(workflowAClone.id);
+    workflowIdGeneratorMock.mockReturnValueOnce(workflowBClone.id);
+    workflowIdGeneratorMock.mockReturnValueOnce(workflowCClone.id);
+    widgetLayoutItemIdGeneratorMock.mockReturnValueOnce(widgetLayoutItemAClone.id)
+    widgetLayoutItemIdGeneratorMock.mockReturnValueOnce(widgetLayoutItemBClone.id)
+    widgetLayoutItemIdGeneratorMock.mockReturnValueOnce(widgetLayoutItemCClone.id)
+    widgetIdGeneratorMock.mockReturnValueOnce(widgetAClone.id)
+    widgetIdGeneratorMock.mockReturnValueOnce(widgetBClone.id)
+    widgetIdGeneratorMock.mockReturnValueOnce(widgetCClone.id)
 
     await saveChangesInProjectManagerUseCase();
 
-    expect(cloneWorkflowSubCaseMock).toBeCalledTimes(4);
-    expect(cloneWorkflowSubCaseMock).toHaveBeenNthCalledWith(1, ...subCaseCallParams1)
-    expect(cloneWorkflowSubCaseMock).toHaveBeenNthCalledWith(2, ...subCaseCallParams2)
-    expect(cloneWorkflowSubCaseMock).toHaveBeenNthCalledWith(3, ...subCaseCallParams3)
-    expect(cloneWorkflowSubCaseMock).toHaveBeenNthCalledWith(4, ...subCaseCallParams4)
-    expect(appStore.get()).toEqual(finalState);
+    expect(appStore.get()).toEqual(expectState);
   });
-
-  it('should not update state with copyProjectContentInAppState nor call the widgetDataStorageManager\'s copyObjectData, when there are no project duplicates', async () => {
-    const projectA = fixtureProjectA();
-    const projectB = fixtureProjectB();
-    const updProjectA = fixtureProjectA({
-      settings: fixtureProjectSettingsA({ name: 'New Name' })
-    })
-    const initState = fixtureAppState({
-      entities: {
-        projects: {
-          [projectA.id]: projectA,
-          [projectB.id]: projectB,
-        }
-      },
-      ui: {
-        projectSwitcher: fixtureProjectSwitcher({
-          projectIds: [projectA.id, projectB.id],
-          currentProjectId: projectA.id
-        }),
-        modalScreens: fixtureModalScreens({
-          data: fixtureModalScreensData({
-            projectManager: fixtureProjectManager({
-              projects: {
-                [projectA.id]: updProjectA,
-                [projectB.id]: projectB,
-              },
-              currentProjectId: projectA.id,
-              projectIds: [projectB.id, projectA.id],
-              deleteProjectIds: {},
-              duplicateProjectIds: {}
-            })
-          }),
-          order: ['about', 'projectManager']
-        })
-      }
-    })
-
-    const {
-      saveChangesInProjectManagerUseCase,
-      cloneWorkflowSubCaseMock,
-    } = await setup(initState)
-
-    await saveChangesInProjectManagerUseCase();
-
-    expect(cloneWorkflowSubCaseMock).not.toBeCalled();
-  })
 
   it('should update the current project id = first project on the list, when the id does not exist', async () => {
     const projectA = fixtureProjectA();

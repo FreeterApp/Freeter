@@ -5,7 +5,8 @@
 
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { CloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
-import { EntitiesState } from '@/base/state/entities';
+import { WorkflowEntityDeps } from '@/base/state/entities';
+import { Widget } from '@/base/widget';
 import { WidgetLayoutItem } from '@/base/widgetLayout';
 
 type Deps = {
@@ -18,19 +19,20 @@ export function createCloneWidgetLayoutItemSubCase({
 }: Deps) {
   async function subCase(
     item: WidgetLayoutItem,
-    entitiesState: EntitiesState
-  ): Promise<[newWidgetLayoutItem: WidgetLayoutItem | null, newEntitiesState: EntitiesState]> {
-    const [wgtId, newEntities] = await cloneWidgetSubCase(item.widgetId, entitiesState);
-    if (wgtId === null) {
-      return [null, entitiesState];
+    deps: WorkflowEntityDeps
+  ): Promise<[newLayoutItem: WidgetLayoutItem | null, newWidget: Widget | null]> {
+    const wgt = deps.widgets[item.widgetId];
+    if (!wgt) {
+      return [null, null]
     }
+    const newWgt = await cloneWidgetSubCase(wgt);
 
     const newItem: WidgetLayoutItem = {
       ...item,
       id: idGenerator(),
-      widgetId: wgtId
+      widgetId: newWgt.id
     }
-    return [newItem, newEntities];
+    return [newItem, newWgt];
   }
 
   return subCase;

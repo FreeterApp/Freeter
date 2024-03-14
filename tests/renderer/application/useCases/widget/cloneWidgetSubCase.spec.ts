@@ -3,12 +3,11 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { fixtureEntitiesState } from '@tests/base/state/fixtures/entitiesState';
 import { ObjectManager } from '@common/base/objectManager';
 import { DataStorageRenderer } from '@/application/interfaces/dataStorage';
 import { fixtureWidgetA } from '@tests/base/fixtures/widget';
 import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
-import { EntitiesState } from '@/base/state/entities';
+import { Widget } from '@/base/widget';
 
 function setup() {
   const widgetDataStorageManagerMock: ObjectManager<DataStorageRenderer> = {
@@ -33,69 +32,39 @@ beforeEach(() => {
 })
 
 describe('cloneWidgetSubCase()', () => {
-  it('should return null id and unchanged entities state, if there is no widget id in the entities state', async () => {
-    const initState = fixtureEntitiesState({
-      widgets: {}
-    })
-    const {
-      cloneWidgetSubCase
-    } = setup()
-    const expectState = initState;
-
-    const [gotId, gotState] = await cloneWidgetSubCase('NO-SUCH-ID', initState);
-
-    expect(gotId).toBeNull();
-    expect(gotState).toBe(expectState);
-  })
-
   it('should create a widget clone with a new id in the entities state', async () => {
-    const widgetId = 'WIDGET-ID';
-    const newWidgetId = 'NEW-WIDGET-ID';
-    const initState = fixtureEntitiesState({
-      widgets: {
-        [widgetId]: fixtureWidgetA({ id: widgetId })
-      }
-    })
+    const widget = fixtureWidgetA();
+    const widgetClone: Widget = {
+      ...widget,
+      id: widget.id + 'CLONE'
+    }
     const {
       cloneWidgetSubCase,
       idGeneratorMock
     } = setup()
-    idGeneratorMock.mockImplementationOnce(() => newWidgetId)
-    const expectState: EntitiesState = {
-      ...initState,
-      widgets: {
-        ...initState.widgets,
-        [newWidgetId]: {
-          ...initState.widgets[widgetId]!,
-          id: newWidgetId
-        }
-      }
-    };
+    idGeneratorMock.mockImplementationOnce(() => widgetClone.id)
 
-    const [gotId, gotState] = await cloneWidgetSubCase(widgetId, initState);
+    const gotWgt = await cloneWidgetSubCase(widget);
 
-    expect(gotId).toBe(newWidgetId);
-    expect(gotState).toEqual(expectState);
+    expect(gotWgt).toEqual(widgetClone);
   })
 
   it('should call widgetDataStorageManager\'s copyObjectData with right args', async () => {
-    const widgetId = 'WIDGET-ID';
-    const newWidgetId = 'NEW-WIDGET-ID';
-    const initState = fixtureEntitiesState({
-      widgets: {
-        [widgetId]: fixtureWidgetA({ id: widgetId })
-      }
-    })
+    const widget = fixtureWidgetA();
+    const widgetClone: Widget = {
+      ...widget,
+      id: widget.id + 'CLONE'
+    }
     const {
       cloneWidgetSubCase,
       idGeneratorMock,
       widgetDataStorageManagerMock
     } = setup()
-    idGeneratorMock.mockImplementationOnce(() => newWidgetId)
+    idGeneratorMock.mockImplementationOnce(() => widgetClone.id)
 
-    await cloneWidgetSubCase(widgetId, initState);
+    await cloneWidgetSubCase(widget);
 
     expect(widgetDataStorageManagerMock.copyObjectData).toBeCalledTimes(1);
-    expect(widgetDataStorageManagerMock.copyObjectData).toBeCalledWith(widgetId, newWidgetId);
+    expect(widgetDataStorageManagerMock.copyObjectData).toBeCalledWith(widget.id, widgetClone.id);
   })
 })

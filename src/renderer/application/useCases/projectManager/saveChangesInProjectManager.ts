@@ -7,7 +7,7 @@ import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
 import { EntityId } from '@/base/entity';
-import { getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';
 import { addWorkflowToAppState, deleteProjectsFromAppState, modalScreensStateActions } from '@/base/state/actions';
 
@@ -58,19 +58,24 @@ export function createSaveChangesInProjectManagerUseCase({
       const arrToIdFromId = Object.entries(duplicateProjectIds);
       if (arrToIdFromId.length > 0) {
         for (const [toPrjId, fromPrjId] of arrToIdFromId) {
-          const { projects } = state.entities;
+          const { projects, workflows } = state.entities;
           const fromPrj = projects[fromPrjId];
           const toPrj = projects[toPrjId];
           if (fromPrj && toPrj) {
             const newWorkflowIds: EntityId[] = [];
             for (const wflId of fromPrj.workflowIds) {
-              const [newWflId, newEntities] = await cloneWorkflowSubCase(wflId, state.entities);
-              state = {
-                ...state,
-                entities: newEntities
-              }
-              if (newWflId !== null) {
-                newWorkflowIds.push(newWflId);
+              const wfl = workflows[wflId];
+              if (wfl) {
+                const [newWfl, newWgts] = await cloneWorkflowSubCase(wfl, state.entities);
+                newWorkflowIds.push(newWfl.id);
+                state = {
+                  ...state,
+                  entities: {
+                    ...state.entities,
+                    workflows: addOneToEntityCollection(state.entities.workflows, newWfl),
+                    widgets: addManyToEntityCollection(state.entities.widgets, newWgts)
+                  }
+                }
               }
             }
             if (newWorkflowIds.length > 0) {
