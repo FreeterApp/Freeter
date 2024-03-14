@@ -3,22 +3,22 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { DataStorageRenderer } from '@/application/interfaces/dataStorage';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
-import { getOneFromEntityCollection } from '@/base/entityCollection';
+import { CloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
+import { EntityId } from '@/base/entity';
+import { getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';
-import { addWorkflowToAppState, copyProjectContentInAppState, deleteProjectsFromAppState, modalScreensStateActions } from '@/base/state/actions';
-import { ObjectManager } from '@common/base/objectManager';
+import { addWorkflowToAppState, deleteProjectsFromAppState, modalScreensStateActions } from '@/base/state/actions';
 
 type Deps = {
   appStore: AppStore;
-  widgetDataStorageManager: ObjectManager<DataStorageRenderer>;
+  cloneWorkflowSubCase: CloneWorkflowSubCase;
   idGenerator: IdGenerator;
 }
 export function createSaveChangesInProjectManagerUseCase({
   appStore,
-  widgetDataStorageManager,
+  cloneWorkflowSubCase,
   idGenerator,
 }: Deps) {
   const useCase = async () => {
@@ -55,12 +55,40 @@ export function createSaveChangesInProjectManagerUseCase({
         state = deleteProjectsFromAppState(state, projectIdsToDel);
       }
 
-      const arrFromIdToId = Object.entries(duplicateProjectIds).map<[string, string]>(([toId, fromId]) => [fromId, toId]);
-      if (arrFromIdToId.length > 0) {
-        const { newState, newWidgetIds } = copyProjectContentInAppState(state, arrFromIdToId, idGenerator);
-        state = newState;
-        for (const { origId, newId } of newWidgetIds) {
-          await widgetDataStorageManager.copyObjectData(origId, newId);
+      const arrToIdFromId = Object.entries(duplicateProjectIds);
+      if (arrToIdFromId.length > 0) {
+        for (const [toPrjId, fromPrjId] of arrToIdFromId) {
+          const { projects } = state.entities;
+          const fromPrj = projects[fromPrjId];
+          const toPrj = projects[toPrjId];
+          if (fromPrj && toPrj) {
+            const newWorkflowIds: EntityId[] = [];
+            for (const wflId of fromPrj.workflowIds) {
+              const [newWflId, newEntities] = await cloneWorkflowSubCase(wflId, state.entities);
+              state = {
+                ...state,
+                entities: newEntities
+              }
+              if (newWflId !== null) {
+                newWorkflowIds.push(newWflId);
+              }
+            }
+            if (newWorkflowIds.length > 0) {
+              state = {
+                ...state,
+                entities: {
+                  ...state.entities,
+                  projects: updateOneInEntityCollection(state.entities.projects, {
+                    id: toPrjId,
+                    changes: {
+                      workflowIds: [...toPrj.workflowIds, ...newWorkflowIds],
+                      currentWorkflowId: newWorkflowIds[0]
+                    }
+                  })
+                }
+              }
+            }
+          }
         }
       }
 

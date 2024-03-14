@@ -3,16 +3,11 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { EntityId } from '@/base/entity';
-import { addManyToEntityCollection, addOneToEntityCollection, getManyFromEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
-import { EntityIdList, findIdIndexOnList, mapIdListToEntityList, removeIdFromListAtIndex } from '@/base/entityList';
-import { List, addItemToList, findIndexOrUndef } from '@/base/list';
-import { CopyEntityResult } from '@/base/state/actions/entity';
+import { addOneToEntityCollection, getManyFromEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { findIdIndexOnList, mapIdListToEntityList, removeIdFromListAtIndex } from '@/base/entityList';
+import { addItemToList, findIndexOrUndef } from '@/base/list';
 import { AppState } from '@/base/state/app';
-import { generateUniqueName } from '@/base/utils';
-import { Widget } from '@/base/widget';
-import { WidgetLayoutItem } from '@/base/widgetLayout';
 import { Workflow, createWorkflow, generateWorkflowName } from '@/base/workflow';
 
 export function addWorkflowToAppState(
@@ -97,90 +92,3 @@ export function deleteWorkflowsFromAppState(appState: AppState, ownerProjectId: 
   }
 }
 
-export function copyWorkflowsInAppState(
-  appState: AppState,
-  workflowIds: EntityIdList,
-  toPrjId: EntityId,
-  toPosWorkflowId: EntityId | null,
-  idGenerator: IdGenerator,
-  keepNamesAsIs: boolean
-): {
-  newState: AppState;
-  newWorkflowIds: CopyEntityResult[],
-  newWidgetIds: CopyEntityResult[],
-} {
-  const { projects, workflows, widgets } = appState.entities;
-  let newState = appState;
-  const addWorkflows: Workflow[] = [];
-  const addWidgets: Widget[] = [];
-  const newWorkflowIds: CopyEntityResult[] = [];
-  const newWidgetIds: CopyEntityResult[] = [];
-  const toPrj = projects[toPrjId];
-  if (toPrj) {
-    let toPrjWorkflowIds: List<EntityId> = [...toPrj.workflowIds];
-    const wfls = mapIdListToEntityList(workflows, workflowIds)
-    for (const wfl of wfls) {
-      const wgtLayout: WidgetLayoutItem[] = [];
-      for (const wgtLayoutItem of wfl.layout) {
-        const wgt = widgets[wgtLayoutItem.widgetId];
-        if (wgt) {
-          const newWgt: Widget = {
-            ...wgt,
-            id: idGenerator()
-          }
-          addWidgets.push(newWgt);
-          newWidgetIds.push({
-            newId: newWgt.id,
-            origId: wgt.id
-          })
-          const newWgtLayoutItem: WidgetLayoutItem = {
-            ...wgtLayoutItem,
-            id: idGenerator(),
-            widgetId: newWgt.id
-          }
-          wgtLayout.push(newWgtLayoutItem)
-        }
-      }
-      const newWfl: Workflow = {
-        ...wfl,
-        id: idGenerator(),
-        layout: wgtLayout,
-        settings: {
-          ...wfl.settings,
-          name: keepNamesAsIs ? wfl.settings.name : generateUniqueName(`${wfl.settings.name} Copy`, mapIdListToEntityList(workflows, toPrjWorkflowIds).map(item => item?.settings.name || ''))
-        }
-      }
-      toPrjWorkflowIds = addItemToList(toPrjWorkflowIds, newWfl.id, toPosWorkflowId ? findIndexOrUndef(toPrjWorkflowIds, toPosWorkflowId) : undefined);
-      addWorkflows.push(newWfl);
-      newWorkflowIds.push({
-        newId: newWfl.id,
-        origId: wfl.id
-      })
-    }
-
-    if (addWorkflows.length > 0) {
-      newState = {
-        ...newState,
-        entities: {
-          ...newState.entities,
-          projects: {
-            ...newState.entities.projects,
-            [toPrjId]: {
-              ...newState.entities.projects[toPrjId]!,
-              workflowIds: toPrjWorkflowIds,
-              currentWorkflowId: addWorkflows[0].id || ''
-            }
-          },
-          widgets: addManyToEntityCollection(newState.entities.widgets, addWidgets),
-          workflows: addManyToEntityCollection(newState.entities.workflows, addWorkflows)
-        }
-      }
-    }
-  }
-
-  return {
-    newState,
-    newWidgetIds,
-    newWorkflowIds,
-  };
-}

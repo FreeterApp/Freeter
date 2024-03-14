@@ -6,13 +6,12 @@
 import { CloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
 import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
 import { fixtureWidgetLayoutItemA } from '@tests/base/fixtures/widgetLayout';
-import { jest } from '@jest/globals';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { fixtureEntitiesState, fixtureWidgetAInColl } from '@tests/base/state/fixtures/entitiesState';
 
 function setup() {
-  const idGeneratorMock = jest.fn<IdGenerator>().mockImplementation(() => 'SOME-ID');
-  const cloneWidgetSubCaseMock = jest.fn<CloneWidgetSubCase>().mockImplementation(async (_id, state) => [null, state]);
+  const idGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-ID');
+  const cloneWidgetSubCaseMock: jest.MockedFn<CloneWidgetSubCase> = jest.fn().mockImplementation(async (_id, state) => [null, state]);
   const cloneWidgetLayoutItemSubCase = createCloneWidgetLayoutItemSubCase({
     idGenerator: idGeneratorMock,
     cloneWidgetSubCase: cloneWidgetSubCaseMock

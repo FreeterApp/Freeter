@@ -8,7 +8,6 @@ import { EntityCollection, addOneToEntityCollection, getOneFromEntityCollection,
 import { EntityIdList, mapIdListToEntityList } from '@/base/entityList';
 import { removeItemFromList } from '@/base/list';
 import { AppState } from '@/base/state/app';
-import { generateUniqueName } from '@/base/utils';
 import { Widget, WidgetEnv, createWidget, generateWidgetName } from '@/base/widget';
 import { WidgetLayoutItemWH, WidgetLayoutItemXY, createLayoutItem, createLayoutItemAtFreeArea } from '@/base/widgetLayout';
 import { createListItem } from '@/base/widgetList';
@@ -22,22 +21,6 @@ function createWidgetForAppState(
   widgetEntities: EntityCollection<Widget>
 ): Widget {
   return createWidget(widgetType, newWidgetId, generateWidgetName(widgetType.name, mapIdListToEntityList(widgetEntities, targetWidgetIdList).map(item => item?.coreSettings.name || '')));
-}
-
-function copyWidgetForAppState(
-  widget: Widget,
-  newWidgetId: EntityId,
-  targetWidgetIdList: EntityIdList,
-  widgetEntities: EntityCollection<Widget>
-): Widget {
-  return {
-    ...widget,
-    id: newWidgetId,
-    coreSettings: {
-      ...widget.coreSettings,
-      name: generateUniqueName(`${widget.coreSettings.name} Copy`, mapIdListToEntityList(widgetEntities, targetWidgetIdList).map(item => item?.coreSettings.name || ''))
-    }
-  }
 }
 
 function addWidgetToShelf(appState: AppState, widget: Widget, targetListItemId: EntityId | null, newListItemId: EntityId): AppState {
@@ -148,53 +131,6 @@ export function addWidgetToAppState(
     }
 
     const newWidget = createWidgetForAppState(widgetType, newWidgetId, ownerWorkflow.layout.map(item => item.widgetId), appState.entities.widgets);
-
-    const newState = addWidgetToWorkflow(
-      appState,
-      newWidget,
-      ownerWorkflow,
-      newLayoutItemId,
-      newLayoutItemWH || { w: widgetType.minSize.w, h: widgetType.minSize.h },
-      newLayoutItemXY
-    )
-
-    return [newState, newWidget];
-  }
-
-  return [appState, null];
-}
-
-export function copyWidgetInAppState(
-  appState: AppState,
-  widgetId: EntityId,
-  addTo: WidgetAddTo,
-  newWidgetId: EntityId
-): [appState: AppState, newWidget: Widget | null] {
-  const { widgets } = appState.entities;
-  const widget = getOneFromEntityCollection(widgets, widgetId);
-  if (!widget) {
-    return [appState, null];
-  }
-
-  if (addTo.type === 'shelf') {
-    const { widgetList } = appState.ui.shelf;
-    const { newListItemId, targetListItemId } = addTo;
-
-    const newWidget = copyWidgetForAppState(widget, newWidgetId, widgetList.map(item => item.widgetId), widgets)
-
-    const newState = addWidgetToShelf(appState, newWidget, targetListItemId, newListItemId)
-
-    return [newState, newWidget];
-
-  } else if (addTo.type === 'workflow') {
-    const { workflowId, newLayoutItemId, newLayoutItemXY, newLayoutItemWH } = addTo;
-    const ownerWorkflow = getOneFromEntityCollection(appState.entities.workflows, workflowId);
-    const widgetType = getOneFromEntityCollection(appState.entities.widgetTypes, widget.type);
-    if (!ownerWorkflow || !widgetType) {
-      return [appState, null];
-    }
-
-    const newWidget = copyWidgetForAppState(widget, newWidgetId, ownerWorkflow.layout.map(item => item.widgetId), widgets)
 
     const newState = addWidgetToWorkflow(
       appState,

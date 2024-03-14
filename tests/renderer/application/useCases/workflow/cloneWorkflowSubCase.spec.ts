@@ -5,7 +5,6 @@
 
 import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
 import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
-import { jest } from '@jest/globals';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { fixtureEntitiesState, fixtureWidgetAInColl, fixtureWidgetBInColl } from '@tests/base/state/fixtures/entitiesState';
 import { CloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
@@ -13,8 +12,8 @@ import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayout
 import { EntitiesState } from '@/base/state/entities';
 
 function setup() {
-  const idGeneratorMock = jest.fn<IdGenerator>().mockImplementation(() => 'SOME-ID');
-  const cloneWidgetLayoutItemSubCase = jest.fn<CloneWidgetLayoutItemSubCase>().mockImplementation(async (_item, state) => [null, state]);
+  const idGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-ID');
+  const cloneWidgetLayoutItemSubCase: jest.MockedFn<CloneWidgetLayoutItemSubCase> = jest.fn().mockImplementation(async (_item, state) => [null, state]);
   const cloneWorkflowSubCase = createCloneWorkflowSubCase({
     idGenerator: idGeneratorMock,
     cloneWidgetLayoutItemSubCase

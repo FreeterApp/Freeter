@@ -111,6 +111,9 @@ import { createOpenSponsorshipUrlUseCase } from '@/application/useCases/about/op
 import { createTerminalProvider } from '@/infra/terminalProvider/terminalProvider';
 import { createShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
 import { createDuplicateProjectInProjectManagerUseCase } from '@/application/useCases/projectManager/duplicateProjectInProjectManager';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
+import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -130,6 +133,16 @@ function createStore() {
       menuBar: true,
       appConfig: {
         mainHotkey: 'CmdOrCtrl+Shift+F'
+      },
+      copy: {
+        widgets: {
+          entities: {},
+          list: []
+        },
+        workflows: {
+          entities: {},
+          list: []
+        }
       },
       modalScreens: {
         data: {
@@ -183,7 +196,7 @@ function createStore() {
 async function createUseCases(store: ReturnType<typeof createStore>) {
   const deps = {
     appStore: store.appStore,
-    idGenerator: uuidv4IdGenerator
+    idGenerator: uuidv4IdGenerator,
   }
 
   const osDialogProvider = createOsDialogProvider();
@@ -260,10 +273,23 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     dialog: osDialogProvider
   })
 
+  const cloneWidgetSubCase = createCloneWidgetSubCase({
+    ...deps,
+    widgetDataStorageManager
+  })
+  const cloneWidgetLayoutItemSubCase = createCloneWidgetLayoutItemSubCase({
+    ...deps,
+    cloneWidgetSubCase
+  });
+  const cloneWorkflowSubCase = createCloneWorkflowSubCase({
+    ...deps,
+    cloneWidgetLayoutItemSubCase,
+  })
+
   const addProjectInProjectManagerUseCase = createAddProjectInProjectManagerUseCase(deps);
   const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase({
     ...deps,
-    widgetDataStorageManager
+    cloneWorkflowSubCase
   });
   const switchProjectInProjectManagerUseCase = createSwitchProjectInProjectManagerUseCase(deps);
   const toggleDeletionInProjectManagerUseCase = createToggleDeletionInProjectManagerUseCase(deps);

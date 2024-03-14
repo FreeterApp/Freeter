@@ -39,7 +39,10 @@ function setup() {
     getJson: jest.fn(),
     setJson: jest.fn()
   };
-  const widgetDataStorageManager: ObjectManager<jest.MockedObject<DataStorageRenderer>> = createObjectManager(async () => widgetDataStorage)
+  const widgetDataStorageManager: ObjectManager<jest.MockedObject<DataStorageRenderer>> = createObjectManager(
+    async () => widgetDataStorage,
+    async () => true
+  )
 
   const terminalProvider: jest.MockedObject<TerminalProvider> = {
     execCmdLines: jest.fn()

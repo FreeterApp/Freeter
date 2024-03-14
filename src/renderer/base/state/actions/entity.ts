@@ -9,11 +9,6 @@ import { EntityIdList } from '@/base/entityList';
 import { AppState } from '@/base/state/app';
 import { EntitiesState } from '@/base/state/entities';
 
-export interface CopyEntityResult {
-  newId: EntityId;
-  origId: EntityId;
-}
-
 type GetEntityTypeOfCollection<T> = T extends EntityCollection<infer Entity> ? Entity : never;
 
 function updateEntityState<K extends keyof EntitiesState>(state: AppState, key: K, newEntities: EntitiesState[K]): AppState {
