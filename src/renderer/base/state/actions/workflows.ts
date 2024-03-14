@@ -22,7 +22,7 @@ export function addWorkflowToAppState(
   }
 
   const newWorkflow = createWorkflow(newWorkflowId, generateWorkflowName(mapIdListToEntityList(appState.entities.workflows, ownerProject.workflowIds).map(item => item?.settings.name || '')));
-  const posIdx = posByWorkflowId !== undefined ? findIndexOrUndef(ownerProject.workflowIds, posByWorkflowId) : undefined
+  const posIdx = findIndexOrUndef(ownerProject.workflowIds, posByWorkflowId)
   const newState = {
     ...appState,
     entities: {

@@ -135,7 +135,19 @@ describe('List', () => {
       expect(gotIdx).toBe(1);
     })
 
-    it('should return undefinex, if the item does not exist on the list', () => {
+    it('should return undefined, if the item is undefined', () => {
+      const list = [
+        'A',
+        undefined,
+        'C'
+      ];
+
+      const gotIdx = findIndexOrUndef(list, undefined);
+
+      expect(gotIdx).toBeUndefined();
+    })
+
+    it('should return undefined, if the item does not exist on the list', () => {
       const list = [
         'A',
         'B',

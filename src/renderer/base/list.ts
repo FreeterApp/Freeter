@@ -56,7 +56,10 @@ export function moveItemInList<T>(list: List<T>, fromIndex: number, toIndex?: nu
   return newList;
 }
 
-export function findIndexOrUndef<T>(list: List<T>, item: T): number | undefined {
+export function findIndexOrUndef<T>(list: List<T>, item: T | undefined): number | undefined {
+  if (item === undefined) {
+    return undefined;
+  }
   const idx = list.indexOf(item);
   if (idx < 0) {
     return undefined;
