@@ -9,6 +9,15 @@ import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetC, fixtureWidgetD, fixture
 import { fixtureWidgetTypeA, fixtureWidgetTypeB, fixtureWidgetTypeC, fixtureWidgetTypeD } from '@tests/base/fixtures/widgetType';
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowD } from '@tests/base/fixtures/workflow';
 import { deepFreeze } from '@common/helpers/deepFreeze';
+import { EntitiesState } from '@/base/state/entities';
+import { makeFixture } from '@utils/makeFixture';
+
+const entitiesState: EntitiesState = {
+  projects: {},
+  widgets: {},
+  widgetTypes: {},
+  workflows: {}
+}
 
 const makeEntityInCollFixture = <T extends Entity, Y>(fixtureEntity: (testData?: Y) => T) => (testData?: Y): { [id: string]: T } => {
   const entity = fixtureEntity(testData);
@@ -37,3 +46,5 @@ export const fixtureWorkflowAInColl = makeEntityInCollFixture(fixtureWorkflowA);
 export const fixtureWorkflowBInColl = makeEntityInCollFixture(fixtureWorkflowB);
 export const fixtureWorkflowCInColl = makeEntityInCollFixture(fixtureWorkflowC);
 export const fixtureWorkflowDInColl = makeEntityInCollFixture(fixtureWorkflowD);
+
+export const fixtureEntitiesState = makeFixture(entitiesState);

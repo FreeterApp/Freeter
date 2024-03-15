@@ -45,7 +45,7 @@ export function initAppStateWidgets(appState: AppState): AppState {
 }
 
 export function createPersistentAppState(appState: AppState) {
-  const { dragDrop, editMode, palette, modalScreens, worktable, ...persistentUi } = appState.ui
+  const { copy, dragDrop, editMode, palette, modalScreens, worktable, ...persistentUi } = appState.ui
   const { widgetTypes, /* widgets, */...persistentEntities } = appState.entities;
   return {
     // entities: {

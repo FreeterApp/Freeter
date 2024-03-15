@@ -19,7 +19,7 @@ import { Workflow } from '@/base/workflow';
 import { Project } from '@/base/project';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
-import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/cloneWidgetLayoutItemSubCase';
 import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetC } from '@tests/base/fixtures/widget';
 import { Widget } from '@/base/widget';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';

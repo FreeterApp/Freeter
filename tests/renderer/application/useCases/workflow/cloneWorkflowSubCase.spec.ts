@@ -6,7 +6,7 @@
 import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
 import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
-import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/cloneWidgetLayoutItemSubCase';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';
 import { WorkflowEntityDeps } from '@/base/state/entities';
 import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';

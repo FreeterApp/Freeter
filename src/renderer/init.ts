@@ -113,7 +113,7 @@ import { createShowContextMenuUseCase } from '@/application/useCases/contextMenu
 import { createDuplicateProjectInProjectManagerUseCase } from '@/application/useCases/projectManager/duplicateProjectInProjectManager';
 import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
 import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
-import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/widgetLayout/cloneWidgetLayoutItemSubCase';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/cloneWidgetLayoutItemSubCase';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
