@@ -114,6 +114,13 @@ import { createDuplicateProjectInProjectManagerUseCase } from '@/application/use
 import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
 import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
 import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/cloneWidgetLayoutItemSubCase';
+import { createCopyWidgetUseCase } from '@/application/useCases/widget/copyWidget';
+import { createCopyWorkflowUseCase } from '@/application/useCases/workflow/copyWorkflow';
+import { createPasteWidgetToShelfUseCase } from '@/application/useCases/shelf/pasteWidgetToShelf';
+import { createPasteWidgetToWorkflowUseCase } from '@/application/useCases/workflow/pasteWidgetToWorkflow';
+import { createPasteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/pasteWorkflow';
+import { createAddWidgetToWidgetListSubCase } from '@/application/useCases/shelf/addWidgetToWidgetListSubCase';
+import { createAddWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/addWidgetToWidgetLayoutSubCase';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -355,6 +362,26 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
   const showContextMenuUseCase = createShowContextMenuUseCase({ contextMenu: osContextMenuProvider })
 
+  const addWidgetToWidgetListSubCase = createAddWidgetToWidgetListSubCase(deps);
+  const copyWidgetUseCase = createCopyWidgetUseCase(deps);
+  const pasteWidgetToShelfUseCase = createPasteWidgetToShelfUseCase({
+    ...deps,
+    addWidgetToWidgetListSubCase,
+    cloneWidgetSubCase
+  });
+  const addWidgetToWidgetLayoutSubCase = createAddWidgetToWidgetLayoutSubCase(deps);
+  const pasteWidgetToWorkflowUseCase = createPasteWidgetToWorkflowUseCase({
+    ...deps,
+    addWidgetToWidgetLayoutSubCase,
+    cloneWidgetSubCase
+  });
+
+  const copyWorkflowUseCase = createCopyWorkflowUseCase(deps);
+  const pasteWorkflowUseCase = createPasteWorkflowUseCase({
+    ...deps,
+    cloneWorkflowSubCase
+  });
+
   return {
     dragWidgetFromWorktableLayoutUseCase,
     dragOverWorktableLayoutUseCase,
@@ -424,6 +451,12 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     openSponsorshipUrlUseCase,
 
     showContextMenuUseCase,
+
+    copyWidgetUseCase,
+    pasteWidgetToShelfUseCase,
+    pasteWidgetToWorkflowUseCase,
+    copyWorkflowUseCase,
+    pasteWorkflowUseCase,
   }
 }
 

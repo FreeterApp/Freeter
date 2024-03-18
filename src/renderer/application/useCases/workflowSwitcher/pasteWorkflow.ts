@@ -6,8 +6,10 @@
 import { AppStore } from '@/application/interfaces/store';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
 import { EntityId } from '@/base/entity';
-import { addManyToEntityCollection, addOneToEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { addManyToEntityCollection, addOneToEntityCollection, getEntitiesArrayFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { addItemToList, findIndexOrUndef } from '@/base/list';
+import { generateUniqueName } from '@/base/utils';
+import { updateWorkflowSettings } from '@/base/workflow';
 
 type Deps = {
   appStore: AppStore;
@@ -32,7 +34,10 @@ export function createPasteWorkflowUseCase({
 
     const { entity, deps } = workflowCopyEntity;
 
-    const [newWorkflow, newWidgets] = await cloneWorkflowSubCase(entity, deps)
+    const [workflowClone, newWidgets] = await cloneWorkflowSubCase(entity, deps);
+    const newWorkflow = updateWorkflowSettings(workflowClone, {
+      name: generateUniqueName(`${entity.settings.name} Copy`, getEntitiesArrayFromEntityCollection(state.entities.workflows).map(item => item?.settings.name || ''))
+    })
     const posIdx = findIndexOrUndef(currentProject.workflowIds, posByWorkflowId)
     appStore.set({
       ...state,

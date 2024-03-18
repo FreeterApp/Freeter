@@ -94,7 +94,7 @@ describe('pasteWorkflowUseCase()', () => {
     const workflowA = fixtureWorkflowA({ layout: [fixtureWidgetLayoutItemA({ widgetId: widgetA.id })] });
     const workflowB = fixtureWorkflowB();
     const workflowC = fixtureWorkflowC();
-    const workflowAClone: Workflow = { ...workflowA, id: workflowA.id + 'CLONE', layout: [{ ...workflowA.layout[0], id: workflowA.layout[0].id + 'CLONE', widgetId: widgetAClone.id }] }
+    const workflowAClone: Workflow = { ...workflowA, id: workflowA.id + 'CLONE', settings: { ...workflowA.settings, name: workflowA.settings.name + ' Copy 1' }, layout: [{ ...workflowA.layout[0], id: workflowA.layout[0].id + 'CLONE', widgetId: widgetAClone.id }] }
     const projectA = fixtureProjectA({ workflowIds: [workflowB.id, workflowC.id] });
     const initState = fixtureAppState({
       entities: {

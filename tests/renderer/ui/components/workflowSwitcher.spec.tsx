@@ -39,6 +39,8 @@ async function setup(
   const renameWorkflowUseCase = jest.fn();
   const deleteWorkflowUseCase = jest.fn();
   const showContextMenuUseCase = jest.fn();
+  const copyWorkflowUseCase = jest.fn();
+  const pasteWorkflowUseCase = jest.fn();
 
   const useWorkflowSwitcherViewModel = createWorkflowSwitcherViewModelHook({
     useAppState,
@@ -53,6 +55,8 @@ async function setup(
     renameWorkflowUseCase,
     deleteWorkflowUseCase,
     showContextMenuUseCase,
+    copyWorkflowUseCase,
+    pasteWorkflowUseCase,
   })
   const WorkflowSwitcher = createWorkflowSwitcherComponent({
     useWorkflowSwitcherViewModel
@@ -581,7 +585,7 @@ describe('<WorkflowSwitcher />', () => {
         })
       );
 
-      expect(screen.getAllByRole('button', {name: 'Workflow Settings'}).length).toBe(2);
+      expect(screen.getAllByRole('button', {name: /delete workflow/i}).length).toBe(2);
     })
 
     it('should display edit-mode actions on a tab, when edit mode is on', async () => {
@@ -607,7 +611,7 @@ describe('<WorkflowSwitcher />', () => {
         })
       );
 
-      expect(screen.queryAllByRole('button', {name: /workflow settings/i}).length).toBe(1);
+      // expect(screen.queryAllByRole('button', {name: /workflow settings/i}).length).toBe(1);
       expect(screen.queryAllByRole('button', {name: /delete workflow/i}).length).toBe(1);
     })
 
@@ -638,35 +642,36 @@ describe('<WorkflowSwitcher />', () => {
       expect(screen.queryAllByRole('button', {name: /delete workflow/i}).length).toBe(0);
     })
 
-    it('should call the open settings usecase with right params, when clicking the Workflow Settings button', async () => {
-      const idP = 'P';
-      const idWA = 'W-A';
-      const {openWorkflowSettingsUseCase} = await setup(
-        fixtureAppState({
-          entities: {
-            projects: {
-              ...fixtureProjectAInColl({id: idP, workflowIds: [idWA]})
-            },
-            workflows: {
-              ...fixtureWorkflowAInColl({id: idWA, settings: fixtureWorkflowSettingsA()}),
-            }
-          },
-          ui: {
-            editMode: true,
-            projectSwitcher: fixtureProjectSwitcher({
-              projectIds: [idP],
-              currentProjectId: idP
-            })
-          }
-        })
-      );
+    // Enable this test when there are workflow settings besides the workflow name
+    // it('should call the open settings usecase with right params, when clicking the Workflow Settings button', async () => {
+    //   const idP = 'P';
+    //   const idWA = 'W-A';
+    //   const {openWorkflowSettingsUseCase} = await setup(
+    //     fixtureAppState({
+    //       entities: {
+    //         projects: {
+    //           ...fixtureProjectAInColl({id: idP, workflowIds: [idWA]})
+    //         },
+    //         workflows: {
+    //           ...fixtureWorkflowAInColl({id: idWA, settings: fixtureWorkflowSettingsA()}),
+    //         }
+    //       },
+    //       ui: {
+    //         editMode: true,
+    //         projectSwitcher: fixtureProjectSwitcher({
+    //           projectIds: [idP],
+    //           currentProjectId: idP
+    //         })
+    //       }
+    //     })
+    //   );
 
-      const elButton = screen.getByRole('button', {name: /workflow settings/i});
-      fireEvent.click(elButton);
+    //   const elButton = screen.getByRole('button', {name: /workflow settings/i});
+    //   fireEvent.click(elButton);
 
-      expect(openWorkflowSettingsUseCase).toBeCalledTimes(1);
-      expect(openWorkflowSettingsUseCase).toBeCalledWith(idWA);
-    })
+    //   expect(openWorkflowSettingsUseCase).toBeCalledTimes(1);
+    //   expect(openWorkflowSettingsUseCase).toBeCalledWith(idWA);
+    // })
 
     it('should call the delete workflow usecase with right params, when clicking the Delete Workflow button', async () => {
       const idP = 'P';

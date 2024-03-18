@@ -37,6 +37,7 @@
 
 .workflow-switcher-action-bar {
   margin: 0 24px 0 12px;
+  min-width: 100px;
   &:first-child {
     padding-left: 12px;
   }
@@ -58,18 +59,20 @@
 .workflow-switcher-item-button,
 .workflow-switcher-item-name-editor {
   outline-offset: -2px;
-  padding: 0 36px 0 12px;
+  margin: 0;
+  padding: 0 48px 0 12px;
   border: 1px solid #ECECEC;
   box-sizing: border-box;
   height: 38px;
   line-height: 36px;
   font-size: 14px;
+  text-align: left;
 }
 .workflow-switcher-item-button {
   display: inline-block;
   background-color: #F8F8F8;
   white-space: nowrap;
-  min-width: 80px;
+  min-width: 124px;
   cursor: pointer;
 }
 
@@ -116,9 +119,11 @@
 }
 
 .workflow-switcher:not(.dont-show-action-bar) {
-  .workflow-switcher-item:hover, .workflow-switcher-item:focus-within {
-    .workflow-switcher-item-action-bar {
-      visibility: visible;
+  .workflow-switcher-item {
+    &:hover, &:focus-within {
+      .workflow-switcher-item-action-bar {
+        visibility: visible;
+      }
     }
   }
 }
