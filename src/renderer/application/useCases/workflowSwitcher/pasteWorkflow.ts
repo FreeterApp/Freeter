@@ -6,7 +6,8 @@
 import { AppStore } from '@/application/interfaces/store';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
 import { EntityId } from '@/base/entity';
-import { addManyToEntityCollection, addOneToEntityCollection, getEntitiesArrayFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { addManyToEntityCollection, addOneToEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { mapIdListToEntityList } from '@/base/entityList';
 import { addItemToList, findIndexOrUndef } from '@/base/list';
 import { generateCopyName } from '@/base/utils';
 import { updateWorkflowSettings } from '@/base/workflow';
@@ -36,7 +37,7 @@ export function createPasteWorkflowUseCase({
 
     const [workflowClone, newWidgets] = await cloneWorkflowSubCase(entity, deps);
     const newWorkflow = updateWorkflowSettings(workflowClone, {
-      name: generateCopyName(entity.settings.name, getEntitiesArrayFromEntityCollection(state.entities.workflows).map(item => item?.settings.name || ''))
+      name: generateCopyName(entity.settings.name, mapIdListToEntityList(state.entities.workflows, currentProject.workflowIds).map(item => item?.settings.name || ''))
     })
     const posIdx = findIndexOrUndef(currentProject.workflowIds, posByWorkflowId)
     appStore.set({

@@ -12,16 +12,17 @@ import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWid
 import { fixtureCopyState } from '@tests/base/state/fixtures/copy';
 import { fixtureWidgetA, fixtureWidgetB } from '@tests/base/fixtures/widget';
 import { Widget } from '@/base/widget';
-import { createAddWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/addWidgetToWidgetLayoutSubCase';
+import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/addItemToWidgetLayoutSubCase';
 import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
 import { fixtureWidgetTypeA } from '@tests/base/fixtures/widgetType';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';
+import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
   const widgetLayoutItemIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-WL-ID')
   const widgetIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-W-ID')
-  const addWidgetToWidgetLayoutSubCase = createAddWidgetToWidgetLayoutSubCase({
+  const addItemToWidgetLayoutSubCase = createAddItemToWidgetLayoutSubCase({
     idGenerator: widgetLayoutItemIdGeneratorMock
   })
   const cloneWidgetSubCase = createCloneWidgetSubCase({
@@ -31,10 +32,13 @@ async function setup(initState: AppState) {
       getObject: jest.fn()
     }
   })
+  const cloneWidgetToWidgetLayoutSubCase = createCloneWidgetToWidgetLayoutSubCase({
+    addItemToWidgetLayoutSubCase,
+    cloneWidgetSubCase
+  })
   const pasteWidgetToWorkflowUseCase = createPasteWidgetToWorkflowUseCase({
     appStore,
-    cloneWidgetSubCase,
-    addWidgetToWidgetLayoutSubCase,
+    cloneWidgetToWidgetLayoutSubCase
   });
   return {
     appStore,
@@ -85,7 +89,7 @@ describe('pasteWidgetToWorkflowUseCase()', () => {
     });
     const widgetTypeA = fixtureWidgetTypeA({ minSize: { w: 2, h: 2 } });
     const widgetA = fixtureWidgetA({ type: widgetTypeA.id });
-    const widgetAClone: Widget = { ...widgetA, id: widgetA.id + 'CLONE' }
+    const widgetAClone: Widget = { ...widgetA, id: widgetA.id + 'CLONE', coreSettings: { ...widgetA.coreSettings, name: widgetA.coreSettings.name + ' Copy 1' } }
     const newWidgetLayoutItem = fixtureWidgetLayoutItemC({ widgetId: widgetAClone.id, rect: { x: 4, y: 0, w: 2, h: 2 } })
     const initState = fixtureAppState({
       entities: {

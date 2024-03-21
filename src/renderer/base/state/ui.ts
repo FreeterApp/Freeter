@@ -16,7 +16,8 @@ import { WidgetList } from '@/base/widgetList';
 import { Workflow } from '@/base/workflow';
 
 export interface DragDropFromPaletteState {
-  widgetTypeId: EntityId;
+  widgetTypeId?: EntityId;
+  widgetCopyId?: EntityId;
 }
 
 export interface DragDropFromTopBarListState {

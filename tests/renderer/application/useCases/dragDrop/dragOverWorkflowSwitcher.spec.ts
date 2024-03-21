@@ -6,7 +6,7 @@
 import { createDragOverWorkflowSwitcherUseCase } from '@/application/useCases/dragDrop/dragOverWorkflowSwitcher';
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
-import { fixtureDragDropFromPalette, fixtureDragDropFromTopBarList, fixtureDragDropFromWorkflowSwitcher, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging, fixtureDragDropOverWorkflowSwitcher } from '@tests/base/state/fixtures/dragDropState';
+import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromTopBarList, fixtureDragDropFromWorkflowSwitcher, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging, fixtureDragDropOverWorkflowSwitcher } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 const testId = 'TEST-ID';
@@ -95,7 +95,7 @@ describe('dragOverWorkflowSwitcherUseCase()', () => {
     const initState = fixtureAppState({
       ui: {
         dragDrop: {
-          ...fixtureDragDropFromPalette()
+          ...fixtureDragDropFromPaletteAdd()
         }
       }
     });

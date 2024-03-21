@@ -6,7 +6,7 @@
 import { createDragOverTopBarListUseCase } from '@/application/useCases/dragDrop/dragOverTopBarList';
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
-import { fixtureDragDropFromPalette, fixtureDragDropFromTopBarList, fixtureDragDropFromWorkflowSwitcher, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging, fixtureDragDropOverTopBarList } from '@tests/base/state/fixtures/dragDropState';
+import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromTopBarList, fixtureDragDropFromWorkflowSwitcher, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging, fixtureDragDropOverTopBarList } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 const testId = 'TEST-ID';
@@ -86,7 +86,7 @@ describe('dragOverTopBarListUseCase()', () => {
     const initState = fixtureAppState({
       ui: {
         dragDrop: {
-          from: fixtureDragDropFromPalette().from,
+          from: fixtureDragDropFromPaletteAdd().from,
         }
       }
     });
@@ -116,7 +116,7 @@ describe('dragOverTopBarListUseCase()', () => {
     const initState = fixtureAppState({
       ui: {
         dragDrop: {
-          from: fixtureDragDropFromPalette().from,
+          from: fixtureDragDropFromPaletteAdd().from,
           over: fixtureDragDropOverTopBarList({ listItemId: testId }).over
         }
       }

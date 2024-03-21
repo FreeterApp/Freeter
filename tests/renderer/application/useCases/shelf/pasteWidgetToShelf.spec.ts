@@ -7,19 +7,20 @@ import { createPasteWidgetToShelfUseCase } from '@/application/useCases/shelf/pa
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { createAddWidgetToWidgetListSubCase } from '@/application/useCases/shelf/addWidgetToWidgetListSubCase';
+import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/addItemToWidgetListSubCase';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
 import { fixtureCopyState } from '@tests/base/state/fixtures/copy';
 import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetC } from '@tests/base/fixtures/widget';
 import { Widget } from '@/base/widget';
 import { fixtureWidgetListItemA, fixtureWidgetListItemB, fixtureWidgetListItemC } from '@tests/base/fixtures/widgetList';
+import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/cloneWidgetToWidgetListSubCase';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
   const widgetListItemIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-WL-ID')
   const widgetIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => 'SOME-W-ID')
-  const addWidgetToWidgetListSubCase = createAddWidgetToWidgetListSubCase({
+  const addItemToWidgetListSubCase = createAddItemToWidgetListSubCase({
     idGenerator: widgetListItemIdGeneratorMock
   })
   const cloneWidgetSubCase = createCloneWidgetSubCase({
@@ -29,10 +30,13 @@ async function setup(initState: AppState) {
       getObject: jest.fn()
     }
   })
+  const cloneWidgetToWidgetListSubCase = createCloneWidgetToWidgetListSubCase({
+    addItemToWidgetListSubCase,
+    cloneWidgetSubCase
+  })
   const pasteWidgetToShelfUseCase = createPasteWidgetToShelfUseCase({
     appStore,
-    addWidgetToWidgetListSubCase,
-    cloneWidgetSubCase,
+    cloneWidgetToWidgetListSubCase
   });
   return {
     appStore,
@@ -76,7 +80,7 @@ describe('pasteWidgetToShelfUseCase()', () => {
   it('should add a clone of the copied widget to entities and Shelf', async () => {
     const widgetA = fixtureWidgetA();
     const widgetB = fixtureWidgetB();
-    const widgetBClone: Widget = { ...widgetB, id: widgetB.id + 'CLONE' };
+    const widgetBClone: Widget = { ...widgetB, id: widgetB.id + 'CLONE', coreSettings: { ...widgetB.coreSettings, name: widgetB.coreSettings.name + ' Copy 1' } };
     const newWidgetListItem = fixtureWidgetListItemC({ widgetId: widgetBClone.id });
     const initState = fixtureAppState({
       entities: {

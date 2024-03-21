@@ -9,7 +9,7 @@ import { WidgetLayoutProps, createWidgetLayoutViewModelHook } from '@/ui/compone
 import { createWidgetLayoutItemComponent } from '@/ui/components/worktable/widgetLayout/widgetLayoutItem';
 import { WidgetByIdComponent } from '@/ui/components/widget/widgetById';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC, fixtureWidgetLayoutItemD } from '@tests/base/fixtures/widgetLayout';
-import { fixtureDragDropFromPalette, fixtureDragDropFromTopBarList, fixtureDragDropFromWorktableLayout, fixtureDragDropOverWorktableLayout } from '@tests/base/state/fixtures/dragDropState';
+import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromTopBarList, fixtureDragDropFromWorktableLayout, fixtureDragDropOverWorktableLayout } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureWidgetTypeA } from '@tests/base/fixtures/widgetType';
 
 const widgetLayoutTestId = 'widget-layout';
@@ -303,7 +303,7 @@ describe('<WidgetLayout />', () => {
           fixtureWidgetLayoutItemB(),
         ],
         dndDraggingWidgetType: fixtureWidgetTypeA({id: wgtTypeId}),
-        dndDraggingFrom: fixtureDragDropFromPalette().from,
+        dndDraggingFrom: fixtureDragDropFromPaletteAdd().from,
         dndOverWorktableLayout: undefined
       })
 
@@ -319,7 +319,7 @@ describe('<WidgetLayout />', () => {
             fixtureWidgetLayoutItemB(),
           ],
           dndDraggingWidgetType: fixtureWidgetTypeA({id: wgtTypeId}),
-          dndDraggingFrom: fixtureDragDropFromPalette().from,
+          dndDraggingFrom: fixtureDragDropFromPaletteAdd().from,
           dndOverWorktableLayout: fixtureDragDropOverWorktableLayout().over?.worktableLayout
         })
 
@@ -334,7 +334,7 @@ describe('<WidgetLayout />', () => {
             fixtureWidgetLayoutItemB(),
           ],
           dndDraggingWidgetType: fixtureWidgetTypeA({id: wgtTypeId}),
-          dndDraggingFrom: fixtureDragDropFromPalette().from,
+          dndDraggingFrom: fixtureDragDropFromPaletteAdd().from,
           dndOverWorktableLayout: fixtureDragDropOverWorktableLayout().over?.worktableLayout
         })
 
@@ -349,7 +349,7 @@ describe('<WidgetLayout />', () => {
             fixtureWidgetLayoutItemB(),
           ],
           dndDraggingWidgetType: fixtureWidgetTypeA({id: wgtTypeId}),
-          dndDraggingFrom: fixtureDragDropFromPalette().from,
+          dndDraggingFrom: fixtureDragDropFromPaletteAdd().from,
           dndOverWorktableLayout: fixtureDragDropOverWorktableLayout().over?.worktableLayout
         })
 
@@ -365,7 +365,7 @@ describe('<WidgetLayout />', () => {
             fixtureWidgetLayoutItemB(),
           ],
           dndDraggingWidgetType: fixtureWidgetTypeA({id: wgtTypeId}),
-          dndDraggingFrom: fixtureDragDropFromPalette().from,
+          dndDraggingFrom: fixtureDragDropFromPaletteAdd().from,
           dndOverWorktableLayout: fixtureDragDropOverWorktableLayout().over?.worktableLayout
         })
 

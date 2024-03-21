@@ -119,8 +119,10 @@ import { createCopyWorkflowUseCase } from '@/application/useCases/workflow/copyW
 import { createPasteWidgetToShelfUseCase } from '@/application/useCases/shelf/pasteWidgetToShelf';
 import { createPasteWidgetToWorkflowUseCase } from '@/application/useCases/workflow/pasteWidgetToWorkflow';
 import { createPasteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/pasteWorkflow';
-import { createAddWidgetToWidgetListSubCase } from '@/application/useCases/shelf/addWidgetToWidgetListSubCase';
-import { createAddWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/addWidgetToWidgetLayoutSubCase';
+import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/addItemToWidgetListSubCase';
+import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/addItemToWidgetLayoutSubCase';
+import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
+import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/cloneWidgetToWidgetListSubCase';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -207,20 +209,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   }
 
   const osDialogProvider = createOsDialogProvider();
-
-  const dragWidgetFromWorktableLayoutUseCase = createDragWidgetFromWorktableLayoutUseCase(deps);
-  const dragOverWorktableLayoutUseCase = createDragOverWorktableLayoutUseCase(deps);
-  const dropOnWorktableLayoutUseCase = createDropOnWorktableLayoutUseCase(deps);
-  const dragWidgetFromTopBarListUseCase = createDragWidgetFromTopBarListUseCase(deps);
-  const dragOverTopBarListUseCase = createDragOverTopBarListUseCase(deps);
-  const dragLeaveTargetUseCase = createDragLeaveTargetUseCase(deps);
-  const dropOnTopBarListUseCase = createDropOnTopBarListUseCase(deps);
-  const dragWidgetFromPaletteUseCase = createDragWidgetFromPaletteUseCase(deps);
-  const addWidgetToWorkflowWithPaletteUseCase = createAddWidgetToWorkflowUseCase(deps);
-  const dragEndUseCase = createDragEndUseCase(deps);
-  const dragOverWorkflowSwitcherUseCase = createDragOverWorkflowSwitcherUseCase(deps);
-  const dragWorkflowFromWorkflowSwitcherUseCase = createDragWorkflowFromWorkflowSwitcherUseCase(deps);
-  const dropOnWorkflowSwitcherUseCase = createDropOnWorkflowSwitcherUseCase(deps);
 
   const openWidgetSettingsUseCase = createOpenWidgetSettingsUseCase(deps);
   const closeWidgetSettingsUseCase = createCloseWidgetSettingsUseCase(deps);
@@ -362,18 +350,26 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
   const showContextMenuUseCase = createShowContextMenuUseCase({ contextMenu: osContextMenuProvider })
 
-  const addWidgetToWidgetListSubCase = createAddWidgetToWidgetListSubCase(deps);
+  const addItemToWidgetListSubCase = createAddItemToWidgetListSubCase(deps);
   const copyWidgetUseCase = createCopyWidgetUseCase(deps);
+  const cloneWidgetToWidgetListSubCase = createCloneWidgetToWidgetListSubCase({
+    ...deps,
+    addItemToWidgetListSubCase,
+    cloneWidgetSubCase
+  })
   const pasteWidgetToShelfUseCase = createPasteWidgetToShelfUseCase({
     ...deps,
-    addWidgetToWidgetListSubCase,
-    cloneWidgetSubCase
+    cloneWidgetToWidgetListSubCase
   });
-  const addWidgetToWidgetLayoutSubCase = createAddWidgetToWidgetLayoutSubCase(deps);
+  const addItemToWidgetLayoutSubCase = createAddItemToWidgetLayoutSubCase(deps);
+  const cloneWidgetToWidgetLayoutSubCase = createCloneWidgetToWidgetLayoutSubCase({
+    ...deps,
+    addItemToWidgetLayoutSubCase,
+    cloneWidgetSubCase
+  })
   const pasteWidgetToWorkflowUseCase = createPasteWidgetToWorkflowUseCase({
     ...deps,
-    addWidgetToWidgetLayoutSubCase,
-    cloneWidgetSubCase
+    cloneWidgetToWidgetLayoutSubCase
   });
 
   const copyWorkflowUseCase = createCopyWorkflowUseCase(deps);
@@ -381,6 +377,26 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     ...deps,
     cloneWorkflowSubCase
   });
+
+  const dragWidgetFromWorktableLayoutUseCase = createDragWidgetFromWorktableLayoutUseCase(deps);
+  const dragOverWorktableLayoutUseCase = createDragOverWorktableLayoutUseCase(deps);
+  const dropOnWorktableLayoutUseCase = createDropOnWorktableLayoutUseCase({
+    ...deps,
+    cloneWidgetToWidgetLayoutSubCase
+  });
+  const dragWidgetFromTopBarListUseCase = createDragWidgetFromTopBarListUseCase(deps);
+  const dragOverTopBarListUseCase = createDragOverTopBarListUseCase(deps);
+  const dragLeaveTargetUseCase = createDragLeaveTargetUseCase(deps);
+  const dropOnTopBarListUseCase = createDropOnTopBarListUseCase({
+    ...deps,
+    cloneWidgetToWidgetListSubCase
+  });
+  const dragWidgetFromPaletteUseCase = createDragWidgetFromPaletteUseCase(deps);
+  const addWidgetToWorkflowWithPaletteUseCase = createAddWidgetToWorkflowUseCase(deps);
+  const dragEndUseCase = createDragEndUseCase(deps);
+  const dragOverWorkflowSwitcherUseCase = createDragOverWorkflowSwitcherUseCase(deps);
+  const dragWorkflowFromWorkflowSwitcherUseCase = createDragWorkflowFromWorkflowSwitcherUseCase(deps);
+  const dropOnWorkflowSwitcherUseCase = createDropOnWorkflowSwitcherUseCase(deps);
 
   return {
     dragWidgetFromWorktableLayoutUseCase,

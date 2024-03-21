@@ -6,29 +6,59 @@
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { removeLayoutItem } from '@/base/widgetLayout';
 import { createListItem } from '@/base/widgetList';
-import { moveEntityInList } from '@/base/entityList';
+import { mapIdListToEntityList, moveEntityInList } from '@/base/entityList';
 import { AppStore } from '@/application/interfaces/store';
 import { addWidgetToAppState, dragDropStateActions, entityStateActions } from '@/base/state/actions';
+import { CloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/cloneWidgetToWidgetListSubCase';
+import { addOneToEntityCollection, getOneFromEntityCollection } from '@/base/entityCollection';
 
 type Deps = {
   appStore: AppStore;
   idGenerator: IdGenerator;
+  cloneWidgetToWidgetListSubCase: CloneWidgetToWidgetListSubCase;
 }
 export function createDropOnTopBarListUseCase({
   appStore,
   idGenerator,
+  cloneWidgetToWidgetListSubCase,
 }: Deps) {
-  const dropOnTopBarListUseCase = (targetListItemId: string | null) => {
+  const dropOnTopBarListUseCase = async (targetListItemId: string | null) => {
     let state = appStore.get();
     const { from: draggingFrom } = state.ui.dragDrop;
     if (draggingFrom) {
       const { widgetList } = state.ui.shelf;
       if (draggingFrom.palette) {
-        [state] = addWidgetToAppState(state, {
-          type: 'shelf',
-          newListItemId: idGenerator(),
-          targetListItemId
-        }, draggingFrom.palette.widgetTypeId, idGenerator())
+        if (draggingFrom.palette.widgetTypeId) {
+          [state] = addWidgetToAppState(state, {
+            type: 'shelf',
+            newListItemId: idGenerator(),
+            targetListItemId
+          }, draggingFrom.palette.widgetTypeId, idGenerator())
+        } else if (draggingFrom.palette.widgetCopyId) {
+          const widgetCopyEntity = getOneFromEntityCollection(state.ui.copy.widgets.entities, draggingFrom.palette.widgetCopyId);
+          if (widgetCopyEntity) {
+            const { entity: widget } = widgetCopyEntity;
+
+            const { widgetList } = state.ui.shelf;
+
+            const [newWidget, newWidgetList] = await cloneWidgetToWidgetListSubCase(widget, widgetList, mapIdListToEntityList(state.entities.widgets, widgetList.map(item => item.widgetId)).map(item => item?.coreSettings.name || ''), targetListItemId)
+
+            state = {
+              ...state,
+              entities: {
+                ...state.entities,
+                widgets: addOneToEntityCollection(state.entities.widgets, newWidget),
+              },
+              ui: {
+                ...state.ui,
+                shelf: {
+                  ...state.ui.shelf,
+                  widgetList: newWidgetList
+                }
+              }
+            }
+          }
+        }
       } else if (draggingFrom.topBarList) {
         const newWidgetList = moveEntityInList(
           widgetList,

@@ -4,20 +4,18 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
-import { AddWidgetToWidgetListSubCase } from '@/application/useCases/shelf/addWidgetToWidgetListSubCase';
-import { CloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
+import { CloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/cloneWidgetToWidgetListSubCase';
 import { EntityId } from '@/base/entity';
 import { addOneToEntityCollection, getOneFromEntityCollection } from '@/base/entityCollection';
+import { mapIdListToEntityList } from '@/base/entityList';
 
 type Deps = {
   appStore: AppStore;
-  cloneWidgetSubCase: CloneWidgetSubCase;
-  addWidgetToWidgetListSubCase: AddWidgetToWidgetListSubCase;
+  cloneWidgetToWidgetListSubCase: CloneWidgetToWidgetListSubCase;
 }
 export function createPasteWidgetToShelfUseCase({
   appStore,
-  cloneWidgetSubCase,
-  addWidgetToWidgetListSubCase,
+  cloneWidgetToWidgetListSubCase,
 }: Deps) {
   const useCase = async (widgetCopyId: EntityId, atPosListItemId: EntityId | null) => {
     const state = appStore.get();
@@ -29,13 +27,7 @@ export function createPasteWidgetToShelfUseCase({
 
     const { widgetList } = state.ui.shelf;
 
-    const newWidget = await cloneWidgetSubCase(widget)
-
-    const newWidgetList = addWidgetToWidgetListSubCase(
-      newWidget.id,
-      widgetList,
-      atPosListItemId,
-    )
+    const [newWidget, newWidgetList] = await cloneWidgetToWidgetListSubCase(widget, widgetList, mapIdListToEntityList(state.entities.widgets, widgetList.map(item => item.widgetId)).map(item => item?.coreSettings.name || ''), atPosListItemId)
 
     appStore.set({
       ...state,

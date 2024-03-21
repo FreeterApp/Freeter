@@ -10,7 +10,7 @@ import { WidgetList, createListItem } from '@/base/widgetList';
 type Deps = {
   idGenerator: IdGenerator;
 }
-export function createAddWidgetToWidgetListSubCase({
+export function createAddItemToWidgetListSubCase({
   idGenerator,
 }: Deps) {
   function subCase(
@@ -34,4 +34,4 @@ export function createAddWidgetToWidgetListSubCase({
   return subCase;
 }
 
-export type AddWidgetToWidgetListSubCase = ReturnType<typeof createAddWidgetToWidgetListSubCase>;
+export type AddItemToWidgetListSubCase = ReturnType<typeof createAddItemToWidgetListSubCase>;

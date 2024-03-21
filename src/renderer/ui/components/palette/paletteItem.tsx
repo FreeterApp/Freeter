@@ -4,7 +4,7 @@
  */
 
 import { useCallback } from 'react';
-import styles from './paletteItem.module.scss';
+import styles from './palette.module.scss';
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
 
 export interface PaletteItemProps {

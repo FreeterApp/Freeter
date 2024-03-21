@@ -10,7 +10,7 @@ import { WidgetLayout, WidgetLayoutItemWH, WidgetLayoutItemXY, createLayoutItem,
 type Deps = {
   idGenerator: IdGenerator;
 }
-export function createAddWidgetToWidgetLayoutSubCase({
+export function createAddItemToWidgetLayoutSubCase({
   idGenerator,
 }: Deps) {
   function subCase(
@@ -45,4 +45,4 @@ export function createAddWidgetToWidgetLayoutSubCase({
   return subCase;
 }
 
-export type AddWidgetToWidgetLayoutSubCase = ReturnType<typeof createAddWidgetToWidgetLayoutSubCase>;
+export type AddItemToWidgetLayoutSubCase = ReturnType<typeof createAddItemToWidgetLayoutSubCase>;

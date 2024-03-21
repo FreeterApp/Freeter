@@ -4,25 +4,96 @@
  */
 
 .palette {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 6px;
   position: fixed;
-  background-color: #F8F8F8;
-  overflow-x: auto;
-  overflow-y: hidden;
   top: 138px;
   left: 50%;
-  max-width: 700px;
   transform: translateX(-50%);
+  background-color: #F8F8F8;
   box-shadow: 0 4px 8px 0 #00000040;
   border: 1px solid #ECECEC;
-  border-radius: 2px;
   &.is-hidden {
     // The display:none, visibility:hidden block the native drag
     // Using the transform method to fix that
     transition: transform 0.01s;
     transform: translateX(-9999px);
   }
+}
+
+@mixin palette-toggle-hover {
+  background-color: #FFF;
+  border-bottom-color: #FFF;
+}
+
+.palette-toggle {
+  z-index:1;
+  display: inline-block;
+  padding: 18px;
+  font-size: 14px;
+  line-height: 14px;
+  border-bottom:1px solid #ECECEC;
+  &:not(:last-child) {
+    border-right:1px solid #ECECEC;
+  }
+  &:hover {
+    @include palette-toggle-hover;
+  }
+}
+.palette:not(:hover) {
+  border-bottom: none;
+}
+.palette-section {
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y:auto;
+  width: 100%;
+  z-index:0;
+  max-height: 500px;
+  display: none;
+  background-color: #FFF;
+}
+.palette-sectionnote {
+  padding: 18px;
+  font-size: 14px;
+  font-style: italic;
+}
+
+$sections: 'add', 'paste';
+@each $section in $sections {
+  .palette-toggle-#{$section}:hover ~ .palette-section-#{$section} {
+    display: block;
+  }
+
+  .palette-section-#{$section}:hover {
+    display: block;
+  }
+
+  .palette-toggle-#{$section}:has(~ .palette-section-#{$section}:hover) {
+    @include palette-toggle-hover;
+  }
+}
+
+.palette-item {
+  display: flex;
+  align-items: center;
+  box-sizing: content-box;
+  height: 36px;
+  line-height: 36px;
+  padding: 6px 18px;
+  white-space: nowrap;
+  cursor: pointer;
+  > span {
+    font-size: 14px;
+    line-height: 14px;
+    margin-top: 2px;
+  }
+  &:hover {
+    background-color: #A6A6A680;
+  }
+}
+
+.palette-item-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
 }

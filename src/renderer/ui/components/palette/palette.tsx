@@ -17,29 +17,62 @@ export function createPaletteComponent({
 }: Deps) {
   function Palette() {
     const {
-      onItemDragEnd,
-      onItemDragStart,
-      onItemClick,
+      onAddItemDragEnd,
+      onAddItemDragStart,
+      onAddItemClick,
+      onPasteItemDragEnd,
+      onPasteItemDragStart,
+      onPasteItemClick,
       widgetTypes,
-      isHidden
+      isHidden,
+      copiedWidgets
     } = usePaletteViewModel();
 
     return (
-      <ul
+      <div
         className={clsx(styles.palette, isHidden && styles['is-hidden'])}
       >
-      {widgetTypes.map(item => (
-        <PaletteItem
-          key={item.id}
-          id={item.id}
-          icon={item.icon}
-          name={item.name}
-          onDragStart={onItemDragStart}
-          onDragEnd={onItemDragEnd}
-          onClick={onItemClick}
-        />
-      ))}
-      </ul>
+        <span className={clsx(styles['palette-toggle'], styles['palette-toggle-add'])} tabIndex={0}>Add Widget</span>
+        <span className={clsx(styles['palette-toggle'], styles['palette-toggle-paste'])} tabIndex={0}>Paste Widget</span>
+        <ul
+          data-testid="palette-add"
+          className={clsx(styles['palette-section'], styles['palette-section-add'])}
+        >
+        {widgetTypes.map(item => (
+          <PaletteItem
+            key={item.id}
+            id={item.id}
+            icon={item.icon}
+            name={item.name}
+            onDragStart={onAddItemDragStart}
+            onDragEnd={onAddItemDragEnd}
+            onClick={onAddItemClick}
+          />
+        ))}
+        </ul>
+        {
+          copiedWidgets.length>0
+            ? <ul
+                data-testid="palette-paste"
+                className={clsx(styles['palette-section'], styles['palette-section-paste'])}
+              >
+              {copiedWidgets.map(item => (
+                <PaletteItem
+                  key={item.id}
+                  id={item.id}
+                  icon={item.icon}
+                  name={item.name}
+                  onDragStart={onPasteItemDragStart}
+                  onDragEnd={onPasteItemDragEnd}
+                  onClick={onPasteItemClick}
+                />
+              ))}
+              </ul>
+            : <div className={clsx(styles['palette-section'], styles['palette-section-paste'], styles['palette-sectionnote'])}>
+                No widgets to paste
+              </div>
+        }
+      </div>
     )
   }
 

@@ -3,17 +3,17 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { createAddWidgetToWidgetListSubCase } from '@/application/useCases/shelf/addWidgetToWidgetListSubCase';
+import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/addItemToWidgetListSubCase';
 import { fixtureWidgetListItemA, fixtureWidgetListItemB, fixtureWidgetListItemC } from '@tests/base/fixtures/widgetList';
 
 function setup() {
   const idGeneratorMock = jest.fn().mockImplementation(() => 'SOME-ID');
-  const addWidgetToWidgetListSubCase = createAddWidgetToWidgetListSubCase({
+  const addItemToWidgetListSubCase = createAddItemToWidgetListSubCase({
     idGenerator: idGeneratorMock
   });
 
   return {
-    addWidgetToWidgetListSubCase,
+    addItemToWidgetListSubCase,
     idGeneratorMock
   }
 }
@@ -22,18 +22,18 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-describe('addWidgetToWidgetListSubCase()', () => {
+describe('addItemToWidgetListSubCase()', () => {
   it('should add a new item to the widget list', async () => {
     const initList = [fixtureWidgetListItemA(), fixtureWidgetListItemB()]
     const newItem = fixtureWidgetListItemC();
     const expectList = [fixtureWidgetListItemA(), newItem, fixtureWidgetListItemB()]
     const {
-      addWidgetToWidgetListSubCase,
+      addItemToWidgetListSubCase,
       idGeneratorMock
     } = setup()
     idGeneratorMock.mockImplementationOnce(() => newItem.id)
 
-    const gotList = await addWidgetToWidgetListSubCase(newItem.widgetId, initList, initList[1].id);
+    const gotList = await addItemToWidgetListSubCase(newItem.widgetId, initList, initList[1].id);
 
     expect(gotList).toEqual(expectList);
   })

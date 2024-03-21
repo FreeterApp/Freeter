@@ -4,7 +4,9 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
-import { dragDropStateActions, entityStateActions } from '@/base/state/actions';
+import { EntityId } from '@/base/entity';
+import { dragDropStateActions } from '@/base/state/actions';
+import { DragDropFromPaletteState } from '@/base/state/ui';
 
 type Deps = {
   appStore: AppStore;
@@ -12,11 +14,20 @@ type Deps = {
 export function createDragWidgetFromPaletteUseCase({
   appStore,
 }: Deps) {
-  const dragWidgetFromPaletteUseCase = (sourceWidgetTypeId: string) => {
+  const dragWidgetFromPaletteUseCase = (source: { widgetTypeId?: EntityId; widgetCopyId?: EntityId }) => {
     let state = appStore.get();
-    const item = entityStateActions.widgetTypes.getOne(state, sourceWidgetTypeId);
-    if (item) {
-      state = dragDropStateActions.resetOver(state);
+    state = dragDropStateActions.resetOver(state);
+    let newDDPaletteState: DragDropFromPaletteState | undefined;
+    if (source.widgetTypeId) {
+      newDDPaletteState = {
+        widgetTypeId: source.widgetTypeId
+      }
+    } else if (source.widgetCopyId) {
+      newDDPaletteState = {
+        widgetCopyId: source.widgetCopyId
+      }
+    }
+    if (newDDPaletteState) {
       appStore.set({
         ...state,
         ui: {
@@ -24,9 +35,7 @@ export function createDragWidgetFromPaletteUseCase({
           dragDrop: {
             ...state.ui.dragDrop,
             from: {
-              palette: {
-                widgetTypeId: sourceWidgetTypeId
-              }
+              palette: newDDPaletteState
             }
           }
         }

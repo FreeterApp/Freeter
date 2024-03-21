@@ -13,7 +13,7 @@ import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureWidgetListItemA, fixtureWidgetListItemB, fixtureWidgetListItemC, fixtureWidgetListItemD } from '@tests/base/fixtures/widgetList';
 import { fixtureWidgetAInColl, fixtureWidgetBInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureWidgetTypeAInColl, fixtureWidgetTypeBInColl } from '@tests/base/state/fixtures/entitiesState';
-import { fixtureDragDropFromPalette, fixtureDragDropFromTopBarList, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging, fixtureDragDropOverTopBarList } from '@tests/base/state/fixtures/dragDropState';
+import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromTopBarList, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging, fixtureDragDropOverTopBarList } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureShelf } from '@tests/base/state/fixtures/shelf';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { AppState } from '@/base/state/app';
@@ -322,7 +322,7 @@ describe('<Shelf />', () => {
       const {comp} = await setup(fixtureAppState({
         ui: {
           dragDrop: {
-            ...fixtureDragDropFromPalette()
+            ...fixtureDragDropFromPaletteAdd()
           },
           shelf: fixtureShelf({
             widgetList: [
@@ -341,7 +341,7 @@ describe('<Shelf />', () => {
         ui: {
           editMode: true,
           dragDrop: {
-            ...fixtureDragDropFromPalette(),
+            ...fixtureDragDropFromPaletteAdd(),
             ...fixtureDragDropOverTopBarList({listItemId: null})
           },
           shelf: fixtureShelf({
@@ -362,7 +362,7 @@ describe('<Shelf />', () => {
         ui: {
           editMode: false,
           dragDrop: {
-            ...fixtureDragDropFromPalette(),
+            ...fixtureDragDropFromPaletteAdd(),
             ...fixtureDragDropOverTopBarList({listItemId: null})
           },
           shelf: fixtureShelf({
@@ -383,7 +383,7 @@ describe('<Shelf />', () => {
         ui: {
           editMode: true,
           dragDrop: {
-            ...fixtureDragDropFromPalette(),
+            ...fixtureDragDropFromPaletteAdd(),
             ...fixtureDragDropOverTopBarList({listItemId: overItemId})
           },
           shelf: fixtureShelf({
@@ -407,7 +407,7 @@ describe('<Shelf />', () => {
         ui: {
           editMode: false,
           dragDrop: {
-            ...fixtureDragDropFromPalette(),
+            ...fixtureDragDropFromPaletteAdd(),
             ...fixtureDragDropOverTopBarList({listItemId: overItemId})
           },
           shelf: fixtureShelf({

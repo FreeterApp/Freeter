@@ -3,17 +3,17 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { createAddWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/addWidgetToWidgetLayoutSubCase';
+import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/addItemToWidgetLayoutSubCase';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';
 
 function setup() {
   const idGeneratorMock = jest.fn().mockImplementation(() => 'SOME-ID');
-  const addWidgetToWidgetLayoutSubCase = createAddWidgetToWidgetLayoutSubCase({
+  const addItemToWidgetLayoutSubCase = createAddItemToWidgetLayoutSubCase({
     idGenerator: idGeneratorMock
   });
 
   return {
-    addWidgetToWidgetLayoutSubCase,
+    addItemToWidgetLayoutSubCase,
     idGeneratorMock
   }
 }
@@ -22,7 +22,7 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-describe('addWidgetToWidgetLayoutSubCase()', () => {
+describe('addItemToWidgetLayoutSubCase()', () => {
   it('should add a new item to the widget layout at specified XY', async () => {
     const initLayout = [
       fixtureWidgetLayoutItemA({ rect: { x: 1, y: 2, w: 2, h: 2 } }),
@@ -35,12 +35,12 @@ describe('addWidgetToWidgetLayoutSubCase()', () => {
       newItem,
     ]
     const {
-      addWidgetToWidgetLayoutSubCase,
+      addItemToWidgetLayoutSubCase,
       idGeneratorMock
     } = setup()
     idGeneratorMock.mockImplementationOnce(() => newItem.id)
 
-    const gotLayout = addWidgetToWidgetLayoutSubCase(
+    const gotLayout = addItemToWidgetLayoutSubCase(
       newItem.widgetId,
       initLayout,
       { w: newItem.rect.w, h: newItem.rect.h },
@@ -61,12 +61,12 @@ describe('addWidgetToWidgetLayoutSubCase()', () => {
       newItem,
     ]
     const {
-      addWidgetToWidgetLayoutSubCase,
+      addItemToWidgetLayoutSubCase,
       idGeneratorMock
     } = setup()
     idGeneratorMock.mockImplementationOnce(() => newItem.id)
 
-    const gotLayout = addWidgetToWidgetLayoutSubCase(
+    const gotLayout = addItemToWidgetLayoutSubCase(
       newItem.widgetId,
       initLayout,
       { w: newItem.rect.w, h: newItem.rect.h }

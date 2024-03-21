@@ -4,21 +4,19 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
-import { CloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
-import { AddWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/addWidgetToWidgetLayoutSubCase';
+import { CloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
 import { EntityId } from '@/base/entity';
 import { addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { mapIdListToEntityList } from '@/base/entityList';
 import { WidgetLayoutItemWH, WidgetLayoutItemXY } from '@/base/widgetLayout';
 
 type Deps = {
   appStore: AppStore;
-  cloneWidgetSubCase: CloneWidgetSubCase;
-  addWidgetToWidgetLayoutSubCase: AddWidgetToWidgetLayoutSubCase;
+  cloneWidgetToWidgetLayoutSubCase: CloneWidgetToWidgetLayoutSubCase;
 }
 export function createPasteWidgetToWorkflowUseCase({
   appStore,
-  cloneWidgetSubCase,
-  addWidgetToWidgetLayoutSubCase,
+  cloneWidgetToWidgetLayoutSubCase,
 }: Deps) {
   const useCase = async (widgetCopyId: EntityId, toWorkflowId: EntityId, layoutItemXY?: WidgetLayoutItemXY, layoutItemWH?: WidgetLayoutItemWH) => {
     const state = appStore.get();
@@ -38,13 +36,7 @@ export function createPasteWidgetToWorkflowUseCase({
       return;
     }
 
-    const newWidget = await cloneWidgetSubCase(widget)
-
-    const newLayout = addWidgetToWidgetLayoutSubCase(
-      newWidget.id,
-      toWorkflow.layout,
-      layoutItemWH || { w: widgetType.minSize.w, h: widgetType.minSize.h },
-    )
+    const [newWidget, newLayout] = await cloneWidgetToWidgetLayoutSubCase(widget, toWorkflow.layout, mapIdListToEntityList(state.entities.widgets, toWorkflow.layout.map(item => item.widgetId)).map(item => item?.coreSettings.name || ''), layoutItemWH || { w: widgetType.minSize.w, h: widgetType.minSize.h }, layoutItemXY);
 
     appStore.set({
       ...state,

@@ -8,10 +8,15 @@ import { AppState } from '@/base/state/app';
 import { addWidgetToAppState } from '@/base/state/actions';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureWidgetAInColl, fixtureWidgetTypeAInColl, fixtureWorkflowAInColl } from '@tests/base/state/fixtures/entitiesState';
-import { fixtureDragDropFromPalette, fixtureDragDropFromTopBarList, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging } from '@tests/base/state/fixtures/dragDropState';
+import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromPalettePaste, fixtureDragDropFromTopBarList, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureWidgetListItemA, fixtureWidgetListItemB } from '@tests/base/fixtures/widgetList';
-import { fixtureWidgetLayoutItemA } from '@tests/base/fixtures/widgetLayout';
+import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB } from '@tests/base/fixtures/widgetLayout';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
+import { CloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
+import { fixtureCopyState } from '@tests/base/state/fixtures/copy';
+import { fixtureWidgetA, fixtureWidgetB } from '@tests/base/fixtures/widget';
+import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
+import { fixtureWidgetTypeA } from '@tests/base/fixtures/widgetType';
 
 const workflowId = 'WORKFLOW-ID';
 const newItemId = 'NEW-ITEM-ID';
@@ -30,14 +35,17 @@ jest.mock('@/base/state/actions', () => {
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
+  const cloneWidgetToWidgetLayoutSubCase: jest.MockedFn<CloneWidgetToWidgetLayoutSubCase> = jest.fn();
   const dropOnWorktableLayoutUseCase = createDropOnWorktableLayoutUseCase({
     appStore,
-    idGenerator: () => newItemId
+    idGenerator: () => newItemId,
+    cloneWidgetToWidgetLayoutSubCase
   });
   return {
     appStore,
     addWidgetToAppState,
-    dropOnWorktableLayoutUseCase
+    dropOnWorktableLayoutUseCase,
+    cloneWidgetToWidgetLayoutSubCase
   }
 }
 
@@ -45,7 +53,7 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-describe('dropOnWorktableLayoutUseCase()', () => {
+describe('await dropOnWorktableLayoutUseCase()', () => {
   describe('when not dragging an item', () => {
     it('should not modify State', async () => {
       const initState = fixtureAppState({
@@ -67,7 +75,7 @@ describe('dropOnWorktableLayoutUseCase()', () => {
       } = await setup(initState)
       const expectState = appStore.get();
 
-      dropOnWorktableLayoutUseCase(workflowId, { x: 1, y: 1 });
+      await dropOnWorktableLayoutUseCase(workflowId, { x: 1, y: 1 });
 
       expect(appStore.get()).toBe(expectState);
     })
@@ -106,7 +114,7 @@ describe('dropOnWorktableLayoutUseCase()', () => {
       } = await setup(initState)
 
       const targetXY = { x: 1, y: 1 };
-      dropOnWorktableLayoutUseCase(workflowId, targetXY);
+      await dropOnWorktableLayoutUseCase(workflowId, targetXY);
 
       const expectState: AppState = {
         ...initState,
@@ -172,7 +180,7 @@ describe('dropOnWorktableLayoutUseCase()', () => {
       } = await setup(initState)
 
       const targetXY = { x: 2, y: 3 }
-      dropOnWorktableLayoutUseCase(workflowId, targetXY);
+      await dropOnWorktableLayoutUseCase(workflowId, targetXY);
 
       const expectState: AppState = {
         ...initState,
@@ -201,7 +209,7 @@ describe('dropOnWorktableLayoutUseCase()', () => {
     })
   })
 
-  describe('when dragging an item from Palette and the item does not exist', () => {
+  describe('when dragging an item from Palette (Add list) and the item does not exist', () => {
     it('should reset DragDrop state and leave Widgets/workflows State untouched', async () => {
       const initState = fixtureAppState({
         entities: {
@@ -220,7 +228,7 @@ describe('dropOnWorktableLayoutUseCase()', () => {
         },
         ui: {
           dragDrop: {
-            ...fixtureDragDropFromPalette({
+            ...fixtureDragDropFromPaletteAdd({
               widgetTypeId: 'NO SUCH TYPE'
             })
           }
@@ -232,7 +240,7 @@ describe('dropOnWorktableLayoutUseCase()', () => {
       } = await setup(initState)
 
       const targetXY = { x: 1, y: 1 };
-      dropOnWorktableLayoutUseCase(workflowId, targetXY);
+      await dropOnWorktableLayoutUseCase(workflowId, targetXY);
 
       const expectState: AppState = {
         ...initState,
@@ -245,7 +253,7 @@ describe('dropOnWorktableLayoutUseCase()', () => {
     })
   })
 
-  describe('when dragging an item from Palette and the item exists', () => {
+  describe('when dragging an item from Palette (Add list) and the item exists', () => {
     it('should correctly update state, using addWidgetToAppState', async () => {
       const draggingType = 'DRAGGING-TYPE';
       const existingWidgetId = 'EXISTING-WIDGET';
@@ -274,7 +282,7 @@ describe('dropOnWorktableLayoutUseCase()', () => {
         },
         ui: {
           dragDrop: {
-            ...fixtureDragDropFromPalette({
+            ...fixtureDragDropFromPaletteAdd({
               widgetTypeId: draggingType
             })
           }
@@ -287,7 +295,7 @@ describe('dropOnWorktableLayoutUseCase()', () => {
       } = await setup(initState)
 
       const targetXY = { x: 1, y: 1 };
-      dropOnWorktableLayoutUseCase(workflowId, targetXY);
+      await dropOnWorktableLayoutUseCase(workflowId, targetXY);
 
       const gotState = appStore.get();
       const expectState: AppState = {
@@ -322,6 +330,151 @@ describe('dropOnWorktableLayoutUseCase()', () => {
       }
       expect(gotState).toEqual(expectState);
       expect(addWidgetToAppState).toBeCalledTimes(1);
+    })
+  })
+
+  describe('when dragging an item from Palette (Paste list) and the copy item does not exist', () => {
+    it('should reset DragDrop state and keep Widgets/workflows State untouched', async () => {
+      const widgetTypeA = fixtureWidgetTypeA();
+      const widgetA = fixtureWidgetA();
+      const widgetB = fixtureWidgetB({ type: widgetTypeA.id });
+      const workflowA = fixtureWorkflowA({ layout: [fixtureWidgetLayoutItemA({ widgetId: widgetA.id, rect: { x: 5, y: 5, w: 1, h: 1 } })] });
+      const initState = fixtureAppState({
+        entities: {
+          widgets: {
+            [widgetA.id]: widgetA
+          },
+          widgetTypes: {
+            [widgetTypeA.id]: widgetTypeA
+          },
+          workflows: {
+            [workflowA.id]: workflowA
+          }
+        },
+        ui: {
+          copy: fixtureCopyState({
+            widgets: {
+              entities: {
+                [widgetB.id]: {
+                  deps: {},
+                  entity: widgetB,
+                  id: widgetB.id
+                }
+              },
+              list: [widgetB.id]
+            }
+          }),
+          dragDrop: {
+            ...fixtureDragDropFromPalettePaste({
+              widgetCopyId: 'NO-SUCH-ID'
+            })
+          }
+        }
+      });
+      const {
+        appStore,
+        dropOnWorktableLayoutUseCase,
+        cloneWidgetToWidgetLayoutSubCase
+      } = await setup(initState)
+
+      const targetXY = { x: 1, y: 1 };
+      await dropOnWorktableLayoutUseCase(workflowId, targetXY);
+
+      const expectState: AppState = {
+        ...initState,
+        ui: {
+          ...initState.ui,
+          dragDrop: {}
+        }
+      }
+
+      expect(cloneWidgetToWidgetLayoutSubCase).not.toBeCalled();
+      expect(appStore.get()).toEqual(expectState);
+    })
+  })
+
+  describe('when dragging an item from Palette (Paste list) and the copy item exists', () => {
+    it('should reset DragDrop State and update Widgets/Shelf state with values returned by cloneWidgetToWidgetLayoutSubCase', async () => {
+      const widgetTypeA = fixtureWidgetTypeA();
+      const widgetA = fixtureWidgetA();
+      const widgetB = fixtureWidgetB({ type: widgetTypeA.id });
+      const workflowA = fixtureWorkflowA({ layout: [fixtureWidgetLayoutItemA({ widgetId: widgetA.id, rect: { x: 5, y: 5, w: 1, h: 1 } })] });
+      const initState = fixtureAppState({
+        entities: {
+          widgets: {
+            [widgetA.id]: widgetA
+          },
+          widgetTypes: {
+            [widgetTypeA.id]: widgetTypeA
+          },
+          workflows: {
+            [workflowA.id]: workflowA
+          }
+        },
+        ui: {
+          copy: fixtureCopyState({
+            widgets: {
+              entities: {
+                [widgetB.id]: {
+                  deps: {},
+                  entity: widgetB,
+                  id: widgetB.id
+                }
+              },
+              list: [widgetB.id]
+            }
+          }),
+          dragDrop: {
+            ...fixtureDragDropFromPalettePaste({
+              widgetCopyId: widgetB.id
+            })
+          }
+        }
+      });
+      const {
+        appStore,
+        dropOnWorktableLayoutUseCase,
+        cloneWidgetToWidgetLayoutSubCase
+      } = await setup(initState)
+      const targetXY = { x: 1, y: 1 };
+      const newWidget = widgetB;
+      const newLayout = [
+        ...workflowA.layout,
+        fixtureWidgetLayoutItemB({ widgetId: newWidget.id, rect: { ...targetXY, w: widgetTypeA.minSize.w, h: widgetTypeA.minSize.h } })
+      ]
+      cloneWidgetToWidgetLayoutSubCase.mockResolvedValueOnce([newWidget, newLayout])
+      const expectState: AppState = {
+        ...initState,
+        entities: {
+          ...initState.entities,
+          widgets: {
+            ...initState.entities.widgets,
+            [newWidget.id]: newWidget,
+          },
+          workflows: {
+            ...initState.entities.workflows,
+            [workflowA.id]: {
+              ...initState.entities.workflows[workflowA.id]!,
+              layout: newLayout
+            }
+          }
+        },
+        ui: {
+          ...initState.ui,
+          dragDrop: {}
+        }
+      }
+
+      await dropOnWorktableLayoutUseCase(workflowA.id, targetXY);
+
+      expect(cloneWidgetToWidgetLayoutSubCase).toBeCalledWith(
+        widgetB,
+        workflowA.layout,
+        [widgetA.coreSettings.name],
+        { w: widgetTypeA.minSize.w, h: widgetTypeA.minSize.h },
+        targetXY
+      );
+      expect(appStore.get()).toEqual(expectState);
     })
   })
 })
