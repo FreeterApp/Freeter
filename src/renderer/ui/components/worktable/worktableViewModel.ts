@@ -25,6 +25,8 @@ export function createWorktableViewModelHook({
       dndDraggingFrom,
       dndDraggingWidgetType,
       dndOverWorktableLayout,
+      widgetTypes,
+      copiedWidgets,
     } = useAppState(state => {
       const { editMode: isEditMode } = state.ui;
       const { currentProjectId } = state.ui.projectSwitcher;
@@ -47,6 +49,8 @@ export function createWorktableViewModelHook({
         widgetTypeId = getOneFromEntityCollection(state.entities.widgets, dndDraggingFrom.worktableLayout.widgetId)?.type
       }
       const dndDraggingWidgetType = widgetTypeId ? getOneFromEntityCollection(state.entities.widgetTypes, widgetTypeId) : undefined;
+      const widgetTypes = mapIdListToEntityList(state.entities.widgetTypes, state.ui.palette.widgetTypeIds);
+      const copiedWidgets = mapIdListToEntityList(state.ui.copy.widgets.entities, state.ui.copy.widgets.list);
       return {
         isEditMode,
         currentProjectId,
@@ -56,6 +60,8 @@ export function createWorktableViewModelHook({
         dndDraggingFrom,
         dndDraggingWidgetType,
         dndOverWorktableLayout,
+        copiedWidgets,
+        widgetTypes,
       }
     });
 
@@ -71,6 +77,8 @@ export function createWorktableViewModelHook({
       dndDraggingFrom,
       dndDraggingWidgetType,
       dndOverWorktableLayout,
+      widgetTypes,
+      copiedWidgets,
     }
   }
 

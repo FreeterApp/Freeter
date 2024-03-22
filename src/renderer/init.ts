@@ -84,7 +84,7 @@ import { createRenameWorkflowUseCase } from '@/application/useCases/workflowSwit
 import { createDeleteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/deleteWorkflow';
 import { createOsDialogProvider } from '@/infra/dialogProvider/osDialogProvider';
 import { createDeleteWidgetUseCase } from '@/application/useCases/widget/deleteWidget';
-import { createAddWidgetToWorkflowUseCase } from '@/application/useCases/palette/addWidgetToWorkflow';
+import { createAddWidgetToWorkflowUseCase } from '@/application/useCases/workflow/addWidgetToWorkflow';
 import { createInitAppMenuUseCase } from '@/application/useCases/appMenu/initAppMenu';
 import { createAppMenuProvider } from '@/infra/appMenuProvider/appMenuProvider';
 import { createClickAppMenuItemUseCase } from '@/application/useCases/appMenu/clickAppMenuItem';
@@ -123,6 +123,7 @@ import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/a
 import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/addItemToWidgetLayoutSubCase';
 import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
 import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/cloneWidgetToWidgetListSubCase';
+import { createAddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -357,6 +358,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     addItemToWidgetListSubCase,
     cloneWidgetSubCase
   })
+  const addWidgetToShelfUseCase = createAddWidgetToShelfUseCase(deps)
   const pasteWidgetToShelfUseCase = createPasteWidgetToShelfUseCase({
     ...deps,
     cloneWidgetToWidgetListSubCase
@@ -392,7 +394,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     cloneWidgetToWidgetListSubCase
   });
   const dragWidgetFromPaletteUseCase = createDragWidgetFromPaletteUseCase(deps);
-  const addWidgetToWorkflowWithPaletteUseCase = createAddWidgetToWorkflowUseCase(deps);
+  const addWidgetToWorkflowUseCase = createAddWidgetToWorkflowUseCase(deps);
   const dragEndUseCase = createDragEndUseCase(deps);
   const dragOverWorkflowSwitcherUseCase = createDragOverWorkflowSwitcherUseCase(deps);
   const dragWorkflowFromWorkflowSwitcherUseCase = createDragWorkflowFromWorkflowSwitcherUseCase(deps);
@@ -407,7 +409,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     dragLeaveTargetUseCase,
     dropOnTopBarListUseCase,
     dragWidgetFromPaletteUseCase,
-    addWidgetToWorkflowWithPaletteUseCase,
+    addWidgetToWorkflowUseCase,
     dragEndUseCase,
     dragOverWorkflowSwitcherUseCase,
     dragWorkflowFromWorkflowSwitcherUseCase,
@@ -469,6 +471,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     showContextMenuUseCase,
 
     copyWidgetUseCase,
+    addWidgetToShelfUseCase,
     pasteWidgetToShelfUseCase,
     pasteWidgetToWorkflowUseCase,
     copyWorkflowUseCase,

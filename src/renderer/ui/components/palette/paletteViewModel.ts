@@ -5,7 +5,7 @@
 
 import { DragEndUseCase } from '@/application/useCases/dragDrop/dragEnd';
 import { DragWidgetFromPaletteUseCase } from '@/application/useCases/dragDrop/dragWidgetFromPalette';
-import { AddWidgetToWorkflowUseCase } from '@/application/useCases/palette/addWidgetToWorkflow';
+import { AddWidgetToWorkflowUseCase } from '@/application/useCases/workflow/addWidgetToWorkflow';
 import { PasteWidgetToWorkflowUseCase } from '@/application/useCases/workflow/pasteWidgetToWorkflow';
 import { EntityId } from '@/base/entity';
 import { getOneFromEntityCollection } from '@/base/entityCollection';
@@ -17,7 +17,7 @@ type Deps = {
   useAppState: UseAppState;
   dragWidgetFromPaletteUseCase: DragWidgetFromPaletteUseCase;
   dragEndUseCase: DragEndUseCase;
-  addWidgetToWorkflowWithPaletteUseCase: AddWidgetToWorkflowUseCase;
+  addWidgetToWorkflowUseCase: AddWidgetToWorkflowUseCase;
   pasteWidgetToWorkflowUseCase: PasteWidgetToWorkflowUseCase;
 }
 
@@ -25,7 +25,7 @@ export function createPaletteViewModelHook({
   useAppState,
   dragWidgetFromPaletteUseCase,
   dragEndUseCase,
-  addWidgetToWorkflowWithPaletteUseCase,
+  addWidgetToWorkflowUseCase,
   pasteWidgetToWorkflowUseCase
 }: Deps) {
   function useViewModel() {
@@ -84,7 +84,7 @@ export function createPaletteViewModelHook({
     }, [])
 
     const onAddItemClick = useCallback((itemId: string) => {
-      addWidgetToWorkflowWithPaletteUseCase(itemId, currentWorkflowId);
+      addWidgetToWorkflowUseCase(itemId, currentWorkflowId);
     }, [currentWorkflowId])
 
     const onPasteItemDragStart = useCallback((itemId: string) => {

@@ -32,6 +32,8 @@ export function createWorktableComponent({
       resizingItem,
       workflows,
       noWorkflows,
+      widgetTypes,
+      copiedWidgets,
     } = useWorktableViewModel();
 
     return noWorkflows
@@ -64,6 +66,8 @@ export function createWorktableComponent({
             dndDraggingFrom={isCurrentWorkflow ? dndDraggingFrom : undefined}
             dndDraggingWidgetType={isCurrentWorkflow ? dndDraggingWidgetType : undefined}
             dndOverWorktableLayout={isCurrentWorkflow ? dndOverWorktableLayout : undefined}
+            widgetTypes={widgetTypes}
+            copiedWidgets={copiedWidgets}
           />
         })}
       </div>

@@ -39,6 +39,8 @@ export function createShelfComponent({
       onDragOver,
       onDrop,
       onScroll,
+      onContextMenu,
+      onItemContextMenu,
     } = useShelfViewModel();
 
     return (
@@ -53,6 +55,7 @@ export function createShelfComponent({
         onDragOver={onDragOver}
         onDrop={onDrop}
         onScroll={onScroll}
+        onContextMenu={onContextMenu}
       >
       {widgetList.map((item, orderNum) => {
         const widget = widgetsById[item.widgetId];
@@ -74,6 +77,7 @@ export function createShelfComponent({
           onDragLeave={onItemDragLeave}
           onDragOver={onItemDragOver}
           onDrop={onItemDrop}
+          onContextMenu={onItemContextMenu}
         />
       })}
       </ul>

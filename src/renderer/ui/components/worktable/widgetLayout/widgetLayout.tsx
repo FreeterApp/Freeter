@@ -46,6 +46,7 @@ export function createWidgetLayoutComponent({
       onItemResizeStart,
       onItemResize,
       onItemResizeEnd,
+      onContextMenu,
     } = useWidgetLayoutViewModel(layoutEl, props);
 
     return componentMounted ? (<>
@@ -67,6 +68,7 @@ export function createWidgetLayoutComponent({
         onDragOver={onDragOver}
         onDrop={onDrop}
         ref={layoutEl}
+        onContextMenu={onContextMenu}
         data-testid="widget-layout"
         {...{ inert: !isVisible ? '' : undefined }}
       >

@@ -3,14 +3,15 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { EntityId } from '@/base/entity';
 import { Widget, WidgetEnvAreaShelf } from '@/base/widget';
 import { WidgetType } from '@/base/widgetType';
 import { useElementRect } from '@/ui/hooks';
 import { useWindowSize } from '@/ui/hooks/useWindowSize';
-import { CSSProperties, DragEvent, useCallback, useMemo } from 'react';
+import { CSSProperties, DragEvent, MouseEvent, useCallback, useMemo } from 'react';
 
 export interface ShelfItemProps {
-  id: string;
+  id: EntityId;
   orderNum: number;
   scrollLeft: number;
   env: WidgetEnvAreaShelf;
@@ -19,19 +20,20 @@ export interface ShelfItemProps {
   isEditMode: boolean;
   isDragging: boolean;
   isDropArea: boolean;
-  onDragStart: (evt: DragEvent<HTMLElement>, itemId: string) => void;
-  onDragEnd: (evt: DragEvent<HTMLElement>, itemId: string) => void;
-  onDragEnter: (evt: DragEvent<HTMLElement>, itemId: string) => void;
-  onDragLeave: (evt: DragEvent<HTMLElement>, itemId: string) => void;
-  onDragOver: (evt: DragEvent<HTMLElement>, itemId: string) => void;
-  onDrop: (evt: DragEvent<HTMLElement>, itemId: string) => void;
+  onContextMenu: (evt: MouseEvent<HTMLElement>, itemId: EntityId) => void;
+  onDragStart: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
+  onDragEnd: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
+  onDragEnter: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
+  onDragLeave: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
+  onDragOver: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
+  onDrop: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
 }
 
 export function useShelfItemViewModel(shelfItemEl: React.RefObject<HTMLLIElement>, props: ShelfItemProps) {
   const {
     env, widget, widgetType, id, isEditMode, isDragging, isDropArea,
     onDragStart, onDragEnd, onDragEnter, onDragLeave, onDragOver,
-    onDrop, orderNum, scrollLeft,
+    onDrop, onContextMenu, orderNum, scrollLeft,
   } = props;
 
   const widgetName = widget?.coreSettings.name || widgetType?.name || '';
@@ -63,6 +65,12 @@ export function useShelfItemViewModel(shelfItemEl: React.RefObject<HTMLLIElement
     onDrop(evt, id);
   }, [id, onDrop])
 
+  const onContextMenuHandler = useCallback((evt: MouseEvent<HTMLElement>) => {
+    evt.stopPropagation();
+    onContextMenu(evt, id);
+  }, [id, onContextMenu])
+
+
   const itemElRectRefreshDep = useMemo(() => ({ orderNum, scrollLeft }), [
     orderNum, scrollLeft
   ]);
@@ -93,6 +101,7 @@ export function useShelfItemViewModel(shelfItemEl: React.RefObject<HTMLLIElement
     isDragging,
     isDropArea,
     itemWidgetElRectStyle,
+    onContextMenuHandler,
     onDragStartHandler,
     onDragEndHandler,
     onDragEnterHandler,

@@ -31,11 +31,11 @@ async function setup(
   const dragWidgetFromPaletteUseCase = jest.fn(createDragWidgetFromPaletteUseCase({
     appStore,
   }));
-  const addWidgetToWorkflowWithPaletteUseCase = jest.fn();
+  const addWidgetToWorkflowUseCase = jest.fn();
   const pasteWidgetToWorkflowUseCase = jest.fn();
   const usePaletteViewModel = createPaletteViewModelHook({
     useAppState,
-    addWidgetToWorkflowWithPaletteUseCase,
+    addWidgetToWorkflowUseCase,
     dragEndUseCase,
     dragWidgetFromPaletteUseCase,
     pasteWidgetToWorkflowUseCase
@@ -52,7 +52,7 @@ async function setup(
     appStore,
     dragEndUseCase,
     dragWidgetFromPaletteUseCase,
-    addWidgetToWorkflowWithPaletteUseCase,
+    addWidgetToWorkflowUseCase,
     pasteWidgetToWorkflowUseCase
   }
 }
@@ -290,7 +290,7 @@ describe('<Palette />', () => {
     const projectId = 'PROJECT-ID';
 
     const {
-      addWidgetToWorkflowWithPaletteUseCase
+      addWidgetToWorkflowUseCase
     } = await setup(fixtureAppState({
       entities: {
         projects: {
@@ -315,12 +315,12 @@ describe('<Palette />', () => {
     const palAdd = screen.getByTestId('palette-add');
     const elClick = within(palAdd).queryAllByRole('listitem')[1];
 
-    expect(addWidgetToWorkflowWithPaletteUseCase).toBeCalledTimes(0);
+    expect(addWidgetToWorkflowUseCase).toBeCalledTimes(0);
 
     fireEvent.click(elClick);
 
-    expect(addWidgetToWorkflowWithPaletteUseCase).toBeCalledTimes(1);
-    expect(addWidgetToWorkflowWithPaletteUseCase).toBeCalledWith(widgetTypeId, workflowId);
+    expect(addWidgetToWorkflowUseCase).toBeCalledTimes(1);
+    expect(addWidgetToWorkflowUseCase).toBeCalledWith(widgetTypeId, workflowId);
   });
 
   it('should call right use cases with right params, when start/end dragging item from the Paste Widget list', async () => {

@@ -8,9 +8,18 @@ import { DragLeaveTargetUseCase } from '@/application/useCases/dragDrop/dragLeav
 import { DragOverTopBarListUseCase } from '@/application/useCases/dragDrop/dragOverTopBarList';
 import { DragWidgetFromTopBarListUseCase } from '@/application/useCases/dragDrop/dragWidgetFromTopBarList';
 import { DropOnTopBarListUseCase } from '@/application/useCases/dragDrop/dropOnTopBarList';
-import { DragEvent, UIEvent, useCallback, useState } from 'react';
+import { DragEvent, MouseEvent, UIEvent, useCallback, useState } from 'react';
 import { UseAppState } from '@/ui/hooks/appState';
-import { WidgetEnvAreaShelf, createWidgetEnv } from '@/base/widget';
+import { Widget, WidgetEnvAreaShelf, createWidgetEnv } from '@/base/widget';
+import { MenuItem, MenuItems } from '@common/base/menu';
+import { EntityId } from '@/base/entity';
+import { EntityList, mapIdListToEntityList } from '@/base/entityList';
+import { CopiedEntitiesItem } from '@/base/state/ui';
+import { WidgetEntityDeps } from '@/base/state/entities';
+import { PasteWidgetToShelfUseCase } from '@/application/useCases/shelf/pasteWidgetToShelf';
+import { WidgetType } from '@/base/widgetType';
+import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
+import { AddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
 
 type Deps = {
   useAppState: UseAppState;
@@ -19,6 +28,9 @@ type Deps = {
   dragLeaveTargetUseCase: DragLeaveTargetUseCase;
   dropOnTopBarListUseCase: DropOnTopBarListUseCase;
   dragEndUseCase: DragEndUseCase;
+  pasteWidgetToShelfUseCase: PasteWidgetToShelfUseCase;
+  addWidgetToShelfUseCase: AddWidgetToShelfUseCase;
+  showContextMenuUseCase: ShowContextMenuUseCase;
 }
 
 const env: WidgetEnvAreaShelf = createWidgetEnv({
@@ -32,7 +44,66 @@ export function createShelfViewModelHook({
   dragLeaveTargetUseCase,
   dropOnTopBarListUseCase,
   dragEndUseCase,
+  pasteWidgetToShelfUseCase,
+  addWidgetToShelfUseCase,
+  showContextMenuUseCase,
 }: Deps) {
+  function buildAddMenuItems(
+    widgetTypes: EntityList<WidgetType>,
+    posByListItemId: EntityId | null
+  ): MenuItem[] {
+    return widgetTypes.length === 0
+      ? [{ enabled: false, label: 'No widgets to add' }]
+      : widgetTypes.map(item => ({
+        enabled: true,
+        label: item.name,
+        doAction: async () => {
+          addWidgetToShelfUseCase(item.id, posByListItemId);
+        }
+      }))
+  }
+
+  function buildPasteMenuItems(
+    copiedWidgets: EntityList<CopiedEntitiesItem<Widget, WidgetEntityDeps>>,
+    posByListItemId: EntityId | null
+  ): MenuItem[] {
+    return copiedWidgets.length === 0
+      ? [{ enabled: false, label: 'No widgets to paste' }]
+      : copiedWidgets.map(item => ({
+        enabled: true,
+        label: item.entity.coreSettings.name,
+        doAction: async () => {
+          pasteWidgetToShelfUseCase(item.id, posByListItemId);
+        }
+      }))
+  }
+  const createContextMenuItemsEditMode: (
+    widgetTypes: EntityList<WidgetType>,
+    copiedWidgets: EntityList<CopiedEntitiesItem<Widget, WidgetEntityDeps>>,
+  ) => MenuItems = (widgetTypes, copiedWidgets) => [{
+    enabled: true,
+    label: 'Add Widget...',
+    submenu: buildAddMenuItems(widgetTypes, null)
+  }, {
+    enabled: true,
+    label: 'Paste Widget...',
+    submenu: buildPasteMenuItems(copiedWidgets, null)
+  }]
+
+  const createItemContextMenuItemsEditMode: (
+    id: EntityId,
+    widgetTypes: EntityList<WidgetType>,
+    copiedWidgets: EntityList<CopiedEntitiesItem<Widget, WidgetEntityDeps>>,
+  ) => MenuItems = (id, widgetTypes, copiedWidgets) => [{
+    enabled: true,
+    label: 'Add Widget...',
+    submenu: buildAddMenuItems(widgetTypes, id)
+  }, {
+    enabled: true,
+    label: 'Paste Widget...',
+    submenu: buildPasteMenuItems(copiedWidgets, id)
+  }]
+
   function useViewModel() {
     const {
       isEditMode,
@@ -42,7 +113,9 @@ export function createShelfViewModelHook({
       dndSourceListItemId,
       dndTargetListItemId,
       hasDragDropFrom,
-      hasWorktableResizingItem
+      hasWorktableResizingItem,
+      widgetTypes,
+      copiedWidgets,
     } = useAppState(state => {
       const isEditMode = state.ui.editMode;
       const widgetsById = state.entities.widgets;
@@ -57,6 +130,8 @@ export function createShelfViewModelHook({
         : undefined;
       const hasDragDropFrom = !!dragDrop.from;
       const hasWorktableResizingItem = !!state.ui.worktable.resizingItem;
+      const widgetTypes = mapIdListToEntityList(state.entities.widgetTypes, state.ui.palette.widgetTypeIds);
+      const copiedWidgets = mapIdListToEntityList(state.ui.copy.widgets.entities, state.ui.copy.widgets.list);
       return {
         isEditMode,
         widgetsById,
@@ -65,7 +140,9 @@ export function createShelfViewModelHook({
         dndSourceListItemId,
         dndTargetListItemId,
         hasDragDropFrom,
-        hasWorktableResizingItem
+        hasWorktableResizingItem,
+        widgetTypes,
+        copiedWidgets
       }
     })
 
@@ -133,6 +210,20 @@ export function createShelfViewModelHook({
       setScrollLeft(evt.currentTarget.scrollLeft)
     }, [])
 
+    const onContextMenu: React.MouseEventHandler<HTMLUListElement> = useCallback((_) => {
+      if (isEditMode) {
+        const contextMenuItems: MenuItems = createContextMenuItemsEditMode(widgetTypes, copiedWidgets);
+        showContextMenuUseCase(contextMenuItems);
+      }
+    }, [copiedWidgets, isEditMode, widgetTypes])
+
+    const onItemContextMenu = useCallback((e: MouseEvent<HTMLElement>, itemId: EntityId) => {
+      if (isEditMode) {
+        const contextMenuItems: MenuItems = createItemContextMenuItemsEditMode(itemId, widgetTypes, copiedWidgets);
+        showContextMenuUseCase(contextMenuItems);
+      }
+    }, [copiedWidgets, isEditMode, widgetTypes])
+
     return {
       env,
       isEditMode,
@@ -154,6 +245,8 @@ export function createShelfViewModelHook({
       onDragOver,
       onDrop,
       onScroll,
+      onContextMenu,
+      onItemContextMenu,
     }
   }
 

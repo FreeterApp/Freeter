@@ -26,6 +26,7 @@ export function createShelfItemComponent({
       // isDragging,
       isDropArea,
       itemWidgetElRectStyle,
+      onContextMenuHandler,
       onDragStartHandler,
       onDragEndHandler,
       onDragEnterHandler,
@@ -41,6 +42,7 @@ export function createShelfItemComponent({
           // isDragging && styles['is-dragging'],
           isDropArea && styles['is-drop-area'],
         )}
+        onContextMenu={onContextMenuHandler}
         tabIndex={0}
         ref={shelfItemEl}
       >
