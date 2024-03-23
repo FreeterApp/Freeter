@@ -7,7 +7,7 @@ import { WidgetLayoutItemComponent } from '@/ui/components/worktable/widgetLayou
 import WidgetLayoutItemGhost from '@/ui/components/worktable/widgetLayout/widgetLayoutItemGhost';
 import { WidgetLayoutViewModel, WidgetLayoutProps } from '@/ui/components/worktable/widgetLayout/widgetLayoutViewModel';
 import clsx from 'clsx';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import styles from './widgetLayout.module.scss';
 import { InAppNote } from '@/ui/components/basic/inAppNote';
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
@@ -110,5 +110,5 @@ export function createWidgetLayoutComponent({
 
   }
 
-  return WidgetLayoutComponent;
+  return memo(WidgetLayoutComponent);
 }

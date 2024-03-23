@@ -7,6 +7,7 @@ import { PaletteViewModelHook } from './paletteViewModel';
 import clsx from 'clsx';
 import styles from './palette.module.scss';
 import PaletteItem from './paletteItem';
+import { memo } from 'react';
 
 type Deps = {
   usePaletteViewModel: PaletteViewModelHook
@@ -76,5 +77,5 @@ export function createPaletteComponent({
     )
   }
 
-  return Palette;
+  return memo(Palette)
 }

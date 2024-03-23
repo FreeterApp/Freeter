@@ -13,7 +13,7 @@ import { UseAppState } from '@/ui/hooks/appState';
 import { Widget, WidgetEnvAreaShelf, createWidgetEnv } from '@/base/widget';
 import { MenuItem, MenuItems } from '@common/base/menu';
 import { EntityId } from '@/base/entity';
-import { EntityList, mapIdListToEntityList } from '@/base/entityList';
+import { EntityList } from '@/base/entityList';
 import { CopiedEntitiesItem } from '@/base/state/ui';
 import { WidgetEntityDeps } from '@/base/state/entities';
 import { PasteWidgetToShelfUseCase } from '@/application/useCases/shelf/pasteWidgetToShelf';
@@ -114,8 +114,8 @@ export function createShelfViewModelHook({
       dndTargetListItemId,
       hasDragDropFrom,
       hasWorktableResizingItem,
-      widgetTypes,
-      copiedWidgets,
+      widgetTypeIds,
+      copiedWidgetIds,
     } = useAppState(state => {
       const isEditMode = state.ui.editMode;
       const widgetsById = state.entities.widgets;
@@ -130,8 +130,8 @@ export function createShelfViewModelHook({
         : undefined;
       const hasDragDropFrom = !!dragDrop.from;
       const hasWorktableResizingItem = !!state.ui.worktable.resizingItem;
-      const widgetTypes = mapIdListToEntityList(state.entities.widgetTypes, state.ui.palette.widgetTypeIds);
-      const copiedWidgets = mapIdListToEntityList(state.ui.copy.widgets.entities, state.ui.copy.widgets.list);
+      const widgetTypeIds = state.ui.palette.widgetTypeIds;
+      const copiedWidgetIds = state.ui.copy.widgets.list;
       return {
         isEditMode,
         widgetsById,
@@ -141,10 +141,13 @@ export function createShelfViewModelHook({
         dndTargetListItemId,
         hasDragDropFrom,
         hasWorktableResizingItem,
-        widgetTypes,
-        copiedWidgets
+        widgetTypeIds,
+        copiedWidgetIds,
       }
     })
+
+    const widgetTypes = useAppState.useEntityList(state => state.entities.widgetTypes, widgetTypeIds);
+    const copiedWidgets = useAppState.useEntityList(state => state.ui.copy.widgets.entities, copiedWidgetIds);
 
     const dontShowWidgets = isEditMode && (hasDragDropFrom || hasWorktableResizingItem);
 

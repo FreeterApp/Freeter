@@ -9,6 +9,7 @@ import styles from './applicationSettings.module.scss';
 import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { SettingBlock } from '@/widgets/appModules';
+import { memo } from 'react';
 
 type Deps = {
   useApplicationSettingsViewModel: ApplicationSettingsViewModelHook;
@@ -17,7 +18,7 @@ type Deps = {
 export function createApplicationSettingsComponent({
   useApplicationSettingsViewModel,
 }: Deps) {
-  function Component() {
+  function ApplicationSettings() {
 
     const {
       appConfig,
@@ -52,7 +53,7 @@ export function createApplicationSettingsComponent({
     }
   }
 
-  return Component;
+  return memo(ApplicationSettings);
 }
 
 export type ApplicationSettingsComponent = ReturnType<typeof createApplicationSettingsComponent>;

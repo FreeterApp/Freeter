@@ -7,7 +7,7 @@ import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showC
 import { contextMenuForTextInput } from '@/base/contextMenu';
 import { ModalScreenId } from '@/base/state/ui';
 import { UseAppState } from '@/ui/hooks/appState';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, createElement } from 'react';
 
 type Deps = {
   useAppState: UseAppState;
@@ -51,11 +51,11 @@ export function createAppViewModelHook({
     const showPalette = editMode && !!currentWorkflow;
 
     const modalScreenComps: Record<ModalScreenId, ReactNode> = {
-      about: About({}),
-      applicationSettings: ApplicationSettings({}),
-      projectManager: ProjectManager({}),
-      widgetSettings: WidgetSettings({}),
-      workflowSettings: WorkflowSettings({})
+      about: createElement(About, {}),
+      applicationSettings: createElement(ApplicationSettings, {}),
+      projectManager: createElement(ProjectManager, {}),
+      widgetSettings: createElement(WidgetSettings, {}),
+      workflowSettings: createElement(WorkflowSettings, {})
     }
 
     const modalScreens = modalScreensOrder.map((id, idx, arr) => {

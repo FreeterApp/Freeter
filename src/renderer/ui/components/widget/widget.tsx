@@ -7,6 +7,7 @@ import { ActionBar } from '@/ui/components/basic/actionBar';
 import { WidgetProps, WidgetViewModelHook } from '@/ui/components/widget/widgetViewModel';
 import styles from './widget.module.scss';
 import clsx from 'clsx';
+import { memo } from 'react';
 
 type Deps = {
   useWidgetViewModel: WidgetViewModelHook;
@@ -60,7 +61,7 @@ export function createWidgetComponent({
     </div>
   }
 
-  return Component;
+  return memo(Component);
 }
 
 export type WidgetComponent = ReturnType<typeof createWidgetComponent>;

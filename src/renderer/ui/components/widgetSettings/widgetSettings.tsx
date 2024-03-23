@@ -10,6 +10,7 @@ import styles from './widgetSettings.module.scss';
 import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { CoreSettings } from '@/ui/components/widgetSettings/coreSettings';
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
+import { memo } from 'react';
 
 type Deps = {
   Widget: WidgetComponent;
@@ -20,7 +21,7 @@ export function createWidgetSettingsComponent({
   Widget,
   useWidgetSettingsViewModel,
 }: Deps) {
-  function Component() {
+  function WidgetSettings() {
 
     const {
       widgetInEnv,
@@ -48,7 +49,7 @@ export function createWidgetSettingsComponent({
     }
   }
 
-  return Component;
+  return memo(WidgetSettings);
 }
 
 export type WidgetSettingsComponent = ReturnType<typeof createWidgetSettingsComponent>;

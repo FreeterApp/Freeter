@@ -230,34 +230,41 @@ export function createWorkflowSwitcherViewModelHook({
     const {
       isEditMode,
       currentProjectId,
-      currentProject,
+      workflowIds,
+      currentWorkflowId,
       dndTargetListItemId,
       dndFrom,
       resizingItem,
-      copiedWorkflows,
+      copiedWorkflowsEntitites,
+      copiedWorkflowsList,
     } = useAppState(state => {
       const { editMode: isEditMode } = state.ui;
       const { currentProjectId } = state.ui.projectSwitcher;
-      const currentProject = state.entities.projects[currentProjectId];
+      const workflowIds = state.entities.projects[currentProjectId]?.workflowIds;
+      const currentWorkflowId = state.entities.projects[currentProjectId]?.currentWorkflowId;
       const dndTargetListItemId = state.ui.dragDrop.over?.workflowSwitcher?.workflowId;
       const dndFrom = state.ui.dragDrop.from;
       const resizingItem = state.ui.worktable.resizingItem;
-      const copiedWorkflows = mapIdListToEntityList(state.ui.copy.workflows.entities, state.ui.copy.workflows.list);
+      const copiedWorkflowsEntitites = state.ui.copy.workflows.entities;
+      const copiedWorkflowsList = state.ui.copy.workflows.list;
       return {
         isEditMode,
         currentProjectId,
-        currentProject,
+        workflowIds,
+        currentWorkflowId,
         dndTargetListItemId,
         dndFrom,
         resizingItem,
-        copiedWorkflows,
+        copiedWorkflowsEntitites,
+        copiedWorkflowsList,
       }
     })
 
+    const copiedWorkflows = mapIdListToEntityList(copiedWorkflowsEntitites, copiedWorkflowsList);
+
     const [itemIdInEditNameMode, setItemIdInEditNameMode] = useState<string | undefined>(undefined);
 
-    const workflows = useAppState.useEntityListIfIdsDefined(state => state.entities.workflows, currentProject?.workflowIds);
-    const currentWorkflowId = currentProject?.currentWorkflowId;
+    const workflows = useAppState.useEntityListIfIdsDefined(state => state.entities.workflows, workflowIds);
 
     const onItemClick = useCallback((_evt: MouseEvent<HTMLElement>, itemId: EntityId) => {
       if (currentWorkflowId !== itemId) {
@@ -281,15 +288,15 @@ export function createWorkflowSwitcherViewModelHook({
         return;
       }
 
-      if (!currentProject) {
+      if (!workflowIds) {
         return;
       }
-      const item = currentProject.workflowIds.find(v => v === itemId);
+      const item = workflowIds.find(v => v === itemId);
       if (!item) {
         return;
       }
-      dragWorkflowFromWorkflowSwitcherUseCase(currentProject.id, itemId);
-    }, [isEditMode, currentProject])
+      dragWorkflowFromWorkflowSwitcherUseCase(currentProjectId, itemId);
+    }, [currentProjectId, isEditMode, workflowIds])
 
     const onItemDragEnd = useCallback((_evt: DragEvent<HTMLElement>, _itemId: EntityId) => {
       dragEndUseCase();

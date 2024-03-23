@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './worktable.module.scss';
 import { WorktableViewModel } from '@/ui/components/worktable/worktableViewModel';
 import { WidgetLayoutProps } from '@/ui/components/worktable/widgetLayout';
@@ -72,5 +72,5 @@ export function createWorktableComponent({
         })}
       </div>
   }
-  return WorktableComponent;
+  return memo(WorktableComponent);
 }

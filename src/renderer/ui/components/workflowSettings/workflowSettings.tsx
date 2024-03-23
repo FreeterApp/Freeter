@@ -9,6 +9,7 @@ import styles from './workflowSettings.module.scss';
 import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { SettingBlock } from '@/widgets/appModules';
+import { memo } from 'react';
 
 type Deps = {
   useWorkflowSettingsViewModel: WorkflowSettingsViewModelHook;
@@ -17,7 +18,7 @@ type Deps = {
 export function createWorkflowSettingsComponent({
   useWorkflowSettingsViewModel,
 }: Deps) {
-  function Component() {
+  function WorkflowSettings() {
 
     const {
       settings,
@@ -46,7 +47,7 @@ export function createWorkflowSettingsComponent({
     }
   }
 
-  return Component;
+  return memo(WorkflowSettings);
 }
 
 export type WorkflowSettingsComponent = ReturnType<typeof createWorkflowSettingsComponent>;

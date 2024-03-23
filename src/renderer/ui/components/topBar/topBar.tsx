@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './topBar.module.scss';
 import clsx from 'clsx';
 
@@ -36,5 +36,5 @@ export function createTopBarComponent({
       </div>
     )
   }
-  return TopBar;
+  return memo(TopBar);
 }

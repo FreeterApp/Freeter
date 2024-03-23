@@ -8,6 +8,7 @@ import { resizeHandleIds } from '@/ui/components/worktable/widgetLayout/resizeHa
 import { useWidgetLayoutItemViewModel, WidgetLayoutItemProps } from '@/ui/components/worktable/widgetLayout/widgetLayoutItemViewModel';
 import clsx from 'clsx';
 import styles from './widgetLayoutItem.module.scss';
+import { memo } from 'react';
 
 type Deps = {
   WidgetById: WidgetByIdComponent;
@@ -53,7 +54,7 @@ export function createWidgetLayoutItemComponent({
       </div>
     )
   }
-  return Component;
+  return memo(Component);
 }
 
 export type WidgetLayoutItemComponent = ReturnType<typeof createWidgetLayoutItemComponent>;

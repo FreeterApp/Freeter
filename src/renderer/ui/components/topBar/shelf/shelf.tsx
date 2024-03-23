@@ -7,6 +7,7 @@ import { ShelfItemComponent } from '@/ui/components/topBar/shelf/shelfItem';
 import { ShelfViewModelHook } from '@/ui/components/topBar/shelf/shelfViewModel';
 import clsx from 'clsx';
 import styles from './shelf.module.scss';
+import { memo } from 'react';
 
 type Deps = {
   ShelfItem: ShelfItemComponent;
@@ -84,5 +85,5 @@ export function createShelfComponent({
     )
   }
 
-  return Shelf;
+  return memo(Shelf);
 }

@@ -61,7 +61,7 @@ export function createProjectManagerViewModelHook({
         renderProjectManager,
         currentProjectSettings,
         currentProjectId,
-        deleteProjectIds: deleteProjectIds || {},
+        deleteProjectIds,
         projectIds,
         projects
       }
@@ -160,7 +160,7 @@ export function createProjectManagerViewModelHook({
       renderProjectManager,
       currentProjectSettings,
       currentProjectId,
-      deleteProjectIds,
+      deleteProjectIds: deleteProjectIds || {},
       projectList,
       draggingProjectId: dragState?.draggingProjectId || null,
       draggingOverProjectId: dragState?.draggingOverProjectId || null,

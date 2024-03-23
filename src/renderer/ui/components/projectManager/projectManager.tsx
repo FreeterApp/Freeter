@@ -10,6 +10,7 @@ import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsS
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { ProjectManagerSettings } from '@/ui/components/projectManager/projectManagerSettings';
 import { ProjectManagerList } from '@/ui/components/projectManager/projectManagerList';
+import { memo } from 'react';
 
 type Deps = {
   useProjectManagerViewModel: ProjectManagerViewModelHook;
@@ -18,7 +19,7 @@ type Deps = {
 export function createProjectManagerComponent({
   useProjectManagerViewModel,
 }: Deps) {
-  function Component() {
+  function ProjectManager() {
 
     const {
       renderProjectManager,
@@ -76,7 +77,7 @@ export function createProjectManagerComponent({
     }
   }
 
-  return Component;
+  return memo(ProjectManager);
 }
 
 export type ProjectManagerComponent = ReturnType<typeof createProjectManagerComponent>;
