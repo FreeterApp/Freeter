@@ -2,11 +2,13 @@
 <html>
   <head>
     <meta charset="utf-8"/>
-
-    <!-- TODO: In prod build exclude 'unsafe-eval' from CSP script-src -->
-		<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src *; media-src 'self'; frame-src 'self'; object-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self'; font-src 'self';">
-
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src *; media-src 'self'; frame-src 'self'; object-src 'self'; script-src 'self'<% if (htmlWebpackPlugin.options.env === 'development') { %> 'unsafe-eval'<% } %><% if (htmlWebpackPlugin.options.env_REACT_DEVTOOLS === 'enabled') { %> http://localhost:8097/<% } %>; style-src 'self' 'unsafe-inline'; connect-src 'self' <% if (htmlWebpackPlugin.options.env_REACT_DEVTOOLS === 'enabled') { %> ws://localhost:8097/<% } %>; font-src 'self';">
     <title><%= htmlWebpackPlugin.options.title %></title>
+
+    <% if (htmlWebpackPlugin.options.env_REACT_DEVTOOLS === 'enabled') { %>
+    <script src="http://localhost:8097"></script>
+    <% } %>
+
   </head>
   <body>
     <div id="app"></div>

@@ -207,7 +207,6 @@ if (!app.requestSingleInstanceLock()) {
         },
         {
           devTools: isDevMode,
-          reactDevTools: isDevMode
         }
       )
 

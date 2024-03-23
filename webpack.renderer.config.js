@@ -157,7 +157,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: "Freeter",
       template: path.join(__dirname, 'src', 'renderer', 'index.ejs'),
-      filename: "index.html"
+      filename: "index.html",
+      env: process.env.NODE_ENV,
+      env_REACT_DEVTOOLS: process.env.REACT_DEVTOOLS
     }),
 
     new SpriteLoaderPlugin({
