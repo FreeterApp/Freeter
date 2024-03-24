@@ -3,6 +3,9 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { MoreInfo } from '@/ui/components/basic/moreInfo';
+import styles from '../settingsScreen.module.scss';
+
 export interface SettingBlockProps extends React.PropsWithChildren {
   titleForId?: string;
   moreInfo?: string;
@@ -18,9 +21,9 @@ export const SettingBlock = ({
   <fieldset>
     <label
       htmlFor={titleForId}
-      title={moreInfo}
     >
       {title}
+      {moreInfo && <MoreInfo info={moreInfo} className={styles['more-info']}/>}
     </label>
     <div>
       { children }

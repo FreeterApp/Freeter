@@ -45,6 +45,7 @@ export function createPaletteComponent({
             id={item.id}
             icon={item.icon}
             name={item.name}
+            moreInfo={item.description}
             onDragStart={onAddItemDragStart}
             onDragEnd={onAddItemDragEnd}
             onClick={onAddItemClick}

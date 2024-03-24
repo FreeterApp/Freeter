@@ -16,6 +16,7 @@ const widgetType: WidgetType<Settings> = {
     w: 2,
     h: 2
   },
+  description: 'The To-Do List widget allows yout to quickly organize tasks with simple to-do lists.',
   createSettingsState,
   settingsEditorComp,
   widgetComp,

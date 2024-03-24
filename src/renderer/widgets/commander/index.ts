@@ -16,6 +16,7 @@ const widgetType: WidgetType<Settings> = {
     w: 1,
     h: 1
   },
+  description: 'The Commander widget allows to set command-lines and run them in Terminal with a single click.',
   createSettingsState,
   settingsEditorComp,
   widgetComp,

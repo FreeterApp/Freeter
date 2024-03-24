@@ -6,18 +6,20 @@
 import { useCallback } from 'react';
 import styles from './palette.module.scss';
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
+import { MoreInfo } from '@/ui/components/basic/moreInfo';
 
 export interface PaletteItemProps {
   id: string;
   icon: string;
   name: string;
+  moreInfo?: string;
   onDragStart: (itemId: string) => void;
   onDragEnd: () => void;
   onClick: (itemId: string) => void;
 }
 
 const PaletteItemComponent = (props: PaletteItemProps) => {
-  const { id, icon, name, onDragStart, onDragEnd, onClick } = props;
+  const { id, icon, name, moreInfo, onDragStart, onDragEnd, onClick } = props;
 
   const onDragStartHandler = useCallback(() => {
     onDragStart(id);
@@ -38,10 +40,10 @@ const PaletteItemComponent = (props: PaletteItemProps) => {
       onDragStart={onDragStartHandler}
       onDragEnd={onDragEndHandler}
       onClick={onClickHandler}
-      title={name}
     >
       <SvgIcon svg={icon} className={styles['palette-item-icon']}></SvgIcon>
-      <span>{name}</span>
+      <span className={styles['palette-item-name']}>{name}</span>
+      {moreInfo && <MoreInfo info={moreInfo}/>}
     </li>
   )
 }

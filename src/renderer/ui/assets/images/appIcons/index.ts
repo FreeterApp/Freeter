@@ -16,6 +16,8 @@ import duplicate14Svg from './duplicate-14.svg';
 import more14Svg from './more-14.svg';
 import settings14Svg from './settings-14.svg';
 
+import circleQuestion16Svg from './circle-question-16.svg';
+
 import editMode24Svg from './edit-mode-24.svg';
 import manage24Svg from './manage-24.svg';
 
@@ -29,6 +31,8 @@ export {
   duplicate14Svg,
   more14Svg,
   settings14Svg,
+
+  circleQuestion16Svg,
 
   editMode24Svg,
   manage24Svg,

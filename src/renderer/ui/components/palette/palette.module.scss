@@ -81,14 +81,16 @@ $sections: 'add', 'paste';
   padding: 6px 18px;
   white-space: nowrap;
   cursor: pointer;
-  > span {
-    font-size: 14px;
-    line-height: 14px;
-    margin-top: 2px;
-  }
   &:hover {
     background-color: #A6A6A680;
   }
+}
+
+.palette-item-name {
+  flex: 1;
+  font-size: 14px;
+  line-height: 14px;
+  margin-top: 2px;
 }
 
 .palette-item-icon {
@@ -96,4 +98,8 @@ $sections: 'add', 'paste';
   width: 24px;
   height: 24px;
   margin-right: 6px;
+}
+
+.palette-item-moreinfo {
+
 }
