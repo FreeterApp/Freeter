@@ -7,14 +7,14 @@ import { createPasteWidgetToShelfUseCase } from '@/application/useCases/shelf/pa
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/addItemToWidgetListSubCase';
+import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/subs/addItemToWidgetList';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
-import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
 import { fixtureCopyState } from '@tests/base/state/fixtures/copy';
 import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetC } from '@tests/base/fixtures/widget';
 import { Widget } from '@/base/widget';
 import { fixtureWidgetListItemA, fixtureWidgetListItemB, fixtureWidgetListItemC } from '@tests/base/fixtures/widgetList';
-import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/cloneWidgetToWidgetListSubCase';
+import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);

@@ -4,7 +4,7 @@
  */
 
 import { IdGenerator } from '@/application/interfaces/idGenerator';
-import { CloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
+import { CloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
 import { WorkflowEntityDeps } from '@/base/state/entities';
 import { Widget } from '@/base/widget';
 import { WidgetLayoutItem } from '@/base/widgetLayout';

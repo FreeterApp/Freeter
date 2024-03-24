@@ -9,7 +9,7 @@ import { createListItem } from '@/base/widgetList';
 import { mapIdListToEntityList, moveEntityInList } from '@/base/entityList';
 import { AppStore } from '@/application/interfaces/store';
 import { addWidgetToAppState, dragDropStateActions, entityStateActions } from '@/base/state/actions';
-import { CloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/cloneWidgetToWidgetListSubCase';
+import { CloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
 import { addOneToEntityCollection, getOneFromEntityCollection } from '@/base/entityCollection';
 
 type Deps = {

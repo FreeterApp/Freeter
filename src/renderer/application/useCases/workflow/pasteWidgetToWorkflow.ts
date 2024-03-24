@@ -4,7 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
-import { CloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
+import { CloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/cloneWidgetToWidgetLayout';
 import { EntityId } from '@/base/entity';
 import { addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { mapIdListToEntityList } from '@/base/entityList';

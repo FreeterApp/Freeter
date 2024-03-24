@@ -111,18 +111,18 @@ import { createOpenSponsorshipUrlUseCase } from '@/application/useCases/about/op
 import { createTerminalProvider } from '@/infra/terminalProvider/terminalProvider';
 import { createShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
 import { createDuplicateProjectInProjectManagerUseCase } from '@/application/useCases/projectManager/duplicateProjectInProjectManager';
-import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
-import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
-import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/cloneWidgetLayoutItemSubCase';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
+import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/subs/cloneWidgetLayoutItem';
 import { createCopyWidgetUseCase } from '@/application/useCases/widget/copyWidget';
 import { createCopyWorkflowUseCase } from '@/application/useCases/workflow/copyWorkflow';
 import { createPasteWidgetToShelfUseCase } from '@/application/useCases/shelf/pasteWidgetToShelf';
 import { createPasteWidgetToWorkflowUseCase } from '@/application/useCases/workflow/pasteWidgetToWorkflow';
 import { createPasteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/pasteWorkflow';
-import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/addItemToWidgetListSubCase';
-import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/addItemToWidgetLayoutSubCase';
-import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
-import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/cloneWidgetToWidgetListSubCase';
+import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/subs/addItemToWidgetList';
+import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/addItemToWidgetLayout';
+import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/cloneWidgetToWidgetLayout';
+import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
 import { createAddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {

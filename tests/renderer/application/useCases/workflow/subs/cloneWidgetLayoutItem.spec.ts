@@ -3,8 +3,8 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
-import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/cloneWidgetLayoutItemSubCase';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/subs/cloneWidgetLayoutItem';
 import { fixtureWidgetLayoutItemA } from '@tests/base/fixtures/widgetLayout';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { WorkflowEntityDeps } from '@/base/state/entities';

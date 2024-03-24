@@ -6,7 +6,7 @@
 import { ObjectManager } from '@common/base/objectManager';
 import { DataStorageRenderer } from '@/application/interfaces/dataStorage';
 import { fixtureWidgetA } from '@tests/base/fixtures/widget';
-import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
 import { Widget } from '@/base/widget';
 
 function setup() {

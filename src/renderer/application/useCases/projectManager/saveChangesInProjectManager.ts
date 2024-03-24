@@ -5,7 +5,7 @@
 
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
-import { CloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
+import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { EntityId } from '@/base/entity';
 import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';

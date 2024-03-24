@@ -3,8 +3,8 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { CloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
-import { AddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/addItemToWidgetLayoutSubCase';
+import { CloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
+import { AddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/addItemToWidgetLayout';
 import { generateCopyName } from '@/base/utils';
 import { Widget, updateWidgetCoreSettings } from '@/base/widget';
 import { WidgetLayout, WidgetLayoutItemWH, WidgetLayoutItemXY } from '@/base/widgetLayout';

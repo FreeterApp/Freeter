@@ -3,12 +3,12 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { fixtureWidgetA } from '@tests/base/fixtures/widget';
 import { Widget } from '@/base/widget';
-import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
-import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/addItemToWidgetLayoutSubCase';
+import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/cloneWidgetToWidgetLayout';
+import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/addItemToWidgetLayout';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';
 import { WidgetLayout } from '@/base/widgetLayout';
 

@@ -8,15 +8,15 @@ import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
-import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
 import { fixtureCopyState } from '@tests/base/state/fixtures/copy';
 import { fixtureWidgetA, fixtureWidgetB } from '@tests/base/fixtures/widget';
 import { Widget } from '@/base/widget';
-import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/addItemToWidgetLayoutSubCase';
+import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/addItemToWidgetLayout';
 import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
 import { fixtureWidgetTypeA } from '@tests/base/fixtures/widgetType';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';
-import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
+import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/cloneWidgetToWidgetLayout';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);

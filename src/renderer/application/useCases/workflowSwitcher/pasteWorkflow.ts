@@ -4,7 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
-import { CloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
+import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { EntityId } from '@/base/entity';
 import { addManyToEntityCollection, addOneToEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { mapIdListToEntityList } from '@/base/entityList';

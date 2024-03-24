@@ -14,12 +14,12 @@ import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitch
 import { addWorkflowToAppState, deleteProjectsFromAppState } from '@/base/state/actions';
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowSettingsA, fixtureWorkflowSettingsB } from '@tests/base/fixtures/workflow';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
-import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/cloneWorkflowSubCase';
+import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { Workflow } from '@/base/workflow';
 import { Project } from '@/base/project';
 import { IdGenerator } from '@/application/interfaces/idGenerator';
-import { createCloneWidgetSubCase } from '@/application/useCases/widget/cloneWidgetSubCase';
-import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/cloneWidgetLayoutItemSubCase';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/subs/cloneWidgetLayoutItem';
 import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetC } from '@tests/base/fixtures/widget';
 import { Widget } from '@/base/widget';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';

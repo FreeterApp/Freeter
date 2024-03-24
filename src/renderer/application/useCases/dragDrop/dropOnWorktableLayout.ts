@@ -10,7 +10,7 @@ import { EntityId } from '@/base/entity';
 import { AppStore } from '@/application/interfaces/store';
 import { addWidgetToAppState, dragDropStateActions, entityStateActions } from '@/base/state/actions';
 import { addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
-import { CloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/cloneWidgetToWidgetLayoutSubCase';
+import { CloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/cloneWidgetToWidgetLayout';
 
 type Deps = {
   appStore: AppStore;

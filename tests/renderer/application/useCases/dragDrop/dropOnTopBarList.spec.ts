@@ -12,7 +12,7 @@ import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromPalettePaste, fixture
 import { fixtureWidgetListItemA, fixtureWidgetListItemB, fixtureWidgetListItemC } from '@tests/base/fixtures/widgetList';
 import { fixtureWidgetLayoutItemA } from '@tests/base/fixtures/widgetLayout';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { CloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/cloneWidgetToWidgetListSubCase';
+import { CloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
 import { fixtureCopyState } from '@tests/base/state/fixtures/copy';
 import { fixtureWidgetA, fixtureWidgetB } from '@tests/base/fixtures/widget';
 
