@@ -125,6 +125,7 @@ import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/w
 import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
 import { createAddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
 import { createCreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
+import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -227,8 +228,13 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
   const switchProjectUseCase = createSwitchProjectUseCase(deps);
 
+  const createWorkflowSubCase = createCreateWorkflowSubCase(deps)
+
   const switchWorkflowUseCase = createSwitchWorkflowUseCase(deps);
-  const addWorkflowUseCase = createAddWorkflowUseCase(deps);
+  const addWorkflowUseCase = createAddWorkflowUseCase({
+    ...deps,
+    createWorkflowSubCase
+  });
   const renameWorkflowUseCase = createRenameWorkflowUseCase(deps);
   const openWorkflowSettingsUseCase = createOpenWorkflowSettingsUseCase(deps);
   const closeWorkflowSettingsUseCase = createCloseWorkflowSettingsUseCase(deps);
@@ -286,7 +292,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const addProjectInProjectManagerUseCase = createAddProjectInProjectManagerUseCase(deps);
   const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase({
     ...deps,
-    cloneWorkflowSubCase
+    cloneWorkflowSubCase,
+    createWorkflowSubCase
   });
   const switchProjectInProjectManagerUseCase = createSwitchProjectInProjectManagerUseCase(deps);
   const toggleDeletionInProjectManagerUseCase = createToggleDeletionInProjectManagerUseCase(deps);

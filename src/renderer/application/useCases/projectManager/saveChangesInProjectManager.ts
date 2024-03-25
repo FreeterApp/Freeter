@@ -3,23 +3,24 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
+import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
 import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';
-import { addWorkflowToAppState, deleteProjectsFromAppState, modalScreensStateActions } from '@/base/state/actions';
+import { deleteProjectsFromAppState, modalScreensStateActions } from '@/base/state/actions';
+import { generateWorkflowName } from '@/base/workflow';
 
 type Deps = {
   appStore: AppStore;
   cloneWorkflowSubCase: CloneWorkflowSubCase;
-  idGenerator: IdGenerator;
+  createWorkflowSubCase: CreateWorkflowSubCase;
 }
 export function createSaveChangesInProjectManagerUseCase({
   appStore,
   cloneWorkflowSubCase,
-  idGenerator,
+  createWorkflowSubCase,
 }: Deps) {
   const useCase = async () => {
     let state = appStore.get();
@@ -46,7 +47,21 @@ export function createSaveChangesInProjectManagerUseCase({
       for (const prjId of projectIds) {
         // init a workflow for each newly added, non-duplicate project
         if (!getOneFromEntityCollection(prevProjects, prjId) && !duplicateProjectIds[prjId]) {
-          state = addWorkflowToAppState(state, prjId, idGenerator())[0];
+          const newWorkflow = createWorkflowSubCase(generateWorkflowName([]))
+          state = {
+            ...state,
+            entities: {
+              ...state.entities,
+              projects: updateOneInEntityCollection(state.entities.projects, {
+                id: prjId,
+                changes: {
+                  currentWorkflowId: newWorkflow.id,
+                  workflowIds: [newWorkflow.id]
+                }
+              }),
+              workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow)
+            },
+          }
         }
       }
 

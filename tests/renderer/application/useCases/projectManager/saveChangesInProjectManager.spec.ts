@@ -11,7 +11,7 @@ import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { fixtureProjectA, fixtureProjectB, fixtureProjectC, fixtureProjectD, fixtureProjectSettingsA } from '@tests/base/fixtures/project';
 import { fixtureProjectAInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
-import { addWorkflowToAppState, deleteProjectsFromAppState } from '@/base/state/actions';
+import { deleteProjectsFromAppState } from '@/base/state/actions';
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowSettingsA, fixtureWorkflowSettingsB } from '@tests/base/fixtures/workflow';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
@@ -24,13 +24,13 @@ import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetC } from '@tests/base/fixt
 import { Widget } from '@/base/widget';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';
 import { WidgetLayoutItem } from '@/base/widgetLayout';
+import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 
 const newItemId = 'NEW-ITEM-ID';
 jest.mock('@/base/state/actions', () => {
   const actual = jest.requireActual<typeof import('@/base/state/actions')>('@/base/state/actions');
   return {
     ...actual,
-    addWorkflowToAppState: jest.fn(actual.addWorkflowToAppState),
     deleteProjectsFromAppState: jest.fn(actual.deleteProjectsFromAppState)
   }
 })
@@ -38,7 +38,6 @@ jest.mock('@/base/state/actions', () => {
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
   let i = 1;
-  const projectIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newItemId + (i++))
   const workflowIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newItemId + (i++))
   const widgetIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newItemId + (i++))
   const widgetLayoutItemIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newItemId + (i++))
@@ -57,18 +56,19 @@ async function setup(initState: AppState) {
     cloneWidgetLayoutItemSubCase,
     idGenerator: workflowIdGeneratorMock
   });
+  const createWorkflowSubCase = createCreateWorkflowSubCase({
+    idGenerator: workflowIdGeneratorMock
+  })
   const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase({
     appStore,
     cloneWorkflowSubCase,
-    idGenerator: projectIdGeneratorMock
+    createWorkflowSubCase,
   });
 
   return {
     appStore,
-    addWorkflowToAppState,
     deleteProjectsFromAppState,
     saveChangesInProjectManagerUseCase,
-    projectIdGeneratorMock,
     workflowIdGeneratorMock,
     widgetLayoutItemIdGeneratorMock,
     widgetIdGeneratorMock
@@ -292,7 +292,7 @@ describe('saveChangesInProjectManagerUseCase()', () => {
     expect(newState).toEqual(expectState);
   });
 
-  it('should update state with deleteProjectsFromAppState (for marked ids) after applying project and project order changes and resetting the project manager state, when there are marked projects', async () => {
+  it('should delete projects from the state after applying project and project order changes and resetting the project manager state, when there are marked projects', async () => {
     // const workflowA = fixtureWorkflowA({ id: newItemId + '1', settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }) });
     const workflowB = fixtureWorkflowB({ id: newItemId + '2', settings: fixtureWorkflowSettingsB({ name: 'Workflow 1' }) });
     const projectA = fixtureProjectA({ currentWorkflowId: '', workflowIds: [] });
@@ -380,15 +380,11 @@ describe('saveChangesInProjectManagerUseCase()', () => {
 
     const {
       appStore,
-      addWorkflowToAppState,
-      deleteProjectsFromAppState,
       saveChangesInProjectManagerUseCase
     } = await setup(initState)
 
     await saveChangesInProjectManagerUseCase();
 
-    expect(addWorkflowToAppState).toBeCalledTimes(2); // 2x new projects created before processing the deletion marks
-    expect(deleteProjectsFromAppState).toBeCalledTimes(1);
     expect(appStore.get()).toEqual(expectState);
   });
 
@@ -576,13 +572,11 @@ describe('saveChangesInProjectManagerUseCase()', () => {
 
     const {
       appStore,
-      projectIdGeneratorMock,
       widgetIdGeneratorMock,
       widgetLayoutItemIdGeneratorMock,
       workflowIdGeneratorMock,
       saveChangesInProjectManagerUseCase
     } = await setup(initState)
-    projectIdGeneratorMock.mockReturnValueOnce(projectAClone.id);
     workflowIdGeneratorMock.mockReturnValueOnce(workflowAClone.id);
     workflowIdGeneratorMock.mockReturnValueOnce(workflowBClone.id);
     workflowIdGeneratorMock.mockReturnValueOnce(workflowCClone.id);

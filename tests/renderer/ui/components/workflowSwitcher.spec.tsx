@@ -16,6 +16,7 @@ import { fixtureWorkflowSettingsA, fixtureWorkflowSettingsB } from '@tests/base/
 import { createAddWorkflowUseCase } from '@/application/useCases/workflowSwitcher/addWorkflow';
 import userEvent from '@testing-library/user-event';
 import { fixtureWorktableNotResizing, fixtureWorktableResizingItem } from '@tests/base/state/fixtures/worktable';
+import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 
 const newWorkflowId = 'NEW-WORKFLOW-ID';
 
@@ -35,7 +36,8 @@ async function setup(
   const dragLeaveTargetUseCase = jest.fn();
   const dropOnWorkflowSwitcherUseCase = jest.fn();
   const openWorkflowSettingsUseCase = jest.fn();
-  const addWorkflowUseCase = opts?.mockAddWorkflowUseCase || createAddWorkflowUseCase({appStore, idGenerator: () => newWorkflowId});
+  const createWorkflowSubCase = createCreateWorkflowSubCase({idGenerator: () => newWorkflowId})
+  const addWorkflowUseCase = opts?.mockAddWorkflowUseCase || createAddWorkflowUseCase({appStore, createWorkflowSubCase });
   const renameWorkflowUseCase = jest.fn();
   const deleteWorkflowUseCase = jest.fn();
   const showContextMenuUseCase = jest.fn();
