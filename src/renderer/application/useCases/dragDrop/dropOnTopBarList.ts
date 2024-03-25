@@ -8,19 +8,26 @@ import { removeLayoutItem } from '@/base/widgetLayout';
 import { createListItem } from '@/base/widgetList';
 import { mapIdListToEntityList, moveEntityInList } from '@/base/entityList';
 import { AppStore } from '@/application/interfaces/store';
-import { addWidgetToAppState, dragDropStateActions, entityStateActions } from '@/base/state/actions';
+import { dragDropStateActions, entityStateActions } from '@/base/state/actions';
 import { CloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
 import { addOneToEntityCollection, getOneFromEntityCollection } from '@/base/entityCollection';
+import { CreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
+import { generateWidgetName } from '@/base/widget';
+import { AddItemToWidgetListSubCase } from '@/application/useCases/shelf/subs/addItemToWidgetList';
 
 type Deps = {
   appStore: AppStore;
   idGenerator: IdGenerator;
   cloneWidgetToWidgetListSubCase: CloneWidgetToWidgetListSubCase;
+  addItemToWidgetListSubCase: AddItemToWidgetListSubCase;
+  createWidgetSubCase: CreateWidgetSubCase;
 }
 export function createDropOnTopBarListUseCase({
   appStore,
   idGenerator,
   cloneWidgetToWidgetListSubCase,
+  addItemToWidgetListSubCase,
+  createWidgetSubCase,
 }: Deps) {
   const dropOnTopBarListUseCase = async (targetListItemId: string | null) => {
     let state = appStore.get();
@@ -29,11 +36,26 @@ export function createDropOnTopBarListUseCase({
       const { widgetList } = state.ui.shelf;
       if (draggingFrom.palette) {
         if (draggingFrom.palette.widgetTypeId) {
-          [state] = addWidgetToAppState(state, {
-            type: 'shelf',
-            newListItemId: idGenerator(),
-            targetListItemId
-          }, draggingFrom.palette.widgetTypeId, idGenerator())
+          const widgetType = getOneFromEntityCollection(state.entities.widgetTypes, draggingFrom.palette.widgetTypeId);
+          if (widgetType) {
+            const newWidget = createWidgetSubCase(widgetType, generateWidgetName(widgetType.name, mapIdListToEntityList(state.entities.widgets, widgetList.map(item => item.widgetId)).map(item => item?.coreSettings.name || '')))
+            const newWidgetList = addItemToWidgetListSubCase(newWidget.id, widgetList, targetListItemId)
+
+            state = {
+              ...state,
+              entities: {
+                ...state.entities,
+                widgets: addOneToEntityCollection(state.entities.widgets, newWidget)
+              },
+              ui: {
+                ...state.ui,
+                shelf: {
+                  ...state.ui.shelf,
+                  widgetList: newWidgetList
+                }
+              }
+            };
+          }
         } else if (draggingFrom.palette.widgetCopyId) {
           const widgetCopyEntity = getOneFromEntityCollection(state.ui.copy.widgets.entities, draggingFrom.palette.widgetCopyId);
           if (widgetCopyEntity) {

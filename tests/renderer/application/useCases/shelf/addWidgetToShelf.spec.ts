@@ -3,8 +3,10 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { createAddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
-import { addWidgetToAppState } from '@/base/state/actions';
+import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/subs/addItemToWidgetList';
+import { createCreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
 import { AppState } from '@/base/state/app';
 import { fixtureWidgetListItemA, fixtureWidgetListItemB } from '@tests/base/fixtures/widgetList';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
@@ -12,25 +14,26 @@ import { fixtureWidgetTypeAInColl, fixtureWidgetAInColl } from '@tests/base/stat
 import { fixtureShelf } from '@tests/base/state/fixtures/shelf';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
-const newItemId = 'NEW-ITEM-ID';
-
-jest.mock('@/base/state/actions', () => {
-  const actual = jest.requireActual('@/base/state/actions');
-  return {
-    ...actual,
-    addWidgetToAppState: jest.fn(actual.addWidgetToAppState),
-  }
-})
+const newWidgetId = 'NEW-WIDGET-ID';
+const newListItemtId = 'NEW-LIST-ITEM-ID';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
+  const widgetIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newWidgetId)
+  const layoutItemIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newListItemtId)
+  const createWidgetSubCase = createCreateWidgetSubCase({
+    idGenerator: widgetIdGeneratorMock
+  })
+  const addItemToWidgetListSubCase = createAddItemToWidgetListSubCase({
+    idGenerator: layoutItemIdGeneratorMock
+  })
   const addWidgetToShelfUseCase = createAddWidgetToShelfUseCase({
     appStore,
-    idGenerator: () => newItemId,
+    addItemToWidgetListSubCase,
+    createWidgetSubCase,
   });
   return {
     appStore,
-    addWidgetToAppState,
     addWidgetToShelfUseCase
   }
 }
@@ -40,7 +43,7 @@ beforeEach(() => {
 })
 
 describe('addWidgetToShelfUseCase()', () => {
-  it('should correctly add a new widget to the widget list, using addWidgetToAppState', async () => {
+  it('should correctly add a new widget to the widget list', async () => {
     const widgetTypeId = 'WIDGET-TYPE-ID';
     const initState = fixtureAppState({
       entities: {
@@ -59,23 +62,14 @@ describe('addWidgetToShelfUseCase()', () => {
         })
       }
     });
-    const {
-      appStore,
-      addWidgetToAppState,
-      addWidgetToShelfUseCase
-    } = await setup(initState)
-
-    addWidgetToShelfUseCase(widgetTypeId, initState.ui.shelf.widgetList[1].id);
-
-    const gotState = appStore.get();
     const expectState: AppState = {
       ...initState,
       entities: {
         ...initState.entities,
         widgets: {
           ...initState.entities.widgets,
-          [newItemId]: expect.objectContaining({
-            id: newItemId,
+          [newWidgetId]: expect.objectContaining({
+            id: newWidgetId,
             type: widgetTypeId,
           })
         },
@@ -87,16 +81,24 @@ describe('addWidgetToShelfUseCase()', () => {
           widgetList: [
             initState.ui.shelf.widgetList[0],
             expect.objectContaining({
-              id: newItemId,
-              widgetId: newItemId
+              id: newListItemtId,
+              widgetId: newWidgetId
             }),
             initState.ui.shelf.widgetList[1],
           ]
         }
       }
     }
+
+    const {
+      appStore,
+      addWidgetToShelfUseCase
+    } = await setup(initState)
+
+    addWidgetToShelfUseCase(widgetTypeId, initState.ui.shelf.widgetList[1].id);
+
+    const gotState = appStore.get();
     expect(gotState).toEqual(expectState);
-    expect(addWidgetToAppState).toBeCalledTimes(1);
   })
 
   it('should do nothing, if widget type with specified id does not exist', async () => {

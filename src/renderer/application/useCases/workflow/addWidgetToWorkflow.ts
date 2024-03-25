@@ -3,30 +3,58 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
+import { CreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
+import { AddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/addItemToWidgetLayout';
 import { EntityId } from '@/base/entity';
-import { addWidgetToAppState } from '@/base/state/actions';
+import { addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { mapIdListToEntityList } from '@/base/entityList';
+import { generateWidgetName } from '@/base/widget';
+import { WidgetLayoutItemWH, WidgetLayoutItemXY } from '@/base/widgetLayout';
 
 type Deps = {
   appStore: AppStore;
-  idGenerator: IdGenerator;
+  createWidgetSubCase: CreateWidgetSubCase;
+  addItemToWidgetLayoutSubCase: AddItemToWidgetLayoutSubCase;
 }
 export function createAddWidgetToWorkflowUseCase({
   appStore,
-  idGenerator,
+  createWidgetSubCase,
+  addItemToWidgetLayoutSubCase,
 }: Deps) {
-  const addWidgetToWorkflowUseCase = (widgetTypeId: EntityId, toWorkflowId: EntityId) => {
+  const addWidgetToWorkflowUseCase = (widgetTypeId: EntityId, toWorkflowId: EntityId, layoutItemXY?: WidgetLayoutItemXY, layoutItemWH?: WidgetLayoutItemWH) => {
     const state = appStore.get();
-    const [newState, newItem] = addWidgetToAppState(state, {
-      type: 'workflow',
-      newLayoutItemId: idGenerator(),
-      workflowId: toWorkflowId
-    }, widgetTypeId, idGenerator())
-
-    if (newItem) {
-      appStore.set(newState);
+    const widgetType = getOneFromEntityCollection(state.entities.widgetTypes, widgetTypeId);
+    if (!widgetType) {
+      return;
     }
+
+    const toWorkflow = getOneFromEntityCollection(state.entities.workflows, toWorkflowId);
+    if (!toWorkflow) {
+      return;
+    }
+
+    const newWidget = createWidgetSubCase(widgetType, generateWidgetName(widgetType.name, mapIdListToEntityList(state.entities.widgets, toWorkflow.layout.map(item => item.widgetId)).map(item => item?.coreSettings.name || '')))
+    const newWidgetLayout = addItemToWidgetLayoutSubCase(
+      newWidget.id,
+      toWorkflow.layout,
+      layoutItemWH || { w: widgetType.minSize.w, h: widgetType.minSize.h },
+      layoutItemXY
+    )
+
+    appStore.set({
+      ...state,
+      entities: {
+        ...state.entities,
+        widgets: addOneToEntityCollection(state.entities.widgets, newWidget),
+        workflows: updateOneInEntityCollection(state.entities.workflows, {
+          id: toWorkflow.id,
+          changes: {
+            layout: newWidgetLayout
+          }
+        })
+      }
+    });
   }
 
   return addWidgetToWorkflowUseCase;

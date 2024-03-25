@@ -5,18 +5,23 @@
 
 import { createDropOnTopBarListUseCase } from '@/application/useCases/dragDrop/dropOnTopBarList';
 import { AppState } from '@/base/state/app';
-import { addWidgetToAppState } from '@/base/state/actions';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureWidgetAInColl, fixtureWidgetTypeAInColl, fixtureWorkflowAInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromPalettePaste, fixtureDragDropFromTopBarList, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureWidgetListItemA, fixtureWidgetListItemB, fixtureWidgetListItemC } from '@tests/base/fixtures/widgetList';
 import { fixtureWidgetLayoutItemA } from '@tests/base/fixtures/widgetLayout';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { CloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
+import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
 import { fixtureCopyState } from '@tests/base/state/fixtures/copy';
-import { fixtureWidgetA, fixtureWidgetB } from '@tests/base/fixtures/widget';
+import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetCoreSettingsA } from '@tests/base/fixtures/widget';
+import { createCreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
+import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/subs/addItemToWidgetList';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
+import { IdGenerator } from '@/application/interfaces/idGenerator';
+import { Widget } from '@/base/widget';
 
-const newItemId = 'NEW-ITEM-ID';
+const newWidgetId = 'NEW-WIDGET-ID';
+const newListItemId = 'NEW-LIST-ITEM-ID';
 const draggingItemId = 'DRAGGING-ITEM-ID';
 const draggingTypeId = 'DRAGGING-TYPE-ID';
 const draggingItemWidgetId = 'DRAGGING-ITEM-WIDGET-ID';
@@ -24,26 +29,36 @@ const targetItemId = 'TARGET-ITEM-ID';
 const workflowId = 'WORKFLOW-ID';
 const newSettingsState = { widgetProp: 'WIDGET VALUE' }
 
-jest.mock('@/base/state/actions', () => {
-  const actual = jest.requireActual('@/base/state/actions');
-  return {
-    ...actual,
-    addWidgetToAppState: jest.fn(actual.addWidgetToAppState),
-  }
-})
-
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
-  const cloneWidgetToWidgetListSubCase: jest.MockedFn<CloneWidgetToWidgetListSubCase> = jest.fn();
+  const listItemIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newListItemId)
+  const widgetIdGeneratorMock: jest.MockedFn<IdGenerator> = jest.fn().mockImplementation(() => newWidgetId)
+  const cloneWidgetSubCase = createCloneWidgetSubCase({
+    idGenerator: widgetIdGeneratorMock,
+    widgetDataStorageManager: {
+      copyObjectData: jest.fn(),
+      getObject: jest.fn()
+    }
+  })
+  const addItemToWidgetListSubCase = createAddItemToWidgetListSubCase({
+    idGenerator: listItemIdGeneratorMock
+  })
+  const cloneWidgetToWidgetListSubCase = createCloneWidgetToWidgetListSubCase({
+    addItemToWidgetListSubCase,
+    cloneWidgetSubCase,
+  })
+  const createWidgetSubCase = createCreateWidgetSubCase({
+    idGenerator: widgetIdGeneratorMock
+  })
   const dropOnTopBarListUseCase = createDropOnTopBarListUseCase({
     appStore,
-    idGenerator: () => newItemId,
-    cloneWidgetToWidgetListSubCase
+    addItemToWidgetListSubCase,
+    createWidgetSubCase,
+    cloneWidgetToWidgetListSubCase,
+    idGenerator: listItemIdGeneratorMock
   });
   return {
     appStore,
-    addWidgetToAppState,
-    cloneWidgetToWidgetListSubCase,
     dropOnTopBarListUseCase
   }
 }
@@ -250,7 +265,7 @@ describe('await dropOnTopBarListUseCase()', () => {
           ...initState.ui,
           dragDrop: {},
           shelf: {
-            widgetList: [{ id: newItemId, widgetId: draggingItemWidgetId }, ...initState.ui.shelf.widgetList]
+            widgetList: [{ id: newListItemId, widgetId: draggingItemWidgetId }, ...initState.ui.shelf.widgetList]
           }
         }
       };
@@ -307,7 +322,7 @@ describe('await dropOnTopBarListUseCase()', () => {
           ...initState.ui,
           dragDrop: {},
           shelf: {
-            widgetList: [...initState.ui.shelf.widgetList, { id: newItemId, widgetId: draggingItemWidgetId }]
+            widgetList: [...initState.ui.shelf.widgetList, { id: newListItemId, widgetId: draggingItemWidgetId }]
           }
         }
       };
@@ -364,7 +379,7 @@ describe('await dropOnTopBarListUseCase()', () => {
           ...initState.ui,
           dragDrop: {},
           shelf: {
-            widgetList: [...initState.ui.shelf.widgetList, { id: newItemId, widgetId: draggingItemWidgetId }]
+            widgetList: [...initState.ui.shelf.widgetList, { id: newListItemId, widgetId: draggingItemWidgetId }]
           }
         }
       };
@@ -413,7 +428,7 @@ describe('await dropOnTopBarListUseCase()', () => {
   })
 
   describe('when dragging item from Palette (Add list) and target item exist', () => {
-    it('should correctly update State, using addWidgetToAppState', async () => {
+    it('should correctly update State', async () => {
       const existingWidgetId = 'EXISTING-WIDGET';
       const initState = fixtureAppState({
         entities: {
@@ -440,7 +455,6 @@ describe('await dropOnTopBarListUseCase()', () => {
       });
       const {
         appStore,
-        addWidgetToAppState,
         dropOnTopBarListUseCase
       } = await setup(initState)
 
@@ -453,11 +467,11 @@ describe('await dropOnTopBarListUseCase()', () => {
           ...initState.entities,
           widgets: {
             ...initState.entities.widgets,
-            [newItemId]: {
-              id: newItemId,
+            [newWidgetId]: {
+              id: newWidgetId,
               type: draggingTypeId,
               settings: newSettingsState,
-              coreSettings: gotState.entities.widgets[newItemId]!.coreSettings,
+              coreSettings: gotState.entities.widgets[newWidgetId]!.coreSettings,
             }
           }
         },
@@ -465,18 +479,17 @@ describe('await dropOnTopBarListUseCase()', () => {
           ...initState.ui,
           dragDrop: {},
           shelf: {
-            widgetList: [{ id: newItemId, widgetId: newItemId }, ...initState.ui.shelf.widgetList]
+            widgetList: [{ id: newListItemId, widgetId: newWidgetId }, ...initState.ui.shelf.widgetList]
           }
         }
       }
       expect(gotState).toEqual(expectState);
-      expect(addWidgetToAppState).toBeCalledTimes(1);
     })
 
   })
 
   describe('when dragging an item from Palette (Add list) and target item with specified id does not exist', () => {
-    it('should correctly update State, using addWidgetToAppState', async () => {
+    it('should correctly update State', async () => {
       const existingWidgetId = 'EXISTING-WIDGET';
       const initState = fixtureAppState({
         entities: {
@@ -503,7 +516,6 @@ describe('await dropOnTopBarListUseCase()', () => {
       });
       const {
         appStore,
-        addWidgetToAppState,
         dropOnTopBarListUseCase
       } = await setup(initState)
 
@@ -516,11 +528,11 @@ describe('await dropOnTopBarListUseCase()', () => {
           ...initState.entities,
           widgets: {
             ...initState.entities.widgets,
-            [newItemId]: {
-              id: newItemId,
+            [newWidgetId]: {
+              id: newWidgetId,
               type: draggingTypeId,
               settings: newSettingsState,
-              coreSettings: gotState.entities.widgets[newItemId]!.coreSettings,
+              coreSettings: gotState.entities.widgets[newWidgetId]!.coreSettings,
             }
           }
         },
@@ -528,17 +540,16 @@ describe('await dropOnTopBarListUseCase()', () => {
           ...initState.ui,
           dragDrop: {},
           shelf: {
-            widgetList: [...initState.ui.shelf.widgetList, { id: newItemId, widgetId: newItemId }]
+            widgetList: [...initState.ui.shelf.widgetList, { id: newListItemId, widgetId: newWidgetId }]
           }
         }
       };
       expect(gotState).toEqual(expectState);
-      expect(addWidgetToAppState).toBeCalledTimes(1);
     })
   })
 
   describe('when dragging an item from Palette (Add list) and target item === null', () => {
-    it('should correctly update DragDrop State, using addWidgetToAppState', async () => {
+    it('should correctly update DragDrop State', async () => {
       const existingWidgetId = 'EXISTING-WIDGET';
       const initState = fixtureAppState({
         entities: {
@@ -563,26 +574,19 @@ describe('await dropOnTopBarListUseCase()', () => {
           }
         }
       });
-      const {
-        appStore,
-        addWidgetToAppState,
-        dropOnTopBarListUseCase
-      } = await setup(initState)
-
-      await dropOnTopBarListUseCase(null);
-
-      const gotState = appStore.get();
       const expectState: AppState = {
         ...initState,
         entities: {
           ...initState.entities,
           widgets: {
             ...initState.entities.widgets,
-            [newItemId]: {
-              id: newItemId,
+            [newWidgetId]: {
+              id: newWidgetId,
               type: draggingTypeId,
               settings: newSettingsState,
-              coreSettings: gotState.entities.widgets[newItemId]!.coreSettings,
+              coreSettings: fixtureWidgetCoreSettingsA({
+                name: initState.entities.widgetTypes[draggingTypeId]!.name + ' 1'
+              })
             }
           }
         },
@@ -590,12 +594,19 @@ describe('await dropOnTopBarListUseCase()', () => {
           ...initState.ui,
           dragDrop: {},
           shelf: {
-            widgetList: [...initState.ui.shelf.widgetList, { id: newItemId, widgetId: newItemId }]
+            widgetList: [...initState.ui.shelf.widgetList, { id: newListItemId, widgetId: newWidgetId }]
           }
         }
       };
+      const {
+        appStore,
+        dropOnTopBarListUseCase
+      } = await setup(initState)
+
+      await dropOnTopBarListUseCase(null);
+
+      const gotState = appStore.get();
       expect(gotState).toEqual(expectState);
-      expect(addWidgetToAppState).toBeCalledTimes(1);
     })
   })
 
@@ -649,32 +660,34 @@ describe('await dropOnTopBarListUseCase()', () => {
   })
 
   describe('when dragging item from Palette (Paste list) and the copy item exists', () => {
-    it('should reset DragDrop State and update Widgets/Shelf state with values returned by cloneWidgetToWidgetListSubCase', async () => {
-      const widgetA = fixtureWidgetA();
-      const widgetB = fixtureWidgetB();
-      const listItemA = fixtureWidgetListItemA({ widgetId: widgetA.id });
+    it('should reset DragDrop State and correctly update Widgets/Shelf state', async () => {
+      const copiedWidget = fixtureWidgetA({ coreSettings: fixtureWidgetCoreSettingsA({ name: 'Some Widget' }) })
+      const widgetOnList = fixtureWidgetB({ coreSettings: fixtureWidgetCoreSettingsA({ name: 'Some Widget Copy 1' }) });
+      const newWidget: Widget = { ...copiedWidget, id: newWidgetId, coreSettings: fixtureWidgetCoreSettingsA({ name: copiedWidget.coreSettings.name + ' Copy 2' }) };
+      const listItemA = fixtureWidgetListItemA({ widgetId: widgetOnList.id });
+      const newList = [fixtureWidgetListItemB({ id: newListItemId, widgetId: newWidget.id }), listItemA]
       const initState = fixtureAppState({
         entities: {
           widgets: {
-            [widgetA.id]: widgetA
+            [widgetOnList.id]: widgetOnList
           },
         },
         ui: {
           copy: fixtureCopyState({
             widgets: {
               entities: {
-                [widgetB.id]: {
+                [copiedWidget.id]: {
                   deps: {},
-                  entity: widgetB,
-                  id: widgetB.id
+                  entity: copiedWidget,
+                  id: copiedWidget.id
                 }
               },
-              list: [widgetB.id]
+              list: [copiedWidget.id]
             }
           }),
           dragDrop: {
             ...fixtureDragDropFromPalettePaste({
-              widgetCopyId: widgetB.id
+              widgetCopyId: copiedWidget.id
             })
           },
           shelf: {
@@ -682,14 +695,6 @@ describe('await dropOnTopBarListUseCase()', () => {
           }
         }
       });
-      const {
-        appStore,
-        dropOnTopBarListUseCase,
-        cloneWidgetToWidgetListSubCase
-      } = await setup(initState)
-      const newWidget = widgetB;
-      const newList = [listItemA, fixtureWidgetListItemB({ widgetId: newWidget.id })]
-      cloneWidgetToWidgetListSubCase.mockResolvedValueOnce([newWidget, newList])
       const expectState: AppState = {
         ...initState,
         entities: {
@@ -708,10 +713,13 @@ describe('await dropOnTopBarListUseCase()', () => {
           }
         }
       };
+      const {
+        appStore,
+        dropOnTopBarListUseCase,
+      } = await setup(initState)
 
       await dropOnTopBarListUseCase(listItemA.id);
 
-      expect(cloneWidgetToWidgetListSubCase).toBeCalledWith(widgetB, initState.ui.shelf.widgetList, [widgetA.coreSettings.name], listItemA.id);
       expect(appStore.get()).toEqual(expectState);
     })
   })

@@ -19,9 +19,9 @@ export function createCloneWidgetLayoutItemSubCase({
 }: Deps) {
   async function subCase(
     item: WidgetLayoutItem,
-    deps: WorkflowEntityDeps
+    itemDeps: WorkflowEntityDeps
   ): Promise<[newLayoutItem: WidgetLayoutItem | null, newWidget: Widget | null]> {
-    const wgt = deps.widgets[item.widgetId];
+    const wgt = itemDeps.widgets[item.widgetId];
     if (!wgt) {
       return [null, null]
     }
