@@ -4,12 +4,13 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { deleteProjectsSubCase } from '@/application/useCases/project/subs/deleteProjects';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
-import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';
-import { deleteProjectsFromAppState, modalScreensStateActions } from '@/base/state/actions';
+import { modalScreensStateActions } from '@/base/state/actions';
 import { generateWorkflowName } from '@/base/workflow';
 
 type Deps = {
@@ -67,7 +68,36 @@ export function createSaveChangesInProjectManagerUseCase({
 
       const projectIdsToDel = Object.entries(deleteProjectIds).filter(item => item[1]).map(item => item[0]);
       if (projectIdsToDel.length > 0) {
-        state = deleteProjectsFromAppState(state, projectIdsToDel);
+        const [
+          updProjectIdsList,
+          updCurrentProjectId,
+          delProjectIds,
+          delWorkflowIds,
+          delWidgetIds
+        ] = deleteProjectsSubCase(
+          projectIdsToDel,
+          state.ui.projectSwitcher.projectIds,
+          state.ui.projectSwitcher.currentProjectId,
+          state.entities.projects,
+          state.entities.workflows
+        )
+        state = {
+          ...state,
+          ui: {
+            ...state.ui,
+            projectSwitcher: {
+              ...state.ui.projectSwitcher,
+              currentProjectId: updCurrentProjectId,
+              projectIds: updProjectIdsList
+            }
+          },
+          entities: {
+            ...state.entities,
+            projects: removeManyFromEntityCollection(state.entities.projects, delProjectIds),
+            widgets: removeManyFromEntityCollection(state.entities.widgets, delWidgetIds),
+            workflows: removeManyFromEntityCollection(state.entities.workflows, delWorkflowIds)
+          },
+        };
       }
 
       const arrToIdFromId = Object.entries(duplicateProjectIds);

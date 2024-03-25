@@ -11,7 +11,6 @@ import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { fixtureProjectA, fixtureProjectB, fixtureProjectC, fixtureProjectD, fixtureProjectSettingsA } from '@tests/base/fixtures/project';
 import { fixtureProjectAInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
-import { deleteProjectsFromAppState } from '@/base/state/actions';
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowSettingsA, fixtureWorkflowSettingsB } from '@tests/base/fixtures/workflow';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
@@ -27,13 +26,6 @@ import { WidgetLayoutItem } from '@/base/widgetLayout';
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 
 const newItemId = 'NEW-ITEM-ID';
-jest.mock('@/base/state/actions', () => {
-  const actual = jest.requireActual<typeof import('@/base/state/actions')>('@/base/state/actions');
-  return {
-    ...actual,
-    deleteProjectsFromAppState: jest.fn(actual.deleteProjectsFromAppState)
-  }
-})
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
@@ -67,7 +59,6 @@ async function setup(initState: AppState) {
 
   return {
     appStore,
-    deleteProjectsFromAppState,
     saveChangesInProjectManagerUseCase,
     workflowIdGeneratorMock,
     widgetLayoutItemIdGeneratorMock,
@@ -387,54 +378,6 @@ describe('saveChangesInProjectManagerUseCase()', () => {
 
     expect(appStore.get()).toEqual(expectState);
   });
-
-  it('should not update state with deleteProjectsFromAppState, when there are no marked projects', async () => {
-    const projectA = fixtureProjectA();
-    const projectB = fixtureProjectB();
-    const updProjectA = fixtureProjectA({
-      settings: fixtureProjectSettingsA({ name: 'New Name' })
-    })
-    const initState = fixtureAppState({
-      entities: {
-        projects: {
-          [projectA.id]: projectA,
-          [projectB.id]: projectB,
-        }
-      },
-      ui: {
-        projectSwitcher: fixtureProjectSwitcher({
-          projectIds: [projectA.id, projectB.id],
-          currentProjectId: projectA.id
-        }),
-        modalScreens: fixtureModalScreens({
-          data: fixtureModalScreensData({
-            projectManager: fixtureProjectManager({
-              projects: {
-                [projectA.id]: updProjectA,
-                [projectB.id]: projectB,
-              },
-              currentProjectId: projectA.id,
-              projectIds: [projectB.id, projectA.id],
-              deleteProjectIds: {
-                [projectB.id]: false,
-              },
-              duplicateProjectIds: {}
-            })
-          }),
-          order: ['about', 'projectManager']
-        })
-      }
-    })
-
-    const {
-      deleteProjectsFromAppState,
-      saveChangesInProjectManagerUseCase
-    } = await setup(initState)
-
-    await saveChangesInProjectManagerUseCase();
-
-    expect(deleteProjectsFromAppState).not.toBeCalled()
-  })
 
   it('should correctly clone workflows for duplicate projects ids, when there are duplicate projects', async () => {
     const widgetA = fixtureWidgetA();

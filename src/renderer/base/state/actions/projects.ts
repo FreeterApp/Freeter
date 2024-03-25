@@ -15,7 +15,7 @@ import { AppState } from '@/base/state/app';
  * @param projectIdsToDel ids of the projects to delete
  * @returns updated AppState
  */
-export function deleteProjectsFromAppState(appState: AppState, projectIdsToDel: EntityId[]): AppState {
+function deleteProjectsFromAppState(appState: AppState, projectIdsToDel: EntityId[]): AppState {
   let { currentProjectId, projectIds } = appState.ui.projectSwitcher;
   const delProjectIds: EntityId[] = [];
   for (const projectId of projectIdsToDel) {
