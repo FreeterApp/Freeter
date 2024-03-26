@@ -6,7 +6,7 @@
 import { dragDropStateActions } from '@/base/state/actions';
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
-import { fixtureDragDropFromPalette, fixtureDragDropFromTopBarList, fixtureDragDropOverTopBarList, fixtureDragDropOverWorktableLayout } from '@tests/base/state/fixtures/dragDropState';
+import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromTopBarList, fixtureDragDropOverTopBarList, fixtureDragDropOverWorktableLayout } from '@tests/base/state/fixtures/dragDropState';
 
 describe('dragDropStateActions', () => {
   it('should allow to reset the dragdrop state', () => {
@@ -69,7 +69,7 @@ describe('dragDropStateActions', () => {
     const dragState2 = fixtureAppState({
       ui: {
         dragDrop: {
-          ...fixtureDragDropFromPalette(),
+          ...fixtureDragDropFromPaletteAdd(),
           ...fixtureDragDropOverWorktableLayout()
         }
       }

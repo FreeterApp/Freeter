@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { addItemToList, findIndexOrUndef, moveItemInList, removeItemFromList } from '@/base/list';
+import { addItemToList, addOrMoveItemInList, findIndexOrUndef, limitListLength, moveItemInList, removeItemFromList } from '@/base/list';
 
 describe('List', () => {
   describe('addItemToList()', () => {
@@ -135,7 +135,19 @@ describe('List', () => {
       expect(gotIdx).toBe(1);
     })
 
-    it('should return undefinex, if the item does not exist on the list', () => {
+    it('should return undefined, if the item is undefined', () => {
+      const list = [
+        'A',
+        undefined,
+        'C'
+      ];
+
+      const gotIdx = findIndexOrUndef(list, undefined);
+
+      expect(gotIdx).toBeUndefined();
+    })
+
+    it('should return undefined, if the item does not exist on the list', () => {
       const list = [
         'A',
         'B',
@@ -145,6 +157,64 @@ describe('List', () => {
       const gotIdx = findIndexOrUndef(list, 'D');
 
       expect(gotIdx).toBeUndefined();
+    })
+  })
+
+  describe('addOrMoveItemInList()', () => {
+    it('should add the item to the list at the specified index, when it does not exist', () => {
+      const list = [
+        'A',
+        'B',
+        'C'
+      ];
+      const item = 'D'
+
+      const newList = addOrMoveItemInList(list, item, 2);
+
+      expect(newList).toEqual([list[0], list[1], item, list[2]]);
+    })
+    it('should move the item in the list to the specified index, when it already exists', () => {
+      const list = [
+        'A',
+        'B',
+        'C'
+      ];
+
+      const newList = addOrMoveItemInList(list, list[2], 1);
+
+      expect(newList).toEqual([list[0], list[2], list[1]]);
+    })
+  })
+
+  describe('limitListLength()', () => {
+    it('should remove items at the end of the list to fit the specified length, and return the removed items', () => {
+      const list = [
+        'A',
+        'B',
+        'C',
+        'D',
+        'E'
+      ];
+
+      const [newList, deleted] = limitListLength(list, 3);
+
+      expect(newList).toEqual([list[0], list[1], list[2]]);
+      expect(deleted).toEqual([list[3], list[4]]);
+    })
+
+    it('should do nothing and return empty array of deleted items, when the list fits the specified length', () => {
+      const list = [
+        'A',
+        'B',
+        'C',
+        'D',
+        'E'
+      ];
+
+      const [newList, deleted] = limitListLength(list, 10);
+
+      expect(newList === list).toBe(true);
+      expect(deleted).toEqual([]);
     })
   })
 })

@@ -16,6 +16,7 @@ const widgetType: WidgetType<Settings> = {
     w: 1,
     h: 1
   },
+  description: 'Widget description',
   createSettingsState,
   settingsEditorComp,
   widgetComp,

@@ -5,6 +5,7 @@
 
 import { WidgetComponent } from '@/ui/components/widget';
 import { WidgetByIdProps, WidgetByIdViewModelHook } from '@/ui/components/widget/widgetByIdViewModel';
+import { memo } from 'react';
 
 type Deps = {
   Widget: WidgetComponent;
@@ -15,7 +16,7 @@ export function createWidgetByIdComponent({
   Widget,
   useWidgetByIdViewModel
 }: Deps) {
-  function Component(props: WidgetByIdProps) {
+  function WidgetById(props: WidgetByIdProps) {
 
     const {
       widget,
@@ -29,7 +30,7 @@ export function createWidgetByIdComponent({
     return <Widget widget={widget} {...widgetProps}></Widget>;
   }
 
-  return Component;
+  return memo(WidgetById);
 }
 
 export type WidgetByIdComponent = ReturnType<typeof createWidgetByIdComponent>;

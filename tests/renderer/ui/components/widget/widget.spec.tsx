@@ -40,6 +40,8 @@ async function setup({
   const openWidgetSettingsUseCase = jest.fn();
   const deleteWidgetUseCase = jest.fn();
   const showWidgetContextMenuUseCase = jest.fn();
+  const copyWidgetUseCase = jest.fn();
+  const showContextMenuUseCase = jest.fn();
   const getWidgetApiUseCase = mocks?.getWidgetApiUseCase || (
     (
       _widgetId: string,
@@ -60,7 +62,9 @@ async function setup({
     openWidgetSettingsUseCase,
     deleteWidgetUseCase,
     showWidgetContextMenuUseCase,
-    getWidgetApiUseCase
+    getWidgetApiUseCase,
+    copyWidgetUseCase,
+    showContextMenuUseCase,
   })
   const Widget = createWidgetComponent({
     useWidgetViewModel

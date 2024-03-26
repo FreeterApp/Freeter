@@ -6,8 +6,7 @@
 import { createDragWidgetFromPaletteUseCase } from '@/application/useCases/dragDrop/dragWidgetFromPalette';
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
-import { fixtureDragDropFromPalette, fixtureDragDropOverWorktableLayout } from '@tests/base/state/fixtures/dragDropState';
-import { fixtureWidgetTypeAInColl } from '@tests/base/state/fixtures/entitiesState';
+import { fixtureDragDropFromPaletteAdd, fixtureDragDropOverWorktableLayout } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 const testId = 'TEST-ID';
@@ -24,16 +23,11 @@ async function setup(initState: AppState) {
 }
 
 describe('dragWidgetFromPaletteUseCase()', () => {
-  it('should update DragDrop "dragging widget" state and reset "over" state, if widget type with specified id exists', async () => {
+  it('should set DragDrop "widgetTypeId" state and reset "over" state, if widget type is specified', async () => {
     const initState = fixtureAppState({
-      entities: {
-        widgetTypes: {
-          ...fixtureWidgetTypeAInColl({ id: testId })
-        }
-      },
       ui: {
         dragDrop: {
-          ...fixtureDragDropFromPalette(),
+          ...fixtureDragDropFromPaletteAdd(),
           ...fixtureDragDropOverWorktableLayout()
         }
       }
@@ -52,34 +46,39 @@ describe('dragWidgetFromPaletteUseCase()', () => {
       dragWidgetFromPaletteUseCase
     } = await setup(initState)
 
-    dragWidgetFromPaletteUseCase(testId);
+    dragWidgetFromPaletteUseCase({ widgetTypeId: testId });
 
     const newState = appStore.get();
     expect(newState).toEqual(expectState);
   })
 
-  it('should do nothing, if widget type with specified id does not exist', async () => {
+  it('should set DragDrop "widgetCopyId" state and reset "over" state, if widget type is specified', async () => {
     const initState = fixtureAppState({
-      entities: {
-        widgetTypes: {
-          ...fixtureWidgetTypeAInColl()
-        }
-      },
       ui: {
         dragDrop: {
-          ...fixtureDragDropFromPalette(),
+          ...fixtureDragDropFromPaletteAdd(),
           ...fixtureDragDropOverWorktableLayout()
         }
       }
     });
+    const expectState: AppState = {
+      ...initState,
+      ui: {
+        ...initState.ui,
+        dragDrop: {
+          from: { palette: { widgetCopyId: testId } },
+        }
+      }
+    };
     const {
       appStore,
       dragWidgetFromPaletteUseCase
     } = await setup(initState)
-    const expectState = appStore.get();
 
-    dragWidgetFromPaletteUseCase('NO-SUCH-ID');
+    dragWidgetFromPaletteUseCase({ widgetCopyId: testId });
 
-    expect(appStore.get()).toBe(expectState);
+    const newState = appStore.get();
+    expect(newState).toEqual(expectState);
   })
+
 })

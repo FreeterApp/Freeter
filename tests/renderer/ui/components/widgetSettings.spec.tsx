@@ -16,6 +16,7 @@ import { SettingsEditorReactComponent } from '@/widgets/appModules';
 import { AppState } from '@/base/state/app';
 import userEvent from '@testing-library/user-event';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
+import { memo } from 'react';
 
 const widgetId = 'WIDGET-ID';
 const widgetTypeId = 'WIDGET-TYPE-ID';
@@ -44,7 +45,7 @@ async function setup(
     saveWidgetSettingsUseCase,
   })
 
-  const Widget: WidgetComponent = (props) => <div>{`WIDGET-PREVIEW-${props.widget.settings.prop}`}</div>
+  const Widget: WidgetComponent = memo((props) => <div>{`WIDGET-PREVIEW-${props.widget.settings.prop}`}</div>)
   const WidgetSettings = createWidgetSettingsComponent({
     Widget,
     useWidgetSettingsViewModel

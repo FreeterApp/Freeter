@@ -11,6 +11,7 @@ export const widgetTypes: WidgetType[] = [{
   id: 'WP-A',
   icon: 'wp-a',
   name: 'Widget A',
+  description: 'Widget Description A',
   minSize: {
     w: 1,
     h: 1
@@ -29,6 +30,7 @@ export const widgetTypes: WidgetType[] = [{
   id: 'WP-B',
   icon: 'wp-b',
   name: 'Widget B',
+  description: 'Widget Description B',
   minSize: {
     w: 1,
     h: 1
@@ -47,6 +49,7 @@ export const widgetTypes: WidgetType[] = [{
   id: 'WP-C',
   icon: 'wp-c',
   name: 'Widget C',
+  description: 'Widget Description C',
   minSize: {
     w: 1,
     h: 1
@@ -65,6 +68,7 @@ export const widgetTypes: WidgetType[] = [{
   id: 'WP-D',
   icon: 'wp-d',
   name: 'Widget D',
+  description: 'Widget Description D',
   minSize: {
     w: 1,
     h: 1

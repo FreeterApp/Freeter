@@ -3,26 +3,32 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
-import { getOneFromEntityCollection } from '@/base/entityCollection';
+import { deleteProjectsSubCase } from '@/application/useCases/project/subs/deleteProjects';
+import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
+import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
+import { EntityId } from '@/base/entity';
+import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';
-import { addWorkflowToAppState, deleteProjectsFromAppState, modalScreensStateActions } from '@/base/state/actions';
+import { modalScreensStateActions } from '@/base/state/actions';
+import { generateWorkflowName } from '@/base/workflow';
 
 type Deps = {
   appStore: AppStore;
-  idGenerator: IdGenerator;
+  cloneWorkflowSubCase: CloneWorkflowSubCase;
+  createWorkflowSubCase: CreateWorkflowSubCase;
 }
 export function createSaveChangesInProjectManagerUseCase({
   appStore,
-  idGenerator,
+  cloneWorkflowSubCase,
+  createWorkflowSubCase,
 }: Deps) {
-  const useCase = () => {
+  const useCase = async () => {
     let state = appStore.get();
     const prevProjects = state.entities.projects;
-    const { deleteProjectIds, projectIds, projects } = state.ui.modalScreens.data.projectManager;
+    const { deleteProjectIds, projectIds, projects, duplicateProjectIds } = state.ui.modalScreens.data.projectManager;
 
-    if (projects !== null && projectIds !== null && deleteProjectIds !== null) {
+    if (projects !== null && projectIds !== null && deleteProjectIds !== null && duplicateProjectIds !== null) {
       state = {
         ...state,
         entities: {
@@ -40,14 +46,100 @@ export function createSaveChangesInProjectManagerUseCase({
       state = modalScreensStateActions.closeModalScreen(state, 'projectManager');
 
       for (const prjId of projectIds) {
-        if (!getOneFromEntityCollection(prevProjects, prjId)) { // newly added project
-          state = addWorkflowToAppState(state, prjId, idGenerator())[0];
+        // init a workflow for each newly added, non-duplicate project
+        if (!getOneFromEntityCollection(prevProjects, prjId) && !duplicateProjectIds[prjId]) {
+          const newWorkflow = createWorkflowSubCase(generateWorkflowName([]))
+          state = {
+            ...state,
+            entities: {
+              ...state.entities,
+              projects: updateOneInEntityCollection(state.entities.projects, {
+                id: prjId,
+                changes: {
+                  currentWorkflowId: newWorkflow.id,
+                  workflowIds: [newWorkflow.id]
+                }
+              }),
+              workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow)
+            },
+          }
         }
       }
 
       const projectIdsToDel = Object.entries(deleteProjectIds).filter(item => item[1]).map(item => item[0]);
       if (projectIdsToDel.length > 0) {
-        state = deleteProjectsFromAppState(state, projectIdsToDel);
+        const [
+          updProjectIdsList,
+          updCurrentProjectId,
+          delProjectIds,
+          delWorkflowIds,
+          delWidgetIds
+        ] = deleteProjectsSubCase(
+          projectIdsToDel,
+          state.ui.projectSwitcher.projectIds,
+          state.ui.projectSwitcher.currentProjectId,
+          state.entities.projects,
+          state.entities.workflows
+        )
+        state = {
+          ...state,
+          ui: {
+            ...state.ui,
+            projectSwitcher: {
+              ...state.ui.projectSwitcher,
+              currentProjectId: updCurrentProjectId,
+              projectIds: updProjectIdsList
+            }
+          },
+          entities: {
+            ...state.entities,
+            projects: removeManyFromEntityCollection(state.entities.projects, delProjectIds),
+            widgets: removeManyFromEntityCollection(state.entities.widgets, delWidgetIds),
+            workflows: removeManyFromEntityCollection(state.entities.workflows, delWorkflowIds)
+          },
+        };
+      }
+
+      const arrToIdFromId = Object.entries(duplicateProjectIds);
+      if (arrToIdFromId.length > 0) {
+        for (const [toPrjId, fromPrjId] of arrToIdFromId) {
+          const { projects, workflows } = state.entities;
+          const fromPrj = projects[fromPrjId];
+          const toPrj = projects[toPrjId];
+          if (fromPrj && toPrj) {
+            const newWorkflowIds: EntityId[] = [];
+            for (const wflId of fromPrj.workflowIds) {
+              const wfl = workflows[wflId];
+              if (wfl) {
+                const [newWfl, newWgts] = await cloneWorkflowSubCase(wfl, state.entities);
+                newWorkflowIds.push(newWfl.id);
+                state = {
+                  ...state,
+                  entities: {
+                    ...state.entities,
+                    workflows: addOneToEntityCollection(state.entities.workflows, newWfl),
+                    widgets: addManyToEntityCollection(state.entities.widgets, newWgts)
+                  }
+                }
+              }
+            }
+            if (newWorkflowIds.length > 0) {
+              state = {
+                ...state,
+                entities: {
+                  ...state.entities,
+                  projects: updateOneInEntityCollection(state.entities.projects, {
+                    id: toPrjId,
+                    changes: {
+                      workflowIds: [...toPrj.workflowIds, ...newWorkflowIds],
+                      currentWorkflowId: newWorkflowIds[0]
+                    }
+                  })
+                }
+              }
+            }
+          }
+        }
       }
 
       if (findIdIndexOnList(state.ui.projectSwitcher.projectIds, state.ui.projectSwitcher.currentProjectId) < 0) {

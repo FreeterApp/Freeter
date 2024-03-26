@@ -5,9 +5,13 @@
 
 export interface ObjectManager<T> {
   getObject(id: string): Promise<T>;
+  copyObjectData(fromId: string, toId: string): Promise<boolean>;
 }
 
-export function createObjectManager<T>(objectFactory: (id: string) => Promise<T>): ObjectManager<T> {
+export function createObjectManager<T>(
+  objectFactory: (id: string) => Promise<T>,
+  objectDataCopier: (fromId: string, toId: string) => Promise<boolean>
+): ObjectManager<T> {
   const items: Record<string, Promise<T>> = {};
 
   return {
@@ -16,6 +20,7 @@ export function createObjectManager<T>(objectFactory: (id: string) => Promise<T>
         items[id] = objectFactory(id);
       }
       return items[id];
-    }
+    },
+    copyObjectData: objectDataCopier
   }
 }

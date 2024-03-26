@@ -7,8 +7,9 @@ import { ActionBarProps, useActionBarViewModel } from '@/ui/components/basic/act
 import clsx from 'clsx';
 import styles from './actionBar.module.scss';
 import { Button } from '@/ui/components/basic/button';
+import { memo } from 'react';
 
-export const ActionBar = (props: ActionBarProps) => {
+export const ActionBar = memo(function ActionBar(props: ActionBarProps) {
   const {
     actionBarItems,
     onActionBarItemClick,
@@ -42,4 +43,4 @@ export const ActionBar = (props: ActionBarProps) => {
     ))}
     </ul>
   )
-}
+})

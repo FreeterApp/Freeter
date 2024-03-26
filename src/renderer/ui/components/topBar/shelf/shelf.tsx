@@ -7,6 +7,7 @@ import { ShelfItemComponent } from '@/ui/components/topBar/shelf/shelfItem';
 import { ShelfViewModelHook } from '@/ui/components/topBar/shelf/shelfViewModel';
 import clsx from 'clsx';
 import styles from './shelf.module.scss';
+import { memo } from 'react';
 
 type Deps = {
   ShelfItem: ShelfItemComponent;
@@ -39,6 +40,8 @@ export function createShelfComponent({
       onDragOver,
       onDrop,
       onScroll,
+      onContextMenu,
+      onItemContextMenu,
     } = useShelfViewModel();
 
     return (
@@ -53,6 +56,7 @@ export function createShelfComponent({
         onDragOver={onDragOver}
         onDrop={onDrop}
         onScroll={onScroll}
+        onContextMenu={onContextMenu}
       >
       {widgetList.map((item, orderNum) => {
         const widget = widgetsById[item.widgetId];
@@ -74,11 +78,12 @@ export function createShelfComponent({
           onDragLeave={onItemDragLeave}
           onDragOver={onItemDragOver}
           onDrop={onItemDrop}
+          onContextMenu={onItemContextMenu}
         />
       })}
       </ul>
     )
   }
 
-  return Shelf;
+  return memo(Shelf);
 }

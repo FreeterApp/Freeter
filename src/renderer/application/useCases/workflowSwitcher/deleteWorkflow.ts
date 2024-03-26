@@ -5,9 +5,9 @@
 
 import { DialogProvider } from '@/application/interfaces/dialogProvider';
 import { AppStore } from '@/application/interfaces/store';
+import { deleteWorkflowsSubCase } from '@/application/useCases/workflow/subs/deleteWorkflows';
 import { EntityId } from '@/base/entity';
-import { getOneFromEntityCollection } from '@/base/entityCollection';
-import { deleteWorkflowsFromAppState } from '@/base/state/actions';
+import { getOneFromEntityCollection, removeManyFromEntityCollection, setOneInEntityCollection } from '@/base/entityCollection';
 
 type Deps = {
   appStore: AppStore;
@@ -26,7 +26,16 @@ export function createDeleteWorkflowUseCase({
       if (currentProject) {
         const dialogRes = await dialog.showMessageBox({ message: `Are you sure you want to delete the "${workflow.settings.name}" workflow?`, buttons: ['Ok', 'Cancel'], cancelId: 1, defaultId: 1, type: 'warning' })
         if (dialogRes.response === 0) {
-          appStore.set(deleteWorkflowsFromAppState(state, currentProjectId, [workflowId]));
+          const [updatedOwnerProject, deletedWorkflowIds, deletedWidgetIds] = deleteWorkflowsSubCase([workflow], currentProject)
+          appStore.set({
+            ...state,
+            entities: {
+              ...state.entities,
+              projects: setOneInEntityCollection(state.entities.projects, updatedOwnerProject),
+              widgets: removeManyFromEntityCollection(state.entities.widgets, deletedWidgetIds),
+              workflows: removeManyFromEntityCollection(state.entities.workflows, deletedWorkflowIds)
+            },
+          });
         }
       }
     }

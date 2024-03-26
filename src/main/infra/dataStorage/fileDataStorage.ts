@@ -3,10 +3,11 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { mkdir, rm, readFile, writeFile, readdir, stat, unlink } from 'node:fs/promises';
+import { mkdir, rm, readFile, writeFile, readdir, stat, unlink, cp } from 'node:fs/promises';
 import { join, normalize } from 'node:path';
 
 import { DataStorage } from '@common/application/interfaces/dataStorage';
+import { existsSync } from 'node:original-fs';
 
 async function getAllKeys(normStorageDirPath: string) {
   try {
@@ -91,4 +92,20 @@ export async function createFileDataStorage(dataType: 'string', storageDirPath: 
     clear: async () => await clearStorage(normStorageDirPath),
     getKeys: async () => (await getAllKeys(normStorageDirPath) || [])
   }
+}
+
+export async function copyFileDataStorage(fromStorageDirPath: string, toStorageDirPath: string): Promise<boolean> {
+  const normFromStorageDirPath = normalize(fromStorageDirPath);
+  if (!existsSync(normFromStorageDirPath)) {
+    return true;
+  }
+  const normToStorageDirPath = normalize(toStorageDirPath);
+  try {
+    await mkdir(normToStorageDirPath, { recursive: true });
+    await cp(normFromStorageDirPath, normToStorageDirPath, { recursive: true });
+  } catch (err) {
+    return false;
+  }
+
+  return true;
 }

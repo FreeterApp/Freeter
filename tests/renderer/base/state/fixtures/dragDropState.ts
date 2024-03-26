@@ -6,8 +6,11 @@
 import { DragDropFromPaletteState, DragDropFromTopBarListState, DragDropFromWorkflowSwitcherState, DragDropFromWorktableLayoutState, DragDropOverTopBarListState, DragDropOverWorkflowSwitcherState, DragDropOverWorktableLayoutState, DragDropState } from '@/base/state/ui'
 import { deepFreeze } from '@common/helpers/deepFreeze'
 
-const dragDropFromPalette: DragDropFromPaletteState = {
+const dragDropFromPaletteAdd: DragDropFromPaletteState = {
   widgetTypeId: 'SOME-WIDGET-TYPE'
+}
+const dragDropFromPalettePaste: DragDropFromPaletteState = {
+  widgetCopyId: 'SOME-WIDGET-TYPE'
 }
 const dragDropFromTopBarList: DragDropFromTopBarListState = {
   listItemId: 'SOME-LIST-ITEM', widgetId: 'SOME-WIDGET'
@@ -29,10 +32,18 @@ const dragDropOverWorktableLayout: DragDropOverWorktableLayoutState = {
 }
 
 export const fixtureDragDropNotDragging = (): DragDropState => deepFreeze({});
-export const fixtureDragDropFromPalette = (testData?: Partial<DragDropFromPaletteState>): DragDropState => deepFreeze({
+export const fixtureDragDropFromPaletteAdd = (testData?: Partial<DragDropFromPaletteState>): DragDropState => deepFreeze({
   from: {
     palette: {
-      ...dragDropFromPalette,
+      ...dragDropFromPaletteAdd,
+      ...testData
+    }
+  }
+})
+export const fixtureDragDropFromPalettePaste = (testData?: Partial<DragDropFromPaletteState>): DragDropState => deepFreeze({
+  from: {
+    palette: {
+      ...dragDropFromPalettePaste,
       ...testData
     }
   }

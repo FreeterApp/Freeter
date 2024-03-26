@@ -7,7 +7,7 @@ import { WidgetLayoutItemComponent } from '@/ui/components/worktable/widgetLayou
 import WidgetLayoutItemGhost from '@/ui/components/worktable/widgetLayout/widgetLayoutItemGhost';
 import { WidgetLayoutViewModel, WidgetLayoutProps } from '@/ui/components/worktable/widgetLayout/widgetLayoutViewModel';
 import clsx from 'clsx';
-import { useRef } from 'react';
+import { memo, useRef } from 'react';
 import styles from './widgetLayout.module.scss';
 import { InAppNote } from '@/ui/components/basic/inAppNote';
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
@@ -46,6 +46,7 @@ export function createWidgetLayoutComponent({
       onItemResizeStart,
       onItemResize,
       onItemResizeEnd,
+      onContextMenu,
     } = useWidgetLayoutViewModel(layoutEl, props);
 
     return componentMounted ? (<>
@@ -67,6 +68,7 @@ export function createWidgetLayoutComponent({
         onDragOver={onDragOver}
         onDrop={onDrop}
         ref={layoutEl}
+        onContextMenu={onContextMenu}
         data-testid="widget-layout"
         {...{ inert: !isVisible ? '' : undefined }}
       >
@@ -108,5 +110,5 @@ export function createWidgetLayoutComponent({
 
   }
 
-  return WidgetLayoutComponent;
+  return memo(WidgetLayoutComponent);
 }

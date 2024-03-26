@@ -6,7 +6,7 @@
 import { EntityId } from '@/base/entity';
 import { EntityList } from '@/base/entityList';
 import { Project } from '@/base/project';
-import { ProjectManagerListItemDeleteProjectAction, ProjectManagerListItemOnDragEvent, ProjectManagerListItemOnMouseEvent } from '@/ui/components/projectManager/projectManagerList/projectManagerListItemViewModel';
+import { ProjectManagerListItemProjectAction, ProjectManagerListItemOnDragEvent, ProjectManagerListItemOnMouseEvent } from '@/ui/components/projectManager/projectManagerList/projectManagerListItemViewModel';
 import { MouseEvent } from 'react';
 
 export interface ProjectManagerListProps {
@@ -14,7 +14,8 @@ export interface ProjectManagerListProps {
   currentProjectId: EntityId | null;
   draggingOverProjectId: EntityId | null;
   deleteProjectIds: Record<EntityId, boolean>;
-  deleteProjectAction: ProjectManagerListItemDeleteProjectAction;
+  deleteProjectAction: ProjectManagerListItemProjectAction;
+  duplicateProjectAction: ProjectManagerListItemProjectAction;
   onListItemClick: ProjectManagerListItemOnMouseEvent;
   onListItemDragStart: ProjectManagerListItemOnDragEvent;
   onListItemDragEnd: ProjectManagerListItemOnDragEvent;

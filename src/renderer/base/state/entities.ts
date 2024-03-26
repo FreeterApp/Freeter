@@ -3,7 +3,8 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { createEntityCollection, EntityCollection } from '@/base/entityCollection';
+import { createEntityCollection, EntityCollection, setManyInEntityCollection } from '@/base/entityCollection';
+import { mapIdListToEntityList } from '@/base/entityList';
 import { Project } from '@/base/project';
 import { Widget } from '@/base/widget';
 import { WidgetSettings, WidgetType } from '@/base/widgetType';
@@ -22,5 +23,15 @@ export function createEntitiesState(): EntitiesState {
     widgets: createEntityCollection(),
     widgetTypes: createEntityCollection(),
     workflows: createEntityCollection()
+  }
+}
+
+export type WidgetEntityDeps = Pick<EntitiesState, never>;
+
+export type WorkflowEntityDeps = Pick<EntitiesState, 'widgets'>;
+
+export function getWorkflowEntityDeps(workflow: Workflow, entities: EntitiesState): WorkflowEntityDeps {
+  return {
+    widgets: setManyInEntityCollection({}, mapIdListToEntityList(entities.widgets, workflow.layout.map(item => item.widgetId)))
   }
 }

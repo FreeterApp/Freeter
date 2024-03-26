@@ -6,7 +6,7 @@
 import { createDragOverWorktableLayoutUseCase } from '@/application/useCases/dragDrop/dragOverWorktableLayout';
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
-import { fixtureDragDropFromPalette, fixtureDragDropFromTopBarList, fixtureDragDropFromWorkflowSwitcher, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging, fixtureDragDropOverWorktableLayout } from '@tests/base/state/fixtures/dragDropState';
+import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromTopBarList, fixtureDragDropFromWorkflowSwitcher, fixtureDragDropFromWorktableLayout, fixtureDragDropNotDragging, fixtureDragDropOverWorktableLayout } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 const testId = 'TEST-ID';
@@ -142,7 +142,7 @@ describe('dragOverWorktableLayoutUseCase()', () => {
     const initState = fixtureAppState({
       ui: {
         dragDrop: {
-          ...fixtureDragDropFromPalette()
+          ...fixtureDragDropFromPaletteAdd()
         }
       }
     });
@@ -172,7 +172,7 @@ describe('dragOverWorktableLayoutUseCase()', () => {
     const initState = fixtureAppState({
       ui: {
         dragDrop: {
-          ...fixtureDragDropFromPalette(),
+          ...fixtureDragDropFromPaletteAdd(),
           ...fixtureDragDropOverWorktableLayout({ layoutItemId: newLayoutItemId, layoutItemXY: { x: 1, y: 2 } })
         }
       }
@@ -204,7 +204,7 @@ describe('dragOverWorktableLayoutUseCase()', () => {
     const initState = fixtureAppState({
       ui: {
         dragDrop: {
-          ...fixtureDragDropFromPalette(),
+          ...fixtureDragDropFromPaletteAdd(),
           ...fixtureDragDropOverWorktableLayout({ layoutItemId: newLayoutItemId, layoutItemXY: pos })
         }
       }

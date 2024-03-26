@@ -7,29 +7,19 @@ import { createDeleteWorkflowUseCase } from '@/application/useCases/workflowSwit
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { fixtureProjectAInColl, fixtureWorkflowAInColl, fixtureWorkflowBInColl } from '@tests/base/state/fixtures/entitiesState';
+import { fixtureProjectAInColl, fixtureWidgetAInColl, fixtureWidgetBInColl, fixtureWidgetCInColl, fixtureWorkflowAInColl, fixtureWorkflowBInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 import { MessageBoxConfig, MessageBoxResult } from '@common/base/dialog';
-import { deleteWorkflowsFromAppState } from '@/base/state/actions';
 import { mockDialogProvider } from '@tests/infra/mocks/dialogProvider';
+import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB } from '@tests/base/fixtures/widgetLayout';
 
-jest.mock('@/base/state/actions');
-const mockedDeleteWorkflowsFromAppState = jest.mocked(deleteWorkflowsFromAppState);
-
-async function setup(initState: AppState, opts?: { mockShowMessageBoxRes?: number, mockDeleteWorkflowsFromAppStateRes?: AppState }) {
+async function setup(initState: AppState, opts?: { mockShowMessageBoxRes?: number }) {
   const [appStore] = await fixtureAppStore(initState);
   const dialogProviderMock = mockDialogProvider({
     showMessageBox: jest.fn().mockResolvedValue({
       response: opts?.mockShowMessageBoxRes !== undefined ? opts.mockShowMessageBoxRes : 1
     } as MessageBoxResult)
   })
-
-  if (opts?.mockDeleteWorkflowsFromAppStateRes) {
-    mockedDeleteWorkflowsFromAppState.mockClear();
-    mockedDeleteWorkflowsFromAppState.mockImplementation(() => opts.mockDeleteWorkflowsFromAppStateRes!)
-  } else {
-    mockedDeleteWorkflowsFromAppState.mockRestore();
-  }
 
   const deleteWorkflowUseCase = createDeleteWorkflowUseCase({
     appStore,
@@ -38,7 +28,6 @@ async function setup(initState: AppState, opts?: { mockShowMessageBoxRes?: numbe
   return {
     appStore,
     dialogProviderMock,
-    mockedDeleteWorkflowsFromAppState,
     deleteWorkflowUseCase,
   }
 }
@@ -206,19 +195,32 @@ describe('deleteWorkflowUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should call deleteWorkflowsFromAppState with right params, and update the state in the store with the returned value, when the message box returns "Ok"', async () => {
+  it('should correctly update the state, when the message box returns "Ok"', async () => {
 
     const projectId = 'PROJECT-ID';
     const workflowId1 = 'WORKFLOW-ID1';
     const workflowId2 = 'WORKFLOW-ID2';
+    const widgetId1 = 'WIDGET-ID1';
+    const widgetId2 = 'WIDGET-ID2';
+    const widgetId3 = 'WIDGET-ID3';
     const initState = fixtureAppState({
       entities: {
         projects: {
-          ...fixtureProjectAInColl({ id: projectId, workflowIds: [workflowId1, workflowId2] })
+          ...fixtureProjectAInColl({ id: projectId, workflowIds: [workflowId1, workflowId2], currentWorkflowId: workflowId2 })
         },
         workflows: {
-          ...fixtureWorkflowAInColl({ id: workflowId1 }),
+          ...fixtureWorkflowAInColl({
+            id: workflowId1, layout: [
+              fixtureWidgetLayoutItemA({ widgetId: widgetId1 }),
+              fixtureWidgetLayoutItemB({ widgetId: widgetId2 })
+            ]
+          }),
           ...fixtureWorkflowBInColl({ id: workflowId2 }),
+        },
+        widgets: {
+          ...fixtureWidgetAInColl({ id: widgetId1 }),
+          ...fixtureWidgetBInColl({ id: widgetId2 }),
+          ...fixtureWidgetCInColl({ id: widgetId3 })
         }
       },
       ui: {
@@ -227,20 +229,33 @@ describe('deleteWorkflowUseCase()', () => {
         })
       }
     })
-    const updState = {
+    const expectState: AppState = {
       ...initState,
-      workflows: {} // we don't need the correct result here
-    };
+      entities: {
+        ...initState.entities,
+        projects: {
+          ...initState.entities.projects,
+          [projectId]: {
+            ...initState.entities.projects[projectId]!,
+            currentWorkflowId: workflowId2,
+            workflowIds: [workflowId2]
+          }
+        },
+        workflows: {
+          [workflowId2]: initState.entities.workflows[workflowId2]
+        },
+        widgets: {
+          [widgetId3]: initState.entities.widgets[widgetId3]
+        }
+      }
+    }
     const {
       appStore,
       deleteWorkflowUseCase,
-      mockedDeleteWorkflowsFromAppState,
-    } = await setup(initState, { mockShowMessageBoxRes: 0, mockDeleteWorkflowsFromAppStateRes: updState })
+    } = await setup(initState, { mockShowMessageBoxRes: 0 })
 
     await deleteWorkflowUseCase(workflowId1);
 
-    expect(mockedDeleteWorkflowsFromAppState).toBeCalledTimes(1);
-    expect(mockedDeleteWorkflowsFromAppState).toBeCalledWith(initState, projectId, [workflowId1])
-    expect(appStore.get()).toStrictEqual(updState);
+    expect(appStore.get()).toEqual(expectState);
   })
 })

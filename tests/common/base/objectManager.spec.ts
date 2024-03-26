@@ -11,7 +11,7 @@ describe('ObjectManager', () => {
       const testId = 'test-id';
       const testRes = { test: 'res' };
       const objFactory = jest.fn(async () => testRes);
-      const objectManager = createObjectManager(objFactory);
+      const objectManager = createObjectManager(objFactory, async () => true);
 
       const gotRes = await objectManager.getObject(testId);
       expect(objFactory).toBeCalledTimes(1);
@@ -23,7 +23,7 @@ describe('ObjectManager', () => {
       const testId = 'test-id';
       const testRes = { test: 'res' };
       const objFactory = jest.fn(async () => testRes);
-      const objectManager = createObjectManager(objFactory);
+      const objectManager = createObjectManager(objFactory, async () => true);
 
       await objectManager.getObject(testId);
       const gotRes = await objectManager.getObject(testId);
@@ -37,7 +37,7 @@ describe('ObjectManager', () => {
       const testId2 = 'test-id2';
       const testRes2 = { test: 'res2' };
       const objFactory = jest.fn(async id => id === testId1 ? testRes1 : testRes2);
-      const objectManager = createObjectManager(objFactory);
+      const objectManager = createObjectManager(objFactory, async () => true);
 
       const gotRes1a = await objectManager.getObject(testId1);
       const gotRes1b = await objectManager.getObject(testId1);

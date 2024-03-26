@@ -16,6 +16,7 @@ const widgetType: WidgetType<Settings> = {
     w: 2,
     h: 2
   },
+  description: 'The Webpage widget allows you to make most frequently used web applications and webpages easily accessible by embedding them into workflow tabs.',
   createSettingsState,
   settingsEditorComp,
   widgetComp,

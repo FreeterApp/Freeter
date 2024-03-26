@@ -23,6 +23,7 @@ export interface WidgetType<TSettings = WidgetSettings> extends Entity {
     readonly w: number;
     readonly h: number;
   }
+  readonly description: string;
   readonly widgetComp: WidgetTypeComponent;
   readonly settingsEditorComp: WidgetTypeComponent;
   readonly createSettingsState: CreateSettingsState<TSettings>;

@@ -15,12 +15,17 @@ import { calcGridColWidth, calcGridRowHeight, itemXPxToUnits, itemYPxToUnits } f
 import { useComponentMounted, useElementRect } from '@/ui/hooks';
 import { XYPx } from '@/ui/types/dimensions';
 import { DragEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { findEntityOnList } from '@/base/entityList';
+import { EntityList, findEntityOnList } from '@/base/entityList';
 import { resizeLayoutItemCalc } from '@/application/useCases/worktable/resizeLayoutItem/calc';
 import { EntityId } from '@/base/entity';
-import { DragDropFromState, DragDropOverWorktableLayoutState, WorktableResizingItemState, WorktableStateResizingItemEdges } from '@/base/state/ui';
-import { createWidgetEnv, WidgetEnvAreaWorkflow } from '@/base/widget';
+import { CopiedEntitiesItem, DragDropFromState, DragDropOverWorktableLayoutState, WorktableResizingItemState, WorktableStateResizingItemEdges } from '@/base/state/ui';
+import { createWidgetEnv, Widget, WidgetEnvAreaWorkflow } from '@/base/widget';
 import { WidgetType } from '@/base/widgetType';
+import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
+import { MenuItem, MenuItems } from '@common/base/menu';
+import { WidgetEntityDeps } from '@/base/state/entities';
+import { PasteWidgetToWorkflowUseCase } from '@/application/useCases/workflow/pasteWidgetToWorkflow';
+import { AddWidgetToWorkflowUseCase } from '@/application/useCases/workflow/addWidgetToWorkflow';
 
 interface DraggedLayoutItem {
   fromPointPx: XYPx;
@@ -37,6 +42,8 @@ export interface WidgetLayoutProps {
   dndDraggingWidgetType: WidgetType | undefined;
   dndDraggingFrom: DragDropFromState | undefined;
   dndOverWorktableLayout: DragDropOverWorktableLayoutState | undefined;
+  widgetTypes: EntityList<WidgetType>;
+  copiedWidgets: EntityList<CopiedEntitiesItem<Widget, WidgetEntityDeps>>;
 }
 
 type Deps = {
@@ -48,6 +55,9 @@ type Deps = {
   resizeLayoutItemUseCase: RezizeLayoutItemUseCase;
   resizeLayoutItemStartUseCase: RezizeLayoutItemStartUseCase;
   resizeLayoutItemEndUseCase: RezizeLayoutItemUseCase;
+  showContextMenuUseCase: ShowContextMenuUseCase;
+  pasteWidgetToWorkflowUseCase: PasteWidgetToWorkflowUseCase;
+  addWidgetToWorkflowUseCase: AddWidgetToWorkflowUseCase;
 }
 
 export function createWidgetLayoutViewModelHook({
@@ -59,7 +69,53 @@ export function createWidgetLayoutViewModelHook({
   resizeLayoutItemUseCase,
   resizeLayoutItemStartUseCase,
   resizeLayoutItemEndUseCase,
+  showContextMenuUseCase,
+  pasteWidgetToWorkflowUseCase,
+  addWidgetToWorkflowUseCase,
 }: Deps) {
+  function buildAddMenuItems(
+    widgetTypes: EntityList<WidgetType>,
+    curWorkflowId: EntityId
+  ): MenuItem[] {
+    return widgetTypes.length === 0
+      ? [{ enabled: false, label: 'No widgets to add' }]
+      : widgetTypes.map(item => ({
+        enabled: true,
+        label: item.name,
+        doAction: async () => {
+          addWidgetToWorkflowUseCase(item.id, curWorkflowId);
+        }
+      }))
+  }
+  function buildPasteMenuItems(
+    copiedWidgets: EntityList<CopiedEntitiesItem<Widget, WidgetEntityDeps>>,
+    curWorkflowId: EntityId
+  ): MenuItem[] {
+    return copiedWidgets.length === 0
+      ? [{ enabled: false, label: 'No widgets to paste' }]
+      : copiedWidgets.map(item => ({
+        enabled: true,
+        label: item.entity.coreSettings.name,
+        doAction: async () => {
+          pasteWidgetToWorkflowUseCase(item.id, curWorkflowId);
+        }
+      }))
+  }
+
+  const createContextMenuItemsEditMode: (
+    widgetTypes: EntityList<WidgetType>,
+    copiedWidgets: EntityList<CopiedEntitiesItem<Widget, WidgetEntityDeps>>,
+    curWorkflowId: EntityId,
+  ) => MenuItems = (widgetTypes, copiedWidgets, curWorkflowId) => [{
+    enabled: true,
+    label: 'Add Widget...',
+    submenu: buildAddMenuItems(widgetTypes, curWorkflowId)
+  }, {
+    enabled: true,
+    label: 'Paste Widget...',
+    submenu: buildPasteMenuItems(copiedWidgets, curWorkflowId)
+  }]
+
   function useWidgetLayoutViewModel(layoutEl: React.RefObject<HTMLDivElement>, props: WidgetLayoutProps) {
     const {
       isVisible,
@@ -71,6 +127,8 @@ export function createWidgetLayoutViewModelHook({
       dndDraggingFrom,
       dndOverWorktableLayout,
       resizingItem,
+      widgetTypes,
+      copiedWidgets,
     } = props;
     const viewportSize = useElementRect(layoutEl);
     const componentMounted = useComponentMounted();
@@ -231,6 +289,14 @@ export function createWidgetLayoutViewModelHook({
 
     const showNoWidgetsNote = viewLayoutItems.length === 0;
 
+    const onContextMenu: React.MouseEventHandler<HTMLDivElement> = useCallback((_) => {
+      if (isEditMode) {
+        const contextMenuItems: MenuItems = createContextMenuItemsEditMode(widgetTypes, copiedWidgets, workflowId);
+        showContextMenuUseCase(contextMenuItems);
+      }
+    }, [widgetTypes, copiedWidgets, isEditMode, workflowId])
+
+
     return {
       env,
       componentMounted,
@@ -253,6 +319,7 @@ export function createWidgetLayoutViewModelHook({
       onItemResizeStart,
       onItemResize,
       onItemResizeEnd,
+      onContextMenu,
     }
   }
   return useWidgetLayoutViewModel;

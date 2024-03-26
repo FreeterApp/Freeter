@@ -5,7 +5,6 @@
 
 import { EntityId } from '@/base/entity';
 import { getOneFromEntityCollection } from '@/base/entityCollection';
-import { mapIdListToEntityList } from '@/base/entityList';
 import { UseAppState } from '@/ui/hooks/appState';
 
 type Deps = {
@@ -20,39 +19,54 @@ export function createWorktableViewModelHook({
       isEditMode,
       currentProjectId,
       currentWorkflowId,
-      workflows,
+      workflowIds,
       resizingItem,
       dndDraggingFrom,
       dndDraggingWidgetType,
       dndOverWorktableLayout,
+      copiedWidgetIds,
+      widgetTypeIds,
     } = useAppState(state => {
       const { editMode: isEditMode } = state.ui;
       const { currentProjectId } = state.ui.projectSwitcher;
+      const widgetCopies = state.ui.copy.widgets.entities;
       const currentWorkflowId = state.entities.projects[currentProjectId]?.currentWorkflowId;
-      const workflows = mapIdListToEntityList(state.entities.workflows, state.entities.projects[currentProjectId]?.workflowIds || []);
+      const workflowIds = state.entities.projects[currentProjectId]?.workflowIds;
       const { resizingItem } = state.ui.worktable;
       const dndDraggingFrom = state.ui.dragDrop.from;
       const dndOverWorktableLayout = state.ui.dragDrop.over?.worktableLayout;
       let widgetTypeId: EntityId | undefined;
       if (dndDraggingFrom?.palette) {
-        widgetTypeId = dndDraggingFrom?.palette.widgetTypeId;
+        if (dndDraggingFrom.palette.widgetTypeId) {
+          widgetTypeId = dndDraggingFrom.palette.widgetTypeId;
+        } else if (dndDraggingFrom.palette.widgetCopyId) {
+          widgetTypeId = widgetCopies[dndDraggingFrom.palette.widgetCopyId]?.entity.type;
+        }
       } else if (dndDraggingFrom?.topBarList) {
-        widgetTypeId = getOneFromEntityCollection(state.entities.widgets, dndDraggingFrom?.topBarList.widgetId)?.type;
+        widgetTypeId = getOneFromEntityCollection(state.entities.widgets, dndDraggingFrom.topBarList.widgetId)?.type;
       } else if (dndDraggingFrom?.worktableLayout) {
-        widgetTypeId = getOneFromEntityCollection(state.entities.widgets, dndDraggingFrom?.worktableLayout.widgetId)?.type
+        widgetTypeId = getOneFromEntityCollection(state.entities.widgets, dndDraggingFrom.worktableLayout.widgetId)?.type
       }
       const dndDraggingWidgetType = widgetTypeId ? getOneFromEntityCollection(state.entities.widgetTypes, widgetTypeId) : undefined;
+      const widgetTypeIds = state.ui.palette.widgetTypeIds;
+      const copiedWidgetIds = state.ui.copy.widgets.list;
       return {
         isEditMode,
         currentProjectId,
         currentWorkflowId,
-        workflows,
+        workflowIds,
         resizingItem,
         dndDraggingFrom,
         dndDraggingWidgetType,
         dndOverWorktableLayout,
+        copiedWidgetIds,
+        widgetTypeIds,
       }
     });
+
+    const workflows = useAppState.useEntityList(state => state.entities.workflows, workflowIds || []);
+    const widgetTypes = useAppState.useEntityList(state => state.entities.widgetTypes, widgetTypeIds);
+    const copiedWidgets = useAppState.useEntityList(state => state.ui.copy.widgets.entities, copiedWidgetIds);
 
     const noWorkflows = workflows.length === 0;
 
@@ -66,6 +80,8 @@ export function createWorktableViewModelHook({
       dndDraggingFrom,
       dndDraggingWidgetType,
       dndOverWorktableLayout,
+      widgetTypes,
+      copiedWidgets,
     }
   }
 

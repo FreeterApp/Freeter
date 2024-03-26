@@ -59,7 +59,7 @@ import { DataStorage } from '@common/application/interfaces/dataStorage';
 import { setTextOnlyIfChanged } from '@common/infra/dataStorage/setTextOnlyIfChanged';
 import { withJson } from '@common/infra/dataStorage/withJson';
 import { createObjectManager } from '@common/base/objectManager';
-import { createWidgetDataStorage } from '@/infra/dataStorage/widgetDataStorage';
+import { copyWidgetDataStorage, createWidgetDataStorage } from '@/infra/dataStorage/widgetDataStorage';
 import { createWorktableViewModelHook } from '@/ui/components/worktable/worktableViewModel';
 import { createAppViewModelHook } from '@/ui/components/app/appViewModel';
 import { createUpdateWidgetCoreSettingsUseCase } from '@/application/useCases/widgetSettings/updateWidgetCoreSettings';
@@ -84,7 +84,7 @@ import { createRenameWorkflowUseCase } from '@/application/useCases/workflowSwit
 import { createDeleteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/deleteWorkflow';
 import { createOsDialogProvider } from '@/infra/dialogProvider/osDialogProvider';
 import { createDeleteWidgetUseCase } from '@/application/useCases/widget/deleteWidget';
-import { createAddWidgetToWorkflowUseCase } from '@/application/useCases/palette/addWidgetToWorkflow';
+import { createAddWidgetToWorkflowUseCase } from '@/application/useCases/workflow/addWidgetToWorkflow';
 import { createInitAppMenuUseCase } from '@/application/useCases/appMenu/initAppMenu';
 import { createAppMenuProvider } from '@/infra/appMenuProvider/appMenuProvider';
 import { createClickAppMenuItemUseCase } from '@/application/useCases/appMenu/clickAppMenuItem';
@@ -110,6 +110,22 @@ import { createProductInfoProvider } from '@/infra/productInfoProvider/productIn
 import { createOpenSponsorshipUrlUseCase } from '@/application/useCases/about/openSponsorshipUrl';
 import { createTerminalProvider } from '@/infra/terminalProvider/terminalProvider';
 import { createShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
+import { createDuplicateProjectInProjectManagerUseCase } from '@/application/useCases/projectManager/duplicateProjectInProjectManager';
+import { createCloneWidgetSubCase } from '@/application/useCases/widget/subs/cloneWidget';
+import { createCloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
+import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workflow/subs/cloneWidgetLayoutItem';
+import { createCopyWidgetUseCase } from '@/application/useCases/widget/copyWidget';
+import { createCopyWorkflowUseCase } from '@/application/useCases/workflow/copyWorkflow';
+import { createPasteWidgetToShelfUseCase } from '@/application/useCases/shelf/pasteWidgetToShelf';
+import { createPasteWidgetToWorkflowUseCase } from '@/application/useCases/workflow/pasteWidgetToWorkflow';
+import { createPasteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/pasteWorkflow';
+import { createAddItemToWidgetListSubCase } from '@/application/useCases/shelf/subs/addItemToWidgetList';
+import { createAddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/addItemToWidgetLayout';
+import { createCloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/cloneWidgetToWidgetLayout';
+import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
+import { createAddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
+import { createCreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
+import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -130,6 +146,16 @@ function createStore() {
       appConfig: {
         mainHotkey: 'CmdOrCtrl+Shift+F'
       },
+      copy: {
+        widgets: {
+          entities: {},
+          list: []
+        },
+        workflows: {
+          entities: {},
+          list: []
+        }
+      },
       modalScreens: {
         data: {
           applicationSettings: {
@@ -139,7 +165,8 @@ function createStore() {
             currentProjectId: '',
             deleteProjectIds: null,
             projects: null,
-            projectIds: null
+            projectIds: null,
+            duplicateProjectIds: null
           },
           widgetSettings: {
             widgetInEnv: null
@@ -181,24 +208,10 @@ function createStore() {
 async function createUseCases(store: ReturnType<typeof createStore>) {
   const deps = {
     appStore: store.appStore,
-    idGenerator: uuidv4IdGenerator
+    idGenerator: uuidv4IdGenerator,
   }
 
   const osDialogProvider = createOsDialogProvider();
-
-  const dragWidgetFromWorktableLayoutUseCase = createDragWidgetFromWorktableLayoutUseCase(deps);
-  const dragOverWorktableLayoutUseCase = createDragOverWorktableLayoutUseCase(deps);
-  const dropOnWorktableLayoutUseCase = createDropOnWorktableLayoutUseCase(deps);
-  const dragWidgetFromTopBarListUseCase = createDragWidgetFromTopBarListUseCase(deps);
-  const dragOverTopBarListUseCase = createDragOverTopBarListUseCase(deps);
-  const dragLeaveTargetUseCase = createDragLeaveTargetUseCase(deps);
-  const dropOnTopBarListUseCase = createDropOnTopBarListUseCase(deps);
-  const dragWidgetFromPaletteUseCase = createDragWidgetFromPaletteUseCase(deps);
-  const addWidgetToWorkflowWithPaletteUseCase = createAddWidgetToWorkflowUseCase(deps);
-  const dragEndUseCase = createDragEndUseCase(deps);
-  const dragOverWorkflowSwitcherUseCase = createDragOverWorkflowSwitcherUseCase(deps);
-  const dragWorkflowFromWorkflowSwitcherUseCase = createDragWorkflowFromWorkflowSwitcherUseCase(deps);
-  const dropOnWorkflowSwitcherUseCase = createDropOnWorkflowSwitcherUseCase(deps);
 
   const openWidgetSettingsUseCase = createOpenWidgetSettingsUseCase(deps);
   const closeWidgetSettingsUseCase = createCloseWidgetSettingsUseCase(deps);
@@ -215,8 +228,13 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
   const switchProjectUseCase = createSwitchProjectUseCase(deps);
 
+  const createWorkflowSubCase = createCreateWorkflowSubCase(deps)
+
   const switchWorkflowUseCase = createSwitchWorkflowUseCase(deps);
-  const addWorkflowUseCase = createAddWorkflowUseCase(deps);
+  const addWorkflowUseCase = createAddWorkflowUseCase({
+    ...deps,
+    createWorkflowSubCase
+  });
   const renameWorkflowUseCase = createRenameWorkflowUseCase(deps);
   const openWorkflowSettingsUseCase = createOpenWorkflowSettingsUseCase(deps);
   const closeWorkflowSettingsUseCase = createCloseWorkflowSettingsUseCase(deps);
@@ -241,7 +259,10 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const clipboardProvider = createClipboardProvider();
   const shellProvider = createShellProvider();
   const processProvider = await createProcessProvider();
-  const widgetDataStorageManager = createObjectManager(async widgetId => prepareDataStorageForRenderer(createWidgetDataStorage(widgetId)))
+  const widgetDataStorageManager = createObjectManager(
+    async widgetId => prepareDataStorageForRenderer(createWidgetDataStorage(widgetId)),
+    copyWidgetDataStorage
+  )
   const terminalProvider = createTerminalProvider();
   const getWidgetApiUseCase = createGetWidgetApiUseCase({
     clipboardProvider,
@@ -255,10 +276,28 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     dialog: osDialogProvider
   })
 
+  const cloneWidgetSubCase = createCloneWidgetSubCase({
+    ...deps,
+    widgetDataStorageManager
+  })
+  const cloneWidgetLayoutItemSubCase = createCloneWidgetLayoutItemSubCase({
+    ...deps,
+    cloneWidgetSubCase
+  });
+  const cloneWorkflowSubCase = createCloneWorkflowSubCase({
+    ...deps,
+    cloneWidgetLayoutItemSubCase,
+  })
+
   const addProjectInProjectManagerUseCase = createAddProjectInProjectManagerUseCase(deps);
-  const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase(deps);
+  const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase({
+    ...deps,
+    cloneWorkflowSubCase,
+    createWorkflowSubCase
+  });
   const switchProjectInProjectManagerUseCase = createSwitchProjectInProjectManagerUseCase(deps);
   const toggleDeletionInProjectManagerUseCase = createToggleDeletionInProjectManagerUseCase(deps);
+  const duplicateProjectInProjectManagerUseCase = createDuplicateProjectInProjectManagerUseCase(deps);
   const updateProjectSettingsInProjectManagerUseCase = createUpdateProjectSettingsInProjectManagerUseCase(deps);
   const updateProjectsOrderInProjectManagerUseCase = createUpdateProjectsOrderInProjectManagerUseCase(deps);
   const closeProjectManagerUseCase = createCloseProjectManagerUseCase(deps);
@@ -320,6 +359,68 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
   const showContextMenuUseCase = createShowContextMenuUseCase({ contextMenu: osContextMenuProvider })
 
+  const createWidgetSubCase = createCreateWidgetSubCase(deps);
+  const addItemToWidgetListSubCase = createAddItemToWidgetListSubCase(deps);
+  const copyWidgetUseCase = createCopyWidgetUseCase(deps);
+  const cloneWidgetToWidgetListSubCase = createCloneWidgetToWidgetListSubCase({
+    ...deps,
+    addItemToWidgetListSubCase,
+    cloneWidgetSubCase
+  })
+  const addWidgetToShelfUseCase = createAddWidgetToShelfUseCase({
+    ...deps,
+    addItemToWidgetListSubCase,
+    createWidgetSubCase
+  })
+  const pasteWidgetToShelfUseCase = createPasteWidgetToShelfUseCase({
+    ...deps,
+    cloneWidgetToWidgetListSubCase
+  });
+  const addItemToWidgetLayoutSubCase = createAddItemToWidgetLayoutSubCase(deps);
+  const cloneWidgetToWidgetLayoutSubCase = createCloneWidgetToWidgetLayoutSubCase({
+    ...deps,
+    addItemToWidgetLayoutSubCase,
+    cloneWidgetSubCase
+  })
+  const pasteWidgetToWorkflowUseCase = createPasteWidgetToWorkflowUseCase({
+    ...deps,
+    cloneWidgetToWidgetLayoutSubCase
+  });
+
+  const copyWorkflowUseCase = createCopyWorkflowUseCase(deps);
+  const pasteWorkflowUseCase = createPasteWorkflowUseCase({
+    ...deps,
+    cloneWorkflowSubCase
+  });
+
+  const dragWidgetFromWorktableLayoutUseCase = createDragWidgetFromWorktableLayoutUseCase(deps);
+  const dragOverWorktableLayoutUseCase = createDragOverWorktableLayoutUseCase(deps);
+  const dropOnWorktableLayoutUseCase = createDropOnWorktableLayoutUseCase({
+    ...deps,
+    cloneWidgetToWidgetLayoutSubCase,
+    addItemToWidgetLayoutSubCase,
+    createWidgetSubCase
+  });
+  const dragWidgetFromTopBarListUseCase = createDragWidgetFromTopBarListUseCase(deps);
+  const dragOverTopBarListUseCase = createDragOverTopBarListUseCase(deps);
+  const dragLeaveTargetUseCase = createDragLeaveTargetUseCase(deps);
+  const dropOnTopBarListUseCase = createDropOnTopBarListUseCase({
+    ...deps,
+    cloneWidgetToWidgetListSubCase,
+    addItemToWidgetListSubCase,
+    createWidgetSubCase
+  });
+  const dragWidgetFromPaletteUseCase = createDragWidgetFromPaletteUseCase(deps);
+  const addWidgetToWorkflowUseCase = createAddWidgetToWorkflowUseCase({
+    ...deps,
+    addItemToWidgetLayoutSubCase,
+    createWidgetSubCase
+  });
+  const dragEndUseCase = createDragEndUseCase(deps);
+  const dragOverWorkflowSwitcherUseCase = createDragOverWorkflowSwitcherUseCase(deps);
+  const dragWorkflowFromWorkflowSwitcherUseCase = createDragWorkflowFromWorkflowSwitcherUseCase(deps);
+  const dropOnWorkflowSwitcherUseCase = createDropOnWorkflowSwitcherUseCase(deps);
+
   return {
     dragWidgetFromWorktableLayoutUseCase,
     dragOverWorktableLayoutUseCase,
@@ -329,7 +430,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     dragLeaveTargetUseCase,
     dropOnTopBarListUseCase,
     dragWidgetFromPaletteUseCase,
-    addWidgetToWorkflowWithPaletteUseCase,
+    addWidgetToWorkflowUseCase,
     dragEndUseCase,
     dragOverWorkflowSwitcherUseCase,
     dragWorkflowFromWorkflowSwitcherUseCase,
@@ -366,6 +467,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     saveChangesInProjectManagerUseCase,
     switchProjectInProjectManagerUseCase,
     toggleDeletionInProjectManagerUseCase,
+    duplicateProjectInProjectManagerUseCase,
     updateProjectSettingsInProjectManagerUseCase,
     updateProjectsOrderInProjectManagerUseCase,
     closeProjectManagerUseCase,
@@ -388,6 +490,13 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     openSponsorshipUrlUseCase,
 
     showContextMenuUseCase,
+
+    copyWidgetUseCase,
+    addWidgetToShelfUseCase,
+    pasteWidgetToShelfUseCase,
+    pasteWidgetToWorkflowUseCase,
+    copyWorkflowUseCase,
+    pasteWorkflowUseCase,
   }
 }
 

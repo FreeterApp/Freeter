@@ -5,7 +5,7 @@
 
 import { WidgetType } from '@/base/widgetType';
 import { ReactComponent, SettingsEditorReactComponentProps, WidgetReactComponentProps } from '@/widgets/appModules';
-import { FC, useMemo } from 'react';
+import { FC, memo, useMemo } from 'react';
 
 export function useWidgetTypeComp(widgetType?: WidgetType, comp?: keyof Pick<WidgetType, 'settingsEditorComp'>): FC<SettingsEditorReactComponentProps>;
 export function useWidgetTypeComp(widgetType?: WidgetType, comp?: keyof Pick<WidgetType, 'widgetComp'>): FC<WidgetReactComponentProps>;
@@ -13,7 +13,7 @@ export function useWidgetTypeComp(widgetType?: WidgetType, comp?: keyof Pick<Wid
   return useMemo(() => {
     if (widgetType && comp) {
       if (widgetType[comp].type === 'react') {
-        return (widgetType[comp] as ReactComponent<unknown>).Comp
+        return memo((widgetType[comp] as ReactComponent<unknown>).Comp)
       } else {
         return undefined;
       }

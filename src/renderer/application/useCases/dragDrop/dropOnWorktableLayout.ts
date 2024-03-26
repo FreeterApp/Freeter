@@ -8,28 +8,98 @@ import { createLayoutItem, moveLayoutItem, removeLayoutItem, WidgetLayoutItemXY 
 import { removeEntityFromList } from '@/base/entityList';
 import { EntityId } from '@/base/entity';
 import { AppStore } from '@/application/interfaces/store';
-import { addWidgetToAppState, dragDropStateActions, entityStateActions } from '@/base/state/actions';
+import { dragDropStateActions, entityStateActions } from '@/base/state/actions';
+import { addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { CloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/cloneWidgetToWidgetLayout';
+import { CreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
+import { AddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/addItemToWidgetLayout';
+import { generateWidgetName } from '@/base/widget';
+import { getAllWidgetNamesFromWidgetLayout } from '@/base/state/actions/usedNames';
 
 type Deps = {
   appStore: AppStore;
   idGenerator: IdGenerator;
+  cloneWidgetToWidgetLayoutSubCase: CloneWidgetToWidgetLayoutSubCase;
+  createWidgetSubCase: CreateWidgetSubCase;
+  addItemToWidgetLayoutSubCase: AddItemToWidgetLayoutSubCase;
 }
 
 export function createDropOnWorktableLayoutUseCase({
   appStore,
   idGenerator,
+  cloneWidgetToWidgetLayoutSubCase,
+  createWidgetSubCase,
+  addItemToWidgetLayoutSubCase,
 }: Deps) {
-  const dropOnWorktableLayoutUseCase = (toWorkflowId: EntityId, toXY: WidgetLayoutItemXY) => {
+  const dropOnWorktableLayoutUseCase = async (toWorkflowId: EntityId, toXY: WidgetLayoutItemXY) => {
     let state = appStore.get();
     const { from: draggingFrom } = state.ui.dragDrop;
     if (draggingFrom) {
       if (draggingFrom.palette) {
-        [state] = addWidgetToAppState(state, {
-          type: 'workflow',
-          newLayoutItemId: idGenerator(),
-          newLayoutItemXY: toXY,
-          workflowId: toWorkflowId
-        }, draggingFrom.palette.widgetTypeId, idGenerator())
+        if (draggingFrom.palette.widgetTypeId) {
+          const widgetType = getOneFromEntityCollection(state.entities.widgetTypes, draggingFrom.palette.widgetTypeId);
+          if (widgetType) {
+            const toWorkflow = getOneFromEntityCollection(state.entities.workflows, toWorkflowId);
+            if (toWorkflow) {
+              const newWidget = createWidgetSubCase(
+                widgetType,
+                generateWidgetName(widgetType.name, getAllWidgetNamesFromWidgetLayout(state.entities.widgets, toWorkflow.layout))
+              )
+              const newWidgetLayout = addItemToWidgetLayoutSubCase(
+                newWidget.id,
+                toWorkflow.layout,
+                { w: widgetType.minSize.w, h: widgetType.minSize.h },
+                toXY
+              )
+              state = {
+                ...state,
+                entities: {
+                  ...state.entities,
+                  widgets: addOneToEntityCollection(state.entities.widgets, newWidget),
+                  workflows: updateOneInEntityCollection(state.entities.workflows, {
+                    id: toWorkflow.id,
+                    changes: {
+                      layout: newWidgetLayout
+                    }
+                  })
+                }
+              };
+            }
+          }
+        } else if (draggingFrom.palette.widgetCopyId) {
+          const widgetCopyEntity = getOneFromEntityCollection(state.ui.copy.widgets.entities, draggingFrom.palette.widgetCopyId);
+          if (widgetCopyEntity) {
+            const { entity: widget } = widgetCopyEntity;
+
+            const widgetType = getOneFromEntityCollection(state.entities.widgetTypes, widget.type);
+            if (widgetType) {
+              const toWorkflow = getOneFromEntityCollection(state.entities.workflows, toWorkflowId);
+
+              if (toWorkflow) {
+                const [newWidget, newLayout] = await cloneWidgetToWidgetLayoutSubCase(
+                  widget,
+                  toWorkflow.layout,
+                  getAllWidgetNamesFromWidgetLayout(state.entities.widgets, toWorkflow.layout),
+                  { w: widgetType.minSize.w, h: widgetType.minSize.h },
+                  toXY
+                );
+                state = {
+                  ...state,
+                  entities: {
+                    ...state.entities,
+                    widgets: addOneToEntityCollection(state.entities.widgets, newWidget),
+                    workflows: updateOneInEntityCollection(state.entities.workflows, {
+                      id: toWorkflowId,
+                      changes: {
+                        layout: newLayout
+                      }
+                    }),
+                  }
+                }
+              }
+            }
+          }
+        }
       } else if (draggingFrom.worktableLayout) {
         const toWorkflow = entityStateActions.workflows.getOne(state, toWorkflowId);
         if (toWorkflow) {

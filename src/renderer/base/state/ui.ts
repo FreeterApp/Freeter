@@ -4,18 +4,20 @@
  */
 
 import { AppConfig } from '@/base/appConfig';
-import { EntityId } from '@/base/entity';
+import { Entity, EntityId } from '@/base/entity';
 import { EntityCollection } from '@/base/entityCollection';
 import { EntityIdList } from '@/base/entityList';
 import { List } from '@/base/list';
 import { Project } from '@/base/project';
-import { WidgetInEnv } from '@/base/widget';
+import { WidgetEntityDeps, WorkflowEntityDeps } from '@/base/state/entities';
+import { Widget, WidgetInEnv } from '@/base/widget';
 import { WidgetLayoutItemWH, WidgetLayoutItemXY } from '@/base/widgetLayout';
 import { WidgetList } from '@/base/widgetList';
 import { Workflow } from '@/base/workflow';
 
 export interface DragDropFromPaletteState {
-  widgetTypeId: EntityId;
+  widgetTypeId?: EntityId;
+  widgetCopyId?: EntityId;
 }
 
 export interface DragDropFromTopBarListState {
@@ -75,6 +77,12 @@ export interface ProjectManagerState {
   projectIds: EntityIdList | null;
   deleteProjectIds: Record<EntityId, boolean> | null;
   currentProjectId: EntityId;
+  /**
+   * Marks projects to duplicate data on Save.
+   * key = new project id (copy content to)
+   * value = existing project id (copy content from)
+   */
+  duplicateProjectIds: Record<EntityId, EntityId> | null;
 }
 
 export interface ProjectSwitcherState {
@@ -145,11 +153,29 @@ export interface ModalScreensState {
   order: List<ModalScreenId>;
 }
 
+export interface CopiedEntitiesItem<T extends Entity, Y> extends Entity {
+  entity: T;
+  deps: Y;
+}
+export interface CopyEntitiesState<T extends Entity, Y> {
+  entities: EntityCollection<CopiedEntitiesItem<T, Y>>;
+  list: EntityIdList;
+}
+
+export type CopyWidgetsState = CopyEntitiesState<Widget, WidgetEntityDeps>;
+export type CopyWorkflowsState = CopyEntitiesState<Workflow, WorkflowEntityDeps>;
+
+export interface CopyState {
+  widgets: CopyWidgetsState;
+  workflows: CopyWorkflowsState;
+}
+
 export interface UiState {
   editMode: boolean;
   menuBar: boolean;
   appConfig: AppConfig;
   dragDrop: DragDropState;
+  copy: CopyState;
   modalScreens: ModalScreensState;
   palette: PaletteState;
   projectSwitcher: ProjectSwitcherState;
@@ -165,6 +191,16 @@ export function createUiState(): UiState {
     appConfig: {
       mainHotkey: 'CmdOrCtrl+Shift+F'
     },
+    copy: {
+      widgets: {
+        entities: {},
+        list: []
+      },
+      workflows: {
+        entities: {},
+        list: []
+      }
+    },
     modalScreens: {
       data: {
         applicationSettings: {
@@ -174,7 +210,8 @@ export function createUiState(): UiState {
           currentProjectId: '',
           deleteProjectIds: null,
           projects: null,
-          projectIds: null
+          projectIds: null,
+          duplicateProjectIds: null
         },
         widgetSettings: {
           widgetInEnv: null

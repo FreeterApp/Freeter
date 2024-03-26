@@ -14,8 +14,9 @@ import { fixtureWidgetAInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { AppState } from '@/base/state/app';
 import { fixtureWidgetEnvAreaShelf } from '@tests/base/fixtures/widget';
+import { memo } from 'react';
 
-const mockWidget: WidgetComponent = (props) => <div>{props.widget.type}</div>;
+const mockWidget: WidgetComponent = memo((props) => <div>{props.widget.type}</div>);
 const widgetId = 'WIDGET-ID';
 const widgetType = 'WIDGET-TYPE';
 

@@ -11,27 +11,21 @@ import { fixtureProjectA, fixtureProjectB } from '@tests/base/fixtures/project';
 import { fixtureProjectAInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowSettingsA, fixtureWorkflowSettingsB, fixtureWorkflowSettingsC } from '@tests/base/fixtures/workflow';
-import { addWorkflowToAppState } from '@/base/state/actions';
-
-jest.mock('@/base/state/actions', () => {
-  const actual = jest.requireActual('@/base/state/actions');
-  return {
-    ...actual,
-    addWorkflowToAppState: jest.fn(actual.addWorkflowToAppState),
-  }
-})
+import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 
 const newItemId = 'NEW-ITEM-ID';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
+  const createWorkflowSubCase = createCreateWorkflowSubCase({
+    idGenerator: () => newItemId,
+  })
   const addWorkflowUseCase = createAddWorkflowUseCase({
     appStore,
-    idGenerator: () => newItemId
+    createWorkflowSubCase
   });
   return {
     appStore,
-    addWorkflowToAppState,
     addWorkflowUseCase
   }
 }
@@ -192,28 +186,4 @@ describe('addWorkflowUseCase()', () => {
     expect(res).toBe(newItemId);
   })
 
-  it('should use addWorkflowToAppState for adding a workflow to the state', async () => {
-    const projectA = fixtureProjectA();
-    const initState = fixtureAppState({
-      entities: {
-        projects: {
-          [projectA.id]: projectA,
-        },
-      },
-      ui: {
-        projectSwitcher: fixtureProjectSwitcher({
-          currentProjectId: projectA.id,
-          projectIds: [projectA.id]
-        })
-      }
-    })
-    const {
-      addWorkflowUseCase,
-      addWorkflowToAppState
-    } = await setup(initState)
-
-    addWorkflowUseCase();
-
-    expect(addWorkflowToAppState).toBeCalledTimes(1);
-  })
 })

@@ -56,10 +56,31 @@ export function moveItemInList<T>(list: List<T>, fromIndex: number, toIndex?: nu
   return newList;
 }
 
-export function findIndexOrUndef<T>(list: List<T>, item: T): number | undefined {
+export function findIndexOrUndef<T>(list: List<T>, item: T | undefined): number | undefined {
+  if (item === undefined) {
+    return undefined;
+  }
   const idx = list.indexOf(item);
   if (idx < 0) {
     return undefined;
   }
   return idx;
+}
+
+export function addOrMoveItemInList<T>(list: List<T>, item: T, toIndex = 0): List<T> {
+  const idx = list.indexOf(item);
+  if (idx < 0) {
+    return addItemToList(list, item, toIndex);
+  } else {
+    return moveItemInList(list, idx, toIndex);
+  }
+}
+
+export function limitListLength<T>(list: List<T>, num: number): [newList: List<T>, deletedItems: T[]] {
+  if (list.length <= num) {
+    return [list, []];
+  }
+  const newList = list.slice();
+  const deleted = newList.splice(num);
+  return [newList, deleted];
 }

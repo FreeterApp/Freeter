@@ -4,7 +4,6 @@
  */
 
 import { BrowserWindow as ElectronBrowserWindow, app } from 'electron';
-import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import { BrowserWindow } from '@/application/interfaces/browserWindow'
 import { GetWindowStateUseCase } from '@/application/useCases/browserWindow/getWindowState';
 import { SetWindowStateUseCase } from '@/application/useCases/browserWindow/setWindowState';
@@ -31,7 +30,6 @@ export function createRendererWindow(
     setWindowStateUseCase: SetWindowStateUseCase,
   },
   opts: {
-    reactDevTools?: boolean,
     devTools?: boolean,
   }
 ): BrowserWindow {
@@ -106,12 +104,6 @@ export function createRendererWindow(
   win.on('unmaximize', winStateUpdateHandler);
   win.on('enter-full-screen', winStateUpdateHandler);
   win.on('leave-full-screen', winStateUpdateHandler);
-
-  if (opts.reactDevTools) {
-    installExtension([REACT_DEVELOPER_TOOLS])
-      .then((name) => console.log(`Added Extension:  ${name}`))
-      .catch((err) => console.log('An error occurred: ', err));
-  }
 
   // prevent leaving the app page (by dragging an image for example)
   win.webContents.on('will-navigate', evt => evt.preventDefault());

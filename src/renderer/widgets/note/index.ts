@@ -16,6 +16,7 @@ const widgetType: WidgetType<Settings> = {
     w: 2,
     h: 2
   },
+  description: 'The Note widget allows you to write quick notes, such as thoughts, ideas or another important information you  need to keep in front of you.',
   createSettingsState,
   settingsEditorComp,
   widgetComp,

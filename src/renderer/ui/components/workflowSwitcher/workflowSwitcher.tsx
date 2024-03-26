@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import styles from './workflowSwitcher.module.scss';
 import { ActionBar } from '@/ui/components/basic/actionBar';
 import { WorkflowSwitcherItem } from '@/ui/components/workflowSwitcher/workflowSwitcherItem';
+import { memo } from 'react';
 
 type Deps = {
   useWorkflowSwitcherViewModel: WorkflowSwitcherViewModelHook;
@@ -89,5 +90,5 @@ export function createWorkflowSwitcherComponent({
     ) : <div/>
   }
 
-  return WorkflowSwitcher;
+  return memo(WorkflowSwitcher);
 }

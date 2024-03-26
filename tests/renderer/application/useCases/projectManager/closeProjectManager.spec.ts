@@ -31,6 +31,7 @@ describe('closeProjectManagerUseCase()', () => {
             projectManager: fixtureProjectManager({
               currentProjectId: 'SOME-ID',
               deleteProjectIds: { 'SOME-ID': false },
+              duplicateProjectIds: { 'P-ID-1': 'P-ID-2' },
               projects: { 'SOME-ID': fixtureProjectA() },
               projectIds: ['SOME-ID']
             })
@@ -50,6 +51,7 @@ describe('closeProjectManagerUseCase()', () => {
             projectManager: {
               currentProjectId: '',
               deleteProjectIds: null,
+              duplicateProjectIds: null,
               projects: null,
               projectIds: null
             }

@@ -16,6 +16,7 @@ const widgetType: WidgetType<Settings> = {
     w: 1,
     h: 1
   },
+  description: 'The File Opener widget allows you to set files and folders, and open them in an associated application with a single click.',
   createSettingsState,
   settingsEditorComp,
   widgetComp,

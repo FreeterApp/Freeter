@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { IpcWidgetDataStorageClearArgs, ipcWidgetDataStorageClearChannel, IpcWidgetDataStorageClearRes, IpcWidgetDataStorageDeleteArgs, ipcWidgetDataStorageDeleteChannel, IpcWidgetDataStorageDeleteRes, IpcWidgetDataStorageGetKeysArgs, ipcWidgetDataStorageGetKeysChannel, IpcWidgetDataStorageGetKeysRes, IpcWidgetDataStorageGetTextArgs, ipcWidgetDataStorageGetTextChannel, IpcWidgetDataStorageGetTextRes, IpcWidgetDataStorageSetTextArgs, ipcWidgetDataStorageSetTextChannel, IpcWidgetDataStorageSetTextRes } from '@common/ipc/channels';
+import { IpcCopyWidgetDataStorageArgs, ipcCopyWidgetDataStorageChannel, IpcCopyWidgetDataStorageRes, IpcWidgetDataStorageClearArgs, ipcWidgetDataStorageClearChannel, IpcWidgetDataStorageClearRes, IpcWidgetDataStorageDeleteArgs, ipcWidgetDataStorageDeleteChannel, IpcWidgetDataStorageDeleteRes, IpcWidgetDataStorageGetKeysArgs, ipcWidgetDataStorageGetKeysChannel, IpcWidgetDataStorageGetKeysRes, IpcWidgetDataStorageGetTextArgs, ipcWidgetDataStorageGetTextChannel, IpcWidgetDataStorageGetTextRes, IpcWidgetDataStorageSetTextArgs, ipcWidgetDataStorageSetTextChannel, IpcWidgetDataStorageSetTextRes } from '@common/ipc/channels';
 import { DataStorage } from '@common/application/interfaces/dataStorage';
 import { electronIpcRenderer } from '@/infra/mainApi/mainApi';
 
@@ -39,4 +39,13 @@ export function createWidgetDataStorage(widgetId: string): DataStorage {
         widgetId
       )
   }
+}
+
+export async function copyWidgetDataStorage(srcWidgetId: string, destWidgetId: string): Promise<boolean> {
+  return electronIpcRenderer.invoke<IpcCopyWidgetDataStorageArgs, IpcCopyWidgetDataStorageRes>
+    (
+      ipcCopyWidgetDataStorageChannel,
+      srcWidgetId,
+      destWidgetId
+    )
 }

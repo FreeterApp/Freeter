@@ -13,3 +13,7 @@ export function generateUniqueName(baseName: string, usedNames: string[]): strin
   }
   return res;
 }
+
+export function generateCopyName(itemName: string, usedNames: string[]): string {
+  return generateUniqueName(itemName + ' Copy', usedNames);
+}

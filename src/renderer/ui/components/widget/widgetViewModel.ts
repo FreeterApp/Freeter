@@ -12,17 +12,21 @@ import { useWidgetTypeComp } from '@/ui/hooks/useWidgetTypeComp';
 import { useCallback, useMemo, useState } from 'react';
 import { ReactContextMenuEvent } from '@/ui/types/events';
 import { GetWidgetApiUseCase } from '@/application/useCases/widget/getWidgetApi';
-import { delete14Svg, settings14Svg } from '@/ui/assets/images/appIcons';
+import { delete14Svg, more14Svg, settings14Svg } from '@/ui/assets/images/appIcons';
 import { OpenWidgetSettingsUseCase } from '@/application/useCases/widgetSettings/openWidgetSettings';
 import { DeleteWidgetUseCase } from '@/application/useCases/widget/deleteWidget';
 import { EntityId } from '@/base/entity';
+import { CopyWidgetUseCase } from '@/application/useCases/widget/copyWidget';
+import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
 
 type Deps = {
   useAppState: UseAppState;
+  showContextMenuUseCase: ShowContextMenuUseCase;
   showWidgetContextMenuUseCase: ShowWidgetContextMenuUseCase;
   getWidgetApiUseCase: GetWidgetApiUseCase;
   openWidgetSettingsUseCase: OpenWidgetSettingsUseCase;
   deleteWidgetUseCase: DeleteWidgetUseCase;
+  copyWidgetUseCase: CopyWidgetUseCase;
 }
 
 export interface WidgetProps {
@@ -44,11 +48,26 @@ function getContextId(el: HTMLElement): string {
 
 export function createWidgetViewModelHook({
   useAppState,
+  showContextMenuUseCase,
   showWidgetContextMenuUseCase,
   getWidgetApiUseCase,
   openWidgetSettingsUseCase,
   deleteWidgetUseCase,
+  copyWidgetUseCase,
 }: Deps) {
+  function showMoreActions(
+    id: EntityId,
+  ) {
+    showContextMenuUseCase([
+      {
+        enabled: true,
+        label: 'Copy Widget',
+        doAction: async () => {
+          copyWidgetUseCase(id)
+        }
+      }
+    ])
+  }
   const createActionBarItemsEditMode: (id: EntityId, env: WidgetEnv) => ActionBarItems = (id, env) => [{
     enabled: true,
     icon: settings14Svg,
@@ -65,6 +84,14 @@ export function createWidgetViewModelHook({
     doAction: async () => {
       deleteWidgetUseCase(id, env);
     }
+  }, {
+    enabled: true,
+    icon: more14Svg,
+    id: 'MORE-ACTIONS',
+    title: 'More Actions...',
+    doAction: async () => {
+      showMoreActions(id);
+    }
   }]
 
   const createContextMenuFactoryEditMode: (id: EntityId, env: WidgetEnv) => WidgetContextMenuFactory = (id, env) => () => [{
@@ -72,6 +99,14 @@ export function createWidgetViewModelHook({
     label: 'Widget Settings',
     doAction: async () => {
       openWidgetSettingsUseCase(id, env);
+    }
+  }, {
+    type: 'separator'
+  }, {
+    enabled: true,
+    label: 'Copy Widget',
+    doAction: async () => {
+      copyWidgetUseCase(id)
     }
   }, {
     type: 'separator'

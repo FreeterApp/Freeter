@@ -3,28 +3,47 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
+import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
-import { addWorkflowToAppState } from '@/base/state/actions';
+import { addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { addItemToList, findIndexOrUndef } from '@/base/list';
+import { getAllWorkflowNamesFromWorkflowIdList } from '@/base/state/actions/usedNames';
+import { generateWorkflowName } from '@/base/workflow';
 
 type Deps = {
   appStore: AppStore;
-  idGenerator: IdGenerator;
+  createWorkflowSubCase: CreateWorkflowSubCase;
 }
 export function createAddWorkflowUseCase({
   appStore,
-  idGenerator
+  createWorkflowSubCase
 }: Deps) {
   const useCase = (posByWorkflowId?: EntityId) => {
     const state = appStore.get();
     const { currentProjectId } = state.ui.projectSwitcher;
-    const [newState, newItem] = addWorkflowToAppState(state, currentProjectId, idGenerator(), posByWorkflowId);
-    if (newItem) {
-      appStore.set(newState);
-      return newItem.id;
+    const currentProject = getOneFromEntityCollection(state.entities.projects, currentProjectId);
+    if (!currentProject) {
+      return undefined;
     }
-    return undefined;
+    const newWorkflow = createWorkflowSubCase(generateWorkflowName(getAllWorkflowNamesFromWorkflowIdList(state.entities.workflows, currentProject.workflowIds)))
+
+    appStore.set({
+      ...state,
+      entities: {
+        ...state.entities,
+        projects: updateOneInEntityCollection(state.entities.projects, {
+          id: currentProjectId,
+          changes: {
+            currentWorkflowId: newWorkflow.id,
+            workflowIds: addItemToList(currentProject.workflowIds, newWorkflow.id, findIndexOrUndef(currentProject.workflowIds, posByWorkflowId))
+          }
+        }),
+        workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow)
+      },
+    })
+
+    return newWorkflow.id;
   }
 
   return useCase;

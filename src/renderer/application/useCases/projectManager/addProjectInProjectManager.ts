@@ -5,9 +5,10 @@
 
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
-import { addOneToEntityCollection, getEntitiesArrayFromEntityCollection } from '@/base/entityCollection';
+import { addOneToEntityCollection } from '@/base/entityCollection';
 import { createProject, generateProjectName } from '@/base/project';
 import { modalScreensStateActions } from '@/base/state/actions';
+import { getAllProjectNamesFromProjectIdList } from '@/base/state/actions/usedNames';
 
 type Deps = {
   appStore: AppStore;
@@ -22,7 +23,7 @@ export function createAddProjectInProjectManagerUseCase({
     const { projectIds, projects } = state.ui.modalScreens.data.projectManager;
     if (projects !== null && projectIds !== null) {
       const newItemId = idGenerator();
-      const newProject = createProject(newItemId, generateProjectName(getEntitiesArrayFromEntityCollection(projects).map(item => item?.settings.name || '')))
+      const newProject = createProject(newItemId, generateProjectName(getAllProjectNamesFromProjectIdList(projects, projectIds)))
 
       appStore.set(modalScreensStateActions.updateModalScreen(state, 'projectManager', {
         currentProjectId: newItemId,

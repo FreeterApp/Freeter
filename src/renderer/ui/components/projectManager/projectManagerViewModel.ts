@@ -15,8 +15,9 @@ import { UseAppState } from '@/ui/hooks/appState';
 import { DragEvent, MouseEvent, useCallback, useMemo, useState } from 'react';
 import { mapIdListToEntityList } from '@/base/entityList';
 import { EntityId } from '@/base/entity';
-import { ProjectManagerListItemDeleteProjectAction } from '@/ui/components/projectManager/projectManagerList/projectManagerListItemViewModel';
+import { ProjectManagerListItemProjectAction } from '@/ui/components/projectManager/projectManagerList/projectManagerListItemViewModel';
 import { moveItemInList } from '@/base/list';
+import { DuplicateProjectInProjectManagerUseCase } from '@/application/useCases/projectManager/duplicateProjectInProjectManager';
 
 type Deps = {
   useAppState: UseAppState;
@@ -24,6 +25,7 @@ type Deps = {
   saveChangesInProjectManagerUseCase: SaveChangesInProjectManagerUseCase;
   switchProjectInProjectManagerUseCase: SwitchProjectInProjectManagerUseCase;
   toggleDeletionInProjectManagerUseCase: ToggleDeletionInProjectManagerUseCase;
+  duplicateProjectInProjectManagerUseCase: DuplicateProjectInProjectManagerUseCase;
   updateProjectsOrderInProjectManagerUseCase: UpdateProjectsOrderInProjectManagerUseCase;
   updateProjectSettingsInProjectManagerUseCase: UpdateProjectSettingsInProjectManagerUseCase;
   closeProjectManagerUseCase: CloseProjectManagerUseCase;
@@ -35,6 +37,7 @@ export function createProjectManagerViewModelHook({
   saveChangesInProjectManagerUseCase,
   switchProjectInProjectManagerUseCase,
   toggleDeletionInProjectManagerUseCase,
+  duplicateProjectInProjectManagerUseCase,
   updateProjectSettingsInProjectManagerUseCase,
   updateProjectsOrderInProjectManagerUseCase,
   closeProjectManagerUseCase,
@@ -58,7 +61,7 @@ export function createProjectManagerViewModelHook({
         renderProjectManager,
         currentProjectSettings,
         currentProjectId,
-        deleteProjectIds: deleteProjectIds || {},
+        deleteProjectIds,
         projectIds,
         projects
       }
@@ -148,19 +151,22 @@ export function createProjectManagerViewModelHook({
       setProjectAddedTrigger(!projectAddedTrigger);
     }, [projectAddedTrigger]);
 
-    const deleteProjectAction: ProjectManagerListItemDeleteProjectAction = useCallback((projectId) => toggleDeletionInProjectManagerUseCase(projectId), [])
+    const deleteProjectAction: ProjectManagerListItemProjectAction = useCallback((projectId) => toggleDeletionInProjectManagerUseCase(projectId), [])
+
+    const duplicateProjectAction: ProjectManagerListItemProjectAction = useCallback((projectId) => duplicateProjectInProjectManagerUseCase(projectId), [])
 
 
     return {
       renderProjectManager,
       currentProjectSettings,
       currentProjectId,
-      deleteProjectIds,
+      deleteProjectIds: deleteProjectIds || {},
       projectList,
       draggingProjectId: dragState?.draggingProjectId || null,
       draggingOverProjectId: dragState?.draggingOverProjectId || null,
       projectAddedTrigger,
       deleteProjectAction,
+      duplicateProjectAction,
       updateSettings,
       onOkClick,
       onCancelClick,

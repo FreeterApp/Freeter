@@ -3,12 +3,13 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ipcWidgetDataStorageClearChannel, ipcWidgetDataStorageDeleteChannel, ipcWidgetDataStorageGetKeysChannel, ipcWidgetDataStorageGetTextChannel, ipcWidgetDataStorageSetTextChannel } from '@common/ipc/channels';
+import { ipcCopyWidgetDataStorageChannel, ipcWidgetDataStorageClearChannel, ipcWidgetDataStorageDeleteChannel, ipcWidgetDataStorageGetKeysChannel, ipcWidgetDataStorageGetTextChannel, ipcWidgetDataStorageSetTextChannel } from '@common/ipc/channels';
 import { createWidgetDataStorageControllers } from '@/controllers/widgetDataStorage';
 import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 
 const getTextUseCaseRes = 'GET USECASE RESULT';
 const getKeysUseCaseRes = ['KEY1', 'KEY2'];
+const copyUseCaseRes = true;
 
 function setup() {
   const getTextFromWidgetDataStorageUseCase = jest.fn(async () => getTextUseCaseRes);
@@ -16,6 +17,7 @@ function setup() {
   const clearWidgetDataStorageUseCase = jest.fn(async () => undefined);
   const deleteInWidgetDataStorageUseCase = jest.fn(async () => undefined);
   const getKeysFromWidgetDataStorageUseCase = jest.fn(async () => getKeysUseCaseRes);
+  const copyWidgetDataStorageUseCase = jest.fn(async () => copyUseCaseRes);
 
   const [
     getTextFromWidgetDataStorageController,
@@ -23,12 +25,14 @@ function setup() {
     deleteInWidgetDataStorageController,
     clearWidgetDataStorageController,
     getKeysFromWidgetDataStorageController,
+    copyWidgetDataStorageController
   ] = createWidgetDataStorageControllers({
     getTextFromWidgetDataStorageUseCase,
     setTextInWidgetDataStorageUseCase,
     deleteInWidgetDataStorageUseCase,
     clearWidgetDataStorageUseCase,
     getKeysFromWidgetDataStorageUseCase,
+    copyWidgetDataStorageUseCase,
   })
 
   return {
@@ -37,12 +41,14 @@ function setup() {
     deleteInWidgetDataStorageUseCase,
     clearWidgetDataStorageUseCase,
     getKeysFromWidgetDataStorageUseCase,
+    copyWidgetDataStorageUseCase,
 
     getTextFromWidgetDataStorageController,
     setTextInWidgetDataStorageController,
     deleteInWidgetDataStorageController,
     clearWidgetDataStorageController,
     getKeysFromWidgetDataStorageController,
+    copyWidgetDataStorageController,
   }
 }
 
@@ -150,6 +156,28 @@ describe('WidgetDataStorageControllers', () => {
       expect(getKeysFromWidgetDataStorageUseCase).toBeCalledTimes(1);
       expect(getKeysFromWidgetDataStorageUseCase).toBeCalledWith(widgetId);
       expect(res).toBe(getKeysUseCaseRes);
+    });
+  })
+
+  describe('CopyWidgetDataStorageController', () => {
+    it('should have a right channel name', () => {
+      const { channel } = setup().copyWidgetDataStorageController;
+
+      expect(channel).toBe(ipcCopyWidgetDataStorageChannel)
+    })
+
+    it('should call a right usecase with right params and return a right value', async () => {
+      const srcWidgetId = 'scr widget id';
+      const destWidgetId = 'dest widget id';
+      const { copyWidgetDataStorageController, copyWidgetDataStorageUseCase } = setup();
+      const { handle } = copyWidgetDataStorageController;
+      const event = fixtureIpcMainEvent();
+
+      const res = await handle(event, srcWidgetId, destWidgetId);
+
+      expect(copyWidgetDataStorageUseCase).toBeCalledTimes(1);
+      expect(copyWidgetDataStorageUseCase).toBeCalledWith(srcWidgetId, destWidgetId);
+      expect(res).toBe(copyUseCaseRes);
     });
   })
 })

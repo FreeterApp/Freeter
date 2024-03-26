@@ -6,14 +6,10 @@
 import { AppState } from '@/base/state/app';
 import { StateInStore } from '@common/application/interfaces/store';
 import { deepFreeze } from '@common/helpers/deepFreeze';
+import { fixtureEntitiesState } from '@tests/base/state/fixtures/entitiesState';
 
 const appState: AppState = {
-  entities: {
-    projects: {},
-    widgets: {},
-    widgetTypes: {},
-    workflows: {}
-  },
+  entities: fixtureEntitiesState(),
   ui: {
     dragDrop: {},
     editMode: false,
@@ -21,10 +17,20 @@ const appState: AppState = {
     appConfig: {
       mainHotkey: ''
     },
+    copy: {
+      widgets: {
+        entities: {},
+        list: []
+      },
+      workflows: {
+        entities: {},
+        list: []
+      }
+    },
     modalScreens: {
       data: {
         applicationSettings: { appConfig: null },
-        projectManager: { currentProjectId: '', deleteProjectIds: null, projectIds: null, projects: null },
+        projectManager: { currentProjectId: '', deleteProjectIds: null, projectIds: null, projects: null, duplicateProjectIds: null },
         widgetSettings: { widgetInEnv: null },
         workflowSettings: { workflow: null },
       },
