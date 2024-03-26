@@ -8,7 +8,7 @@ import { createClearWidgetDataStorageUseCase } from '@/application/useCases/widg
 import { createObjectManager } from '@common/base/objectManager';
 
 function setup() {
-  const widgetDataStorageManager = createObjectManager(async () => createInMemoryDataStorage());
+  const widgetDataStorageManager = createObjectManager(async () => createInMemoryDataStorage(), async () => true);
   const useCase = createClearWidgetDataStorageUseCase({
     widgetDataStorageManager
   });

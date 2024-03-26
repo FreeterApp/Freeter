@@ -11,6 +11,7 @@ import { WidgetByIdComponent } from '@/ui/components/widget/widgetById';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC, fixtureWidgetLayoutItemD } from '@tests/base/fixtures/widgetLayout';
 import { fixtureDragDropFromPaletteAdd, fixtureDragDropFromTopBarList, fixtureDragDropFromWorktableLayout, fixtureDragDropOverWorktableLayout } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureWidgetTypeA } from '@tests/base/fixtures/widgetType';
+import { memo } from 'react';
 
 const widgetLayoutTestId = 'widget-layout';
 const widgetLayoutItemTestId = 'widget-layout-item';
@@ -37,6 +38,8 @@ async function setup(
     projectId: 'P-ID',
     resizingItem: undefined,
     workflowId: 'W-ID',
+    copiedWidgets: [],
+    widgetTypes: [],
     ...props
   }
   const dragEndUseCase = jest.fn();
@@ -47,6 +50,9 @@ async function setup(
   const resizeLayoutItemEndUseCase = jest.fn();
   const resizeLayoutItemStartUseCase = jest.fn();
   const resizeLayoutItemUseCase = jest.fn();
+  const addWidgetToWorkflowUseCase = jest.fn();
+  const pasteWidgetToWorkflowUseCase = jest.fn();
+  const showContextMenuUseCase = jest.fn();
 
   const useWidgetLayoutViewModel = createWidgetLayoutViewModelHook({
     dragEndUseCase,
@@ -57,9 +63,12 @@ async function setup(
     resizeLayoutItemEndUseCase,
     resizeLayoutItemStartUseCase,
     resizeLayoutItemUseCase,
+    addWidgetToWorkflowUseCase,
+    pasteWidgetToWorkflowUseCase,
+    showContextMenuUseCase,
   })
 
-  const WidgetById: WidgetByIdComponent = props => <div className='is-widget'>{`WIDGET-${props.id}`}</div>;
+  const WidgetById: WidgetByIdComponent = memo(props => <div className='is-widget'>{`WIDGET-${props.id}`}</div>);
 
   const WidgetLayoutItem = createWidgetLayoutItemComponent({
     WidgetById

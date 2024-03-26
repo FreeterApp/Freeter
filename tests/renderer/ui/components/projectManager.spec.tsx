@@ -28,6 +28,7 @@ async function setup(
   const toggleDeletionInProjectManagerUseCase = jest.fn();
   const updateProjectSettingsInProjectManagerUseCase = jest.fn();
   const updateProjectsOrderInProjectManagerUseCase = jest.fn();
+  const duplicateProjectInProjectManagerUseCase = jest.fn();
   const useProjectManagerViewModel = createProjectManagerViewModelHook({
     useAppState,
     addProjectInProjectManagerUseCase,
@@ -37,6 +38,7 @@ async function setup(
     toggleDeletionInProjectManagerUseCase,
     updateProjectSettingsInProjectManagerUseCase,
     updateProjectsOrderInProjectManagerUseCase,
+    duplicateProjectInProjectManagerUseCase,
   })
   const ProjectManager = createProjectManagerComponent({
     useProjectManagerViewModel

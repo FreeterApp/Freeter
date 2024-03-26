@@ -19,6 +19,7 @@ import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { AppState } from '@/base/state/app';
 import { fixtureWidgetCoreSettingsA, fixtureWidgetCoreSettingsB } from '@tests/base/fixtures/widget';
 import { fixtureWorktableNotResizing, fixtureWorktableResizingItem } from '@tests/base/state/fixtures/worktable';
+import { memo } from 'react';
 
 const classIsDragging = 'is-dragging';
 const classIsDropArea = 'is-drop-area';
@@ -40,6 +41,9 @@ async function setup(
   const dragLeaveTargetUseCase = jest.fn();
   const dropOnTopBarListUseCase = jest.fn();
   const openWidgetSettingsUseCase = jest.fn();
+  const addWidgetToShelfUseCase = jest.fn();
+  const pasteWidgetToShelfUseCase = jest.fn();
+  const showContextMenuUseCase = jest.fn();
 
   const useShelfViewModel = createShelfViewModelHook({
     useAppState,
@@ -48,9 +52,12 @@ async function setup(
     dragOverTopBarListUseCase,
     dragWidgetFromTopBarListUseCase: dragWidgetFromTopBarListUseCase,
     dropOnTopBarListUseCase,
+    addWidgetToShelfUseCase,
+    pasteWidgetToShelfUseCase,
+    showContextMenuUseCase,
   })
 
-  const Widget: WidgetComponent = props => <div className={classIsWidget}>{`WIDGET-${props.widget.id}`}</div>;
+  const Widget: WidgetComponent = memo(props => <div className={classIsWidget}>{`WIDGET-${props.widget.id}`}</div>);
 
   const ShelfItem = createShelfItemComponent({
     Widget
