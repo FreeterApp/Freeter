@@ -5,7 +5,7 @@
 
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { createLayoutItem, moveLayoutItem, removeLayoutItem, WidgetLayoutItemXY } from '@/base/widgetLayout';
-import { mapIdListToEntityList, removeEntityFromList } from '@/base/entityList';
+import { removeEntityFromList } from '@/base/entityList';
 import { EntityId } from '@/base/entity';
 import { AppStore } from '@/application/interfaces/store';
 import { dragDropStateActions, entityStateActions } from '@/base/state/actions';
@@ -14,6 +14,7 @@ import { CloneWidgetToWidgetLayoutSubCase } from '@/application/useCases/workflo
 import { CreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
 import { AddItemToWidgetLayoutSubCase } from '@/application/useCases/workflow/subs/addItemToWidgetLayout';
 import { generateWidgetName } from '@/base/widget';
+import { getAllWidgetNamesFromWidgetLayout } from '@/base/state/actions/usedNames';
 
 type Deps = {
   appStore: AppStore;
@@ -40,7 +41,10 @@ export function createDropOnWorktableLayoutUseCase({
           if (widgetType) {
             const toWorkflow = getOneFromEntityCollection(state.entities.workflows, toWorkflowId);
             if (toWorkflow) {
-              const newWidget = createWidgetSubCase(widgetType, generateWidgetName(widgetType.name, mapIdListToEntityList(state.entities.widgets, toWorkflow.layout.map(item => item.widgetId)).map(item => item?.coreSettings.name || '')))
+              const newWidget = createWidgetSubCase(
+                widgetType,
+                generateWidgetName(widgetType.name, getAllWidgetNamesFromWidgetLayout(state.entities.widgets, toWorkflow.layout))
+              )
               const newWidgetLayout = addItemToWidgetLayoutSubCase(
                 newWidget.id,
                 toWorkflow.layout,
@@ -72,7 +76,13 @@ export function createDropOnWorktableLayoutUseCase({
               const toWorkflow = getOneFromEntityCollection(state.entities.workflows, toWorkflowId);
 
               if (toWorkflow) {
-                const [newWidget, newLayout] = await cloneWidgetToWidgetLayoutSubCase(widget, toWorkflow.layout, mapIdListToEntityList(state.entities.widgets, toWorkflow.layout.map(item => item.widgetId)).map(item => item?.coreSettings.name || ''), { w: widgetType.minSize.w, h: widgetType.minSize.h }, toXY);
+                const [newWidget, newLayout] = await cloneWidgetToWidgetLayoutSubCase(
+                  widget,
+                  toWorkflow.layout,
+                  getAllWidgetNamesFromWidgetLayout(state.entities.widgets, toWorkflow.layout),
+                  { w: widgetType.minSize.w, h: widgetType.minSize.h },
+                  toXY
+                );
                 state = {
                   ...state,
                   entities: {

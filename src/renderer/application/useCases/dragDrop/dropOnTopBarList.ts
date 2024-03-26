@@ -6,7 +6,7 @@
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { removeLayoutItem } from '@/base/widgetLayout';
 import { createListItem } from '@/base/widgetList';
-import { mapIdListToEntityList, moveEntityInList } from '@/base/entityList';
+import { moveEntityInList } from '@/base/entityList';
 import { AppStore } from '@/application/interfaces/store';
 import { dragDropStateActions, entityStateActions } from '@/base/state/actions';
 import { CloneWidgetToWidgetListSubCase } from '@/application/useCases/shelf/subs/cloneWidgetToWidgetList';
@@ -14,6 +14,7 @@ import { addOneToEntityCollection, getOneFromEntityCollection } from '@/base/ent
 import { CreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
 import { generateWidgetName } from '@/base/widget';
 import { AddItemToWidgetListSubCase } from '@/application/useCases/shelf/subs/addItemToWidgetList';
+import { getAllWidgetNamesFromWidgetList } from '@/base/state/actions/usedNames';
 
 type Deps = {
   appStore: AppStore;
@@ -38,7 +39,10 @@ export function createDropOnTopBarListUseCase({
         if (draggingFrom.palette.widgetTypeId) {
           const widgetType = getOneFromEntityCollection(state.entities.widgetTypes, draggingFrom.palette.widgetTypeId);
           if (widgetType) {
-            const newWidget = createWidgetSubCase(widgetType, generateWidgetName(widgetType.name, mapIdListToEntityList(state.entities.widgets, widgetList.map(item => item.widgetId)).map(item => item?.coreSettings.name || '')))
+            const newWidget = createWidgetSubCase(
+              widgetType,
+              generateWidgetName(widgetType.name, getAllWidgetNamesFromWidgetList(state.entities.widgets, widgetList))
+            )
             const newWidgetList = addItemToWidgetListSubCase(newWidget.id, widgetList, targetListItemId)
 
             state = {
@@ -63,7 +67,12 @@ export function createDropOnTopBarListUseCase({
 
             const { widgetList } = state.ui.shelf;
 
-            const [newWidget, newWidgetList] = await cloneWidgetToWidgetListSubCase(widget, widgetList, mapIdListToEntityList(state.entities.widgets, widgetList.map(item => item.widgetId)).map(item => item?.coreSettings.name || ''), targetListItemId)
+            const [newWidget, newWidgetList] = await cloneWidgetToWidgetListSubCase(
+              widget,
+              widgetList,
+              getAllWidgetNamesFromWidgetList(state.entities.widgets, widgetList),
+              targetListItemId
+            )
 
             state = {
               ...state,

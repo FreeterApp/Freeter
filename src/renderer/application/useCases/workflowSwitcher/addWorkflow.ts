@@ -7,8 +7,8 @@ import { AppStore } from '@/application/interfaces/store';
 import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
 import { addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
-import { mapIdListToEntityList } from '@/base/entityList';
 import { addItemToList, findIndexOrUndef } from '@/base/list';
+import { getAllWorkflowNamesFromWorkflowIdList } from '@/base/state/actions/usedNames';
 import { generateWorkflowName } from '@/base/workflow';
 
 type Deps = {
@@ -26,7 +26,7 @@ export function createAddWorkflowUseCase({
     if (!currentProject) {
       return undefined;
     }
-    const newWorkflow = createWorkflowSubCase(generateWorkflowName(mapIdListToEntityList(state.entities.workflows, currentProject.workflowIds).map(item => item?.settings.name || '')))
+    const newWorkflow = createWorkflowSubCase(generateWorkflowName(getAllWorkflowNamesFromWorkflowIdList(state.entities.workflows, currentProject.workflowIds)))
 
     appStore.set({
       ...state,

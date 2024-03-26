@@ -7,9 +7,9 @@ import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
 import { EntityId } from '@/base/entity';
 import { addOneToEntityCollection, getOneFromEntityCollection } from '@/base/entityCollection';
-import { mapIdListToEntityList } from '@/base/entityList';
 import { createProject } from '@/base/project';
 import { modalScreensStateActions } from '@/base/state/actions';
+import { getAllProjectNamesFromProjectIdList } from '@/base/state/actions/usedNames';
 import { generateCopyName } from '@/base/utils';
 
 type Deps = {
@@ -36,7 +36,7 @@ export function createDuplicateProjectInProjectManagerUseCase({
     }
 
     const newItemId = idGenerator();
-    const newProject = createProject(newItemId, generateCopyName(duplicateFrom.settings.name, mapIdListToEntityList(projects, state.ui.projectSwitcher.projectIds).map(item => item?.settings.name || '')))
+    const newProject = createProject(newItemId, generateCopyName(duplicateFrom.settings.name, getAllProjectNamesFromProjectIdList(projects, projectIds)))
 
     appStore.set(modalScreensStateActions.updateModalScreen(state, 'projectManager', {
       currentProjectId: newItemId,
