@@ -9,9 +9,15 @@ body {
   user-select: none;
   background-color: #F8F8F8;
 }
-body, select, input, textarea, button {
+
+body, select, a, input, textarea, button {
   font-family: Roboto;
   font-size: 14px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 button {
@@ -27,7 +33,8 @@ fieldset {
 select, input, textarea {
   border: 1px solid #CECECE;
   border-radius: 2px;
-  background-color: #FFF;
+  background-color: var(--main-color);
+  // background-color: #FFF;
   color: #3B3B3B;
   padding: 6px;
 }

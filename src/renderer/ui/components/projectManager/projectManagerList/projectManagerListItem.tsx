@@ -25,9 +25,10 @@ export function ProjectManagerListItem(props: ProjectManagerListItemProps) {
   } = useProjectManagerListItemViewModel(props);
 
   return (
-    <button
+    <a
       className={clsx(styles['project-list-item'], isDropArea && styles['is-drop-area'])}
       role="tab"
+      href=""
       aria-selected={isCurrent}
       draggable={true}
       onClick={onClickHandler}
@@ -45,6 +46,6 @@ export function ProjectManagerListItem(props: ProjectManagerListItemProps) {
         actionBarItems={actionBarItems}
         className={clsx(styles['project-list-item-action-bar'], hasDeletionMark && styles['always-visible'])}
       ></ActionBar>
-    </button>
+    </a>
   )
 }
