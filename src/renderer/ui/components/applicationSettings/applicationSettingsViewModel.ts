@@ -4,6 +4,7 @@
  */
 
 import { CloseApplicationSettingsUseCase } from '@/application/useCases/applicationSettings/closeApplicationSettings';
+import { GetUiThemeOptionsUseCase } from '@/application/useCases/applicationSettings/getUiThemeOptions';
 import { GetMainHotkeyOptionsUseCase } from '@/application/useCases/applicationSettings/getMainHotkeyOptions';
 import { SaveApplicationSettingsUseCase } from '@/application/useCases/applicationSettings/saveApplicationSettings';
 import { UpdateApplicationSettingsUseCase } from '@/application/useCases/applicationSettings/updateApplicationSettings';
@@ -17,6 +18,7 @@ type Deps = {
   saveApplicationSettingsUseCase: SaveApplicationSettingsUseCase;
   updateApplicationSettingsUseCase: UpdateApplicationSettingsUseCase;
   closeApplicationSettingsUseCase: CloseApplicationSettingsUseCase;
+  getUiThemeOptionsUseCase: GetUiThemeOptionsUseCase;
 }
 
 export function createApplicationSettingsViewModelHook({
@@ -25,8 +27,10 @@ export function createApplicationSettingsViewModelHook({
   saveApplicationSettingsUseCase,
   updateApplicationSettingsUseCase,
   closeApplicationSettingsUseCase,
+  getUiThemeOptionsUseCase,
 }: Deps) {
   const hotkeyOptions = getMainHotkeyOptionsUseCase();
+  const uiThemeOptions = getUiThemeOptionsUseCase();
 
   function useViewModel() {
     const {
@@ -53,6 +57,7 @@ export function createApplicationSettingsViewModelHook({
       updateSettings,
       onOkClickHandler,
       onCancelClickHandler,
+      uiThemeOptions,
     }
   }
 

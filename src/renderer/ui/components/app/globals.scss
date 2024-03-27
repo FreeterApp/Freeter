@@ -7,7 +7,7 @@
 
 body {
   user-select: none;
-  background-color: #F8F8F8;
+  background-color: var(--freeter-background);
 }
 
 body, select, a, input, textarea, button {
@@ -31,24 +31,38 @@ fieldset {
   padding: 0;
 }
 select, input, textarea {
-  border: 1px solid #CECECE;
   border-radius: 2px;
-  background-color: var(--main-color);
-  // background-color: #FFF;
-  color: #3B3B3B;
   padding: 6px;
+}
+
+input {
+  border: 1px solid var(--freeter-inputBorder);
+  background-color: var(--freeter-inputBackground);
+  color: var(--freeter-inputColor);
+}
+
+select {
+  border: 1px solid var(--freeter-selectBorder);
+  background-color: var(--freeter-selectBackground);
+  color: var(--freeter-selectColor);
+}
+
+textarea {
+  border: 1px solid var(--freeter-textareaBorder);
+  background-color: var(--freeter-textareaBackground);
+  color: var(--freeter-textareaColor);
 }
 
 select {
   padding-right: 24px;
   appearance: none;
   background-size: 12px 12px;
-  background-image: linear-gradient(45deg, #fff 9px, transparent 0),
-      linear-gradient(-45deg, #fff 9px, transparent 0),
-      linear-gradient(45deg, #3B3B3B 10px, transparent 0),
-      linear-gradient(-45deg, #3B3B3B 10px, transparent 0);
+  background-image: linear-gradient(45deg, var(--freeter-inputBackground) 9px, transparent 0),
+      linear-gradient(-45deg, var(--freeter-inputBackground) 9px, transparent 0),
+      linear-gradient(45deg, var(--freeter-inputColor) 10px, transparent 0),
+      linear-gradient(-45deg, var(--freeter-inputColor) 10px, transparent 0);
   background-repeat: no-repeat;
-  background-color: #fff;
+  background-color: var(--freeter-inputBackground);
   background-position: calc(100% - 6px) calc(50% + 4px);
 }
 
@@ -59,10 +73,10 @@ input[type="checkbox"] {
   vertical-align: middle;
   margin: 0;
   font: inherit;
-  color: #3B3B3B;
+  color: var(--freeter-inputColor);
   width: 16px;
   height: 16px;
-  border: 1px solid #3B3B3B;
+  border: 1px solid var(--freeter-inputBorder);
   border-radius: 1px;
   transform: translateY(-0.075em);
   margin-right: 6px;
@@ -79,7 +93,7 @@ input[type="checkbox"]::before {
   clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
   transform: scale(0) translate(-50%, -50%);
   transform-origin: bottom left;
-  box-shadow: inset 12px 12px #3B3B3B;
+  box-shadow: inset 12px 12px var(--freeter-inputColor);
 }
 
 input[type="checkbox"]:checked::before {
@@ -87,7 +101,7 @@ input[type="checkbox"]:checked::before {
 }
 
 input[type="checkbox"]:focus {
-  outline: 1px solid #005FB8;
+  outline: 1px solid var(--freeter-outline);
   outline-offset: 2px;
 }
 
@@ -96,7 +110,7 @@ input[type="checkbox"]:disabled {
 }
 
 *:focus-visible {
-  outline: #005FB8 solid 1px;
+  outline: var(--freeter-outline) solid 1px;
   outline-offset: -1px;
 }
 
@@ -108,12 +122,12 @@ input[type="checkbox"]:disabled {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(100, 100, 100, 0.4);
+  background-color: var(--freeter-scrollbarThumb);
   &:hover {
-    background-color: rgba(100, 100, 100, 0.7);
+    background-color: var(--freeter-scrollbarThumbHover);
   }
   &:active {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: var(--freeter-scrollbarThumbActive);
   }
 }
 

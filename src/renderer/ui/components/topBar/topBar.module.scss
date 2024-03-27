@@ -7,9 +7,9 @@
   display: flex;
   position: fixed;
   z-index: 3;
-  background-color: #F8F8F8;
-  border-top: 1px solid #ECECEC;
-  border-bottom: 1px solid #ECECEC;
+  background-color: var(--freeter-topBarBackground);
+  border-top: 1px solid var(--freeter-topBarBorder);
+  border-bottom: 1px solid var(--freeter-topBarBorder);
   top: 0;
   left: 0;
   right: 0;
@@ -21,7 +21,7 @@
   height: 60px;
   display: flex;
   &:not(:last-child) {
-    border-right: 1px solid #ECECEC;
+    border-right: 1px solid var(--freeter-topBarBorder);
   }
 }
 

@@ -14,13 +14,14 @@
   left: 0;
   width: 30%;
   overflow: auto;
+  background: var(--freeter-projectManagerListBackground);
   &:not(:hover)::-webkit-scrollbar{
     display: none;
   }
 }
 
 .settings-editor {
-  border-left: 1px solid #ECECEC;
+  border-left: 1px solid var(--freeter-modalScreenBorder);
   right:0;
   width: 70%;
 }

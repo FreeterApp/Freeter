@@ -4,8 +4,8 @@
  */
 
 .workflow-switcher-bar {
-  background-color: #F8F8F8;
-  border-bottom: 1px solid #ECECEC;
+  background-color: var(--freeter-workflowSwitcherBackground);
+  border-bottom: 1px solid var(--freeter-workflowSwitcherBorder);
   position: fixed;
   z-index: 2;
   top: 62px;
@@ -28,7 +28,7 @@
   bottom: -1px;
   box-sizing: content-box;
   &.is-drop-area {
-    background-color: #005FB840;
+    background-color: var(--freeter-workflowSwitcherDropAreaBackground);
   }
   &:not(:hover)::-webkit-scrollbar{
     display: none;
@@ -62,7 +62,7 @@
   outline-offset: -2px;
   margin: 0;
   padding: 0 48px 0 12px;
-  border: 1px solid #ECECEC;
+  border: 1px solid var(--freeter-workflowSwitcherBorder);
   box-sizing: border-box;
   height: 38px;
   line-height: 36px;
@@ -71,7 +71,8 @@
 }
 .workflow-switcher-item-button {
   display: inline-block;
-  background-color: #F8F8F8;
+  background-color: var(--freeter-workflowSwitcherTabBackground);
+  color: var(--freeter-workflowSwitcherTabColor);
   white-space: nowrap;
   min-width: 124px;
   cursor: pointer;
@@ -84,7 +85,7 @@
   right: 0;
   left: 0;
   bottom: 0;
-  border-bottom-color: #FFF;
+  border-bottom-color: var(--freeter-workflowSwitcherTabOpenBackground);
 }
 
 .workflow-switcher-item-action-bar {
@@ -93,28 +94,30 @@
   top: 6px;
   right: 2px;
   bottom: 6px;
-  background-color: #F8F8F8;
-  border-left: 1px solid #ECECEC;
+  background-color: var(--freeter-workflowSwitcherTabBackground);
+  border-left: 1px solid var(--freeter-workflowSwitcherBorder);
 }
 
 .workflow-switcher-item {
   &:hover {
     > .workflow-switcher-item-button, .workflow-switcher-item-action-bar {
-      background-color: #FFFFFF;
+      background-color: var(--freeter-workflowSwitcherTabHoverBackground);
+      color: var(--freeter-workflowSwitcherTabHoverColor);
     }
   }
   &:has(> .workflow-switcher-item-button[aria-selected="true"]) {
     > .workflow-switcher-item-button {
-      background-color: #FFFFFF;
-      border-bottom-color: #FFFFFF;
+      background-color: var(--freeter-workflowSwitcherTabOpenBackground);
+      border-bottom-color: var(--freeter-workflowSwitcherTabOpenBackground);
+      color: var(--freeter-workflowSwitcherTabOpenColor);
     }
     > .workflow-switcher-item-action-bar {
-      background-color: #FFFFFF;
+      background-color: var(--freeter-workflowSwitcherTabOpenBackground);
     }
   }
   &:has(> .workflow-switcher-item-button.is-drop-area) {
     > .workflow-switcher-item-button {
-      background-color: #005FB840;
+      background-color: var(--freeter-workflowSwitcherDropAreaBackground);
     }
   }
 }

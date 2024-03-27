@@ -33,8 +33,8 @@ export function createPaletteComponent({
       <div
         className={clsx(styles.palette, isHidden && styles['is-hidden'])}
       >
-        <span className={clsx(styles['palette-toggle'], styles['palette-toggle-add'])} tabIndex={0}>Add Widget</span>
-        <span className={clsx(styles['palette-toggle'], styles['palette-toggle-paste'])} tabIndex={0}>Paste Widget</span>
+        <span className={clsx(styles['palette-tab'], styles['palette-tab-add'])} tabIndex={0}>Add Widget</span>
+        <span className={clsx(styles['palette-tab'], styles['palette-tab-paste'])} tabIndex={0}>Paste Widget</span>
         <ul
           data-testid="palette-add"
           className={clsx(styles['palette-section'], styles['palette-section-add'])}

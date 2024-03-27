@@ -9,7 +9,8 @@
   top: 0;
   right: 0;
   bottom: 0;
-  background-color: #F8F8F8;
+  background-color: var(--freeter-widgetBackground);
+  color: var(--freeter-widgetColor)
 }
 .widget-header {
   position: absolute;
@@ -18,8 +19,9 @@
   right: 0;
   height: 26px;
   box-sizing: content-box;
-  background-color: #F8F8F8;
-  border-bottom: 1px solid #ECECEC;
+  background-color: var(--freeter-widgetHeaderBackground);
+  color: var(--freeter-widgetHeaderColor);
+  border-bottom: 1px solid var(--freeter-widgetHeaderBorder);
   overflow: hidden;
 }
 .widget-header-name {
@@ -41,8 +43,8 @@
   top: 0;
   right: 0;
   bottom: 0;
-  background-color: #F8F8F8;
-  border-left: 1px solid #ECECEC;
+  background-color: var(--freeter-widgetHeaderBackground);
+  border-left: 1px solid var(--freeter-widgetHeaderBorder);
 }
 
 .widget:not(.dont-show-action-bar) {

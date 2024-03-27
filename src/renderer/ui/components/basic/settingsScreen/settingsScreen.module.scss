@@ -12,7 +12,7 @@
   }
 
   font-size: 14px;
-  color: #3B3B3B;
+  color: var(--freeter-settingsScreenPanelColor);
   fieldset:not(:first-child) {
     margin-top: 24px;
   }
@@ -51,8 +51,6 @@
     display: block;
     line-height: 22px;
     padding: 2px 6px;
-    border: 1px solid #CECECE;
-    background-color: #FFF;
     width: 240px;
     box-sizing: border-box;
   }

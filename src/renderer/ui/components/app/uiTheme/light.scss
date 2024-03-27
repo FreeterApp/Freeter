@@ -1,0 +1,152 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+html.theme-light {
+  /**
+   * Common
+   */
+  --freeter-background: #F8F8F8;
+  --freeter-outline: #005FB8;
+
+  /**
+   * Inputs
+   */
+  --freeter-inputBackground: #FFFFFF;
+  --freeter-inputColor: #3B3B3B;
+  --freeter-inputBorder: #CECECE;
+
+  --freeter-selectBackground: #FFFFFF;
+  --freeter-selectColor: #3B3B3B;
+  --freeter-selectBorder: #CECECE;
+
+  --freeter-textareaBackground: #FFFFFF;
+  --freeter-textareaColor: #3B3B3B;
+  --freeter-textareaBorder: #CECECE;
+
+  /**
+   * Scroll Bar
+   */
+  --freeter-scrollbarThumb: rgba(100, 100, 100, 0.4);
+  --freeter-scrollbarThumbHover: rgba(100, 100, 100, 0.7);
+  --freeter-scrollbarThumbActive: rgba(0, 0, 0, 0.6);
+
+  /**
+   * Buttons
+   */
+  --freeter-buttonBackground: transparent;
+  --freeter-buttonColor: #3B3B3B;
+  --freeter-buttonHoverBackground: #A6A6A650;
+  --freeter-buttonActiveBackground: #A6A6A650;
+  --freeter-buttonPressedBackground: #005FB840;
+  --freeter-buttonPressedBorder: #005FB8;
+
+  --freeter-buttonPrimaryBackground: #005FB8;
+  --freeter-buttonPrimaryColor: #FFFFFF;
+  --freeter-buttonPrimaryHoverBackground: #0258A8;
+  --freeter-buttonPrimaryActiveBackground: #0258A8;
+
+  /**
+   * In-App Notes
+   */
+  --freeter-inAppNoteColor: #3B3B3B60;
+  --freeter-inAppNoteIconColor: #3B3B3B;
+  --freeter-inAppNoteNoProjectsBackground: #F8F8F8;
+  --freeter-inAppNoteNoWorkflowsBackground: #F8F8F8;
+  --freeter-inAppNoteNoWidgetsBackground: #FFFFFF;
+
+  /**
+   * Widget Palette
+   */
+  --freeter-paletteBackground: #F8F8F8;
+  --freeter-paletteBorder: #ECECEC;
+  --freeter-paletteShadow: #00000040;
+  --freeter-paletteTabBackground: transparent;
+  --freeter-paletteTabColor: #000000;
+  --freeter-paletteTabHoverBackground: #FFFFFF;
+  --freeter-paletteTabHoverColor: #000000;
+  --freeter-paletteSectionBackground: #FFFFFF;
+  --freeter-paletteItemBackground: transparent;
+  --freeter-paletteItemColor: #000000;
+  --freeter-paletteItemHoverBackground: #A6A6A680;
+  --freeter-paletteItemHoverColor: #000;
+
+  /**
+   * Top Bar
+   */
+  --freeter-topBarBackground: #F8F8F8;
+  --freeter-topBarBorder: #ECECEC;
+
+  --freeter-shelfDropAreaBackground: #005FB840;
+
+  --freeter-shelfTabColor: #000000;
+  --freeter-shelfTabOpenBackground: #FFFFFF;
+  --freeter-shelfTabOpenColor: #000000;
+
+  --freeter-shelfWidgetBoxBackground: #FFFFFF;
+  --freeter-shelfWidgetBoxBorder: #ECECEC;
+  --freeter-shelfWidgetBoxShadow: #00000040;
+  --freeter-shelfWidgetBoxWidgetBorder: #ECECEC;
+
+  /**
+   * Workflow Switcher
+   */
+  --freeter-workflowSwitcherBackground: #F8F8F8;
+  --freeter-workflowSwitcherBorder: #ECECEC;
+  --freeter-workflowSwitcherDropAreaBackground: #005FB840;
+
+  --freeter-workflowSwitcherTabBackground: #F8F8F8;
+  --freeter-workflowSwitcherTabColor: #000000;
+  --freeter-workflowSwitcherTabHoverBackground: #FFFFFF;
+  --freeter-workflowSwitcherTabHoverColor: #000000;
+  --freeter-workflowSwitcherTabOpenBackground: #FFFFFF;
+  --freeter-workflowSwitcherTabOpenColor: #000000;
+
+  /**
+   * Worktable
+   */
+  --freeter-worktableBackground: #FFFFFF;
+
+  --freeter-widgetLayoutItemBorder: #ECECEC;
+  --freeter-widgetLayoutItemEditHoverBorder: #A6A6A6;
+  --freeter-widgetLayoutItemResizingBorder: #000000;
+  --freeter-widgetLayoutItemResizingOpacity: 0.5;
+  --freeter-widgetLayoutGhostBackground: #005FB840;
+
+  /**
+   * Modal Screens
+   */
+  --freeter-modalScreenBackground: #F8F8F8;
+  --freeter-modalScreenBorder: #ECECEC;
+
+  --freeter-settingsScreenPanelColor: #3B3B3B;
+
+  --freeter-projectManagerListBackground: transparent;
+  --freeter-projectManagerListItemBackground: #F8F8F8;
+  --freeter-projectManagerListItemColor: #000000;
+  --freeter-projectManagerListItemHoverBackground: #F2F2F2;
+  --freeter-projectManagerListItemHoverColor: #000000;
+  --freeter-projectManagerListItemSelectedBackground: #E4E6F1;
+  --freeter-projectManagerListItemSelectedColor: #000000;
+  --freeter-projectManagerListItemDropAreaBackground: #005FB840;
+
+  --freeter-aboutScreenBorder: #ECECEC;
+  --freeter-aboutScreenLeftBackground: #F8F8F8;
+  --freeter-aboutScreenLeftColor: #000000;
+  --freeter-aboutScreenRightBackground: #FFFFFF;
+  --freeter-aboutScreenRightColor: #000000;
+  --freeter-aboutScreenRightLinkColor: #005FB8;
+  --freeter-aboutScreenLogoColor1: #3B3B3B;
+  --freeter-aboutScreenLogoColor2: #FFFFFF;
+  --freeter-aboutScreenLogoBorderColor: #F8F8F8;
+
+  /**
+   * Widget
+   */
+  --freeter-widgetBackground: #F8F8F8;
+  --freeter-widgetColor: #000;
+  --freeter-widgetHeaderBackground: #F8F8F8;
+  --freeter-widgetHeaderBorder: #ECECEC;
+  --freeter-widgetHeaderColor: #000000;
+}

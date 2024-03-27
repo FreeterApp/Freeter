@@ -7,19 +7,22 @@
   display: flex;
   width: 100%;
   outline-offset: -2px;
-  background-color: #F8F8F8;
+  color: var(--freeter-projectManagerListItemColor);
+  background-color: var(--freeter-projectManagerListItemBackground);
   border: 1px solid transparent;
   box-sizing: border-box;
   align-items: center;
   cursor: pointer;
   &:hover {
-    background-color: #F2F2F2;
+    color: var(--freeter-projectManagerListItemHoverColor);
+    background-color: var(--freeter-projectManagerListItemHoverBackground);
   }
   &[aria-selected="true"] {
-    background-color: #e4e6f1;
+    color: var(--freeter-projectManagerListItemSelectedColor);
+    background-color: var(--freeter-projectManagerListItemSelectedBackground);
   }
   &.is-drop-area {
-    background-color: #005FB840;
+    background-color: var(--freeter-projectManagerListItemDropAreaBackground);
   }
 }
 

@@ -10,7 +10,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #F8F8F8;
+  background-color: var(--freeter-modalScreenBackground);
 }
 
 .modal-screen-header {
@@ -19,7 +19,7 @@
   left: 0;
   right: 0;
   height: 60px;
-  border-bottom: 1px solid #ECECEC;
+  border-bottom: 1px solid var(--freeter-modalScreenBorder);
   box-sizing: border-box;
   display: flex;
   align-items: center;

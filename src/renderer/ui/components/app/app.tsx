@@ -11,6 +11,7 @@ import styles from './app.module.scss';
 import {SvgIcon} from '@/ui/components/basic/svgIcon';
 import { manage24Svg } from '@/ui/assets/images/appIcons';
 import { InAppNote } from '@/ui/components/basic/inAppNote';
+import { UITheme } from '@/ui/components/app/uiTheme/uiTheme';
 
 type Deps = {
   TopBar: React.FC;
@@ -28,9 +29,10 @@ export function createAppComponent({
   useAppViewModel
 }: Deps) {
   function App() {
-    const {showPalette, modalScreens, hasModalScreens, hasProjects, contextMenuHandler} = useAppViewModel();
+    const {showPalette, modalScreens, hasModalScreens, hasProjects, contextMenuHandler, uiTheme} = useAppViewModel();
     return (
       <div onContextMenu={contextMenuHandler}>
+        <UITheme themeId={uiTheme} />
         <div data-testid="main-screen" {...{ inert: hasModalScreens ? '' : undefined }}>
           <TopBar />
           {

@@ -13,7 +13,8 @@
   left: 0;
   overflow: hidden;
   width: 50%;
-  background-color: #F8F8F8;
+  background-color: var(--freeter-aboutScreenLeftBackground);
+  color: var(--freeter-aboutScreenLeftColor);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,10 +22,11 @@
 }
 
 .about-right {
-  border-left: 1px solid #ECECEC;
+  border-left: 1px solid var(--freeter-aboutScreenBorder);
   right:0;
   width: 50%;
-  background-color: #FFF;
+  background-color: var(--freeter-aboutScreenRightBackground);
+  color: var(--freeter-aboutScreenRightColor);
   padding: 30px 36px;
   box-sizing: border-box;
   overflow: auto;
@@ -57,7 +59,7 @@
     padding: 0;
   }
   a {
-    color: #005fb8;
+    color: var(--freeter-aboutScreenRightLinkColor);
     text-decoration: none;
     &:hover {
       text-decoration: underline;
@@ -66,12 +68,12 @@
 }
 
 .app-logo {
-  background-color: #FFF;
+  background-color: var(--freeter-aboutScreenLogoColor2);
   display: inline-block;
-  border: 3px solid #F8F8F8;
+  border: 3px solid var(--freeter-aboutScreenLogoBorderColor);
 }
 .app-logo-svg {
-  color: #3B3B3B;
+  color: var(--freeter-aboutScreenLogoColor1);
   width: 150px;
   height: 150px;
   display: block;

@@ -13,18 +13,18 @@
 
 .worktable {
   overflow: hidden;
-  background: #ffffff;
+  background: var(--freeter-worktableBackground);
 }
 
 .no-workflows {
-  background-color: #F8F8F8;
+  background-color: var(--freeter-inAppNoteNoWorkflowsBackground);
 }
 
 .edit-mode-icon, .add-icon {
   display: inline-block;
   vertical-align: middle;
   margin: 0 6px;
-  color: #3B3B3B;
+  color: var(--freeter-inAppNoteIconColor);
 }
 .edit-mode-icon {
   width: 24px;
