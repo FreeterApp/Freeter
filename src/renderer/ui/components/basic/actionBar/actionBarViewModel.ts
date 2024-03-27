@@ -5,7 +5,7 @@
 
 import { EntityId } from '@/base/entity';
 import { ActionBarItems } from '@/base/actionBar';
-import { useCallback } from 'react';
+import { MouseEvent, useCallback } from 'react';
 import { clickActionBarItemUseCase } from '@/application/useCases/actionBar/clickActionBarItem';
 
 export interface ActionBarProps {
@@ -15,7 +15,9 @@ export interface ActionBarProps {
 
 export function useActionBarViewModel(props: ActionBarProps) {
   const { actionBarItems } = props;
-  const onActionBarItemClick = useCallback((actionId: EntityId) => {
+  const onActionBarItemClick = useCallback((e: MouseEvent, actionId: EntityId) => {
+    e.preventDefault();
+    e.stopPropagation();
     clickActionBarItemUseCase(actionBarItems, actionId);
   }, [actionBarItems])
 
