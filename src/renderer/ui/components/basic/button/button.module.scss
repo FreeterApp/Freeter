@@ -112,6 +112,7 @@ $fontSizeL: 16px;
   &[aria-pressed='true'] {
     border: $borderSize solid var(--freeter-buttonPressedBorder);
     background-color: var(--freeter-buttonPressedBackground) !important;
+    color: var(--freeter-buttonPressedColor);
   }
 }
 

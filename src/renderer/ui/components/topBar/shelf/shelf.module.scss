@@ -81,9 +81,9 @@
 
   &:not(.is-drop-area) {
     &:hover, &:focus-visible, &:focus-within {
-      color: var(--freeter-shelfTabOpenColor);
       background-color: var(--freeter-shelfTabOpenBackground);
       .shelf-item-caption {
+        color: var(--freeter-shelfTabOpenColor);
         border-bottom-color: var(--freeter-shelfTabOpenBackground);
       }
     }

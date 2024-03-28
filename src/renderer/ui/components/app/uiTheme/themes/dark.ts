@@ -1,147 +1,166 @@
+const base = {
+  primary: '#2488DB',
+
+  inputBackground: '#313131',
+  inputColor: '#CCCCCC',
+  inputBorder: '#3C3C3C',
+
+  componentBackground: '#181818',
+  componentBorder: '#2B2B2B',
+  componentColor: '#CCCCCC',
+
+  dropAreaBackground: '#2488DB40',
+
+  openBackground: '#1F1F1F',
+  shadow: '#00000070',
+}
+
 export const darkTheme = {
   /**
    * Common
    */
-  background: '#F8F8F8',
-  outline: '#005FB8',
-
-  /**
-   * Inputs
-   */
-  inputBackground: '#FFFFFF',
-  inputColor: '#3B3B3B',
-  inputBorder: '#CECECE',
-
-  selectBackground: '#FFFFFF',
-  selectColor: '#3B3B3B',
-  selectBorder: '#CECECE',
-
-  textareaBackground: '#FFFFFF',
-  textareaColor: '#3B3B3B',
-  textareaBorder: '#CECECE',
+  background: base.componentBackground,
+  outline: base.primary,
 
   /**
    * Scroll Bar
    */
   scrollbarThumb: 'rgba(100, 100, 100, 0.4)',
   scrollbarThumbHover: 'rgba(100, 100, 100, 0.7)',
-  scrollbarThumbActive: 'rgba(0, 0, 0, 0.6)',
+  scrollbarThumbActive: 'rgba(255, 255, 255, 0.6)',
+
+  /**
+   * Inputs
+   */
+  inputBackground: base.inputBackground,
+  inputColor: base.inputColor,
+  inputBorder: base.inputBorder,
+
+  selectBackground: base.inputBackground,
+  selectColor: base.inputColor,
+  selectBorder: base.inputBorder,
+
+  textareaBackground: base.inputBackground,
+  textareaColor: base.inputColor,
+  textareaBorder: base.inputBorder,
 
   /**
    * Buttons
    */
   buttonBackground: 'transparent',
-  buttonColor: '#3B3B3B',
-  buttonHoverBackground: '#A6A6A650',
-  buttonActiveBackground: '#A6A6A650',
-  buttonPressedBackground: '#005FB840',
-  buttonPressedBorder: '#005FB8',
+  buttonColor: '#CCCCCC',
+  buttonHoverBackground: '#5A5D5E50',
+  buttonActiveBackground: '#5A5D5E50',
+  buttonPressedBackground: `${base.primary}40`,
+  buttonPressedBorder: base.primary,
+  buttonPressedColor: '#FFFFFF',
 
-  buttonPrimaryBackground: '#005FB8',
+  buttonPrimaryBackground: '#0078D4',
   buttonPrimaryColor: '#FFFFFF',
-  buttonPrimaryHoverBackground: '#0258A8',
-  buttonPrimaryActiveBackground: '#0258A8',
+  buttonPrimaryHoverBackground: '#026EC1',
+  buttonPrimaryActiveBackground: '#026EC1',
 
   /**
    * In-App Notes
    */
-  inAppNoteColor: '#3B3B3B60',
-  inAppNoteIconColor: '#3B3B3B',
-  inAppNoteNoProjectsBackground: '#F8F8F8',
-  inAppNoteNoWorkflowsBackground: '#F8F8F8',
-  inAppNoteNoWidgetsBackground: '#FFFFFF',
+  inAppNoteColor: '#CCCCCC60',
+  inAppNoteIconColor: '#CCCCCC',
+  inAppNoteNoProjectsBackground: '#181818',
+  inAppNoteNoWorkflowsBackground: '#181818',
 
   /**
    * Widget Palette
    */
-  paletteBackground: '#F8F8F8',
-  paletteBorder: '#ECECEC',
-  paletteShadow: '#00000040',
+  paletteBackground: base.componentBackground,
+  paletteBorder: base.componentBorder,
+  paletteShadow: base.shadow,
+  paletteNoteColor: base.componentColor,
   paletteTabBackground: 'transparent',
-  paletteTabColor: '#000000',
-  paletteTabHoverBackground: '#FFFFFF',
-  paletteTabHoverColor: '#000000',
-  paletteSectionBackground: '#FFFFFF',
+  paletteTabColor: base.componentColor,
+  paletteTabHoverBackground: base.openBackground,
+  paletteTabHoverColor: '#FFFFFF',
+  paletteSectionBackground: base.openBackground,
   paletteItemBackground: 'transparent',
-  paletteItemColor: '#000000',
-  paletteItemHoverBackground: '#A6A6A680',
-  paletteItemHoverColor: '#000',
+  paletteItemColor: base.componentColor,
+  paletteItemHoverBackground: '#37373D',
+  paletteItemHoverColor: base.componentColor,
 
   /**
    * Top Bar
    */
-  topBarBackground: '#F8F8F8',
-  topBarBorder: '#ECECEC',
+  topBarBackground: base.componentBackground,
+  topBarBorder: base.componentBorder,
 
-  shelfDropAreaBackground: '#005FB840',
+  shelfDropAreaBackground: base.dropAreaBackground,
 
-  shelfTabColor: '#000000',
-  shelfTabOpenBackground: '#FFFFFF',
-  shelfTabOpenColor: '#000000',
+  shelfTabColor: base.componentColor,
+  shelfTabOpenBackground: base.openBackground,
+  shelfTabOpenColor: '#FFFFFF',
 
-  shelfWidgetBoxBackground: '#FFFFFF',
-  shelfWidgetBoxBorder: '#ECECEC',
-  shelfWidgetBoxShadow: '#00000040',
-  shelfWidgetBoxWidgetBorder: '#ECECEC',
+  shelfWidgetBoxBackground: base.openBackground,
+  shelfWidgetBoxBorder: base.componentBorder,
+  shelfWidgetBoxShadow: base.shadow,
+  shelfWidgetBoxWidgetBorder: '#323232',
 
   /**
    * Workflow Switcher
    */
-  workflowSwitcherBackground: '#F8F8F8',
-  workflowSwitcherBorder: '#ECECEC',
-  workflowSwitcherDropAreaBackground: '#005FB840',
+  workflowSwitcherBackground: base.componentBackground,
+  workflowSwitcherBorder: base.componentBorder,
+  workflowSwitcherDropAreaBackground: base.dropAreaBackground,
 
-  workflowSwitcherTabBackground: '#F8F8F8',
-  workflowSwitcherTabColor: '#000000',
-  workflowSwitcherTabHoverBackground: '#FFFFFF',
-  workflowSwitcherTabHoverColor: '#000000',
-  workflowSwitcherTabOpenBackground: '#FFFFFF',
-  workflowSwitcherTabOpenColor: '#000000',
+  workflowSwitcherTabBackground: base.componentBackground,
+  workflowSwitcherTabColor: base.componentColor,
+  workflowSwitcherTabHoverBackground: base.openBackground,
+  workflowSwitcherTabHoverColor: base.componentColor,
+  workflowSwitcherTabOpenBackground: base.openBackground,
+  workflowSwitcherTabOpenColor: '#FFFFFF',
 
   /**
    * Worktable
    */
-  worktableBackground: '#FFFFFF',
+  worktableBackground: base.openBackground,
 
-  widgetLayoutItemBorder: '#ECECEC',
-  widgetLayoutItemEditHoverBorder: '#A6A6A6',
-  widgetLayoutItemResizingBorder: '#000000',
+  widgetLayoutItemBorder: '#323232',
+  widgetLayoutItemEditHoverBorder: '#565656',
+  widgetLayoutItemResizingBorder: '#FFFFFF',
   widgetLayoutItemResizingOpacity: '0.5',
-  widgetLayoutGhostBackground: '#005FB840',
+  widgetLayoutGhostBackground: base.dropAreaBackground,
 
   /**
    * Modal Screens
    */
-  modalScreenBackground: '#F8F8F8',
-  modalScreenBorder: '#ECECEC',
+  modalScreenBackground: '#1F1F1F',
+  modalScreenBorder: base.componentBorder,
+  modalScreenColor: base.componentColor,
 
-  settingsScreenPanelColor: '#3B3B3B',
+  settingsScreenPanelColor: '#CCCCCC',
 
-  projectManagerListBackground: 'transparent',
-  projectManagerListItemBackground: '#F8F8F8',
-  projectManagerListItemColor: '#000000',
-  projectManagerListItemHoverBackground: '#F2F2F2',
-  projectManagerListItemHoverColor: '#000000',
-  projectManagerListItemSelectedBackground: '#E4E6F1',
-  projectManagerListItemSelectedColor: '#000000',
-  projectManagerListItemDropAreaBackground: '#005FB840',
+  projectManagerListBackground: base.componentBackground,
+  projectManagerListItemBackground: base.componentBackground,
+  projectManagerListItemColor: base.componentColor,
+  projectManagerListItemHoverBackground: '#2A2D2E',
+  projectManagerListItemHoverColor: base.componentColor,
+  projectManagerListItemSelectedBackground: '#37373D',
+  projectManagerListItemSelectedColor: '#FFFFFF',
+  projectManagerListItemDropAreaBackground: base.dropAreaBackground,
 
-  aboutScreenBorder: '#ECECEC',
-  aboutScreenLeftBackground: '#F8F8F8',
-  aboutScreenLeftColor: '#000000',
-  aboutScreenRightBackground: '#FFFFFF',
-  aboutScreenRightColor: '#000000',
-  aboutScreenRightLinkColor: '#005FB8',
+  aboutScreenBorder: base.componentBorder,
+  aboutScreenLeftBackground: base.componentBackground,
+  aboutScreenLeftColor: base.componentColor,
+  aboutScreenRightBackground: '#1F1F1F',
+  aboutScreenRightColor: base.componentColor,
+  aboutScreenRightLinkColor: base.primary,
   aboutScreenLogoColor1: '#3B3B3B',
   aboutScreenLogoColor2: '#FFFFFF',
-  aboutScreenLogoBorderColor: '#F8F8F8',
+  aboutScreenLogoBorderColor: '#181818',
 
   /**
    * Widget
    */
-  widgetBackground: '#F8F8F8',
-  widgetColor: '#000',
-  widgetHeaderBackground: '#F8F8F8',
-  widgetHeaderBorder: '#ECECEC',
-  widgetHeaderColor: '#000000',
+  widgetBackground: '#262626',
+  widgetColor: base.componentColor,
+  widgetHeaderBackground: '#262626',
+  widgetHeaderBorder: '#323232',
+  widgetHeaderColor: base.componentColor,
 }
