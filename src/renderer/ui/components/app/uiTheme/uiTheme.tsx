@@ -4,25 +4,22 @@
  */
 
 import { useEffect } from 'react';
-import './dark.scss';
-import './light.scss';
-
-const allThemeIds = ['dark', 'light'] as const;
-type ThemeId = typeof allThemeIds[number];
+import { UiThemeId } from '@/base/uiTheme';
+import { uiThemes } from '@/ui/components/app/uiTheme/themes';
 
 export interface UIThemeProps {
-  themeId: ThemeId;
+  themeId: UiThemeId;
 }
 
 export const UITheme = ({
   themeId
 }: UIThemeProps) => {
   useEffect(() => {
-    const themeClassName = `theme-${themeId}`;
-    document.getElementsByTagName('html')[0].classList.add(themeClassName);
-    return () => {
-      document.getElementsByTagName('html')[0].classList.remove(themeClassName);
-    };
+    const theme = uiThemes[themeId];
+    Object.keys(theme).forEach((key) => {
+      const value = theme[key as keyof typeof theme];
+      document.documentElement.style.setProperty(`--freeter-${key}`, value);
+    });
   }, [themeId])
   return <></>;
 }

@@ -55,10 +55,10 @@ export function createApplicationSettingsComponent({
           >
             <select id="ui-theme" value={appConfig.uiTheme} onChange={e => updateSettings({
               ...appConfig,
-              uiTheme: e.target.value === 'light' ? 'light' : 'dark'
+              uiTheme: e.target.value
             })}>
               {uiThemeOptions.map(item=>(
-                <option key={item.value} value={item.value}>{item.caption}</option>
+                <option key={item.id} value={item.id}>{item.name}</option>
               ))}
             </select>
           </SettingBlock>

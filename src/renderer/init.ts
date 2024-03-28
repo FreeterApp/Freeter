@@ -126,7 +126,6 @@ import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/she
 import { createAddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
 import { createCreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
-import { createGetUiThemeOptionsUseCase } from '@/application/useCases/applicationSettings/getUiThemeOptions';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -319,7 +318,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     ...deps,
     process: processProvider
   })
-  const getUiThemeOptionsUseCase = createGetUiThemeOptionsUseCase();
   const openApplicationSettingsUseCase = createOpenApplicationSettingsUseCase(deps);
   const closeApplicationSettingsUseCase = createCloseApplicationSettingsUseCase(deps);
   const saveApplicationSettingsUseCase = createSaveApplicationSettingsUseCase(deps);
@@ -480,7 +478,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     initMainShortcutUseCase,
 
     getMainHotkeyOptionsUseCase,
-    getUiThemeOptionsUseCase,
     openApplicationSettingsUseCase,
     closeApplicationSettingsUseCase,
     saveApplicationSettingsUseCase,

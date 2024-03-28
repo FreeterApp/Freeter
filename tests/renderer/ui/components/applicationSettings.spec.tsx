@@ -17,7 +17,6 @@ import { ProcessInfo } from '@common/base/process';
 import { fixtureAppConfig } from '@tests/base/fixtures/appConfig';
 import { fixtureApplicationSettings } from '@tests/base/state/fixtures/applicationSettings';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
-import { createGetUiThemeOptionsUseCase } from '@/application/useCases/applicationSettings/getColorThemeOptions';
 
 async function setup(
   appState: AppState,
@@ -37,7 +36,6 @@ async function setup(
   const closeApplicationSettingsUseCase = jest.fn();
   const updateApplicationSettingsUseCase = jest.fn();
   const saveApplicationSettingsUseCase = jest.fn();
-  const getColorThemeOptionsUseCase = createGetUiThemeOptionsUseCase();
 
   const useApplicationSettingsViewModel = createApplicationSettingsViewModelHook({
     useAppState,
@@ -45,7 +43,6 @@ async function setup(
     closeApplicationSettingsUseCase,
     updateApplicationSettingsUseCase,
     saveApplicationSettingsUseCase,
-    getUiThemeOptionsUseCase: getColorThemeOptionsUseCase,
   })
 
   const ApplicationSettings = createApplicationSettingsComponent({
@@ -62,7 +59,6 @@ async function setup(
     saveApplicationSettingsUseCase,
     closeApplicationSettingsUseCase,
     updateApplicationSettingsUseCase,
-    getColorThemeOptionsUseCase,
   }
 }
 
@@ -166,7 +162,7 @@ describe('<ApplicationSettings />', () => {
       const mainHotkeyOptions= getMainHotkeyOptionsUseCase()
 
       expect(screen.getByRole('combobox', { name: /^Hotkey Combination$/i })).toHaveValue(appConfig.mainHotkey);
-      expect(screen.getByRole('combobox', { name: /^Color theme$/i })).toHaveValue(appConfig.uiTheme);
+      expect(screen.getByRole('combobox', { name: /^User Interface Theme$/i })).toHaveValue(appConfig.uiTheme);
 
       const appConfig2 = fixtureAppConfig({mainHotkey: mainHotkeyOptions[1].value, uiTheme: 'dark'});
       act(() => appStore.set(fixtureAppState({
@@ -182,7 +178,7 @@ describe('<ApplicationSettings />', () => {
       })))
 
       expect(screen.getByRole('combobox', { name: /^Hotkey Combination$/i })).toHaveValue(appConfig2.mainHotkey);
-      expect(screen.getByRole('combobox', { name: /^Color theme$/i })).toHaveValue(appConfig2.uiTheme);
+      expect(screen.getByRole('combobox', { name: /^User Interface Theme$/i })).toHaveValue(appConfig2.uiTheme);
     })
 
     it('should call updateApplicationSettingsUseCase with right args when editing the hotkey', async () => {

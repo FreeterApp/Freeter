@@ -6,6 +6,7 @@
 import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
 import { contextMenuForTextInput } from '@/base/contextMenu';
 import { ModalScreenId } from '@/base/state/ui';
+import { sanitizeUiThemeId } from '@/base/uiTheme';
 import { UseAppState } from '@/ui/hooks/appState';
 import React, { ReactNode, createElement } from 'react';
 
@@ -80,13 +81,15 @@ export function createAppViewModelHook({
         }
       }
     }
+
+    const uiThemeId = sanitizeUiThemeId(uiTheme);
     return {
       showPalette,
       hasProjects,
       modalScreens,
       hasModalScreens,
       contextMenuHandler,
-      uiTheme
+      uiThemeId
     }
   }
 

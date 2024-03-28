@@ -5,5 +5,5 @@
 
 export interface AppConfig {
   mainHotkey: string;
-  uiTheme: 'dark' | 'light';
+  uiTheme: string;
 }
