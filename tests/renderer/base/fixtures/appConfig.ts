@@ -7,7 +7,8 @@ import { AppConfig } from '@/base/appConfig';
 import { deepFreeze } from '@common/helpers/deepFreeze';
 
 const appConfig: AppConfig = {
-  mainHotkey: ''
+  mainHotkey: '',
+  uiTheme: 'light'
 }
 
 export const fixtureAppConfig = (testData?: Partial<AppConfig>): AppConfig => deepFreeze({

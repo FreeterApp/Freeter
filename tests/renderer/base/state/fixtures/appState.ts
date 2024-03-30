@@ -15,7 +15,8 @@ const appState: AppState = {
     editMode: false,
     menuBar: true,
     appConfig: {
-      mainHotkey: ''
+      mainHotkey: '',
+      uiTheme: 'light'
     },
     copy: {
       widgets: {
