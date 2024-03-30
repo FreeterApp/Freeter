@@ -24,14 +24,14 @@ export function createTopBarComponent({
     return (
       <div className={styles['top-bar']}>
         <div className={styles['top-bar-section']}>
-          <EditModeToggle />
-        </div>
-        <div className={styles['top-bar-section']}>
           <ProjectSwitcher />
           <ManageProjectsButton />
         </div>
         <div className={clsx(styles['top-bar-section'], styles['top-bar-shelf-section'])}>
           <Shelf />
+        </div>
+        <div className={styles['top-bar-section']}>
+          <EditModeToggle />
         </div>
       </div>
     )
