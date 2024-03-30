@@ -4,45 +4,34 @@
  */
 
 .palette {
-  position: fixed;
-  top: 138px;
-  left: 50%;
-  transform: translateX(-50%);
   background-color: var(--freeter-paletteBackground);
-  box-shadow: 0 4px 8px 0 var(--freeter-paletteShadow);
-  border: 1px solid var(--freeter-paletteBorder);
-  &.is-hidden {
-    // The display:none, visibility:hidden block the native drag
-    // Using the transform method to fix that
-    transition: transform 0.01s;
-    transform: translateX(-9999px);
-  }
+  // border: 1px solid var(--freeter-paletteBorder);
 }
 
 @mixin palette-tab-hover {
   color: var(--freeter-paletteTabHoverColor);
-  background-color: var(--freeter-paletteSectionBackground);
-  border-bottom-color: transparent;
+  background-color: var(--freeter-paletteTabHoverBackground);
 }
 
 .palette-tab {
   z-index:1;
   display: inline-block;
-  padding: 18px;
-  font-size: 14px;
-  line-height: 14px;
-  border-bottom:1px solid var(--freeter-paletteBorder);
+  font-family: 'Roboto Condensed';
+  padding: 22px 16px;
+  font-size: 16px;
+  line-height: 16px;
   background-color: var(--freeter-paletteTabBackground);
   color: var(--freeter-paletteTabColor);
   &:not(:first-child) {
     border-left:1px solid var(--freeter-paletteBorder);
   }
-  &:hover {
-    @include palette-tab-hover;
-  }
 }
-.palette:not(:hover) {
-  border-bottom: none;
+.palette:not(.hide-sections) {
+  .palette-tab {
+    &:hover {
+      @include palette-tab-hover;
+    }
+  }
 }
 .palette-section {
   box-sizing: border-box;
@@ -53,6 +42,7 @@
   max-height: 500px;
   display: none;
   background-color: var(--freeter-paletteSectionBackground);
+  box-shadow: 0 4px 8px 0 var(--freeter-paletteShadow);
 }
 .palette-sectionnote {
   padding: 18px;
@@ -73,6 +63,14 @@ $sections: 'add', 'paste';
 
   .palette-tab-#{$section}:has(~ .palette-section-#{$section}:hover) {
     @include palette-tab-hover;
+  }
+}
+.palette.hide-sections {
+  .palette-section {
+    // The display:none, visibility:hidden block the native drag
+    // Using the transform method to fix that
+    transition: transform 0.01s;
+    transform: translateX(-9999px);
   }
 }
 

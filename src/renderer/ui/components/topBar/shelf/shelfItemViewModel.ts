@@ -71,8 +71,8 @@ export function useShelfItemViewModel(shelfItemEl: React.RefObject<HTMLLIElement
   }, [id, onContextMenu])
 
 
-  const itemElRectRefreshDep = useMemo(() => ({ orderNum, scrollLeft }), [
-    orderNum, scrollLeft
+  const itemElRectRefreshDep = useMemo(() => ({ orderNum, scrollLeft, isEditMode }), [
+    orderNum, scrollLeft, isEditMode
   ]);
   const itemElRect = useElementRect(shelfItemEl, { useViewportRect: true, refreshDep: itemElRectRefreshDep });
 

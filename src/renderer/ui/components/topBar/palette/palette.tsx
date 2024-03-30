@@ -25,13 +25,13 @@ export function createPaletteComponent({
       onPasteItemDragStart,
       onPasteItemClick,
       widgetTypes,
-      isHidden,
-      copiedWidgets
+      copiedWidgets,
+      hideSections
     } = usePaletteViewModel();
 
     return (
       <div
-        className={clsx(styles.palette, isHidden && styles['is-hidden'])}
+        className={clsx(styles.palette, hideSections && styles['hide-sections'])}
       >
         <span className={clsx(styles['palette-tab'], styles['palette-tab-add'])} tabIndex={0}>Add Widget</span>
         <span className={clsx(styles['palette-tab'], styles['palette-tab-paste'])} tabIndex={0}>Paste Widget</span>

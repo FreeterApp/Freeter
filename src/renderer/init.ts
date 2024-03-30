@@ -15,8 +15,8 @@ import { createDropOnWorktableLayoutUseCase } from '@/application/useCases/dragD
 import { createResizeLayoutItemUseCase, createResizeLayoutItemEndUseCase, createResizeLayoutItemStartUseCase } from '@/application/useCases/worktable/resizeLayoutItem';
 import { uuidv4IdGenerator } from '@/infra/idGenerator/uuidv4IdGenerator';
 import { createAppComponent } from '@/ui/components/app';
-import { createPaletteComponent } from '@/ui/components/palette';
-import { createPaletteViewModelHook } from '@/ui/components/palette/paletteViewModel';
+import { createPaletteComponent } from '@/ui/components/topBar/palette';
+import { createPaletteViewModelHook } from '@/ui/components/topBar/palette/paletteViewModel';
 import { createTopBarComponent } from '@/ui/components/topBar';
 import { createShelfComponent, createShelfItemComponent } from '@/ui/components/topBar/shelf';
 import { createShelfViewModelHook } from '@/ui/components/topBar/shelf/shelfViewModel';
@@ -127,6 +127,7 @@ import { createAddWidgetToShelfUseCase } from '@/application/useCases/shelf/addW
 import { createCreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { defaultUiThemeId } from '@/base/uiTheme';
+import { createTopBarViewModelHook } from '@/ui/components/topBar/topBarViewModel';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -568,11 +569,14 @@ function createUI(stateHooks: ReturnType<typeof createUiHooks>, useCases: Awaite
     useManageProjectsButtonViewModel
   })
 
+  const useTopBarViewModel = createTopBarViewModelHook(deps);
   const TopBar = createTopBarComponent({
     EditModeToggle,
     ProjectSwitcher,
     ManageProjectsButton,
     Shelf,
+    Palette,
+    useTopBarViewModel
   });
 
   const useWidgetSettingsViewModel = createWidgetSettingsViewModelHook(deps);
@@ -619,7 +623,6 @@ function createUI(stateHooks: ReturnType<typeof createUiHooks>, useCases: Awaite
   });
 
   const App = createAppComponent({
-    Palette,
     TopBar,
     WorkflowSwitcher,
     Worktable,

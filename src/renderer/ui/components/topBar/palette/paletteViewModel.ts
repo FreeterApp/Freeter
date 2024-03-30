@@ -33,11 +33,10 @@ export function createPaletteViewModelHook({
       widgetTypeIds,
       dndSourceTypeId,
       currentWorkflowId,
-      hasDragDropFrom,
-      hasWorktableResizingItem,
       copiedWidgetIds,
       copiedWidgetEntities,
-      widgetTypeEntities
+      widgetTypeEntities,
+      hasDragDropFrom
     ] = useAppState(state => {
       const currentProjectId = state.ui.projectSwitcher.currentProjectId;
       const currentProject = getOneFromEntityCollection(state.entities.projects, currentProjectId);
@@ -45,15 +44,15 @@ export function createPaletteViewModelHook({
         state.ui.palette.widgetTypeIds,
         state.ui.dragDrop.from?.palette?.widgetTypeId,
         currentProject?.currentWorkflowId || '',
-        !!state.ui.dragDrop.from,
-        !!state.ui.worktable.resizingItem,
         state.ui.copy.widgets.list,
         state.ui.copy.widgets.entities,
-        state.entities.widgetTypes
+        state.entities.widgetTypes,
+        !!state.ui.dragDrop.from,
       ]
     })
 
-    const isHidden = hasDragDropFrom || hasWorktableResizingItem;
+    const hideSections = hasDragDropFrom;
+
     const widgetTypes = useAppState.useEntityList(state => state.entities.widgetTypes, widgetTypeIds);
     type CopiedWidget = {
       id: EntityId;
@@ -102,8 +101,8 @@ export function createPaletteViewModelHook({
     return {
       widgetTypes,
       dndSourceTypeId,
-      isHidden,
       copiedWidgets,
+      hideSections,
       onAddItemDragStart,
       onAddItemDragEnd,
       onAddItemClick,

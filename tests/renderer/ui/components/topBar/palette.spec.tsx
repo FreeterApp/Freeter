@@ -4,8 +4,8 @@
  */
 
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import { createPaletteComponent } from '@/ui/components/palette/palette';
-import { createPaletteViewModelHook } from '@/ui/components/palette/paletteViewModel';
+import { createPaletteComponent } from '@/ui/components/topBar/palette/palette';
+import { createPaletteViewModelHook } from '@/ui/components/topBar/palette/paletteViewModel';
 import { createDragEndUseCase } from '@/application/useCases/dragDrop/dragEnd';
 import { createDragWidgetFromPaletteUseCase } from '@/application/useCases/dragDrop/dragWidgetFromPalette';
 import { createAppStateHook } from '@/ui/hooks/appState';
@@ -15,7 +15,6 @@ import { fixturePalette } from '@tests/base/state/fixtures/palette';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { AppState } from '@/base/state/app';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
-import { fixtureWorktableNotResizing, fixtureWorktableResizingItem } from '@tests/base/state/fixtures/worktable';
 import { fixtureCopyState } from '@tests/base/state/fixtures/copy';
 import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetC, fixtureWidgetD } from '@tests/base/fixtures/widget';
 import { fixtureWidgetTypeA } from '@tests/base/fixtures/widgetType';
@@ -57,7 +56,7 @@ async function setup(
   }
 }
 
-const classIsHidden = 'is-hidden';
+const classHideSections = 'hide-sections';
 const dragItemId = 'DRAG-ITEM-ID';
 
 describe('<Palette />', () => {
@@ -205,7 +204,7 @@ describe('<Palette />', () => {
     expect(within(palPaste).queryAllByRole('listitem').length).toBe(4);
   });
 
-  it('should not add "is-hidden" class to the palette, when "dragging from" state is undefined', async () => {
+  it('should not add "hide-sections" class to the palette, when "dragging from" state is undefined', async () => {
     const {comp} = await setup(fixtureAppState({
       ui: {
         dragDrop: {
@@ -214,10 +213,10 @@ describe('<Palette />', () => {
       }
     }));
 
-    expect(comp.container.firstChild).not.toHaveClass(classIsHidden);
+    expect(comp.container.firstChild).not.toHaveClass(classHideSections);
   });
 
-  it('should add "is-hidden" class to the palette, when "dragging from" state is defined', async () => {
+  it('should add "hide-sections" class to the palette, when "dragging from" state is defined', async () => {
     const {comp} = await setup(fixtureAppState({
       ui: {
         dragDrop: {
@@ -226,27 +225,7 @@ describe('<Palette />', () => {
       }
     }));
 
-    expect(comp.container.firstChild).toHaveClass(classIsHidden);
-  });
-
-  it('should not add "is-hidden" class to the palette, when not resizing an item in the worktable', async () => {
-    const {comp} = await setup(fixtureAppState({
-      ui: {
-        worktable: fixtureWorktableNotResizing()
-      }
-    }));
-
-    expect(comp.container.firstChild).not.toHaveClass(classIsHidden);
-  });
-
-  it('should add "is-hidden" class to the palette, when resizing an item in the worktable', async () => {
-    const {comp} = await setup(fixtureAppState({
-      ui: {
-        worktable: fixtureWorktableResizingItem()
-      }
-    }));
-
-    expect(comp.container.firstChild).toHaveClass(classIsHidden);
+    expect(comp.container.firstChild).toHaveClass(classHideSections);
   });
 
   it('should call right use cases with right params, when start/end dragging item from the Add Widget list', async () => {
