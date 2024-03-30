@@ -6,6 +6,9 @@
 const uiThemeIds = ['dark', 'light'] as const;
 
 export type UiThemeId = typeof uiThemeIds[number];
+
+export const defaultUiThemeId: UiThemeId = 'light';
+
 export interface UiThemeData {
   name: string;
 }
@@ -25,5 +28,5 @@ export function sanitizeUiThemeId(id: string): UiThemeId {
   if (isUiThemeId(id)) {
     return id;
   }
-  return 'dark';
+  return defaultUiThemeId;
 }

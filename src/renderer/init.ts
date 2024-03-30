@@ -126,6 +126,7 @@ import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/she
 import { createAddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
 import { createCreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
+import { defaultUiThemeId } from '@/base/uiTheme';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -145,7 +146,7 @@ function createStore() {
       menuBar: true,
       appConfig: {
         mainHotkey: 'CmdOrCtrl+Shift+F',
-        uiTheme: 'dark'
+        uiTheme: defaultUiThemeId
       },
       copy: {
         widgets: {
