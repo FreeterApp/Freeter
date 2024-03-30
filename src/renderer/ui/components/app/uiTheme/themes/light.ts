@@ -21,6 +21,10 @@ export const lightTheme = {
    */
   background: base.componentBackground,
   outline: base.primary,
+  componentBackground: base.componentBackground,
+  componentBorder: base.componentBorder,
+  componentColor: base.componentColor,
+  dropAreaBackground: base.dropAreaBackground,
 
   /**
    * Scroll Bar
@@ -55,7 +59,7 @@ export const lightTheme = {
   buttonPressedBorder: base.primary,
   buttonPressedColor: '#3B3B3B',
 
-  buttonPrimaryBackground: '#005FB8',
+  buttonPrimaryBackground: base.primary,
   buttonPrimaryColor: '#FFFFFF',
   buttonPrimaryHoverBackground: '#0258A8',
   buttonPrimaryActiveBackground: '#0258A8',

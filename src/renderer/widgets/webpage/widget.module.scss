@@ -22,8 +22,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  background: #FFF;
-  color: #000;
+  background: var(--freeter-componentBackground);
+  color:  var(--freeter-componentColor);
 }
 .not-configured {
   display: block;

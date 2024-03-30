@@ -21,6 +21,10 @@ export const darkTheme = {
    */
   background: base.componentBackground,
   outline: base.primary,
+  componentBackground: base.componentBackground,
+  componentBorder: base.componentBorder,
+  componentColor: base.componentColor,
+  dropAreaBackground: base.dropAreaBackground,
 
   /**
    * Scroll Bar

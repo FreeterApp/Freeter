@@ -40,7 +40,7 @@ $item-height: 32px;
     opacity: 0.8;
   }
   &.is-drop-area {
-    background-color: #005FB840;
+    background-color: var(--freeter-dropAreaBackground);
   }
 }
 .done-item-actionbar {
@@ -51,8 +51,13 @@ $item-height: 32px;
   visibility: hidden;
 }
 .todo-list-item:not(.is-editor) {
+  background-color: var(--freeter-buttonBackground);
+  color: var(--freeter-buttonColor);
   &:hover, &:active, &:focus-within {
-    background-color: #A6A6A650;
+    background-color: var(--freeter-buttonHoverBackground);
+    input[type="checkbox"] {
+      border-color: var(--freeter-buttonColor);
+    }
     &.is-done {
       .done-item-actionbar {
         visibility: visible;
