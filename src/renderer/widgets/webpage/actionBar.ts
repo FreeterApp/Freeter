@@ -4,10 +4,11 @@
  */
 
 import { ActionBarItems } from '@/base/actionBar';
-import { canGoBack, canGoForward, canGoHome, canRefresh, goBack, goForward, goHome, labelGoBack, labelGoForward, labelGoHome, labelRefresh, refresh } from './actions';
-import { backSvg, forwardSvg, homeSvg, refreshSvg } from './icons';
+import { canGoBack, canGoForward, canGoHome, canRefresh, goBack, goForward, goHome, labelGoBack, labelGoForward, labelGoHome, labelOpenInBrowser, labelRefresh, openCurrentInBrowser, refresh } from './actions';
+import { backSvg, forwardSvg, homeSvg, openInBrowserSvg, refreshSvg } from './icons';
+import { WidgetApi } from '@/base/widgetApi';
 
-export function createActionBarItems(elWebview: Electron.WebviewTag | null, homeUrl: string): ActionBarItems {
+export function createActionBarItems(elWebview: Electron.WebviewTag | null, widgetApi: WidgetApi, homeUrl: string): ActionBarItems {
   return (!elWebview || !homeUrl) ? [] : [
     {
       enabled: canGoHome(elWebview, homeUrl),
@@ -36,6 +37,13 @@ export function createActionBarItems(elWebview: Electron.WebviewTag | null, home
       id: 'REFRESH',
       title: labelRefresh,
       doAction: async () => refresh(elWebview)
+    },
+    {
+      enabled: true,
+      icon: openInBrowserSvg,
+      id: 'OPEN-IN-BROWSER',
+      title: labelOpenInBrowser,
+      doAction: async () => openCurrentInBrowser(elWebview, widgetApi)
     }
   ];
 }

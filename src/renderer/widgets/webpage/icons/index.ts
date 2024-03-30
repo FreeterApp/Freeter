@@ -6,6 +6,7 @@
 import backSvg from './back.svg';
 import forwardSvg from './forward.svg';
 import homeSvg from './home.svg';
+import openInBrowserSvg from './open-in-browser.svg';
 import refreshSvg from './refresh.svg';
 import widgetSvg from './widget.svg';
 
@@ -13,6 +14,7 @@ export {
   backSvg,
   forwardSvg,
   homeSvg,
+  openInBrowserSvg,
   refreshSvg,
   widgetSvg
 }

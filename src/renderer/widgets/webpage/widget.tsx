@@ -50,7 +50,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
 
   const sanitUrl = useMemo(() => sanitizeUrl(url), [url]);
 
-  const refreshActions = useCallback(() => updateActionBar(createActionBarItems(webviewRef.current, url)), [updateActionBar, url]);
+  const refreshActions = useCallback(() => updateActionBar(createActionBarItems(webviewRef.current, widgetApi, url)), [updateActionBar, url, widgetApi]);
 
   useEffect(() => {
     setContextMenuFactory(createContextMenuFactory(webviewRef.current, widgetApi, url))
@@ -163,7 +163,7 @@ export function WidgetComp(props: WidgetReactComponentProps<Settings>) {
     if(!url) {
       const {updateActionBar, setContextMenuFactory} = props.widgetApi;
       setContextMenuFactory(createContextMenuFactory(null, props.widgetApi, url));
-      updateActionBar(createActionBarItems(null, url));
+      updateActionBar(createActionBarItems(null, props.widgetApi, url));
     }
   }, [props.widgetApi, url]);
 
