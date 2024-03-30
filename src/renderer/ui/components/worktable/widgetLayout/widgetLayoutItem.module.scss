@@ -7,7 +7,7 @@
   position: absolute;
   transition: all 200ms ease;
   transition-property: transform;
-  border: 1px solid #ECECEC;
+  border: 1px solid var(--freeter-widgetLayoutItemBorder);
   box-sizing: border-box;
 
   /* Absolute positioned elements ignore the padding of the parent. */
@@ -23,15 +23,15 @@
 
   &[draggable=true]:hover {
     // border-style: dotted;
-    border-color: #A6A6A6;
+    border-color: var(--freeter-widgetLayoutItemEditHoverBorder);
   }
 
   &.is-dragging {
     display: none;
   }
   &.is-resizing {
-    opacity: 0.5;
-    border-color: #000;
+    opacity: var(--freeter-widgetLayoutItemResizingOpacity);
+    border-color: var(--freeter-widgetLayoutItemResizingBorder);
   }
   &.is-dragging, &.is-resizing {
     transition-property: none;

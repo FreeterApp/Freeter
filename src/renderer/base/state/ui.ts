@@ -189,7 +189,8 @@ export function createUiState(): UiState {
     editMode: false,
     menuBar: true,
     appConfig: {
-      mainHotkey: 'CmdOrCtrl+Shift+F'
+      mainHotkey: 'CmdOrCtrl+Shift+F',
+      uiTheme: 'dark'
     },
     copy: {
       widgets: {

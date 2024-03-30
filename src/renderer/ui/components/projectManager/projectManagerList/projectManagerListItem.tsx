@@ -25,24 +25,27 @@ export function ProjectManagerListItem(props: ProjectManagerListItemProps) {
   } = useProjectManagerListItemViewModel(props);
 
   return (
-    <div className={styles['project-list-item']}>
-      <button
-        className={clsx(styles['project-list-item-button'], isDropArea && styles['is-drop-area'])}
-        role="tab"
-        aria-selected={isCurrent}
-        draggable={true}
-        onClick={onClickHandler}
-        onDragStart={onDragStartHandler}
-        onDragEnd={onDragEndHandler}
-        onDragEnter={onDragEnterHandler}
-        onDragLeave={onDragLeaveHandler}
-        onDragOver={onDragOverHandler}
-        onDrop={onDropHandler}
-      >{name}</button>
+    <a
+      className={clsx(styles['project-list-item'], isDropArea && styles['is-drop-area'])}
+      role="tab"
+      href=""
+      aria-selected={isCurrent}
+      draggable={true}
+      onClick={onClickHandler}
+      onDragStart={onDragStartHandler}
+      onDragEnd={onDragEndHandler}
+      onDragEnter={onDragEnterHandler}
+      onDragLeave={onDragLeaveHandler}
+      onDragOver={onDragOverHandler}
+      onDrop={onDropHandler}
+    >
+      <div
+        className={styles['project-list-item-name']}
+      >{name}</div>
       <ActionBar
         actionBarItems={actionBarItems}
         className={clsx(styles['project-list-item-action-bar'], hasDeletionMark && styles['always-visible'])}
       ></ActionBar>
-    </div>
+    </a>
   )
 }

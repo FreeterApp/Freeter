@@ -16,7 +16,7 @@
   bottom: -1px;
   box-sizing: content-box;
   &.is-drop-area {
-    background-color: #005FB840;
+    background-color: var(--freeter-shelfDropAreaBackground);
   }
   &:not(:hover)::-webkit-scrollbar{
     display: none;
@@ -27,12 +27,12 @@
   display: inline-block;
   position: relative;
   outline-offset: -2px;
-  background-color: #F8F8F8;
+  background-color: var(--freeter-topBarBackground);
   .shelf-item-caption {
     font-family: 'Roboto Condensed';
-    color: #000000;
+    color: var(--freeter-shelfTabColor);
     display: block;
-    border: 1px solid #ECECEC;
+    border: 1px solid var(--freeter-topBarBorder);
     box-sizing: border-box;
     white-space: nowrap;
     min-width: 120px;
@@ -48,9 +48,9 @@
     z-index: 1;
     position: fixed;
     top: 58px;
-    border: 1px solid #ECECEC;
-    background-color: #FFF;
-    box-shadow: 0 4px 8px 0 #00000040;
+    border: 1px solid var(--freeter-shelfWidgetBoxBorder);
+    background-color: var(--freeter-shelfWidgetBoxBackground);
+    box-shadow: 0 4px 8px 0 var(--freeter-shelfWidgetBoxShadow);
     box-sizing: border-box;
     padding: 6px;
     visibility: hidden;
@@ -64,7 +64,7 @@
     right: 8px;
     bottom: 8px;
     box-sizing: border-box;
-    border: 1px solid #ECECEC;
+    border: 1px solid var(--freeter-shelfWidgetBoxWidgetBorder);
   }
   &:first-child {
     .shelf-item-caption{
@@ -76,17 +76,15 @@
   }
 
   &.is-drop-area {
-    background-color: #005FB840;
+    background-color: var(--freeter-shelfDropAreaBackground);
   }
 
   &:not(.is-drop-area) {
     &:hover, &:focus-visible, &:focus-within {
-      background-color: #FFF;
-    }
-    &:focus-visible, &:focus-within {
-      background-color: #FFF;
+      background-color: var(--freeter-shelfTabOpenBackground);
       .shelf-item-caption {
-        border-bottom-color: #FFF;
+        color: var(--freeter-shelfTabOpenColor);
+        border-bottom-color: var(--freeter-shelfTabOpenBackground);
       }
     }
   }

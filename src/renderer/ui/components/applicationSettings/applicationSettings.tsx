@@ -26,6 +26,7 @@ export function createApplicationSettingsComponent({
       updateSettings,
       onOkClickHandler,
       onCancelClickHandler,
+      uiThemeOptions,
     } = useApplicationSettingsViewModel();
 
     if (appConfig) {
@@ -43,6 +44,21 @@ export function createApplicationSettingsComponent({
             })}>
               {hotkeyOptions.map(item=>(
                 <option key={item.value} value={item.value}>{item.caption}</option>
+              ))}
+            </select>
+          </SettingBlock>
+
+          <SettingBlock
+            titleForId='ui-theme'
+            title='User Interface Theme'
+            moreInfo='The interface theme defines the appearance of all visual elements of the user interface.'
+          >
+            <select id="ui-theme" value={appConfig.uiTheme} onChange={e => updateSettings({
+              ...appConfig,
+              uiTheme: e.target.value
+            })}>
+              {uiThemeOptions.map(item=>(
+                <option key={item.id} value={item.id}>{item.name}</option>
               ))}
             </select>
           </SettingBlock>

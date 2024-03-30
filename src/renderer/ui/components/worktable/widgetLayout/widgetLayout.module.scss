@@ -41,14 +41,14 @@
 }
 
 .no-widgets {
-  background-color: #FFFFFF;
+  background-color: var(--freeter-worktableBackground);
 }
 
 .edit-mode-icon {
   display: inline-block;
   vertical-align: middle;
   margin: 0 6px;
-  color: #3B3B3B;
+  color: var(--freeter-inAppNoteIconColor);
   width: 24px;
   height: 24px;
 }

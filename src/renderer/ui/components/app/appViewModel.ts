@@ -6,6 +6,7 @@
 import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
 import { contextMenuForTextInput } from '@/base/contextMenu';
 import { ModalScreenId } from '@/base/state/ui';
+import { sanitizeUiThemeId } from '@/base/uiTheme';
 import { UseAppState } from '@/ui/hooks/appState';
 import React, { ReactNode, createElement } from 'react';
 
@@ -35,14 +36,16 @@ export function createAppViewModelHook({
       currentProjectId,
       projects,
       workflows,
-      modalScreensOrder
+      modalScreensOrder,
+      uiTheme
     ] = useAppState(state => [
       state.ui.editMode,
       state.ui.projectSwitcher.projectIds,
       state.ui.projectSwitcher.currentProjectId,
       state.entities.projects,
       state.entities.workflows,
-      state.ui.modalScreens.order
+      state.ui.modalScreens.order,
+      state.ui.appConfig.uiTheme
     ])
 
     const projectList = useAppState.useEntityList(state => state.entities.projects, projectIds);
@@ -78,12 +81,15 @@ export function createAppViewModelHook({
         }
       }
     }
+
+    const uiThemeId = sanitizeUiThemeId(uiTheme);
     return {
       showPalette,
       hasProjects,
       modalScreens,
       hasModalScreens,
-      contextMenuHandler
+      contextMenuHandler,
+      uiThemeId
     }
   }
 

@@ -8,6 +8,7 @@ import { GetMainHotkeyOptionsUseCase } from '@/application/useCases/applicationS
 import { SaveApplicationSettingsUseCase } from '@/application/useCases/applicationSettings/saveApplicationSettings';
 import { UpdateApplicationSettingsUseCase } from '@/application/useCases/applicationSettings/updateApplicationSettings';
 import { AppConfig } from '@/base/appConfig';
+import { uiThemes } from '@/base/uiTheme';
 import { UseAppState } from '@/ui/hooks/appState';
 import { useCallback } from 'react';
 
@@ -27,6 +28,7 @@ export function createApplicationSettingsViewModelHook({
   closeApplicationSettingsUseCase,
 }: Deps) {
   const hotkeyOptions = getMainHotkeyOptionsUseCase();
+  const uiThemeOptions = uiThemes;
 
   function useViewModel() {
     const {
@@ -53,6 +55,7 @@ export function createApplicationSettingsViewModelHook({
       updateSettings,
       onOkClickHandler,
       onCancelClickHandler,
+      uiThemeOptions,
     }
   }
 

@@ -14,17 +14,17 @@ $fontSizeL: 16px;
 
 .button {
   display: inline-block;
-  background: none;
   border-radius: 2px;
   box-sizing: border-box;
   white-space: nowrap;
   border: $borderSize solid transparent;
   &:not(.primary) {
-    color: #3B3B3B;
+    background-color: var(--freeter-buttonBackground);
+    color: var(--freeter-buttonColor);
   }
   &.primary {
-    background-color: #005fb8;
-    color: #fff;
+    background-color: var(--freeter-buttonPrimaryBackground);
+    color: var(--freeter-buttonPrimaryColor);
   }
   &.size-s {
     height: $innerHeightS + $padding*2;
@@ -90,22 +90,29 @@ $fontSizeL: 16px;
   &:not([disabled]) {
     cursor: pointer;
     &:not(.primary) {
-      &:hover, &:active, &:focus-visible {
-        background-color: #A6A6A650;
+      &:hover {
+        background-color: var(--freeter-buttonHoverBackground);
+      }
+      &:active, &:focus-visible {
+        background-color: var(--freeter-buttonActiveBackground);
       }
     }
     &.primary {
-      &:hover, &:active, &:focus-visible {
-        background-color: #0258a8;
+      &:hover {
+        background-color: var(--freeter-buttonPrimaryHoverBackground);
+      }
+      &:active, &:focus-visible {
+        background-color: var(--freeter-buttonPrimaryActiveBackground);
       }
     }
   }
   &[aria-pressed='false'] {
-    border: $borderSize solid #00000000;
+    border: $borderSize solid transparent;
   }
   &[aria-pressed='true'] {
-    border: $borderSize solid #005FB8;
-    background-color: #005FB840 !important;
+    border: $borderSize solid var(--freeter-buttonPressedBorder);
+    background-color: var(--freeter-buttonPressedBackground) !important;
+    color: var(--freeter-buttonPressedColor);
   }
 }
 

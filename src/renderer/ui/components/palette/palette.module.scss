@@ -8,9 +8,9 @@
   top: 138px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #F8F8F8;
-  box-shadow: 0 4px 8px 0 #00000040;
-  border: 1px solid #ECECEC;
+  background-color: var(--freeter-paletteBackground);
+  box-shadow: 0 4px 8px 0 var(--freeter-paletteShadow);
+  border: 1px solid var(--freeter-paletteBorder);
   &.is-hidden {
     // The display:none, visibility:hidden block the native drag
     // Using the transform method to fix that
@@ -19,23 +19,26 @@
   }
 }
 
-@mixin palette-toggle-hover {
-  background-color: #FFF;
-  border-bottom-color: #FFF;
+@mixin palette-tab-hover {
+  color: var(--freeter-paletteTabHoverColor);
+  background-color: var(--freeter-paletteSectionBackground);
+  border-bottom-color: transparent;
 }
 
-.palette-toggle {
+.palette-tab {
   z-index:1;
   display: inline-block;
   padding: 18px;
   font-size: 14px;
   line-height: 14px;
-  border-bottom:1px solid #ECECEC;
-  &:not(:last-child) {
-    border-right:1px solid #ECECEC;
+  border-bottom:1px solid var(--freeter-paletteBorder);
+  background-color: var(--freeter-paletteTabBackground);
+  color: var(--freeter-paletteTabColor);
+  &:not(:first-child) {
+    border-left:1px solid var(--freeter-paletteBorder);
   }
   &:hover {
-    @include palette-toggle-hover;
+    @include palette-tab-hover;
   }
 }
 .palette:not(:hover) {
@@ -49,17 +52,18 @@
   z-index:0;
   max-height: 500px;
   display: none;
-  background-color: #FFF;
+  background-color: var(--freeter-paletteSectionBackground);
 }
 .palette-sectionnote {
   padding: 18px;
   font-size: 14px;
   font-style: italic;
+  color: var(--freeter-paletteNoteColor);
 }
 
 $sections: 'add', 'paste';
 @each $section in $sections {
-  .palette-toggle-#{$section}:hover ~ .palette-section-#{$section} {
+  .palette-tab-#{$section}:hover ~ .palette-section-#{$section} {
     display: block;
   }
 
@@ -67,8 +71,8 @@ $sections: 'add', 'paste';
     display: block;
   }
 
-  .palette-toggle-#{$section}:has(~ .palette-section-#{$section}:hover) {
-    @include palette-toggle-hover;
+  .palette-tab-#{$section}:has(~ .palette-section-#{$section}:hover) {
+    @include palette-tab-hover;
   }
 }
 
@@ -81,8 +85,11 @@ $sections: 'add', 'paste';
   padding: 6px 18px;
   white-space: nowrap;
   cursor: pointer;
+  background-color: var(--freeter-paletteItemBackground);
+  color: var(--freeter-paletteItemColor);
   &:hover {
-    background-color: #A6A6A680;
+    background-color: var(--freeter-paletteItemHoverBackground);
+    color: var(--freeter-paletteItemHoverColor);
   }
 }
 
@@ -98,8 +105,4 @@ $sections: 'add', 'paste';
   width: 24px;
   height: 24px;
   margin-right: 6px;
-}
-
-.palette-item-moreinfo {
-
 }

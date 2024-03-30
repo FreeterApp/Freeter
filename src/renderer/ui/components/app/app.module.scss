@@ -4,7 +4,7 @@
  */
 
 .no-projects {
-  background-color: #F8F8F8;
+  background-color: var(--freeter-inAppNoteNoProjectsBackground);
   position: fixed;
   top: 62px;
   left: 0;
@@ -17,5 +17,5 @@
   width: 24px;
   height: 24px;
   margin: 0 6px;
-  color: #3B3B3B;
+  color: var(--freeter-inAppNoteIconColor);
 }

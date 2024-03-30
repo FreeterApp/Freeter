@@ -5,4 +5,5 @@
 
 export interface AppConfig {
   mainHotkey: string;
+  uiTheme: string;
 }

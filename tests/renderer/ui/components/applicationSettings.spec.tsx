@@ -147,7 +147,7 @@ describe('<ApplicationSettings />', () => {
 
   describe('Settings Controls', () => {
     it('should fill inputs with right values', async () => {
-      const appConfig = fixtureAppConfig({mainHotkey: ''});
+      const appConfig = fixtureAppConfig({mainHotkey: '', uiTheme: 'light'});
       const {getMainHotkeyOptionsUseCase, appStore} = await setup(fixtureAppState({
         ui: {
           modalScreens: fixtureModalScreens({
@@ -162,8 +162,9 @@ describe('<ApplicationSettings />', () => {
       const mainHotkeyOptions= getMainHotkeyOptionsUseCase()
 
       expect(screen.getByRole('combobox', { name: /^Hotkey Combination$/i })).toHaveValue(appConfig.mainHotkey);
+      expect(screen.getByRole('combobox', { name: /^User Interface Theme$/i })).toHaveValue(appConfig.uiTheme);
 
-      const appConfig2 = fixtureAppConfig({mainHotkey: mainHotkeyOptions[1].value});
+      const appConfig2 = fixtureAppConfig({mainHotkey: mainHotkeyOptions[1].value, uiTheme: 'dark'});
       act(() => appStore.set(fixtureAppState({
         ui: {
           modalScreens: fixtureModalScreens({
@@ -177,6 +178,7 @@ describe('<ApplicationSettings />', () => {
       })))
 
       expect(screen.getByRole('combobox', { name: /^Hotkey Combination$/i })).toHaveValue(appConfig2.mainHotkey);
+      expect(screen.getByRole('combobox', { name: /^User Interface Theme$/i })).toHaveValue(appConfig2.uiTheme);
     })
 
     it('should call updateApplicationSettingsUseCase with right args when editing the hotkey', async () => {

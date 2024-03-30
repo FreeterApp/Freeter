@@ -36,7 +36,7 @@ export const ActionBar = memo(function ActionBar(props: ActionBarProps) {
           size='S'
           title={item.title}
           disabled={(item.enabled !== undefined && !item.enabled)}
-          onClick={() => onActionBarItemClick(item.id)}
+          onClick={e => onActionBarItemClick(e, item.id)}
           pressed={item.pressed}
         ></Button>
       </li>
