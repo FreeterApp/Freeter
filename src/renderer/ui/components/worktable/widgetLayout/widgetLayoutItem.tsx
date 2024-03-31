@@ -7,7 +7,7 @@ import { WidgetByIdComponent } from '@/ui/components/widget/widgetById';
 import { resizeHandleIds } from '@/ui/components/worktable/widgetLayout/resizeHandles';
 import { useWidgetLayoutItemViewModel, WidgetLayoutItemProps } from '@/ui/components/worktable/widgetLayout/widgetLayoutItemViewModel';
 import clsx from 'clsx';
-import styles from './widgetLayoutItem.module.scss';
+import styles from './widgetLayout.module.scss';
 import { memo } from 'react';
 
 type Deps = {
@@ -24,15 +24,17 @@ export function createWidgetLayoutItemComponent({
       isEditable,
       isDragging,
       isResizing,
+      isMaximized,
       rectPx,
       onDragStartHandler,
       onDragEndHandler,
       onResizeMouseDownHandler,
+      maximizeAction,
     } = useWidgetLayoutItemViewModel(props);
 
     return (
       <div
-        className={clsx(styles['layout-item'], isDragging && styles['is-dragging'], isResizing && styles['is-resizing'])}
+        className={clsx(styles['layout-item'], isDragging && styles['is-dragging'], isResizing && styles['is-resizing'], isMaximized && styles['is-maximized'])}
         draggable={isEditable}
         onDragStart={onDragStartHandler}
         onDragEnd={onDragEndHandler}
@@ -43,7 +45,7 @@ export function createWidgetLayoutItemComponent({
         }}
         data-testid="widget-layout-item"
       >
-        <WidgetById env={env} id={widgetId} />
+        <WidgetById env={env} id={widgetId} maximizeAction={maximizeAction} />
         {isEditable && resizeHandleIds.map(id => (
           <div key={id}
             className={clsx(styles['resize-handle'], styles[id])}

@@ -133,6 +133,7 @@ export const darkTheme = {
   widgetLayoutItemResizingBorder: '#FFFFFF',
   widgetLayoutItemResizingOpacity: '0.5',
   widgetLayoutGhostBackground: base.dropAreaBackground,
+  widgetLayoutItemShadow: base.shadow,
 
   /**
    * Modal Screens

@@ -133,6 +133,7 @@ export const lightTheme = {
   widgetLayoutItemResizingBorder: '#000000',
   widgetLayoutItemResizingOpacity: '0.5',
   widgetLayoutGhostBackground: base.dropAreaBackground,
+  widgetLayoutItemShadow: base.shadow,
 
   /**
    * Modal Screens

@@ -60,7 +60,12 @@ export function canGoHome(elWebview: Electron.WebviewTag, url: string) {
   const homeUrl = sanitizeUrl(url);
   let enabled = false;
   if (homeUrl) {
-    enabled = new URL(elWebview.getURL()).toString() !== new URL(homeUrl).toString();
+    const curUrl = elWebview.getURL();
+    if (!curUrl) {
+      enabled = false;
+    } else {
+      enabled = new URL(curUrl).toString() !== new URL(homeUrl).toString();
+    }
   }
   return enabled;
 }

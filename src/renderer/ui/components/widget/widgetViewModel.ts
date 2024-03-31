@@ -6,7 +6,7 @@
 import { ShowWidgetContextMenuUseCase } from '@/application/useCases/widget/showWidgetContextMenu';
 import { entityStateActions } from '@/base/state/actions';
 import { Widget, WidgetContextMenuFactory, WidgetEnv, getWidgetDisplayName } from '@/base/widget';
-import { ActionBarItems } from '@/base/actionBar';
+import { ActionBarItem, ActionBarItems } from '@/base/actionBar';
 import { UseAppState } from '@/ui/hooks/appState';
 import { useWidgetTypeComp } from '@/ui/hooks/useWidgetTypeComp';
 import { useCallback, useMemo, useState } from 'react';
@@ -32,6 +32,7 @@ type Deps = {
 export interface WidgetProps {
   widget: Widget;
   env: WidgetEnv;
+  maximizeAction?: ActionBarItem;
 }
 
 function getContextId(el: HTMLElement): string {
@@ -94,6 +95,20 @@ export function createWidgetViewModelHook({
     }
   }]
 
+  const createActionBarCommonItemsViewMode: (
+    isMaximizable: boolean,
+    maximizeAction: ActionBarItem | undefined
+  ) => ActionBarItems = (
+    isMaximizable,
+    maximizeAction
+  ) => {
+      const res: ActionBarItem[] = [];
+      if (maximizeAction && isMaximizable) {
+        res.push(maximizeAction);
+      }
+      return res;
+    }
+
   const createContextMenuFactoryEditMode: (id: EntityId, env: WidgetEnv) => WidgetContextMenuFactory = (id, env) => () => [{
     enabled: true,
     label: 'Widget Settings',
@@ -119,7 +134,7 @@ export function createWidgetViewModelHook({
   }]
 
   function useViewModel(props: WidgetProps) {
-    const { widget, env } = props;
+    const { widget, env, maximizeAction } = props;
     const [
       editMode,
       dragDropFrom,
@@ -137,10 +152,10 @@ export function createWidgetViewModelHook({
     const widgetApi = useMemo(() => getWidgetApiUseCase(
       widget.id,
       !!env.isPreview,
-      setActionBarItemsViewMode,
+      (items) => setActionBarItemsViewMode([...items, ...createActionBarCommonItemsViewMode(widgetType?.maximizable || false, maximizeAction)]),
       (factory: WidgetContextMenuFactory | undefined) => setContextMenuFactoryViewMode(() => factory),
       widgetType?.requiresApi || []
-    ), [env.isPreview, widget.id, widgetType?.requiresApi])
+    ), [env.isPreview, maximizeAction, widget.id, widgetType?.maximizable, widgetType?.requiresApi])
 
     const widgetName = getWidgetDisplayName(widget, widgetType);
 

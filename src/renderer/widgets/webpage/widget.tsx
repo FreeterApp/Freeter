@@ -47,16 +47,22 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   const {updateActionBar, setContextMenuFactory} = widgetApi;
   const webviewRef = useRef<Electron.WebviewTag>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [webviewIsReady, setWebviewIsReady] = useState(false);
 
   const sanitUrl = useMemo(() => sanitizeUrl(url), [url]);
 
-  const refreshActions = useCallback(() => updateActionBar(createActionBarItems(webviewRef.current, widgetApi, url)), [updateActionBar, url, widgetApi]);
+  const refreshActions = useCallback(
+    () => updateActionBar(
+      createActionBarItems(webviewIsReady ? webviewRef.current : null, widgetApi, url)
+    ),
+    [updateActionBar, url, webviewIsReady, widgetApi]
+  );
 
   useEffect(() => {
-    setContextMenuFactory(createContextMenuFactory(webviewRef.current, widgetApi, url))
+    setContextMenuFactory(createContextMenuFactory(webviewIsReady ? webviewRef.current : null, widgetApi, url))
 
     return undefined;
-  }, [setContextMenuFactory, widgetApi, url])
+  }, [setContextMenuFactory, webviewIsReady, widgetApi, url])
 
   useEffect(() => {
     const webviewEl = webviewRef.current;
@@ -65,6 +71,9 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       return undefined;
     }
 
+    const handleDidAttach = () => {
+      setWebviewIsReady(true);
+    }
     const handleDidStartLoading = () => {
       setIsLoading(true);
     }
@@ -88,6 +97,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     // };
 
     // Add event listeners
+    webviewEl.addEventListener('did-attach', handleDidAttach);
     webviewEl.addEventListener('did-start-loading', handleDidStartLoading);
     webviewEl.addEventListener('did-stop-loading', handleDidStopLoading);
     // webviewEl.addEventListener('did-fail-load', handleDidFailLoad);
@@ -95,6 +105,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
 
     return () => {
       // Remove event listeners
+      webviewEl.removeEventListener('did-attach', handleDidAttach);
       webviewEl.removeEventListener('did-start-loading', handleDidStartLoading);
       webviewEl.removeEventListener('did-stop-loading', handleDidStopLoading);
       // webviewEl.removeEventListener('did-fail-load', handleDidFailLoad);
@@ -103,6 +114,8 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   }, []);
 
   useEffect(() => {
+    refreshActions();
+
     const webviewEl = webviewRef.current;
 
     if (!webviewEl) {

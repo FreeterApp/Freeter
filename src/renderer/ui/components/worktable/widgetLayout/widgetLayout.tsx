@@ -90,6 +90,7 @@ export function createWidgetLayoutComponent({
             env={env}
             widgetId={layoutItem.widgetId}
             viewportSize={viewportSize}
+            viewportElRef={layoutEl}
             resizingMinSize={resizingItem?.minSize}
             isEditable={isEditMode}
             isDragging={layoutItem.id===dndDraggingLayoutItemId}
