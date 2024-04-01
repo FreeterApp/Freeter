@@ -10,7 +10,7 @@ import { SetupWidgetSutOptional, setupWidgetSut } from '@tests/widgets/setupSut'
 jest.useFakeTimers();
 
 function setupNoteWidgetSut(optional?: SetupWidgetSutOptional) {
-  return setupWidgetSut(widgetComp, {}, optional);
+  return setupWidgetSut(widgetComp, { spellCheck: false }, optional);
 }
 
 describe('Note Widget', () => {
