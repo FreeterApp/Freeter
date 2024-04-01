@@ -9,7 +9,9 @@ import { sanitizeUrl } from '@common/helpers/sanitizeUrl';
 export const labelGoHome = 'Go to start page';
 export const labelGoBack = 'Go Back';
 export const labelGoForward = 'Go Forward';
-export const labelRefresh = 'Refresh';
+export const labelReload = 'Reload this page';
+export const labelAutoReloadStart = 'Start auto-reload';
+export const labelAutoReloadStop = 'Stop auto-reload';
 export const labelOpenInBrowser = 'Open in web browser';
 export const labelSaveAs = 'Save as...';
 export const labelCopyCurrentAddress = 'Copy current address';
@@ -29,11 +31,11 @@ export const labelPasteAsPlainText = 'Paste as plain text';
 export const labelSelectAll = 'Select All';
 
 
-export function canRefresh() {
+export function canReload() {
   return true;
 }
 
-export function refresh(elWebview: Electron.WebviewTag) {
+export function reload(elWebview: Electron.WebviewTag) {
   if (elWebview.isLoading()) {
     elWebview.stop();
   }
@@ -60,7 +62,12 @@ export function canGoHome(elWebview: Electron.WebviewTag, url: string) {
   const homeUrl = sanitizeUrl(url);
   let enabled = false;
   if (homeUrl) {
-    enabled = new URL(elWebview.getURL()).toString() !== new URL(homeUrl).toString();
+    const curUrl = elWebview.getURL();
+    if (!curUrl) {
+      enabled = false;
+    } else {
+      enabled = new URL(curUrl).toString() !== new URL(homeUrl).toString();
+    }
   }
   return enabled;
 }

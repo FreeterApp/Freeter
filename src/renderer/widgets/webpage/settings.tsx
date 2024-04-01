@@ -50,6 +50,7 @@ function isSettingsViewMode(val: unknown): val is SettingsViewMode {
 }
 
 export interface Settings {
+  autoReload: number;
   sessionPersist: SettingsSessionPersist;
   sessionScope: SettingsSessionScope;
   url: string;
@@ -57,6 +58,7 @@ export interface Settings {
 }
 
 export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
+  autoReload: typeof settings.autoReload === 'number' ? settings.autoReload : 0,
   sessionPersist: isSettingsSessionPersist(settings.sessionPersist) ? settings.sessionPersist : 'persist',
   sessionScope: isSettingsSessionScope(settings.sessionScope) ? settings.sessionScope : 'prj',
   url: typeof settings.url === 'string' ? settings.url : '',
@@ -127,6 +129,7 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
           <option value="temp">Temporary</option>
         </select>
       </SettingBlock>
+
       <SettingBlock
         titleForId='webpage-view-mode'
         title='View Mode'
@@ -140,6 +143,25 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
         })}>
           <option value="desktop">Desktop</option>
           <option value="mobile">Mobile</option>
+        </select>
+      </SettingBlock>
+
+      <SettingBlock
+        titleForId='webpage-auto-reload'
+        title='Auto-Reload'
+        moreInfo="If you need to automatically refresh the webpage, use this option to set the auto-reload interval."
+      >
+        <select id="webpage-auto-reload" value={settings.autoReload} onChange={e => updateSettings({
+          ...settings,
+          autoReload: Number.parseInt(e.target.value) || 0
+        })}>
+          <option value="0">Disabled</option>
+          <option value="10">10 Seconds</option>
+          <option value="30">30 Seconds</option>
+          <option value="60">1 Minute</option>
+          <option value="300">5 Minutes</option>
+          <option value="600">10 Minutes</option>
+          <option value="3600">60 Minutes</option>
         </select>
       </SettingBlock>
     </>

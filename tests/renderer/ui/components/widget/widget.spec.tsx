@@ -12,7 +12,7 @@ import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureWidgetTypeAInColl, fixtureWidgetTypeBInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
-import { ActionBarItems, ContextMenuEvent, WidgetReactComponent } from '@/widgets/appModules';
+import { ActionBarItem, ActionBarItems, ContextMenuEvent, WidgetReactComponent } from '@/widgets/appModules';
 import { AppState } from '@/base/state/app';
 import { WidgetApi, WidgetApiModuleName } from '@/base/widgetApi';
 import { useEffect } from 'react';
@@ -23,6 +23,7 @@ import { fixtureWorktableNotResizing, fixtureWorktableResizingItem } from '@test
 type SetupProps = {
   widget: Widget;
   env?: WidgetEnv;
+  maximizeAction?: ActionBarItem | undefined;
   appState: AppState;
   mocks?: {
     getWidgetApiUseCase?: jest.Mock;
@@ -31,6 +32,7 @@ type SetupProps = {
 async function setup({
   widget,
   env,
+  maximizeAction,
   appState,
   mocks,
 }: SetupProps) {
@@ -70,7 +72,7 @@ async function setup({
     useWidgetViewModel
   })
   const comp = await waitFor(() => render(
-    <Widget widget={ widget } env={env || fixtureWidgetEnvAreaShelf()} />
+    <Widget widget={ widget } env={env || fixtureWidgetEnvAreaShelf()} maximizeAction={maximizeAction} />
   ));
 
   return {
@@ -468,6 +470,146 @@ describe('<Widget />', () => {
 
     expect(screen.queryAllByRole('button', {name: /widget settings/i}).length).toBe(0);
     expect(screen.queryAllByRole('button', {name: /delete widget/i}).length).toBe(0);
+  })
+
+  it('should display the "maximize" widget action, when the maximizeAction prop is set, the widget type supports the maximize action and the edit mode is off', async () => {
+    await setup({
+      appState: fixtureAppState({
+        entities: {
+          widgetTypes: {
+            ...fixtureWidgetTypeAInColl({
+              id: widgetTypeId1,
+              widgetComp: {
+                type: 'react',
+                Comp: ({widgetApi}) => {
+                  useEffect(() => {
+                    widgetApi.updateActionBar([
+                      fixtureActionBarItemA()
+                    ]);
+                  }, [])
+                  return <></>;
+                }
+              } as WidgetReactComponent,
+              maximizable: true
+            }),
+          }
+        },
+        ui: {
+          editMode: false
+        }
+      }),
+      widget: fixtureWidgetA({
+        type: widgetTypeId1,
+      }),
+      maximizeAction: fixtureActionBarItemB()
+    });
+
+    expect(screen.queryAllByRole('button').length).toBe(2);
+  })
+
+  it('should not display the "maximize" widget action, when the maximizeAction prop is not set', async () => {
+    await setup({
+      appState: fixtureAppState({
+        entities: {
+          widgetTypes: {
+            ...fixtureWidgetTypeAInColl({
+              id: widgetTypeId1,
+              widgetComp: {
+                type: 'react',
+                Comp: ({widgetApi}) => {
+                  useEffect(() => {
+                    widgetApi.updateActionBar([
+                      fixtureActionBarItemA()
+                    ]);
+                  }, [])
+                  return <></>;
+                }
+              } as WidgetReactComponent,
+              maximizable: true
+            }),
+          }
+        },
+        ui: {
+          editMode: false
+        }
+      }),
+      widget: fixtureWidgetA({
+        type: widgetTypeId1,
+      }),
+      maximizeAction: undefined
+    });
+
+    expect(screen.queryAllByRole('button').length).toBe(1);
+  })
+
+  it('should not display the "maximize" widget action, when the widget type does not support the maximize action', async () => {
+    await setup({
+      appState: fixtureAppState({
+        entities: {
+          widgetTypes: {
+            ...fixtureWidgetTypeAInColl({
+              id: widgetTypeId1,
+              widgetComp: {
+                type: 'react',
+                Comp: ({widgetApi}) => {
+                  useEffect(() => {
+                    widgetApi.updateActionBar([
+                      fixtureActionBarItemA()
+                    ]);
+                  }, [])
+                  return <></>;
+                }
+              } as WidgetReactComponent,
+              maximizable: false
+            }),
+          }
+        },
+        ui: {
+          editMode: false
+        }
+      }),
+      widget: fixtureWidgetA({
+        type: widgetTypeId1,
+      }),
+      maximizeAction: fixtureActionBarItemB()
+    });
+
+    expect(screen.queryAllByRole('button').length).toBe(1);
+  })
+
+  it('should not display the "maximize" widget action, when the edit mode is on', async () => {
+    await setup({
+      appState: fixtureAppState({
+        entities: {
+          widgetTypes: {
+            ...fixtureWidgetTypeAInColl({
+              id: widgetTypeId1,
+              widgetComp: {
+                type: 'react',
+                Comp: ({widgetApi}) => {
+                  useEffect(() => {
+                    widgetApi.updateActionBar([
+                      fixtureActionBarItemA()
+                    ]);
+                  }, [])
+                  return <></>;
+                }
+              } as WidgetReactComponent,
+              maximizable: true
+            }),
+          }
+        },
+        ui: {
+          editMode: true
+        }
+      }),
+      widget: fixtureWidgetA({
+        type: widgetTypeId1,
+      }),
+      maximizeAction: fixtureActionBarItemB()
+    });
+
+    expect(screen.queryAllByRole('button').length).not.toBe(1);
   })
 
   it('should call the open widget settings usecase with right params, when clicking the Widget Settings button', async () => {

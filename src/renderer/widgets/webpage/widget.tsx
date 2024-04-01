@@ -14,6 +14,7 @@ import { createContextMenuFactory } from '@/widgets/webpage/contextMenu';
 import { ContextMenuEvent as ElectronContextMenuEvent } from 'electron';
 import { createPartition } from '@/widgets/webpage/partition';
 import { createUserAgent } from '@/widgets/webpage/userAgent';
+import { reload } from '@/widgets/webpage/actions';
 
 interface WebviewProps extends WidgetReactComponentProps<Settings> {
   /**
@@ -24,7 +25,7 @@ interface WebviewProps extends WidgetReactComponentProps<Settings> {
 }
 
 function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps) {
-  const {url, sessionScope, sessionPersist, viewMode} = settings;
+  const {url, sessionScope, sessionPersist, viewMode, autoReload} = settings;
 
   const partition = useMemo(() => createPartition(sessionPersist, sessionScope, env, id), [
     env, id, sessionScope, sessionPersist
@@ -47,16 +48,39 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   const {updateActionBar, setContextMenuFactory} = widgetApi;
   const webviewRef = useRef<Electron.WebviewTag>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [webviewIsReady, setWebviewIsReady] = useState(false);
+  const [autoReloadStopped, setAutoReloadStopped] = useState(false);
 
   const sanitUrl = useMemo(() => sanitizeUrl(url), [url]);
 
-  const refreshActions = useCallback(() => updateActionBar(createActionBarItems(webviewRef.current, url)), [updateActionBar, url]);
+  const refreshActions = useCallback(
+    () => updateActionBar(
+      createActionBarItems(
+        webviewIsReady ? webviewRef.current : null,
+        widgetApi,
+        url,
+        autoReload,
+        autoReloadStopped,
+        setAutoReloadStopped
+      )
+    ),
+    [autoReload, autoReloadStopped, updateActionBar, url, webviewIsReady, widgetApi]
+  );
 
   useEffect(() => {
-    setContextMenuFactory(createContextMenuFactory(webviewRef.current, widgetApi, url))
+    setContextMenuFactory(
+      createContextMenuFactory(
+        webviewIsReady ? webviewRef.current : null,
+        widgetApi,
+        url,
+        autoReload,
+        autoReloadStopped,
+        setAutoReloadStopped
+      )
+    )
 
     return undefined;
-  }, [setContextMenuFactory, widgetApi, url])
+  }, [setContextMenuFactory, webviewIsReady, widgetApi, url, autoReload, autoReloadStopped])
 
   useEffect(() => {
     const webviewEl = webviewRef.current;
@@ -65,6 +89,9 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       return undefined;
     }
 
+    const handleDidAttach = () => {
+      setWebviewIsReady(true);
+    }
     const handleDidStartLoading = () => {
       setIsLoading(true);
     }
@@ -88,6 +115,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     // };
 
     // Add event listeners
+    webviewEl.addEventListener('did-attach', handleDidAttach);
     webviewEl.addEventListener('did-start-loading', handleDidStartLoading);
     webviewEl.addEventListener('did-stop-loading', handleDidStopLoading);
     // webviewEl.addEventListener('did-fail-load', handleDidFailLoad);
@@ -95,6 +123,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
 
     return () => {
       // Remove event listeners
+      webviewEl.removeEventListener('did-attach', handleDidAttach);
       webviewEl.removeEventListener('did-start-loading', handleDidStartLoading);
       webviewEl.removeEventListener('did-stop-loading', handleDidStopLoading);
       // webviewEl.removeEventListener('did-fail-load', handleDidFailLoad);
@@ -103,6 +132,8 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   }, []);
 
   useEffect(() => {
+    refreshActions();
+
     const webviewEl = webviewRef.current;
 
     if (!webviewEl) {
@@ -138,6 +169,15 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     };
   }, [refreshActions]);
 
+  useEffect(() => {
+    if (autoReload>0 && !autoReloadStopped) {
+      const interval = setInterval(() => webviewRef.current && reload(webviewRef.current), autoReload*1000)
+
+      return () => clearInterval(interval)
+    }
+    return undefined;
+  }, [autoReload, autoReloadStopped])
+
   return <>
     <webview
       ref={webviewRef}
@@ -162,8 +202,8 @@ export function WidgetComp(props: WidgetReactComponentProps<Settings>) {
   useEffect(()=> {
     if(!url) {
       const {updateActionBar, setContextMenuFactory} = props.widgetApi;
-      setContextMenuFactory(createContextMenuFactory(null, props.widgetApi, url));
-      updateActionBar(createActionBarItems(null, url));
+      setContextMenuFactory(createContextMenuFactory(null, props.widgetApi, url, 0, false, () => undefined));
+      updateActionBar(createActionBarItems(null, props.widgetApi, url, 0, false, () => undefined));
     }
   }, [props.widgetApi, url]);
 

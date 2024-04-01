@@ -73,13 +73,19 @@ export const darkTheme = {
   inAppNoteNoWorkflowsBackground: '#181818',
 
   /**
-   * Widget Palette
+   * Top Bar
+   */
+  topBarBackground: base.componentBackground,
+  topBarBorder: base.componentBorder,
+
+  /**
+   * Top Bar - Widget Palette
    */
   paletteBackground: base.componentBackground,
-  paletteBorder: base.componentBorder,
+  paletteBorder: `${base.primary}25`,
   paletteShadow: base.shadow,
   paletteNoteColor: base.componentColor,
-  paletteTabBackground: 'transparent',
+  paletteTabBackground: `${base.primary}25`,
   paletteTabColor: base.componentColor,
   paletteTabHoverBackground: base.openBackground,
   paletteTabHoverColor: '#FFFFFF',
@@ -90,11 +96,8 @@ export const darkTheme = {
   paletteItemHoverColor: base.componentColor,
 
   /**
-   * Top Bar
+   * Top Bar - Shelf
    */
-  topBarBackground: base.componentBackground,
-  topBarBorder: base.componentBorder,
-
   shelfDropAreaBackground: base.dropAreaBackground,
 
   shelfTabColor: base.componentColor,
@@ -130,6 +133,7 @@ export const darkTheme = {
   widgetLayoutItemResizingBorder: '#FFFFFF',
   widgetLayoutItemResizingOpacity: '0.5',
   widgetLayoutGhostBackground: base.dropAreaBackground,
+  widgetLayoutItemShadow: base.shadow,
 
   /**
    * Modal Screens

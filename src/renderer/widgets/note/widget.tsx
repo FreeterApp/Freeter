@@ -13,7 +13,7 @@ import { createActionBarItems } from '@/widgets/note/actionBar';
 
 const keyNote = 'note';
 
-function WidgetComp({widgetApi}: WidgetReactComponentProps<Settings>) {
+function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) {
   const {updateActionBar, setContextMenuFactory, dataStorage} = widgetApi;
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const loadedNote = useRef('');
@@ -51,6 +51,7 @@ function WidgetComp({widgetApi}: WidgetReactComponentProps<Settings>) {
         onChange={handleChange}
         placeholder='Write a note here'
         data-widget-context={textAreaContextId}
+        spellCheck={settings.spellCheck}
       ></textarea>
     : <>Loading Note...</>
   )

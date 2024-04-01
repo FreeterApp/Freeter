@@ -3,18 +3,35 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { CreateSettingsState, ReactComponent, SettingsEditorReactComponentProps } from '@/widgets/appModules';
+import { CreateSettingsState, ReactComponent, SettingBlock, SettingsEditorReactComponentProps } from '@/widgets/appModules';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface Settings {
+  spellCheck: boolean;
 }
 
-export const createSettingsState: CreateSettingsState<Settings> = (_settings) => ({
+export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
+  spellCheck: typeof settings.spellCheck === 'boolean' ? settings.spellCheck : false,
 })
 
-function SettingsEditorComp(/*{}: SettingsEditorReactComponentProps<Settings>*/) {
+function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
+  const {updateSettings} = settingsApi;
   return (
-    <></>
+    <>
+      <SettingBlock
+        titleForId='note-spell-check'
+        title='Spell Checker'
+      >
+        <div>
+          <label>
+            <input type="checkbox" id="note-spell-check" checked={settings.spellCheck} onChange={_=>updateSettings({
+              ...settings,
+              spellCheck: !settings.spellCheck
+            })}/>
+            Enable spell checking
+          </label>
+        </div>
+      </SettingBlock>
+    </>
   )
 }
 

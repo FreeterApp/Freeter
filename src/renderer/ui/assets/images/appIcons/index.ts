@@ -13,8 +13,10 @@ import arrDown14Svg from './arr-down-14.svg';
 import browse14Svg from './browse-14.svg';
 import delete14Svg from './delete-14.svg';
 import duplicate14Svg from './duplicate-14.svg';
+import maximize14Svg from './maximize-14.svg';
 import more14Svg from './more-14.svg';
 import settings14Svg from './settings-14.svg';
+import unmaximize14Svg from './unmaximize-14.svg';
 
 import circleQuestion16Svg from './circle-question-16.svg';
 
@@ -29,8 +31,10 @@ export {
   browse14Svg,
   delete14Svg,
   duplicate14Svg,
+  maximize14Svg,
   more14Svg,
   settings14Svg,
+  unmaximize14Svg,
 
   circleQuestion16Svg,
 

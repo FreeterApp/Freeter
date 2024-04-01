@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { canGoBack, canGoForward, canGoHome, copyCurrentAddress, copyLinkAddress, goBack, goForward, goHome, labelCopy, labelCopyCurrentAddress, labelCopyImageAddress, labelCopyLinkAddress, labelCut, labelGoBack, labelGoForward, labelGoHome, labelOpenInBrowser, labelOpenLinkInBrowser, labelPaste, labelPasteAsPlainText, labelPrintPage, labelRedo, labelRefresh, labelSaveAs, labelSaveImageAs, labelSaveLinkAs, labelSelectAll, labelUndo, openCurrentInBrowser, openLinkInBrowser, printPage, refresh, saveLink, savePage } from './actions';
+import { canGoBack, canGoForward, canGoHome, copyCurrentAddress, copyLinkAddress, goBack, goForward, goHome, labelAutoReloadStart, labelAutoReloadStop, labelCopy, labelCopyCurrentAddress, labelCopyImageAddress, labelCopyLinkAddress, labelCut, labelGoBack, labelGoForward, labelGoHome, labelOpenInBrowser, labelOpenLinkInBrowser, labelPaste, labelPasteAsPlainText, labelPrintPage, labelRedo, labelReload, labelSaveAs, labelSaveImageAs, labelSaveLinkAs, labelSelectAll, labelUndo, openCurrentInBrowser, openLinkInBrowser, printPage, reload, saveLink, savePage } from './actions';
 import { WidgetApi, WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
 import { ContextMenuParams } from 'electron';
 
@@ -15,10 +15,29 @@ function isElectronContextMenuParams(data: unknown): data is ContextMenuParams {
   return ((data as ContextMenuParams).x !== undefined && (data as ContextMenuParams).y !== undefined);
 }
 
-export function createContextMenuFactory(elWebview: Electron.WebviewTag | null, widgetApi: WidgetApi, homeUrl: string): WidgetContextMenuFactory {
+export function createContextMenuFactory(
+  elWebview: Electron.WebviewTag | null,
+  widgetApi: WidgetApi,
+  homeUrl: string,
+  autoReload: number,
+  autoReloadStopped: boolean,
+  setAutoReloadStopped: (val: boolean) => void
+): WidgetContextMenuFactory {
   return (_contextId, contextData) => {
     const items: WidgetMenuItem[] = []
     if (elWebview && homeUrl) {
+      let reloadItem: WidgetMenuItem;
+      if (autoReload > 0) {
+        reloadItem = {
+          doAction: async () => setAutoReloadStopped(!autoReloadStopped),
+          label: autoReloadStopped ? labelAutoReloadStart : labelAutoReloadStop
+        }
+      } else {
+        reloadItem = {
+          doAction: async () => reload(elWebview),
+          label: labelReload
+        }
+      }
       const defaultItems: WidgetMenuItem[] = [
         {
           doAction: async () => goHome(elWebview, homeUrl),
@@ -32,10 +51,9 @@ export function createContextMenuFactory(elWebview: Electron.WebviewTag | null, 
           doAction: async () => goForward(elWebview),
           enabled: canGoForward(elWebview),
           label: labelGoForward
-        }, {
-          doAction: async () => refresh(elWebview),
-          label: labelRefresh
-        }, {
+        },
+        reloadItem,
+        {
           type: 'separator'
         }, {
           doAction: async () => openCurrentInBrowser(elWebview, widgetApi),

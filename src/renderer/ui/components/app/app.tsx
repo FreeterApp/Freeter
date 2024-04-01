@@ -15,7 +15,6 @@ import { UITheme } from '@/ui/components/app/uiTheme/uiTheme';
 
 type Deps = {
   TopBar: React.FC;
-  Palette: React.FC;
   WorkflowSwitcher: React.FC;
   Worktable: React.FC;
   useAppViewModel: AppViewModelHook;
@@ -23,13 +22,12 @@ type Deps = {
 
 export function createAppComponent({
   TopBar,
-  Palette,
   WorkflowSwitcher,
   Worktable,
   useAppViewModel
 }: Deps) {
   function App() {
-    const {showPalette, modalScreens, hasModalScreens, hasProjects, contextMenuHandler, uiThemeId} = useAppViewModel();
+    const {modalScreens, hasModalScreens, hasProjects, contextMenuHandler, uiThemeId} = useAppViewModel();
     return (
       <div onContextMenu={contextMenuHandler}>
         <UITheme themeId={uiThemeId} />
@@ -45,7 +43,6 @@ export function createAppComponent({
                 {'You don\'t have any projects. Use the Manage Projects '} <SvgIcon svg={manage24Svg} className={styles['manage-icon']} /> {' button at the Top Bar to create a first one.'}
               </InAppNote>
           }
-          {showPalette && <Palette />}
         </div>
         {
           modalScreens.map(scr => (

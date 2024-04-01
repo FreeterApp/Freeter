@@ -58,7 +58,7 @@ export function createWidgetLayoutComponent({
             {' button at the Top Bar to edit it.'}
           </InAppNote>
         : <InAppNote className={styles['no-widgets']}>
-            {'Click or drag a widget from the Widget Palette to add it to the workflow.'}
+            {'Click or drag a widget from the Add/Paste Widget at the Top Bar to add it to the workflow.'}
           </InAppNote>
       )}
       <div
@@ -90,6 +90,7 @@ export function createWidgetLayoutComponent({
             env={env}
             widgetId={layoutItem.widgetId}
             viewportSize={viewportSize}
+            viewportElRef={layoutEl}
             resizingMinSize={resizingItem?.minSize}
             isEditable={isEditMode}
             isDragging={layoutItem.id===dndDraggingLayoutItemId}

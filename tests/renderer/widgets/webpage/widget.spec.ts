@@ -14,9 +14,10 @@ import { fixtureProcessInfoLinux, fixtureProcessInfoMac, fixtureProcessInfoWin }
 
 function setupWebpageWidgetSut(settings: Settings, optional?: SetupWidgetSutOptional) {
   const { comp, ...rest } = setupWidgetSut(widgetComp, settings, optional);
+  const webview = comp.container.getElementsByTagName('webview')[0];
   return {
     comp,
-    webview: comp.container.getElementsByTagName('webview')[0],
+    webview,
     ...rest
   }
 }

@@ -18,11 +18,14 @@ describe('Webpage Widget Settings', () => {
   })
 
   it('should fill inputs with right values', () => {
-    const settings = fixtureSettings({ url: 'https://www.url.com/', sessionScope: 'wgt' });
+    const settings = fixtureSettings({ url: 'https://www.url.com/', sessionScope: 'wgt', sessionPersist: 'temp', viewMode: 'desktop', autoReload: 3600 });
     setupSettingsSut(settingsEditorComp, settings);
 
     expect(screen.getByRole('textbox', { name: /url/i })).toHaveValue(settings.url);
     expect(screen.getByRole('combobox', { name: /session scope/i })).toHaveValue(settings.sessionScope);
+    expect(screen.getByRole('combobox', { name: /session persistence/i })).toHaveValue(settings.sessionPersist);
+    expect(screen.getByRole('combobox', { name: /view mode/i })).toHaveValue(settings.viewMode);
+    expect(screen.getByRole('combobox', { name: /Auto-Reload/i })).toHaveValue(settings.autoReload.toString());
   })
 
   it('should allow to update "sessionScope" setting with an option select', async () => {
@@ -61,6 +64,26 @@ describe('Webpage Widget Settings', () => {
     expect(getSettings()).toEqual({
       ...settings,
       viewMode: 'desktop'
+    });
+  })
+
+  it('should allow to update "autoReload" setting with an option select', async () => {
+    const settings = fixtureSettings({ autoReload: 10 });
+    const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const select = screen.getByRole('combobox', { name: /Auto-Reload/i })
+
+    userEvent.selectOptions(select, '0');
+    await waitFor(() => expect((screen.getByRole('option', { name: 'Disabled' }) as HTMLOptionElement).selected).toBe(true))
+    expect(getSettings()).toEqual({
+      ...settings,
+      autoReload: 0
+    });
+
+    userEvent.selectOptions(select, '300');
+    await waitFor(() => expect((screen.getByRole('option', { name: '5 Minutes' }) as HTMLOptionElement).selected).toBe(true))
+    expect(getSettings()).toEqual({
+      ...settings,
+      autoReload: 300
     });
   })
 

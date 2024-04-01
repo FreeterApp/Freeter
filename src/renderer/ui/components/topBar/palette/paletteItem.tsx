@@ -16,10 +16,11 @@ export interface PaletteItemProps {
   onDragStart: (itemId: string) => void;
   onDragEnd: () => void;
   onClick: (itemId: string) => void;
+  onContextMenu: (itemId: string) => void;
 }
 
 const PaletteItemComponent = (props: PaletteItemProps) => {
-  const { id, icon, name, moreInfo, onDragStart, onDragEnd, onClick } = props;
+  const { id, icon, name, moreInfo, onDragStart, onDragEnd, onClick, onContextMenu } = props;
 
   const onDragStartHandler = useCallback(() => {
     onDragStart(id);
@@ -33,6 +34,10 @@ const PaletteItemComponent = (props: PaletteItemProps) => {
     onClick(id);
   }, [id, onClick])
 
+  const onContextMenuHandler = useCallback(() => {
+    onContextMenu(id);
+  }, [id, onContextMenu])
+
   return (
     <li
       className={styles['palette-item']}
@@ -40,6 +45,7 @@ const PaletteItemComponent = (props: PaletteItemProps) => {
       onDragStart={onDragStartHandler}
       onDragEnd={onDragEndHandler}
       onClick={onClickHandler}
+      onContextMenu={onContextMenuHandler}
     >
       <SvgIcon svg={icon} className={styles['palette-item-icon']}></SvgIcon>
       <span className={styles['palette-item-name']}>{name}</span>

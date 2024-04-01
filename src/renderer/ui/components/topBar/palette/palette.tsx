@@ -24,14 +24,16 @@ export function createPaletteComponent({
       onPasteItemDragEnd,
       onPasteItemDragStart,
       onPasteItemClick,
+      onAddContextMenu,
+      onPasteContextMenu,
       widgetTypes,
-      isHidden,
-      copiedWidgets
+      copiedWidgets,
+      hideSections
     } = usePaletteViewModel();
 
     return (
       <div
-        className={clsx(styles.palette, isHidden && styles['is-hidden'])}
+        className={clsx(styles.palette, hideSections && styles['hide-sections'])}
       >
         <span className={clsx(styles['palette-tab'], styles['palette-tab-add'])} tabIndex={0}>Add Widget</span>
         <span className={clsx(styles['palette-tab'], styles['palette-tab-paste'])} tabIndex={0}>Paste Widget</span>
@@ -49,6 +51,7 @@ export function createPaletteComponent({
             onDragStart={onAddItemDragStart}
             onDragEnd={onAddItemDragEnd}
             onClick={onAddItemClick}
+            onContextMenu={onAddContextMenu}
           />
         ))}
         </ul>
@@ -67,7 +70,8 @@ export function createPaletteComponent({
                   onDragStart={onPasteItemDragStart}
                   onDragEnd={onPasteItemDragEnd}
                   onClick={onPasteItemClick}
-                />
+                  onContextMenu={onPasteContextMenu}
+                  />
               ))}
               </ul>
             : <div className={clsx(styles['palette-section'], styles['palette-section-paste'], styles['palette-sectionnote'])}>

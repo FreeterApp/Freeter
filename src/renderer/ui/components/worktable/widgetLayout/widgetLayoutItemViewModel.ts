@@ -4,12 +4,14 @@
  */
 
 import { WorktableStateResizingItemEdges, WorktableStateResizingItemEdgeX, WorktableStateResizingItemEdgeY } from '@/base/state/ui';
-import { WidgetLayoutItemRect } from '@/base/widgetLayout';
+import { WidgetLayoutItemRect, widgetLayoutMaxCols, widgetLayoutVisibleRows } from '@/base/widgetLayout';
 import { itemRectUnitsToPx, itemWUnitsToPx, itemHUnitsToPx, calcGridColWidth, calcGridRowHeight, itemXPxToUnits, itemYPxToUnits, clamp } from '@/ui/components/worktable/widgetLayout/calcs';
 import { resizeEdgesByHandleId, ResizeHandleId } from '@/ui/components/worktable/widgetLayout/resizeHandles';
 import { RectPx, WHPx, XYPx } from '@/ui/types/dimensions';
-import { DragEvent, MouseEvent as ReactMouseEvent, useCallback, useEffect, useState } from 'react';
+import { DragEvent, MouseEvent as ReactMouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { WidgetEnvAreaWorkflow } from '@/base/widget';
+import { ActionBarItem } from '@/base/actionBar';
+import { maximize14Svg, unmaximize14Svg } from '@/ui/assets/images/appIcons';
 
 export interface WidgetLayoutItemProps {
   id: string;
@@ -26,6 +28,7 @@ export interface WidgetLayoutItemProps {
   isEditable: boolean;
   isDragging: boolean;
   viewportSize: WHPx;
+  viewportElRef: React.RefObject<HTMLDivElement>;
   onDragStart: (evt: DragEvent<HTMLElement>, itemId: string) => void;
   onDragEnd: (evt: DragEvent<HTMLElement>) => void;
   onResizeStart: (itemId: string, edges: WorktableStateResizingItemEdges) => void;
@@ -63,16 +66,28 @@ function calcDeltasForMouseEvent(evt: MouseEvent, fromPointPx: XYPx, colWidth: n
 
 export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
   const {
-    id, x, y, w, h, viewportSize, env, widgetId, resizingMinSize, isEditable, isDragging, onDragStart, onDragEnd, onResize, onResizeEnd, onResizeStart
+    id, x, y, w, h, viewportSize, env, widgetId, resizingMinSize, isEditable, isDragging, viewportElRef,
+    onDragStart, onDragEnd, onResize, onResizeEnd, onResizeStart
   } = props;
 
+  const [maximized, setMaximized] = useState(false);
   const [resizing, setResizing] = useState<ResizingState | null>(null);
   const isResizing = !!resizing;
 
   const colWidth = calcGridColWidth(viewportSize);
   const rowHeight = calcGridRowHeight(viewportSize);
 
-  const rectPx: RectPx = resizing ? resizing.rectPx : itemRectUnitsToPx({ x, y, w, h }, colWidth, rowHeight);
+  const isMaximized = maximized && !isEditable;
+
+  let rectPx: RectPx;
+  if (resizing) {
+    rectPx = resizing.rectPx;
+  } else if (isMaximized) {
+    rectPx = itemRectUnitsToPx({ x: 0, y: 0, w: widgetLayoutMaxCols, h: widgetLayoutVisibleRows }, colWidth, rowHeight);
+    rectPx.yPx = rectPx.yPx + (viewportElRef.current?.scrollTop || 0);
+  } else {
+    rectPx = itemRectUnitsToPx({ x, y, w, h }, colWidth, rowHeight);
+  }
 
   const onDragStartHandler = useCallback((evt: DragEvent<HTMLElement>) => {
     onDragStart(evt, id);
@@ -190,6 +205,15 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
     }
   }, [isResizing, onResizeMouseUpHandler])
 
+  const maximizeAction: ActionBarItem = useMemo(() => ({
+    enabled: true,
+    icon: maximized ? unmaximize14Svg : maximize14Svg,
+    id: 'MAXIMIZE',
+    title: maximized ? 'Unmaximize' : 'Maximize',
+    doAction: async () => {
+      setMaximized(!maximized);
+    }
+  }), [maximized])
 
   return {
     env,
@@ -201,5 +225,7 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
     onDragStartHandler,
     onDragEndHandler,
     onResizeMouseDownHandler,
+    maximizeAction,
+    isMaximized,
   }
 }

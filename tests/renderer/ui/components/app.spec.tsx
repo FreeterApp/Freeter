@@ -10,12 +10,11 @@ import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { AppState } from '@/base/state/app';
 import { createAppViewModelHook } from '@/ui/components/app/appViewModel';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
-import { fixtureProjectAInColl, fixtureWorkflowAInColl } from '@tests/base/state/fixtures/entitiesState';
+import { fixtureProjectAInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 import { ModalScreenId } from '@/base/state/ui';
 import { fixtureModalScreens } from '@tests/base/state/fixtures/modalScreens';
 
-const strPalette = 'Palette';
 const strTopBar = 'TopBar';
 const strWidgetSettings = 'WidgetSettings';
 const strWorkflowSettings = 'WorkflowSettings';
@@ -24,7 +23,6 @@ const strProjectManager = 'ProjectManager';
 const strApplicationSettings = 'ApplicationSettings';
 const strWorktable = 'Worktable';
 const strAbout = 'About';
-const mockPalette = () => <div>{strPalette}</div>;
 const mockTopBar = () => <div>{strTopBar}</div>;
 const mockWidgetSettings = () => <div>{strWidgetSettings}</div>;
 const mockWorkflowSettings = () => <div>{strWorkflowSettings}</div>;
@@ -53,7 +51,6 @@ async function setup(
   });
 
   const App = createAppComponent({
-    Palette: mockPalette,
     TopBar: mockTopBar,
     WorkflowSwitcher: mockWorkflowSwitcher,
     Worktable: mockWorktable,
@@ -281,118 +278,6 @@ describe('<App />', () => {
       expect(modals[1]).toHaveAttribute('inert');
       expect(modals[2]).not.toHaveAttribute('inert');
     })
-  })
-
-  describe('when edit mode is on', () => {
-    it('should display Palette, when the current project and the current workflow exist', async () => {
-      const workflowId = 'workflow-id';
-      const projectId = 'project-id';
-      await setup(fixtureAppState({
-        entities: {
-          projects: fixtureProjectAInColl({id: projectId, workflowIds: [workflowId], currentWorkflowId: workflowId}),
-          workflows: fixtureWorkflowAInColl({id: workflowId})
-        },
-        ui: {
-          editMode: true,
-          projectSwitcher: {
-            projectIds: [projectId],
-            currentProjectId: projectId
-          }
-        }
-      }));
-      expect(screen.getByText(strPalette)).toBeInTheDocument();
-    });
-
-    it('should not display Palette, when there are no projects', async () => {
-      await setup(fixtureAppState({
-        entities: {
-          projects: {},
-          workflows: fixtureWorkflowAInColl()
-        },
-        ui: {
-          editMode: true,
-          projectSwitcher: {
-            projectIds: [],
-            currentProjectId: ''
-          }
-        }
-      }));
-      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
-    });
-
-    it('should not display Palette, when there are no workflows', async () => {
-      const projectId = 'project-id';
-      await setup(fixtureAppState({
-        entities: {
-          projects: fixtureProjectAInColl({id: projectId, workflowIds: [], currentWorkflowId: ''}),
-          workflows: {}
-        },
-        ui: {
-          editMode: true,
-          projectSwitcher: {
-            projectIds: [projectId],
-            currentProjectId: projectId
-          }
-        }
-      }));
-      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
-    });
-
-    it('should not display Palette, when the current project does not exist', async () => {
-      await setup(fixtureAppState({
-        entities: {
-          projects: fixtureProjectAInColl(),
-          workflows: fixtureWorkflowAInColl()
-        },
-        ui: {
-          editMode: true,
-          projectSwitcher: {
-            projectIds: ['no such id'],
-            currentProjectId: 'no such id'
-          }
-        }
-      }));
-      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
-    });
-
-    it('should not display Palette, when the current workflow does not exist', async () => {
-      const projectId = 'project-id';
-      await setup(fixtureAppState({
-        entities: {
-          projects: fixtureProjectAInColl({id: projectId, workflowIds: ['no-such-id'], currentWorkflowId: 'no-such-id'}),
-          workflows: fixtureWorkflowAInColl()
-        },
-        ui: {
-          editMode: true,
-          projectSwitcher: {
-            projectIds: [projectId],
-            currentProjectId: projectId
-          }
-        }
-      }));
-      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
-    });
-  })
-
-  describe('when edit mode is off', () => {
-    it('should not display Palette', async () => {
-      const workflowId = 'workflow-id';
-      const projectId = 'project-id';
-      await setup(fixtureAppState({
-        entities: {
-          projects: fixtureProjectAInColl({id: projectId, workflowIds: [workflowId], currentWorkflowId: workflowId}),
-          workflows: fixtureWorkflowAInColl({id: workflowId})
-        },
-        ui: {
-          editMode: false,
-          projectSwitcher: {
-            projectIds: [projectId],
-            currentProjectId: projectId
-          }
-        }
-      }));
-      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
-    });
   })
 
 });

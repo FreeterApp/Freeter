@@ -3,14 +3,18 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
 import { DragEndUseCase } from '@/application/useCases/dragDrop/dragEnd';
 import { DragWidgetFromPaletteUseCase } from '@/application/useCases/dragDrop/dragWidgetFromPalette';
+import { AddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
+import { PasteWidgetToShelfUseCase } from '@/application/useCases/shelf/pasteWidgetToShelf';
 import { AddWidgetToWorkflowUseCase } from '@/application/useCases/workflow/addWidgetToWorkflow';
 import { PasteWidgetToWorkflowUseCase } from '@/application/useCases/workflow/pasteWidgetToWorkflow';
 import { EntityId } from '@/base/entity';
 import { getOneFromEntityCollection } from '@/base/entityCollection';
 import { mapIdListToEntityList } from '@/base/entityList';
 import { UseAppState } from '@/ui/hooks/appState';
+import { MenuItems } from '@common/base/menu';
 import { useCallback, useMemo } from 'react';
 
 type Deps = {
@@ -19,6 +23,9 @@ type Deps = {
   dragEndUseCase: DragEndUseCase;
   addWidgetToWorkflowUseCase: AddWidgetToWorkflowUseCase;
   pasteWidgetToWorkflowUseCase: PasteWidgetToWorkflowUseCase;
+  addWidgetToShelfUseCase: AddWidgetToShelfUseCase;
+  pasteWidgetToShelfUseCase: PasteWidgetToShelfUseCase;
+  showContextMenuUseCase: ShowContextMenuUseCase;
 }
 
 export function createPaletteViewModelHook({
@@ -26,18 +33,56 @@ export function createPaletteViewModelHook({
   dragWidgetFromPaletteUseCase,
   dragEndUseCase,
   addWidgetToWorkflowUseCase,
-  pasteWidgetToWorkflowUseCase
+  pasteWidgetToWorkflowUseCase,
+  addWidgetToShelfUseCase,
+  pasteWidgetToShelfUseCase,
+  showContextMenuUseCase,
 }: Deps) {
+
+  const createAddContextMenuItemsEditMode: (
+    widgetTypeId: EntityId,
+    toWorkflowId: EntityId,
+  ) => MenuItems = (widgetTypeId, toWorkflowId) => [{
+    enabled: true,
+    label: 'Add to Workflow',
+    doAction: async () => {
+      addWidgetToWorkflowUseCase(widgetTypeId, toWorkflowId);
+    }
+  }, {
+    enabled: true,
+    label: 'Add to Shelf',
+    doAction: async () => {
+      addWidgetToShelfUseCase(widgetTypeId, null);
+    }
+  }]
+
+  const createPasteContextMenuItemsEditMode: (
+    widgetCopyId: EntityId,
+    toWorkflowId: EntityId,
+  ) => MenuItems = (widgetCopyId, toWorkflowId) => [{
+    enabled: true,
+    label: 'Paste to Workflow',
+    doAction: async () => {
+      pasteWidgetToWorkflowUseCase(widgetCopyId, toWorkflowId);
+    }
+  }, {
+    enabled: true,
+    label: 'Paste to Shelf',
+    doAction: async () => {
+      pasteWidgetToShelfUseCase(widgetCopyId, null);
+    }
+  }]
+
   function useViewModel() {
     const [
       widgetTypeIds,
       dndSourceTypeId,
       currentWorkflowId,
-      hasDragDropFrom,
-      hasWorktableResizingItem,
       copiedWidgetIds,
       copiedWidgetEntities,
-      widgetTypeEntities
+      widgetTypeEntities,
+      hasDragDropFrom,
+      isEditMode
     ] = useAppState(state => {
       const currentProjectId = state.ui.projectSwitcher.currentProjectId;
       const currentProject = getOneFromEntityCollection(state.entities.projects, currentProjectId);
@@ -45,15 +90,16 @@ export function createPaletteViewModelHook({
         state.ui.palette.widgetTypeIds,
         state.ui.dragDrop.from?.palette?.widgetTypeId,
         currentProject?.currentWorkflowId || '',
-        !!state.ui.dragDrop.from,
-        !!state.ui.worktable.resizingItem,
         state.ui.copy.widgets.list,
         state.ui.copy.widgets.entities,
-        state.entities.widgetTypes
+        state.entities.widgetTypes,
+        !!state.ui.dragDrop.from,
+        state.ui.editMode
       ]
     })
 
-    const isHidden = hasDragDropFrom || hasWorktableResizingItem;
+    const hideSections = hasDragDropFrom;
+
     const widgetTypes = useAppState.useEntityList(state => state.entities.widgetTypes, widgetTypeIds);
     type CopiedWidget = {
       id: EntityId;
@@ -99,17 +145,33 @@ export function createPaletteViewModelHook({
       pasteWidgetToWorkflowUseCase(itemId, currentWorkflowId);
     }, [currentWorkflowId])
 
+    const onAddContextMenu = useCallback((widgetTypeId: EntityId) => {
+      if (isEditMode) {
+        const contextMenuItems: MenuItems = createAddContextMenuItemsEditMode(widgetTypeId, currentWorkflowId);
+        showContextMenuUseCase(contextMenuItems);
+      }
+    }, [currentWorkflowId, isEditMode])
+
+    const onPasteContextMenu = useCallback((widgetCopyId: EntityId) => {
+      if (isEditMode) {
+        const contextMenuItems: MenuItems = createPasteContextMenuItemsEditMode(widgetCopyId, currentWorkflowId);
+        showContextMenuUseCase(contextMenuItems);
+      }
+    }, [currentWorkflowId, isEditMode])
+
     return {
       widgetTypes,
       dndSourceTypeId,
-      isHidden,
       copiedWidgets,
+      hideSections,
       onAddItemDragStart,
       onAddItemDragEnd,
       onAddItemClick,
       onPasteItemDragStart,
       onPasteItemDragEnd,
       onPasteItemClick,
+      onAddContextMenu,
+      onPasteContextMenu,
     }
   }
 

@@ -6,13 +6,19 @@
 import backSvg from './back.svg';
 import forwardSvg from './forward.svg';
 import homeSvg from './home.svg';
-import refreshSvg from './refresh.svg';
+import openInBrowserSvg from './open-in-browser.svg';
+import reloadSvg from './reload.svg';
+import reloadStartSvg from './reload-start.svg';
+import reloadStopSvg from './reload-stop.svg';
 import widgetSvg from './widget.svg';
 
 export {
   backSvg,
   forwardSvg,
   homeSvg,
-  refreshSvg,
+  openInBrowserSvg,
+  reloadSvg,
+  reloadStartSvg,
+  reloadStopSvg,
   widgetSvg
 }
