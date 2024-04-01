@@ -24,6 +24,8 @@ export function createPaletteComponent({
       onPasteItemDragEnd,
       onPasteItemDragStart,
       onPasteItemClick,
+      onAddContextMenu,
+      onPasteContextMenu,
       widgetTypes,
       copiedWidgets,
       hideSections
@@ -49,6 +51,7 @@ export function createPaletteComponent({
             onDragStart={onAddItemDragStart}
             onDragEnd={onAddItemDragEnd}
             onClick={onAddItemClick}
+            onContextMenu={onAddContextMenu}
           />
         ))}
         </ul>
@@ -67,7 +70,8 @@ export function createPaletteComponent({
                   onDragStart={onPasteItemDragStart}
                   onDragEnd={onPasteItemDragEnd}
                   onClick={onPasteItemClick}
-                />
+                  onContextMenu={onPasteContextMenu}
+                  />
               ))}
               </ul>
             : <div className={clsx(styles['palette-section'], styles['palette-section-paste'], styles['palette-sectionnote'])}>
