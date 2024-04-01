@@ -32,12 +32,18 @@ async function setup(
   }));
   const addWidgetToWorkflowUseCase = jest.fn();
   const pasteWidgetToWorkflowUseCase = jest.fn();
+  const addWidgetToShelfUseCase = jest.fn();
+  const pasteWidgetToShelfUseCase = jest.fn();
+  const showContextMenuUseCase = jest.fn();
   const usePaletteViewModel = createPaletteViewModelHook({
     useAppState,
     addWidgetToWorkflowUseCase,
     dragEndUseCase,
     dragWidgetFromPaletteUseCase,
-    pasteWidgetToWorkflowUseCase
+    pasteWidgetToWorkflowUseCase,
+    addWidgetToShelfUseCase,
+    pasteWidgetToShelfUseCase,
+    showContextMenuUseCase,
   })
   const Palette = createPaletteComponent({
     usePaletteViewModel
