@@ -134,8 +134,7 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
         titleForId='webpage-view-mode'
         title='View Mode'
         moreInfo="By default, the widget will try to open a mobile version of a web app/site where it's supported, to have
-                 a compact size which better fits workflow tabs containing multiple various widget. Set the Desktop mode to
-                 disable it and show the desktop version."
+                 a compact size which better fits workflow tabs containing multiple various widget. In some cases it might not work on desktops as intended. To fix that switch the view mode from Mobile to Desktop mode."
       >
         <select id="webpage-view-mode" value={settings.viewMode} onChange={e => updateSettings({
           ...settings,
