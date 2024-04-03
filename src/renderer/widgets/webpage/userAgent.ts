@@ -7,37 +7,33 @@ import { WidgetApi } from '@/widgets/appModules';
 import { SettingsViewMode } from '@/widgets/webpage/settings';
 
 export function createUserAgent(viewMode: SettingsViewMode, wapiProcess: WidgetApi['process']) {
-  const ua: string[] = ['Mozilla/5.0'];
+  let uaOS: string;
 
   const processInfo = wapiProcess.getProcessInfo();
   if (viewMode === 'mobile') {
-    ua.push('(Linux; Android)');
+    uaOS = '(Linux; Android)';
   } else {
     switch (processInfo.os.name) {
       case 'darwin': {
-        ua.push('(Macintosh)');
+        uaOS = '(Macintosh)';
         break;
       }
       case 'linux': {
-        ua.push('(Linux)');
+        uaOS = '(Linux)';
         break;
       }
       case 'win32': {
-        ua.push('(Windows)');
+        uaOS = '(Windows)';
         break;
       }
       default: {
-        ua.push('(-)');
+        uaOS = '(-)';
         break;
       }
     }
   }
 
-  ua.push(`Chrome/${processInfo.browser.ver}`)
+  const uaChrome = `Chrome/${processInfo.browser.ver}${viewMode === 'mobile' ? ' Mobile' : ''}`;
 
-  if (viewMode === 'mobile') {
-    ua.push('Mobile')
-  }
-
-  return ua.join(' ');
+  return `Mozilla/5.0 ${uaOS} AppleWebKit/537.36 (KHTML, like Gecko) ${uaChrome} Safari/537.36`;
 }
