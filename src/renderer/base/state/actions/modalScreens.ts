@@ -54,6 +54,10 @@ function closeModalScreen(state: AppState, screenId: ModalScreenId): AppState {
       newData.applicationSettings = { appConfig: null };
       break;
     }
+    case 'appManager': {
+      newData.appManager = { currentAppId: '', deleteAppIds: null, appIds: null, apps: null };
+      break;
+    }
     case 'projectManager': {
       newData.projectManager = { currentProjectId: '', deleteProjectIds: null, projectIds: null, projects: null, duplicateProjectIds: null };
       break;

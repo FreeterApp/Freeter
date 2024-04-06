@@ -3,6 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { App } from '@/base/app';
 import { EntityCollection } from '@/base/entityCollection';
 import { EntityIdList, mapIdListToEntityList } from '@/base/entityList';
 import { Project } from '@/base/project';
@@ -32,6 +33,13 @@ export function getAllWorkflowNamesFromWorkflowIdList(
   workflowIds: EntityIdList
 ) {
   return mapIdListToEntityList(workflowsState, workflowIds).map(item => item.settings.name)
+}
+
+export function getAllAppNamesFromAppIdList(
+  appsState: EntityCollection<App>,
+  appIds: EntityIdList
+) {
+  return mapIdListToEntityList(appsState, appIds).map(item => item.settings.name)
 }
 
 export function getAllProjectNamesFromProjectIdList(

@@ -11,8 +11,10 @@ import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowD 
 import { deepFreeze } from '@common/helpers/deepFreeze';
 import { EntitiesState } from '@/base/state/entities';
 import { makeFixture } from '@utils/makeFixture';
+import { fixtureAppA, fixtureAppB, fixtureAppC, fixtureAppD } from '@tests/base/fixtures/app';
 
 const entitiesState: EntitiesState = {
+  apps: {},
   projects: {},
   widgets: {},
   widgetTypes: {},
@@ -25,6 +27,11 @@ const makeEntityInCollFixture = <T extends Entity, Y>(fixtureEntity: (testData?:
     [entity.id]: entity
   })
 }
+
+export const fixtureAppAInColl = makeEntityInCollFixture(fixtureAppA);
+export const fixtureAppBInColl = makeEntityInCollFixture(fixtureAppB);
+export const fixtureAppCInColl = makeEntityInCollFixture(fixtureAppC);
+export const fixtureAppDInColl = makeEntityInCollFixture(fixtureAppD);
 
 export const fixtureProjectAInColl = makeEntityInCollFixture(fixtureProjectA);
 export const fixtureProjectBInColl = makeEntityInCollFixture(fixtureProjectB);

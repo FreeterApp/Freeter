@@ -8,9 +8,10 @@ import { CreateSettingsState } from '@/widgets/appModules';
 import { fixtureWidgetA } from '@tests/base/fixtures/widget';
 import { fixtureAppConfig } from '@tests/base/fixtures/appConfig';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
-import { fixtureProjectAInColl, fixtureProjectBInColl, fixtureWidgetAInColl, fixtureWidgetBInColl, fixtureWidgetCInColl, fixtureWidgetTypeAInColl, fixtureWorkflowAInColl, fixtureWorkflowBInColl } from '@tests/base/state/fixtures/entitiesState';
+import { fixtureAppAInColl, fixtureAppBInColl, fixtureProjectAInColl, fixtureProjectBInColl, fixtureWidgetAInColl, fixtureWidgetBInColl, fixtureWidgetCInColl, fixtureWidgetTypeAInColl, fixtureWorkflowAInColl, fixtureWorkflowBInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher'
 import { fixtureShelf } from '@tests/base/state/fixtures/shelf'
+import { fixtureApps } from '@tests/base/state/fixtures/apps';
 
 type Settings = {
   prop: string;
@@ -98,6 +99,7 @@ describe('AppState', () => {
       const widgetA = fixtureWidgetA({});
       const state = fixtureAppState({
         entities: {
+          apps: fixtureAppAInColl(),
           projects: fixtureProjectAInColl(),
           widgets: {
             [widgetA.id]: widgetA
@@ -109,6 +111,7 @@ describe('AppState', () => {
       const { ...persistentWidgetA } = widgetA;
       const expectPersistentState: PersistentAppState = {
         entities: {
+          apps: state.entities.apps,
           projects: state.entities.projects,
           widgets: {
             [persistentWidgetA.id]: persistentWidgetA
@@ -117,6 +120,7 @@ describe('AppState', () => {
         },
         ui: {
           appConfig: state.ui.appConfig,
+          apps: state.ui.apps,
           menuBar: state.ui.menuBar,
           projectSwitcher: state.ui.projectSwitcher,
           shelf: state.ui.shelf
@@ -134,6 +138,7 @@ describe('AppState', () => {
       const widgetA = fixtureWidgetA({})
       const state = fixtureAppState({
         entities: {
+          apps: fixtureAppAInColl(),
           projects: fixtureProjectAInColl(),
           widgets: {
             [widgetA.id]: widgetA
@@ -150,6 +155,7 @@ describe('AppState', () => {
       const { ...persistentWidgetA } = widgetA;
       const persistentState: PersistentAppState = {
         entities: {
+          apps: fixtureAppBInColl(),
           projects: fixtureProjectBInColl(),
           widgets: {
             [persistentWidgetA.id]: persistentWidgetA
@@ -158,6 +164,7 @@ describe('AppState', () => {
         },
         ui: {
           appConfig: fixtureAppConfig({ mainHotkey: 'Accelerator' }),
+          apps: fixtureApps({ appIds: ['APP1', 'APP2'] }),
           menuBar: false,
           projectSwitcher: fixtureProjectSwitcher({ currentProjectId: 'B1', projectIds: ['B1', 'B2'] }),
           shelf: fixtureShelf({ widgetList: [{ id: 'A1', widgetId: 'A1' }] })

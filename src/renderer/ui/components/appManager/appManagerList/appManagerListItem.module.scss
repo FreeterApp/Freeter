@@ -1,0 +1,51 @@
+/*
+ * Copyright: (c) 2024, Alex Kaul
+ * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+ */
+
+.app-list-item {
+  display: flex;
+  width: 100%;
+  outline-offset: -2px;
+  color: var(--freeter-appManagerListItemColor);
+  background-color: var(--freeter-appManagerListItemBackground);
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  align-items: center;
+  cursor: pointer;
+  &:hover {
+    color: var(--freeter-appManagerListItemHoverColor);
+    background-color: var(--freeter-appManagerListItemHoverBackground);
+  }
+  &[aria-selected="true"] {
+    color: var(--freeter-appManagerListItemSelectedColor);
+    background-color: var(--freeter-appManagerListItemSelectedBackground);
+  }
+  &.is-drop-area {
+    background-color: var(--freeter-appManagerListItemDropAreaBackground);
+  }
+}
+
+.app-list-item-name {
+  flex: 1;
+  text-align: left;
+  padding: 0 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+  height: 36px;
+  line-height: 36px;
+}
+
+.app-list-item-action-bar {
+  &:not(.always-visible) {
+    display: none;
+  }
+}
+
+.app-list-item:hover, .app-list-item:focus-within {
+  .app-list-item-action-bar {
+    display: block;
+  }
+}

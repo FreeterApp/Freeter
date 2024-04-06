@@ -12,6 +12,8 @@ import { ToggleMenuBarUseCase } from '@/application/useCases/toggleMenuBar';
 import { OpenApplicationSettingsUseCase } from '@/application/useCases/applicationSettings/openApplicationSettings';
 import { OpenAboutUseCase } from '@/application/useCases/about/openAbout';
 import { ShellProvider } from '@/application/interfaces/shellProvider';
+import { OpenProjectManagerUseCase } from '@/application/useCases/projectManager/openProjectManager';
+import { OpenAppManagerUseCase } from '@/application/useCases/appManager/openAppManager';
 
 const urlDownload = 'https://freeter.io/v2/download';
 const urlTwitter = 'https://twitter.com/FreeterApp';
@@ -28,6 +30,8 @@ type Deps = {
   toggleMenuBarUseCase: ToggleMenuBarUseCase;
   openApplicationSettingsUseCase: OpenApplicationSettingsUseCase;
   openAboutUseCase: OpenAboutUseCase;
+  openProjectManagerUseCase: OpenProjectManagerUseCase;
+  openAppManagerUseCase: OpenAppManagerUseCase;
 }
 
 
@@ -40,6 +44,8 @@ export function createInitAppMenuUseCase({
   toggleMenuBarUseCase,
   openApplicationSettingsUseCase,
   openAboutUseCase,
+  openProjectManagerUseCase,
+  openAppManagerUseCase,
 }: Deps) {
   const { isMac, isDevMode } = processProvider.getProcessInfo();
 
@@ -128,7 +134,16 @@ export function createInitAppMenuUseCase({
         accelerator: 'CmdOrCtrl+E',
         label: `${editMode ? 'Disable' : 'Enable'} Edit Mode`,
         doAction: async () => toggleEditModeUseCase()
-      }
+      },
+      itemSeparator,
+      {
+        label: 'Manage Projects',
+        doAction: async () => openProjectManagerUseCase()
+      },
+      {
+        label: 'Manage Apps',
+        doAction: async () => openAppManagerUseCase()
+      },
     ]
   })
 

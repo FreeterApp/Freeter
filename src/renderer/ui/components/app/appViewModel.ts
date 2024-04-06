@@ -14,6 +14,7 @@ type Deps = {
   useAppState: UseAppState;
   WidgetSettings: React.FC;
   WorkflowSettings: React.FC;
+  AppManager: React.FC;
   ProjectManager: React.FC;
   ApplicationSettings: React.FC;
   About: React.FC;
@@ -25,6 +26,7 @@ export function createAppViewModelHook({
   WidgetSettings,
   WorkflowSettings,
   ProjectManager,
+  AppManager,
   ApplicationSettings,
   About,
   showContextMenuUseCase,
@@ -56,6 +58,7 @@ export function createAppViewModelHook({
     const modalScreenComps: Record<ModalScreenId, ReactNode> = {
       about: createElement(About, {}),
       applicationSettings: createElement(ApplicationSettings, {}),
+      appManager: createElement(AppManager, {}),
       projectManager: createElement(ProjectManager, {}),
       widgetSettings: createElement(WidgetSettings, {}),
       workflowSettings: createElement(WorkflowSettings, {})
