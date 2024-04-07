@@ -7,8 +7,8 @@ import { App } from '@/base/app';
 import { createEntityCollection, EntityCollection, setManyInEntityCollection } from '@/base/entityCollection';
 import { mapIdListToEntityList } from '@/base/entityList';
 import { Project } from '@/base/project';
-import { Widget } from '@/base/widget';
-import { WidgetSettings, WidgetType } from '@/base/widgetType';
+import { Widget, WidgetSettings } from '@/base/widget';
+import { WidgetType } from '@/base/widgetType';
 import { Workflow } from '@/base/workflow';
 
 export interface EntitiesState {

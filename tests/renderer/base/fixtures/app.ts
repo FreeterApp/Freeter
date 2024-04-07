@@ -25,16 +25,16 @@ const appSettings: AppSettings[] = [{
 }]
 
 const apps: App[] = [{
-  id: 'P-A',
+  id: 'APP-A',
   settings: appSettings[0],
 }, {
-  id: 'P-B',
+  id: 'APP-B',
   settings: appSettings[1],
 }, {
-  id: 'P-C',
+  id: 'APP-C',
   settings: appSettings[2],
 }, {
-  id: 'P-D',
+  id: 'APP-D',
   settings: appSettings[3],
 }];
 

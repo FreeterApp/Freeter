@@ -5,12 +5,14 @@
 
 import { Entity, EntityId } from '@/base/entity';
 import { generateUniqueName } from '@/base/utils';
-import { WidgetSettings, WidgetType } from '@/base/widgetType';
+import { WidgetType } from '@/base/widgetType';
 import { MenuItem, MenuItemRole } from '@common/base/menu';
 
 export interface WidgetCoreSettings {
   readonly name: string;
 }
+
+export type WidgetSettings = Record<string, unknown>;
 
 export type WidgetMenuItemRole = Exclude<MenuItemRole, 'togglefullscreen' | 'window' | 'minimize' | 'close' | 'help' | 'about' | 'services' | 'hide' | 'hideOthers' | 'unhide' | 'quit' | 'startSpeaking' | 'stopSpeaking' | 'appMenu' | 'fileMenu' | 'editMenu' | 'viewMenu' | 'shareMenu' | 'recentDocuments' | 'toggleTabBar' | 'selectNextTab' | 'selectPreviousTab' | 'mergeAllWindows' | 'clearRecentDocuments' | 'moveTabToNewWindow' | 'windowMenu'>;
 

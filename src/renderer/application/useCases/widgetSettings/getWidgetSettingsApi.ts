@@ -4,10 +4,10 @@
  */
 
 import { WidgetSettingsApi } from '@/base/widgetApi';
-import { WidgetSettings } from '@/base/widgetType';
 import { AppStore } from '@/application/interfaces/store';
 import { DialogProvider } from '@/application/interfaces/dialogProvider';
 import { modalScreensStateActions } from '@/base/state/actions';
+import { WidgetSettings } from '@/base/widget';
 
 interface Deps {
   appStore: AppStore;

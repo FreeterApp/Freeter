@@ -4,9 +4,9 @@
  */
 
 import { Entity } from '@/base/entity';
+import { SharedStateSliceName } from '@/base/state/shared';
+import { WidgetSettings } from '@/base/widget';
 import { WidgetApiModuleName } from '@/base/widgetApi';
-
-export type WidgetSettings = Record<string, unknown>;
 
 export interface WidgetTypeComponent {
   /** Component type. Only 'react' supported now.
@@ -29,4 +29,5 @@ export interface WidgetType<TSettings = WidgetSettings> extends Entity {
   readonly settingsEditorComp: WidgetTypeComponent;
   readonly createSettingsState: CreateSettingsState<TSettings>;
   readonly requiresApi?: WidgetApiModuleName[];
+  readonly requiresState?: SharedStateSliceName[];
 }

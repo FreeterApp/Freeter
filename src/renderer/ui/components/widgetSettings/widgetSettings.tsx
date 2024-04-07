@@ -27,6 +27,7 @@ export function createWidgetSettingsComponent({
       widgetInEnv,
       settingsApi,
       SettingsEditorComp,
+      sharedState,
       updateCoreSettings,
       onOkClickHandler: onSaveClickHandler,
       onCancelClickHandler: onCloseClickHandler,
@@ -40,7 +41,7 @@ export function createWidgetSettingsComponent({
         <div className={clsx(settingsScreenStyles['settings-screen-panel'], styles['settings-editor'])}>
           <div>
             <CoreSettings coreSettings={widgetInEnv.widget.coreSettings} updateCoreSettings={updateCoreSettings}></CoreSettings>
-            <SettingsEditorComp settings={widgetInEnv.widget.settings} settingsApi={settingsApi}></SettingsEditorComp>
+            <SettingsEditorComp settings={widgetInEnv.widget.settings} settingsApi={settingsApi} sharedState={sharedState}></SettingsEditorComp>
           </div>
         </div>
       </SettingsScreen>)
