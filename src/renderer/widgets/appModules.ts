@@ -9,6 +9,7 @@ export type { WidgetType, CreateSettingsState } from '@/base/widgetType';
 export type { WidgetMenuItem, WidgetMenuItemRole, WidgetMenuItems, WidgetContextMenuFactory, WidgetEnv, WidgetSettings } from '@/base/widget';
 export type { ActionBarItem, ActionBarItems } from '@/base/actionBar';
 export type { EntityId } from '@/base/entity';
+export type { SharedState } from '@/base/state/shared';
 export type {
   ReactComponent,
   SettingsEditorReactComponent,
@@ -20,8 +21,9 @@ export type { ContextMenuEvent } from '@/ui/types/events';
 export type { List } from '@/base/list';
 export type { SettingActionsProps, SettingBlockProps, SettingRowProps } from '@/ui/components/basic/settingsScreen/setting';
 
-export { browse14Svg, delete14Svg } from '@/ui/assets/images/appIcons';
+export { browse14Svg, delete14Svg, manage14Svg } from '@/ui/assets/images/appIcons';
 
+export { mapIdListToEntityList } from '@/base/entityList';
 export { addItemToList, moveItemInList, removeItemFromList } from '@/base/list';
 export { ActionBar } from '@/ui/components/basic/actionBar';
 export { Button } from '@/ui/components/basic/button';

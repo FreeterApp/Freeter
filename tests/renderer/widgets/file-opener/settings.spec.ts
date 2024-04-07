@@ -5,10 +5,11 @@
 
 import { settingsEditorComp } from '@/widgets/file-opener/settings';
 import { OpenDialogResult } from '@/widgets/appModules';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { setupSettingsSut } from '@tests/widgets/setupSut'
 import { fixtureSettings } from './fixtures';
 import { SettingsType } from '@/widgets/file-opener/settingsType';
+import { fixtureAppA, fixtureAppB, fixtureAppC } from '@tests/base/fixtures/app';
 
 describe('File Opener Widget Settings', () => {
   it('should display file-specific inputs, when type=File', () => {
@@ -53,6 +54,83 @@ describe('File Opener Widget Settings', () => {
     expect(foldernputs.length).toBe(2);
     expect(foldernputs[0]).toHaveValue(settings.folders[0]);
     expect(foldernputs[1]).toHaveValue(settings.folders[1]);
+  })
+
+  it('should display right options in the "Open In" dropdown', () => {
+    const app1 = fixtureAppA();
+    const app2 = fixtureAppB();
+    const app3 = fixtureAppC();
+    const settings = fixtureSettings({ type: SettingsType.File });
+    setupSettingsSut(settingsEditorComp, settings, {
+      sharedState: {
+        apps: {
+          apps: {
+            [app1.id]: app1,
+            [app2.id]: app2,
+            [app3.id]: app3
+          },
+          appIds: [app1.id, app2.id]
+        }
+      }
+    });
+
+    const dropdown = screen.getByRole('combobox', { name: /^open files in ...$/i });
+    const options = within(dropdown).getAllByRole('option');
+    expect(options).toHaveLength(3);
+    expect(options[0]).toHaveTextContent(/default app/i);
+    expect(options[1]).toHaveTextContent(app1.settings.name);
+    expect(options[2]).toHaveTextContent(app2.settings.name);
+  })
+
+  it('should select the right option, when the app id specified in "openIn" exists', () => {
+    const app1 = fixtureAppA();
+    const app2 = fixtureAppB();
+    const app3 = fixtureAppC();
+    const settings = fixtureSettings({ type: SettingsType.File, openIn: app2.id });
+    setupSettingsSut(settingsEditorComp, settings, {
+      sharedState: {
+        apps: {
+          apps: {
+            [app1.id]: app1,
+            [app2.id]: app2,
+            [app3.id]: app3
+          },
+          appIds: [app1.id, app2.id]
+        }
+      }
+    });
+
+    const dropdown = screen.getByRole('combobox', { name: /^open files in ...$/i });
+    const options = within(dropdown).getAllByRole('option') as HTMLOptionElement[];
+    expect(options[0].selected).not.toBe(true);
+    expect(options[1].selected).not.toBe(true);
+    expect(options[2].selected).toBe(true)
+  })
+
+  it('should select the "Default App" option, when the app id specified in "openIn" does not exist', () => {
+    const app1 = fixtureAppA();
+    const app2 = fixtureAppB();
+    const app3 = fixtureAppC();
+    const settings = fixtureSettings({ type: SettingsType.File, openIn: 'NO-SUCH-ID' });
+    setupSettingsSut(settingsEditorComp, settings, {
+      sharedState: {
+        apps: {
+          apps: {
+            [app1.id]: app1,
+            [app2.id]: app2,
+            [app3.id]: app3
+          },
+          appIds: [app1.id, app2.id]
+        }
+      }
+    });
+
+    const dropdown = screen.getByRole('combobox', { name: /^open files in ...$/i });
+    const options = within(dropdown).getAllByRole('option') as HTMLOptionElement[];
+    expect(options).toHaveLength(3);
+    expect(options[0].selected).toBe(true);
+    expect(options[1].selected).not.toBe(true);
+    expect(options[2].selected).not.toBe(true);
   })
 
   it('should allow to update "type" setting with an option select', async () => {
@@ -172,5 +250,50 @@ describe('File Opener Widget Settings', () => {
     await userEvent.click(btn);
 
     expect(getSettings().folders).toEqual([testFolders[0], pickedFolder]);
+  })
+
+  it('should allow to update "openIn" setting with an option select', async () => {
+    const app1 = fixtureAppA();
+    const app2 = fixtureAppB();
+    const settings = fixtureSettings({ type: SettingsType.File, openIn: app2.id });
+    const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings, {
+      sharedState: {
+        apps: {
+          apps: {
+            [app1.id]: app1,
+            [app2.id]: app2,
+          },
+          appIds: [app1.id, app2.id]
+        }
+      }
+    });
+
+    const dropdown = screen.getByRole('combobox', { name: /^open files in ...$/i });
+
+    await userEvent.selectOptions(dropdown, app1.id);
+    expect((within(dropdown).getByRole('option', { name: app1.settings.name }) as HTMLOptionElement).selected).toBe(true)
+    expect(getSettings()).toEqual({
+      ...settings,
+      openIn: app1.id
+    });
+  })
+
+  it('should allow to manage apps', async () => {
+    const settings = fixtureSettings({ type: SettingsType.File });
+    const showAppManager = jest.fn();
+    const { userEvent } = setupSettingsSut(settingsEditorComp, settings, {
+      mockSettingsApi: {
+        dialog: {
+          showAppManager
+        }
+      }
+    });
+    const btn = screen.getByRole('button', { name: /manage apps/i });
+
+    expect(showAppManager).not.toHaveBeenCalled();
+
+    await userEvent.click(btn);
+
+    expect(showAppManager).toHaveBeenCalledTimes(1);
   })
 })
