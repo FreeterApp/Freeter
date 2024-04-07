@@ -235,6 +235,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     idGenerator: uuidv4IdGenerator,
   }
 
+  const openAppManagerUseCase = createOpenAppManagerUseCase(deps);
+
   const osDialogProvider = createOsDialogProvider();
 
   const openWidgetSettingsUseCase = createOpenWidgetSettingsUseCase(deps);
@@ -242,7 +244,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const saveWidgetSettingsUseCase = createSaveWidgetSettingsUseCase(deps);
   const getWidgetSettingsApiUseCase = createGetWidgetSettingsApiUseCase({
     ...deps,
-    dialogProvider: osDialogProvider
+    dialogProvider: osDialogProvider,
+    openAppManagerUseCase
   });
   const updateWidgetCoreSettingsUseCase = createUpdateWidgetCoreSettingsUseCase(deps);
 
@@ -340,7 +343,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const updateAppSettingsInAppManagerUseCase = createUpdateAppSettingsInAppManagerUseCase(deps);
   const updateAppsOrderInAppManagerUseCase = createUpdateAppsOrderInAppManagerUseCase(deps);
   const closeAppManagerUseCase = createCloseAppManagerUseCase(deps);
-  const openAppManagerUseCase = createOpenAppManagerUseCase(deps);
 
   const productInfoProvider = createProductInfoProvider();
   const openAboutUseCase = createOpenAboutUseCase(deps);
