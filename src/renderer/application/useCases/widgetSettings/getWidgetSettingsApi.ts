@@ -8,15 +8,18 @@ import { AppStore } from '@/application/interfaces/store';
 import { DialogProvider } from '@/application/interfaces/dialogProvider';
 import { modalScreensStateActions } from '@/base/state/actions';
 import { WidgetSettings } from '@/base/widget';
+import { OpenAppManagerUseCase } from '@/application/useCases/appManager/openAppManager';
 
 interface Deps {
   appStore: AppStore;
   dialogProvider: DialogProvider;
+  openAppManagerUseCase: OpenAppManagerUseCase;
 }
 
 export function createGetWidgetSettingsApiUseCase({
   appStore,
   dialogProvider,
+  openAppManagerUseCase,
 }: Deps) {
   function getWidgetSettingsApiUseCase() {
     const settingsApi: WidgetSettingsApi<WidgetSettings> = {
@@ -40,6 +43,7 @@ export function createGetWidgetSettingsApiUseCase({
         }));
       },
       dialog: {
+        showAppManager: () => openAppManagerUseCase(),
         showOpenDirDialog: cfg => dialogProvider.showOpenDirDialog(cfg),
         showOpenFileDialog: cfg => dialogProvider.showOpenFileDialog(cfg),
       }

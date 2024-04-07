@@ -78,6 +78,7 @@ export function createWidgetApiFactory(commonFactory: WidgetApiCommonFactory, mo
 export interface WidgetSettingsApi<TSettings> {
   readonly updateSettings: (newSettings: TSettings) => void;
   readonly dialog: {
+    showAppManager: () => void;
     showOpenFileDialog: (cfg: OpenFileDialogConfig) => Promise<OpenDialogResult>;
     showOpenDirDialog: (cfg: OpenDirDialogConfig) => Promise<OpenDialogResult>;
   }
