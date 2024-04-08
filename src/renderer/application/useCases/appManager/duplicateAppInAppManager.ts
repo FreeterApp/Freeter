@@ -5,7 +5,7 @@
 
 import { IdGenerator } from '@/application/interfaces/idGenerator';
 import { AppStore } from '@/application/interfaces/store';
-import { createApp } from '@/base/app';
+import { duplicateApp } from '@/base/app';
 import { EntityId } from '@/base/entity';
 import { addOneToEntityCollection, getOneFromEntityCollection } from '@/base/entityCollection';
 import { modalScreensStateActions } from '@/base/state/actions';
@@ -21,20 +21,20 @@ export function createDuplicateAppInAppManagerUseCase({
   appStore,
   idGenerator
 }: Deps) {
-  const useCase = (projectId: EntityId) => {
+  const useCase = (appId: EntityId) => {
     const state = appStore.get();
     const { appIds, apps } = state.ui.modalScreens.data.appManager;
     if (apps === null || appIds === null) {
       return;
     }
 
-    const duplicateFrom = getOneFromEntityCollection(apps, projectId);
+    const duplicateFrom = getOneFromEntityCollection(apps, appId);
     if (!duplicateFrom) {
       return;
     }
 
     const newItemId = idGenerator();
-    const newApp = createApp(newItemId, generateCopyName(duplicateFrom.settings.name, getAllAppNamesFromAppIdList(apps, appIds)))
+    const newApp = duplicateApp(duplicateFrom, newItemId, generateCopyName(duplicateFrom.settings.name, getAllAppNamesFromAppIdList(apps, appIds)))
 
     appStore.set(modalScreensStateActions.updateModalScreen(state, 'appManager', {
       currentAppId: newItemId,

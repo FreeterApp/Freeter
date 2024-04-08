@@ -26,6 +26,17 @@ export function createApp(id: EntityId, appName: string): App {
   };
 }
 
+export function duplicateApp(app: App, newId: EntityId, newName: string): App {
+  return {
+    ...app,
+    id: newId,
+    settings: {
+      ...app.settings,
+      name: newName,
+    }
+  };
+}
+
 export function generateAppName(usedNames: string[]): string {
   return generateUniqueName('App', usedNames);
 }

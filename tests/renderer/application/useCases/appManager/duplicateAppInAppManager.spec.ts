@@ -136,6 +136,7 @@ describe('duplicateAppInAppManagerUseCase()', () => {
                 [newAppId]: expect.objectContaining({
                   id: newAppId,
                   settings: expect.objectContaining({
+                    ...initState.ui.modalScreens.data.appManager.apps![appId]!.settings,
                     name: initState.ui.modalScreens.data.appManager.apps![appId]!.settings.name + ' Copy 1'
                   })
                 })
