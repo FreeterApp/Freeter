@@ -4,19 +4,32 @@
  */
 
 import { ChildProcessProvider } from '@/application/interfaces/childProcessProvider';
+import { ProcessProvider } from '@/application/interfaces/processProvider';
 
 interface Deps {
   childProcessProvider: ChildProcessProvider;
+  processProvider: ProcessProvider;
 }
 
-export function createOpenAppUseCase({ childProcessProvider }: Deps) {
+export function createOpenAppUseCase({ childProcessProvider, processProvider }: Deps) {
   const { spawnDetached } = childProcessProvider;
+  const { isMac } = processProvider.getProcessInfo();
 
-  return function openAppUseCase(appPath: string, args?: string[]) {
-    spawnDetached(appPath, args || [], {
-      shell: false
-    })
+  let openAppUseCase: (appPath: string, args?: string[]) => void;
+  if (isMac) {
+    openAppUseCase = (appPath, args) => {
+      spawnDetached('open', [appPath, '--args', ...(args || [])], {
+        shell: false
+      })
+    }
+  } else {
+    openAppUseCase = (appPath, args) => {
+      spawnDetached(appPath, args || [], {
+        shell: false
+      })
+    }
   }
+  return openAppUseCase;
 }
 
 export type OpenAppUseCase = ReturnType<typeof createOpenAppUseCase>;

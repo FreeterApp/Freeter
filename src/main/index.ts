@@ -156,7 +156,7 @@ if (!app.requestSingleInstanceLock()) {
     const childProcessProvider = createChildProcessProvider();
     const execCmdLinesInTerminalUseCase = createExecCmdLinesInTerminalUseCase({ appsProvider, childProcessProvider, processProvider })
 
-    const openAppUseCase = createOpenAppUseCase({ childProcessProvider })
+    const openAppUseCase = createOpenAppUseCase({ childProcessProvider, processProvider })
 
     registerControllers(ipcMain, [
       ...createAppDataStorageControllers({ getTextFromAppDataStorageUseCase, setTextInAppDataStorageUseCase }),
