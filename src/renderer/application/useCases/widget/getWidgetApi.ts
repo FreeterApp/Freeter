@@ -56,6 +56,7 @@ function _createWidgetApiFactory({
         getProcessInfo: () => processProvider.getProcessInfo()
       }),
       shell: () => ({
+        openApp: (appPath, args) => shellProvider.openApp(appPath, args),
         openExternalUrl: (url) => shellProvider.openExternal(url),
         openPath: (path) => shellProvider.openPath(path)
       }),

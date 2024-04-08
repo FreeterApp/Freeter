@@ -56,6 +56,10 @@ export const ipcPopupOsContextMenuChannel = makeIpcChannelName('popup-os-context
 export type IpcPopupOsContextMenuArgs = [menuItems: MenuItemsIpc];
 export type IpcPopupOsContextMenuRes = number | undefined;
 
+export const ipcShellOpenAppChannel = makeIpcChannelName('shell-open-app');
+export type IpcShellOpenAppArgs = [appPath: string, args?: string[]];
+export type IpcShellOpenAppRes = void;
+
 export const ipcShellOpenExternalUrlChannel = makeIpcChannelName('shell-open-external-url');
 export type IpcShellOpenExternalUrlArgs = [url: string];
 export type IpcShellOpenExternalUrlRes = void;

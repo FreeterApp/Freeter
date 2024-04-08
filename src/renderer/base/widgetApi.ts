@@ -32,6 +32,7 @@ interface WidgetApiModules {
     getProcessInfo: () => ProcessInfo;
   };
   readonly shell: {
+    openApp: (appPath: string, args?: string[]) => Promise<void>;
     openExternalUrl: (url: string) => Promise<void>;
     openPath: (path: string) => Promise<string>;
   };

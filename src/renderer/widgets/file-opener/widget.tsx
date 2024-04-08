@@ -8,17 +8,29 @@ import { Settings } from './settings';
 import { openFileSvg, openFolderSvg } from '@/widgets/file-opener/icons';
 import styles from './widget.module.scss';
 import { SettingsType, settingsTypeNamesCapital } from '@/widgets/file-opener/settingsType';
+import { useCallback } from 'react';
 
-function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) {
+function WidgetComp({settings, widgetApi, sharedState}: WidgetReactComponentProps<Settings>) {
   const { shell } = widgetApi;
-  const { files, folders, type } = settings;
+  const { files, folders, type, openIn } = settings;
+  const {apps} = sharedState.apps;
+  const openInApp = openIn !== '' ? apps[openIn] : undefined;
 
   const paths = (type === SettingsType.Folder ? folders : files).filter(path=>path!=='');
   const iconSvg = type === SettingsType.Folder ? openFolderSvg : openFileSvg;
 
+  const onBtnClick: React.MouseEventHandler<HTMLButtonElement> = useCallback(_ => {
+    if (openInApp) {
+      const { execPath, cmdArgs} = openInApp.settings;
+      shell.openApp( execPath, [...cmdArgs ? [cmdArgs] : [], ...paths])
+    } else {
+      paths.forEach(path => shell.openPath(path))
+    }
+  }, [openInApp, paths, shell])
+
   return paths.length>0
     ? <Button
-        onClick={_ => paths.forEach(path => shell.openPath(path))}
+        onClick={onBtnClick}
         iconSvg={iconSvg}
         title={`Open ${settingsTypeNamesCapital[settings.type]}${paths.length>1 ? 's' : ''}`}
         size='Fill'

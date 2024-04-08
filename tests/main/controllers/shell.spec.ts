@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ipcShellOpenExternalUrlChannel, ipcShellOpenPathChannel } from '@common/ipc/channels';
+import { ipcShellOpenAppChannel, ipcShellOpenExternalUrlChannel, ipcShellOpenPathChannel } from '@common/ipc/channels';
 import { createShellControllers } from '@/controllers/shell';
 import { fixtureIpcMainEvent } from '@tests/infra/mocks/ipcMain';
 
@@ -11,26 +11,53 @@ const openExternalUrlUseCaseRes = 'open-external-url-return-res';
 const openPathUseCaseRes = 'open-path-return-res';
 
 function setup() {
+  const openAppUseCase = jest.fn();
   const openExternalUrlUseCase = jest.fn(async () => openExternalUrlUseCaseRes as unknown as void);
   const openPathUseCase = jest.fn(async () => openPathUseCaseRes);
 
   const [
+    openAppController,
     openExternalUrlController,
     openPathController
   ] = createShellControllers({
+    openAppUseCase,
     openExternalUrlUseCase,
     openPathUseCase
   })
 
   return {
+    openAppUseCase,
     openExternalUrlUseCase,
     openPathUseCase,
+    openAppController,
     openExternalUrlController,
     openPathController,
   }
 }
 
 describe('ShellControllers', () => {
+  describe('openAppController', () => {
+    it('should have a right channel name', () => {
+      const { channel } = setup().openAppController;
+
+      expect(channel).toBe(ipcShellOpenAppChannel)
+    })
+
+    it('should call a right usecase with right params', async () => {
+      const testAppPath = 'app/path';
+      const testCmdArgs = ['-a', '-r', '-g', '-s']
+
+      const { openAppController, openAppUseCase } = setup();
+      const { handle } = openAppController;
+      const event = fixtureIpcMainEvent();
+
+      await handle(event, testAppPath, testCmdArgs);
+
+      expect(openAppUseCase).toBeCalledTimes(1);
+      expect(openAppUseCase).toBeCalledWith(testAppPath, testCmdArgs);
+    });
+  })
+
   describe('openExternalUrlController', () => {
     it('should have a right channel name', () => {
       const { channel } = setup().openExternalUrlController;

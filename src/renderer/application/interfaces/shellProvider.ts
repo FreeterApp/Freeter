@@ -4,6 +4,7 @@
  */
 
 export interface ShellProvider {
+  openApp: (appPath: string, args?: string[]) => Promise<void>;
   openExternal: (url: string) => Promise<void>;
   openPath: (path: string) => Promise<string>;
 }
