@@ -6,8 +6,9 @@
 import { ShellProvider } from '@/application/interfaces/shellProvider';
 
 const shellProvider: ShellProvider = {
+  openApp: jest.fn(),
   openExternal: jest.fn(),
-  openPath: jest.fn()
+  openPath: jest.fn(),
 }
 
 export const mockShellProvider = (props: Partial<ShellProvider>) => ({ ...shellProvider, ...props });

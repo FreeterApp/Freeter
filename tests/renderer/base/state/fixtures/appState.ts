@@ -18,6 +18,9 @@ const appState: AppState = {
       mainHotkey: '',
       uiTheme: 'light'
     },
+    apps: {
+      appIds: [],
+    },
     copy: {
       widgets: {
         entities: {},
@@ -30,6 +33,7 @@ const appState: AppState = {
     },
     modalScreens: {
       data: {
+        appManager: { appIds: null, apps: null, currentAppId: '', deleteAppIds: null },
         applicationSettings: { appConfig: null },
         projectManager: { currentProjectId: '', deleteProjectIds: null, projectIds: null, projects: null, duplicateProjectIds: null },
         widgetSettings: { widgetInEnv: null },

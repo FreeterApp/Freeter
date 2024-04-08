@@ -8,6 +8,7 @@ import { SettingsType } from '@/widgets/file-opener/settingsType';
 
 export function fixtureSettings(settings: Partial<Settings>): Settings {
   return {
+    openIn: '',
     files: ['file/path1', 'file/path2'],
     folders: ['folder/path1', 'folder/path2'],
     type: SettingsType.File,
