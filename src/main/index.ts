@@ -68,6 +68,7 @@ import { createAppsProvider } from '@/infra/appsProvider/appsProvider';
 import { createChildProcessProvider } from '@/infra/childProcessProvider/childProcessProvider';
 import { createOpenPathUseCase } from '@/application/useCases/shell/openPath';
 import { createCopyWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/copyWidgetDataStorage';
+import { createOpenAppUseCase } from '@/application/useCases/shell/openApp';
 
 let appWindow: BrowserWindow | null = null; // ref to the app window
 
@@ -155,6 +156,8 @@ if (!app.requestSingleInstanceLock()) {
     const childProcessProvider = createChildProcessProvider();
     const execCmdLinesInTerminalUseCase = createExecCmdLinesInTerminalUseCase({ appsProvider, childProcessProvider, processProvider })
 
+    const openAppUseCase = createOpenAppUseCase({ childProcessProvider, processProvider })
+
     registerControllers(ipcMain, [
       ...createAppDataStorageControllers({ getTextFromAppDataStorageUseCase, setTextInAppDataStorageUseCase }),
       ...createWidgetDataStorageControllers({
@@ -167,7 +170,7 @@ if (!app.requestSingleInstanceLock()) {
       }),
       ...createContextMenuControllers({ popupContextMenuUseCase }),
       ...createClipboardControllers({ writeBookmarkIntoClipboardUseCase, writeTextIntoClipboardUseCase }),
-      ...createShellControllers({ openExternalUrlUseCase, openPathUseCase }),
+      ...createShellControllers({ openExternalUrlUseCase, openPathUseCase, openAppUseCase }),
       ...createProcessControllers({ getProcessInfoUseCase }),
       ...createDialogControllers({
         showMessageBoxUseCase: dialogShowMessageBoxUseCase,

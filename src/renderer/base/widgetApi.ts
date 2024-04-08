@@ -32,6 +32,7 @@ interface WidgetApiModules {
     getProcessInfo: () => ProcessInfo;
   };
   readonly shell: {
+    openApp: (appPath: string, args?: string[]) => Promise<void>;
     openExternalUrl: (url: string) => Promise<void>;
     openPath: (path: string) => Promise<string>;
   };
@@ -78,6 +79,7 @@ export function createWidgetApiFactory(commonFactory: WidgetApiCommonFactory, mo
 export interface WidgetSettingsApi<TSettings> {
   readonly updateSettings: (newSettings: TSettings) => void;
   readonly dialog: {
+    showAppManager: () => void;
     showOpenFileDialog: (cfg: OpenFileDialogConfig) => Promise<OpenDialogResult>;
     showOpenDirDialog: (cfg: OpenDirDialogConfig) => Promise<OpenDialogResult>;
   }

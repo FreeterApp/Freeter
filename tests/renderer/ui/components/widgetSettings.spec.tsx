@@ -17,6 +17,9 @@ import { AppState } from '@/base/state/app';
 import userEvent from '@testing-library/user-event';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { memo } from 'react';
+import { SharedStateSliceName } from '@/base/state/shared';
+import { fixtureAppA } from '@tests/base/fixtures/app';
+import { fixtureApps } from '@tests/base/state/fixtures/apps';
 
 const widgetId = 'WIDGET-ID';
 const widgetTypeId = 'WIDGET-TYPE-ID';
@@ -236,6 +239,51 @@ describe('<WidgetSettings />', () => {
     }));
 
     expect(screen.getByText(someValue)).toBeInTheDocument();
+  })
+
+  it('should provide settingsEditorComp with access to the shared app state, required by the widget type', async () => {
+    const testRequiresState: SharedStateSliceName[] = ['apps'];
+    const testApp = fixtureAppA();
+    const testAppIds = [testApp.id];
+
+    await setup(fixtureAppState({
+      entities: {
+        apps: {
+          [testApp.id]: testApp
+        },
+        widgetTypes: {
+          ...fixtureWidgetTypeAInColl({
+            id: widgetTypeId,
+            settingsEditorComp: {
+              type: 'react',
+              Comp: ({sharedState}) => <>{sharedState.apps.appIds[0]} {sharedState.apps.apps[testApp.id]?.settings.name}</>
+            } as SettingsEditorReactComponent,
+            requiresState: testRequiresState
+          }),
+          ...fixtureWidgetTypeBInColl()
+        }
+      },
+      ui: {
+        apps: fixtureApps({
+          appIds: testAppIds
+        }),
+        modalScreens: fixtureModalScreens({
+          data: fixtureModalScreensData({
+            widgetSettings: fixtureWidgetSettings({
+              widgetInEnv: {
+                widget: fixtureWidgetA({
+                  id: widgetId,
+                  type: widgetTypeId,
+                }),
+                env: fixtureWidgetEnvAreaShelf()
+              }
+            })
+          })
+        })
+      }
+    }));
+
+    expect(screen.getByText(`${testAppIds[0]} ${testApp.settings.name}`)).toBeInTheDocument();
   })
 
   it('should display a preview with current settings', async () => {

@@ -128,6 +128,17 @@ import { createCreateWidgetSubCase } from '@/application/useCases/widget/subs/cr
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { defaultUiThemeId } from '@/base/uiTheme';
 import { createTopBarViewModelHook } from '@/ui/components/topBar/topBarViewModel';
+import { createAppManagerComponent, createAppManagerViewModelHook } from '@/ui/components/appManager';
+import { createAddAppInAppManagerUseCase } from '@/application/useCases/appManager/addAppInAppManager';
+import { createSaveChangesInAppManagerUseCase } from '@/application/useCases/appManager/saveChangesInAppManager';
+import { createSwitchAppInAppManagerUseCase } from '@/application/useCases/appManager/switchAppInAppManager';
+import { createToggleDeletionInAppManagerUseCase } from '@/application/useCases/appManager/toggleDeletionInAppManager';
+import { createDuplicateAppInAppManagerUseCase } from '@/application/useCases/appManager/duplicateAppInAppManager';
+import { createUpdateAppSettingsInAppManagerUseCase } from '@/application/useCases/appManager/updateAppSettingsInAppManager';
+import { createUpdateAppsOrderInAppManagerUseCase } from '@/application/useCases/appManager/updateAppsOrderInAppManager';
+import { createCloseAppManagerUseCase } from '@/application/useCases/appManager/closeAppManager';
+import { createOpenAppManagerUseCase } from '@/application/useCases/appManager/openAppManager';
+import { createShowOpenFileDialogUseCase } from '@/application/useCases/dialog/showOpenFileDialog';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -136,6 +147,7 @@ function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRen
 function createStore() {
   let firstRunState: AppState = {
     entities: {
+      apps: {},
       projects: {},
       widgets: {},
       widgetTypes: {},
@@ -149,6 +161,9 @@ function createStore() {
         mainHotkey: 'CmdOrCtrl+Shift+F',
         uiTheme: defaultUiThemeId
       },
+      apps: {
+        appIds: []
+      },
       copy: {
         widgets: {
           entities: {},
@@ -161,6 +176,12 @@ function createStore() {
       },
       modalScreens: {
         data: {
+          appManager: {
+            appIds: null,
+            apps: null,
+            currentAppId: '',
+            deleteAppIds: null
+          },
           applicationSettings: {
             appConfig: null
           },
@@ -214,6 +235,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     idGenerator: uuidv4IdGenerator,
   }
 
+  const openAppManagerUseCase = createOpenAppManagerUseCase(deps);
+
   const osDialogProvider = createOsDialogProvider();
 
   const openWidgetSettingsUseCase = createOpenWidgetSettingsUseCase(deps);
@@ -221,7 +244,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const saveWidgetSettingsUseCase = createSaveWidgetSettingsUseCase(deps);
   const getWidgetSettingsApiUseCase = createGetWidgetSettingsApiUseCase({
     ...deps,
-    dialogProvider: osDialogProvider
+    dialogProvider: osDialogProvider,
+    openAppManagerUseCase
   });
   const updateWidgetCoreSettingsUseCase = createUpdateWidgetCoreSettingsUseCase(deps);
 
@@ -258,6 +282,11 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     ...deps,
     contextMenuProvider: osContextMenuProvider,
   });
+
+  const showOpenFileDialogUseCase = createShowOpenFileDialogUseCase({
+    ...deps,
+    dialog: osDialogProvider
+  })
 
   const clipboardProvider = createClipboardProvider();
   const shellProvider = createShellProvider();
@@ -306,6 +335,15 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const closeProjectManagerUseCase = createCloseProjectManagerUseCase(deps);
   const openProjectManagerUseCase = createOpenProjectManagerUseCase(deps);
 
+  const addAppInAppManagerUseCase = createAddAppInAppManagerUseCase(deps);
+  const saveChangesInAppManagerUseCase = createSaveChangesInAppManagerUseCase(deps);
+  const switchAppInAppManagerUseCase = createSwitchAppInAppManagerUseCase(deps);
+  const toggleDeletionInAppManagerUseCase = createToggleDeletionInAppManagerUseCase(deps);
+  const duplicateAppInAppManagerUseCase = createDuplicateAppInAppManagerUseCase(deps);
+  const updateAppSettingsInAppManagerUseCase = createUpdateAppSettingsInAppManagerUseCase(deps);
+  const updateAppsOrderInAppManagerUseCase = createUpdateAppsOrderInAppManagerUseCase(deps);
+  const closeAppManagerUseCase = createCloseAppManagerUseCase(deps);
+
   const productInfoProvider = createProductInfoProvider();
   const openAboutUseCase = createOpenAboutUseCase(deps);
   const closeAboutUseCase = createCloseAboutUseCase(deps);
@@ -337,7 +375,9 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     toggleEditModeUseCase,
     toggleMenuBarUseCase,
     openApplicationSettingsUseCase,
-    openAboutUseCase
+    openAboutUseCase,
+    openAppManagerUseCase,
+    openProjectManagerUseCase
   });
 
   const browserWindow = createBrowserWindowProvider();
@@ -463,6 +503,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
     showWidgetContextMenuUseCase,
 
+    showOpenFileDialogUseCase,
+
     getWidgetApiUseCase,
     deleteWidgetUseCase,
 
@@ -475,6 +517,17 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     updateProjectsOrderInProjectManagerUseCase,
     closeProjectManagerUseCase,
     openProjectManagerUseCase,
+
+    addAppInAppManagerUseCase,
+    saveChangesInAppManagerUseCase,
+    switchAppInAppManagerUseCase,
+    toggleDeletionInAppManagerUseCase,
+    duplicateAppInAppManagerUseCase,
+    updateAppSettingsInAppManagerUseCase,
+    updateAppsOrderInAppManagerUseCase,
+    closeAppManagerUseCase,
+    openAppManagerUseCase,
+
     initAppMenuUseCase,
     initTrayMenuUseCase,
     initMainShortcutUseCase,
@@ -613,12 +666,17 @@ function createUI(stateHooks: ReturnType<typeof createUiHooks>, useCases: Awaite
   const useAboutViewModel = createAboutViewModelHook(deps);
   const About = createAboutComponent({ useAboutViewModel });
 
+  const useAppManagerViewModel = createAppManagerViewModelHook(deps);
+  const AppManager = createAppManagerComponent({
+    useAppManagerViewModel
+  })
   const useAppViewModel = createAppViewModelHook({
     ...deps,
     WidgetSettings,
     WorkflowSettings,
     ProjectManager,
     ApplicationSettings,
+    AppManager,
     About,
   });
 

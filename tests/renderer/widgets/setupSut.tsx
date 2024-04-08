@@ -3,22 +3,32 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ReactComponent, SettingsEditorReactComponentProps, WidgetApi, WidgetReactComponentProps, WidgetEnv, EntityId, WidgetSettingsApi, WidgetSettings} from '@/widgets/appModules';
+import { ReactComponent, SettingsEditorReactComponentProps, WidgetApi, WidgetReactComponentProps, WidgetEnv, EntityId, WidgetSettingsApi, WidgetSettings, SharedState} from '@/widgets/appModules';
 import { render, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { fixtureProcessInfoLinux } from '@testscommon/base/fixtures/process';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-function setupSut<T>(compFactory: (settings: T, setVal: (newVal: T) => void) => JSX.Element, initSettings: T) {
+function setupSut<T>(
+  compFactory: (settings: T, setVal: (newVal: T) => void, sharedState: SharedState) => JSX.Element,
+  initSettings: T,
+  sharedState?: Partial<SharedState>
+) {
   let settings: T;
   const getSettings = () => settings;
   let setSettings: (newVal: T) => void;
+  const emptySharedState: SharedState = {
+    apps: {
+      appIds: [],
+      apps: {}
+    }
+  }
 
   function Sut() {
     const [val, setVal] = useState(initSettings)
     settings = val;
     setSettings= (newVal) => act(()=>setVal(newVal));
-    return compFactory(settings, setVal);
+    return compFactory(settings, setVal, (sharedState || emptySharedState) as SharedState);
   }
 
   const comp = render(<Sut></Sut>);
@@ -38,13 +48,14 @@ export interface SetupSettingsSutOptional {
     ? Partial<WidgetSettingsApi<WidgetSettings>[P]>
     : WidgetSettingsApi<WidgetSettings>[P]
   }
+  sharedState?: Partial<SharedState>
 }
 
 export function setupSettingsSut<T>(reactComp: ReactComponent<SettingsEditorReactComponentProps<T>>, initSettings: T, optional?: SetupSettingsSutOptional) {
   const mockSettingsApi = optional?.mockSettingsApi || {};
   const {Comp} = reactComp;
   return setupSut(
-    (settings, setVal) => (
+    (settings, setVal, sharedState) => (
       <Comp
         settings={settings}
         settingsApi={{
@@ -52,12 +63,15 @@ export function setupSettingsSut<T>(reactComp: ReactComponent<SettingsEditorReac
           dialog: {
             showOpenDirDialog: jest.fn(),
             showOpenFileDialog: jest.fn(),
+            showAppManager: jest.fn(),
             ...mockSettingsApi.dialog
           }
         }}
+        sharedState={sharedState}
       ></Comp>
     ),
-    initSettings
+    initSettings,
+    optional?.sharedState
   );
 }
 
@@ -65,6 +79,7 @@ export interface SetupWidgetSutOptional {
   widgetId?: EntityId;
   env?: WidgetEnv;
   mockWidgetApi?: {[P in keyof WidgetApi]?: WidgetApi[P] extends Record<string, unknown> ? Partial<WidgetApi[P]> : WidgetApi[P]}
+  sharedState?: Partial<SharedState>;
 }
 
 export function setupWidgetSut<T>(reactComp: ReactComponent<WidgetReactComponentProps<T>>, initSettings: T, optional?: SetupWidgetSutOptional) {
@@ -95,6 +110,7 @@ export function setupWidgetSut<T>(reactComp: ReactComponent<WidgetReactComponent
       ...mockWidgetApi.process
     },
     shell: {
+      openApp: jest.fn(),
       openExternalUrl: jest.fn(),
       openPath: jest.fn(),
       ...mockWidgetApi.shell
@@ -106,15 +122,17 @@ export function setupWidgetSut<T>(reactComp: ReactComponent<WidgetReactComponent
   };
   return {
     ...setupSut(
-      (settings) => (
+      (settings, _, sharedState) => (
         <Comp
           id={widgetId}
           env={env}
           settings={settings}
           widgetApi={widgetApi}
+          sharedState={sharedState}
         ></Comp>
       ),
-      initSettings
+      initSettings,
+      optional?.sharedState
     ),
     widgetApi
   }

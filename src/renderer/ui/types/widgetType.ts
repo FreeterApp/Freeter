@@ -4,9 +4,10 @@
  */
 
 import { EntityId } from '@/base/entity';
-import { WidgetEnv } from '@/base/widget';
+import { SharedState } from '@/base/state/shared';
+import { WidgetSettings, WidgetEnv } from '@/base/widget';
 import { WidgetApi, WidgetSettingsApi } from '@/base/widgetApi';
-import { WidgetSettings, WidgetTypeComponent } from '@/base/widgetType';
+import { WidgetTypeComponent } from '@/base/widgetType';
 import { FC } from 'react';
 
 /** React Component */
@@ -20,10 +21,12 @@ export interface WidgetReactComponentProps<TSettings = WidgetSettings> {
   env: WidgetEnv;
   settings: TSettings;
   widgetApi: WidgetApi;
+  sharedState: SharedState;
 }
 export type WidgetReactComponent<TSettings = WidgetSettings> = ReactComponent<WidgetReactComponentProps<TSettings>>;
 export interface SettingsEditorReactComponentProps<TSettings = WidgetSettings> {
   settings: TSettings;
   settingsApi: WidgetSettingsApi<TSettings>;
+  sharedState: SharedState;
 }
 export type SettingsEditorReactComponent<TSettings = WidgetSettings> = ReactComponent<SettingsEditorReactComponentProps<TSettings>>;

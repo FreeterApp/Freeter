@@ -31,6 +31,8 @@ async function setup(initState: AppState, opts?: {
   const toggleMenuBarUseCase = jest.fn();
   const openApplicationSettingsUseCase = jest.fn();
   const openAboutUseCase = jest.fn();
+  const openAppManagerUseCase = jest.fn();
+  const openProjectManagerUseCase = jest.fn();
   const initAppMenuUseCase = createInitAppMenuUseCase({
     appStore,
     appMenu: appMenuProviderMock,
@@ -40,6 +42,8 @@ async function setup(initState: AppState, opts?: {
     toggleMenuBarUseCase,
     openApplicationSettingsUseCase,
     openAboutUseCase,
+    openAppManagerUseCase,
+    openProjectManagerUseCase
   });
   return {
     appStore,

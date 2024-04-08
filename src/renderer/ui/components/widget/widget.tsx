@@ -26,6 +26,7 @@ export function createWidgetComponent({
       widgetName,
       widgetApi,
       WidgetComp,
+      sharedState,
       dontShowActionBar,
       onContextMenuHandler,
     } = useWidgetViewModel(props);
@@ -40,7 +41,7 @@ export function createWidgetComponent({
 
     if (env.isPreview) {
       return (
-        <WidgetComp id={widget.id} env={env} settings={widget.settings} widgetApi={widgetApi}></WidgetComp>
+        <WidgetComp id={widget.id} env={env} settings={widget.settings} widgetApi={widgetApi} sharedState={sharedState}></WidgetComp>
       )
     }
 
@@ -56,7 +57,7 @@ export function createWidgetComponent({
         ></ActionBar>
       </div>
       <div className={styles['widget-body']} data-widget-context="" {...{ inert: editMode ? '' : undefined }}>
-        <WidgetComp id={widget.id} env={env} settings={widget.settings} widgetApi={widgetApi}></WidgetComp>
+        <WidgetComp id={widget.id} env={env} settings={widget.settings} widgetApi={widgetApi} sharedState={sharedState}></WidgetComp>
       </div>
     </div>
   }

@@ -144,6 +144,15 @@ export const lightTheme = {
 
   settingsScreenPanelColor: '#3B3B3B',
 
+  appManagerListBackground: base.componentBackground,
+  appManagerListItemBackground: base.componentBackground,
+  appManagerListItemColor: base.componentColor,
+  appManagerListItemHoverBackground: '#F2F2F2',
+  appManagerListItemHoverColor: base.componentColor,
+  appManagerListItemSelectedBackground: '#E4E6F1',
+  appManagerListItemSelectedColor: base.componentColor,
+  appManagerListItemDropAreaBackground: base.dropAreaBackground,
+
   projectManagerListBackground: base.componentBackground,
   projectManagerListItemBackground: base.componentBackground,
   projectManagerListItemColor: base.componentColor,

@@ -19,6 +19,9 @@ import { useEffect } from 'react';
 import { fixtureActionBarItemA, fixtureActionBarItemB, fixtureActionBarItemC, fixtureActionBarItemD } from '@tests/base/fixtures/actionBar';
 import { fixtureDragDropNotDragging } from '@tests/base/state/fixtures/dragDropState';
 import { fixtureWorktableNotResizing, fixtureWorktableResizingItem } from '@tests/base/state/fixtures/worktable';
+import { SharedStateSliceName } from '@/base/state/shared';
+import { fixtureAppA } from '@tests/base/fixtures/app';
+import { fixtureApps } from '@tests/base/state/fixtures/apps';
 
 type SetupProps = {
   widget: Widget;
@@ -779,7 +782,44 @@ describe('<Widget />', () => {
     expect(screen.getByText(someValue)).toBeInTheDocument();
   })
 
-  it('should call getWidgetApiUseCase with right params and give access to the returned value as widgetApi in Comp', async () => {
+  it('should have access to the shared app state, required by the widget type', async () => {
+    const testRequiresState: SharedStateSliceName[] = ['apps'];
+    const testApp = fixtureAppA();
+    const testAppIds = [testApp.id];
+
+    await setup({
+      appState: fixtureAppState({
+        entities: {
+          apps: {
+            [testApp.id]: testApp
+          },
+          widgetTypes: {
+            ...fixtureWidgetTypeAInColl({
+              id: widgetTypeId1,
+              widgetComp: {
+                type: 'react',
+                Comp: ({sharedState}) => <>{sharedState.apps.appIds[0]} {sharedState.apps.apps[testApp.id]?.settings.name}</>
+              } as WidgetReactComponent,
+              requiresState: testRequiresState
+            }),
+          }
+        },
+        ui: {
+          apps: fixtureApps({
+            appIds: testAppIds
+          })
+        }
+      }),
+      widget: fixtureWidgetA({
+        id: widgetId,
+        type: widgetTypeId1,
+      }),
+    });
+
+    expect(screen.getByText(`${testAppIds[0]} ${testApp.settings.name}`)).toBeInTheDocument();
+  })
+
+  it('should call getWidgetApiUseCase with right params and give access to the returned value as widgetApi prop in Comp', async () => {
     const testRequiresApi: WidgetApiModuleName[] = ['clipboard'];
     const getWidgetApiUseCaseRes = 'USECASE RES';
     const getWidgetApiUseCase = jest.fn(() => getWidgetApiUseCaseRes);

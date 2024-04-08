@@ -18,6 +18,7 @@ import { DeleteWidgetUseCase } from '@/application/useCases/widget/deleteWidget'
 import { EntityId } from '@/base/entity';
 import { CopyWidgetUseCase } from '@/application/useCases/widget/copyWidget';
 import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
+import { createSharedState } from '@/base/state/shared';
 
 type Deps = {
   useAppState: UseAppState;
@@ -148,6 +149,7 @@ export function createWidgetViewModelHook({
     const [contextMenuFactoryViewMode, setContextMenuFactoryViewMode] = useState<WidgetContextMenuFactory | undefined>(undefined);
 
     const widgetType = useAppState.useWithStrictEq(state => entityStateActions.widgetTypes.getOne(state, widget.type));
+    const sharedState = useAppState(state => createSharedState(state, widgetType?.requiresState || []));
     const WidgetComp = useWidgetTypeComp(widgetType, 'widgetComp');
     const widgetApi = useMemo(() => getWidgetApiUseCase(
       widget.id,
@@ -186,6 +188,7 @@ export function createWidgetViewModelHook({
       widgetName,
       widgetApi,
       WidgetComp,
+      sharedState,
       dontShowActionBar,
       onContextMenuHandler,
     }

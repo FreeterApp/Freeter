@@ -9,6 +9,7 @@ import { screen } from '@testing-library/react';
 import { SetupWidgetSutOptional, setupWidgetSut } from '@tests/widgets/setupSut'
 import { fixtureSettings } from './fixtures';
 import { SettingsType } from '@/widgets/file-opener/settingsType';
+import { fixtureAppA } from '@tests/base/fixtures/app';
 
 function setupSut(settings: Settings, optional?: SetupWidgetSutOptional) {
   const { comp, ...rest } = setupWidgetSut(widgetComp, settings, optional);
@@ -79,10 +80,10 @@ describe('File Opener Widget', () => {
     expect(screen.getByRole('button', { name: /open folders/i })).toBeInTheDocument();
   })
 
-  it('should call openPath for each non-empty files item with right params, when clicking the open button and type=file', async () => {
+  it('should call openPath for each non-empty files item with right params on the open button click, when type=file and openIn is empty', async () => {
     const openPath = jest.fn();
     const { userEvent } = setupSut(
-      fixtureSettings({ type: SettingsType.File, files: ['', 'file/path1', 'file/path2'], folders: ['', 'folder/path1', 'folder/path2'] }),
+      fixtureSettings({ type: SettingsType.File, files: ['', 'file/path1', 'file/path2'], folders: ['', 'folder/path1', 'folder/path2'], openIn: '' }),
       {
         mockWidgetApi: {
           shell: {
@@ -99,10 +100,67 @@ describe('File Opener Widget', () => {
     expect(openPath).toHaveBeenNthCalledWith(2, 'file/path2');
   })
 
-  it('should call openPath for each non-empty folders item with right params, when clicking the open button and type=folder', async () => {
+  it('should call openPath for each non-empty files item with right params on the open button click, when type=file and openIn = unexisting app', async () => {
+    const openPath = jest.fn();
+    const app = fixtureAppA();
+    const { userEvent } = setupSut(
+      fixtureSettings({ type: SettingsType.File, files: ['', 'file/path1', 'file/path2'], folders: ['', 'folder/path1', 'folder/path2'], openIn: 'NO-SUCH-ID' }),
+      {
+        mockWidgetApi: {
+          shell: {
+            openPath
+          }
+        },
+        sharedState: {
+          apps: {
+            apps: {
+              [app.id]: app
+            },
+            appIds: [app.id]
+          }
+        }
+      }
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /open files/i }))
+
+    expect(openPath).toBeCalledTimes(2);
+    expect(openPath).toHaveBeenNthCalledWith(1, 'file/path1');
+    expect(openPath).toHaveBeenNthCalledWith(2, 'file/path2');
+  })
+
+  it('should call openApp with right params on the open button click, when type=file and openIn = an existing app id', async () => {
+    const openApp = jest.fn();
+    const app = fixtureAppA();
+    const { userEvent } = setupSut(
+      fixtureSettings({ type: SettingsType.File, files: ['', 'file/path1', 'file/path2'], folders: ['', 'folder/path1', 'folder/path2'], openIn: app.id }),
+      {
+        mockWidgetApi: {
+          shell: {
+            openApp
+          }
+        },
+        sharedState: {
+          apps: {
+            apps: {
+              [app.id]: app
+            },
+            appIds: [app.id]
+          }
+        }
+      }
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /open files/i }))
+
+    expect(openApp).toHaveBeenCalledTimes(1);
+    expect(openApp).toHaveBeenCalledWith(app.settings.execPath, [app.settings.cmdArgs, 'file/path1', 'file/path2']);
+  })
+
+  it('should call openPath for each non-empty folders item with right params on the open button click, when type=folder and openIn is empty', async () => {
     const openPath = jest.fn();
     const { userEvent } = setupSut(
-      fixtureSettings({ type: SettingsType.Folder, files: ['', 'file/path1', 'file/path2'], folders: ['', 'folder/path1', 'folder/path2'] }),
+      fixtureSettings({ type: SettingsType.Folder, files: ['', 'file/path1', 'file/path2'], folders: ['', 'folder/path1', 'folder/path2'], openIn: '' }),
       {
         mockWidgetApi: {
           shell: {
@@ -117,5 +175,62 @@ describe('File Opener Widget', () => {
     expect(openPath).toBeCalledTimes(2);
     expect(openPath).toHaveBeenNthCalledWith(1, 'folder/path1');
     expect(openPath).toHaveBeenNthCalledWith(2, 'folder/path2');
+  })
+
+  it('should call openPath for each non-empty folders item with right params on the open button click, when type=folder and openIn = unexisting app', async () => {
+    const openPath = jest.fn();
+    const app = fixtureAppA();
+    const { userEvent } = setupSut(
+      fixtureSettings({ type: SettingsType.Folder, files: ['', 'file/path1', 'file/path2'], folders: ['', 'folder/path1', 'folder/path2'], openIn: 'NO-SUCH-ID' }),
+      {
+        mockWidgetApi: {
+          shell: {
+            openPath
+          }
+        },
+        sharedState: {
+          apps: {
+            apps: {
+              [app.id]: app
+            },
+            appIds: [app.id]
+          }
+        }
+      }
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /open folders/i }))
+
+    expect(openPath).toBeCalledTimes(2);
+    expect(openPath).toHaveBeenNthCalledWith(1, 'folder/path1');
+    expect(openPath).toHaveBeenNthCalledWith(2, 'folder/path2');
+  })
+
+  it('should call openApp with right params on the open button click, when type=folder and openIn = an existing app id', async () => {
+    const openApp = jest.fn();
+    const app = fixtureAppA();
+    const { userEvent } = setupSut(
+      fixtureSettings({ type: SettingsType.Folder, files: ['', 'file/path1', 'file/path2'], folders: ['', 'folder/path1', 'folder/path2'], openIn: app.id }),
+      {
+        mockWidgetApi: {
+          shell: {
+            openApp
+          }
+        },
+        sharedState: {
+          apps: {
+            apps: {
+              [app.id]: app
+            },
+            appIds: [app.id]
+          }
+        }
+      }
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /open folders/i }))
+
+    expect(openApp).toHaveBeenCalledTimes(1);
+    expect(openApp).toHaveBeenCalledWith(app.settings.execPath, [app.settings.cmdArgs, 'folder/path1', 'folder/path2']);
   })
 })

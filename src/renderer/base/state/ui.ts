@@ -3,6 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { App } from '@/base/app';
 import { AppConfig } from '@/base/appConfig';
 import { Entity, EntityId } from '@/base/entity';
 import { EntityCollection } from '@/base/entityCollection';
@@ -90,6 +91,13 @@ export interface ProjectSwitcherState {
   currentProjectId: EntityId;
 }
 
+export interface AppManagerState {
+  apps: EntityCollection<App> | null;
+  appIds: EntityIdList | null;
+  deleteAppIds: Record<EntityId, boolean> | null;
+  currentAppId: EntityId;
+}
+
 export interface ApplicationSettingsState {
   appConfig: AppConfig | null;
 }
@@ -139,6 +147,7 @@ export interface WorktableState {
 
 export interface ModalScreensDataState {
   about?: void; // no data - key is used for consistency
+  appManager: AppManagerState;
   applicationSettings: ApplicationSettingsState;
   projectManager: ProjectManagerState;
   widgetSettings: WidgetSettingsState;
@@ -170,10 +179,15 @@ export interface CopyState {
   workflows: CopyWorkflowsState;
 }
 
+export interface AppsState {
+  appIds: EntityIdList;
+}
+
 export interface UiState {
   editMode: boolean;
   menuBar: boolean;
   appConfig: AppConfig;
+  apps: AppsState;
   dragDrop: DragDropState;
   copy: CopyState;
   modalScreens: ModalScreensState;
@@ -192,6 +206,9 @@ export function createUiState(): UiState {
       mainHotkey: 'CmdOrCtrl+Shift+F',
       uiTheme: 'dark'
     },
+    apps: {
+      appIds: []
+    },
     copy: {
       widgets: {
         entities: {},
@@ -204,6 +221,12 @@ export function createUiState(): UiState {
     },
     modalScreens: {
       data: {
+        appManager: {
+          currentAppId: '',
+          deleteAppIds: null,
+          apps: null,
+          appIds: null
+        },
         applicationSettings: {
           appConfig: null
         },

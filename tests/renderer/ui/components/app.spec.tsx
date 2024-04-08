@@ -21,6 +21,7 @@ const strWorkflowSettings = 'WorkflowSettings';
 const strWorkflowSwitcher = 'WorkflowSwitcher';
 const strProjectManager = 'ProjectManager';
 const strApplicationSettings = 'ApplicationSettings';
+const strAppManager = 'AppManager';
 const strWorktable = 'Worktable';
 const strAbout = 'About';
 const mockTopBar = () => <div>{strTopBar}</div>;
@@ -28,6 +29,7 @@ const mockWidgetSettings = () => <div>{strWidgetSettings}</div>;
 const mockWorkflowSettings = () => <div>{strWorkflowSettings}</div>;
 const mockProjectManager = () => <div>{strProjectManager}</div>;
 const mockApplicationSettings = () => <div>{strApplicationSettings}</div>;
+const mockAppManager = () => <div>{strAppManager}</div>;
 const mockAbout = () => <div>{strAbout}</div>;
 const mockWorkflowSwitcher = () => <div>{strWorkflowSwitcher}</div>;
 const mockWorktable = () => <div>{strWorktable}</div>;
@@ -46,6 +48,7 @@ async function setup(
     WorkflowSettings: mockWorkflowSettings,
     ProjectManager: mockProjectManager,
     ApplicationSettings: mockApplicationSettings,
+    AppManager: mockAppManager,
     About: mockAbout,
     showContextMenuUseCase
   });
@@ -178,6 +181,7 @@ describe('<App />', () => {
     {name: 'WorkflowSettings', modalScreen: 'workflowSettings', expectRendered: strWorkflowSettings},
     {name: 'ProjectManager', modalScreen: 'projectManager', expectRendered: strProjectManager},
     {name: 'ApplicationSettings', modalScreen: 'applicationSettings', expectRendered: strApplicationSettings},
+    {name: 'AppManager', modalScreen: 'appManager', expectRendered: strAppManager},
     {name: 'About', modalScreen: 'about', expectRendered: strAbout},
   ])('When modal screens state = $name', ({modalScreen, expectRendered}) => {
     beforeEach(async ()=> {
@@ -227,6 +231,16 @@ describe('<App />', () => {
     } else {
       it('should not display ApplicationSettings', async () => {
         expect(screen.queryByText(strApplicationSettings)).not.toBeInTheDocument();
+      });
+    }
+
+    if (expectRendered===strAppManager) {
+      it('should display AppManager', async () => {
+        expect(screen.getByText(strAppManager)).toBeInTheDocument();
+      });
+    } else {
+      it('should not display AppManager', async () => {
+        expect(screen.queryByText(strAppManager)).not.toBeInTheDocument();
       });
     }
 

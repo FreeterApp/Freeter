@@ -3,7 +3,8 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { WidgetSettings, WidgetType } from '@/base/widgetType';
+import { WidgetSettings } from '@/base/widget';
+import { WidgetType } from '@/base/widgetType';
 import { WidgetReactComponent } from '@/widgets/appModules';
 import { deepFreeze } from '@common/helpers/deepFreeze';
 

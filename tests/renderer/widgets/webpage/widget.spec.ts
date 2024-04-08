@@ -140,15 +140,15 @@ describe('Webpage Widget', () => {
   })
   describe('webview useragent attribute', () => {
     it.each<[string, SettingsViewMode, ProcessInfo]>([
-      ['Mozilla/5.0 (Macintosh) Chrome/1.2.3', 'desktop', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '1.2.3' }, os: { name: 'darwin', ver: '5.6.7' } })],
-      ['Mozilla/5.0 (Linux) Chrome/2.3.4', 'desktop', fixtureProcessInfoLinux({ browser: { name: 'Chrome', ver: '2.3.4' }, os: { name: 'linux', ver: '6.7.8' } })],
-      ['Mozilla/5.0 (Windows) Chrome/3.4.5', 'desktop', fixtureProcessInfoWin({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'win32', ver: '7.8.9' } })],
-      ['Mozilla/5.0 (-) Chrome/3.4.5', 'desktop', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'another-os' as ProcessInfoOsName, ver: '7.8.9' }, isMac: false })],
+      ['Mozilla/5.0 (Macintosh) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/1.2.3 Safari/537.36', 'desktop', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '1.2.3' }, os: { name: 'darwin', ver: '5.6.7' } })],
+      ['Mozilla/5.0 (Linux) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/2.3.4 Safari/537.36', 'desktop', fixtureProcessInfoLinux({ browser: { name: 'Chrome', ver: '2.3.4' }, os: { name: 'linux', ver: '6.7.8' } })],
+      ['Mozilla/5.0 (Windows) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/3.4.5 Safari/537.36', 'desktop', fixtureProcessInfoWin({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'win32', ver: '7.8.9' } })],
+      ['Mozilla/5.0 (-) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/3.4.5 Safari/537.36', 'desktop', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'another-os' as ProcessInfoOsName, ver: '7.8.9' }, isMac: false })],
 
-      ['Mozilla/5.0 (Linux; Android) Chrome/1.2.3 Mobile', 'mobile', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '1.2.3' }, os: { name: 'darwin', ver: '5.6.7' } })],
-      ['Mozilla/5.0 (Linux; Android) Chrome/2.3.4 Mobile', 'mobile', fixtureProcessInfoLinux({ browser: { name: 'Chrome', ver: '2.3.4' }, os: { name: 'linux', ver: '6.7.8' } })],
-      ['Mozilla/5.0 (Linux; Android) Chrome/3.4.5 Mobile', 'mobile', fixtureProcessInfoWin({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'win32', ver: '7.8.9' } })],
-      ['Mozilla/5.0 (Linux; Android) Chrome/3.4.5 Mobile', 'mobile', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'another-os' as ProcessInfoOsName, ver: '7.8.9' }, isMac: false })],
+      ['Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/1.2.3 Mobile Safari/537.36', 'mobile', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '1.2.3' }, os: { name: 'darwin', ver: '5.6.7' } })],
+      ['Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/2.3.4 Mobile Safari/537.36', 'mobile', fixtureProcessInfoLinux({ browser: { name: 'Chrome', ver: '2.3.4' }, os: { name: 'linux', ver: '6.7.8' } })],
+      ['Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/3.4.5 Mobile Safari/537.36', 'mobile', fixtureProcessInfoWin({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'win32', ver: '7.8.9' } })],
+      ['Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/3.4.5 Mobile Safari/537.36', 'mobile', fixtureProcessInfoMac({ browser: { name: 'Chrome', ver: '3.4.5' }, os: { name: 'another-os' as ProcessInfoOsName, ver: '7.8.9' }, isMac: false })],
     ])(
       'should be "%s" when the viewMode setting is "%s" and processInfo is "%o"',
       (expectedUserAgent, viewMode, processInfo) => {

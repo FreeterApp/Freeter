@@ -3,26 +3,35 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { Button, CreateSettingsState, List, ReactComponent, SettingsEditorReactComponentProps, addItemToList, browse14Svg, delete14Svg, removeItemFromList, SettingBlock, SettingRow, SettingActions } from '@/widgets/appModules';
+import { Button, CreateSettingsState, List, ReactComponent, SettingsEditorReactComponentProps, addItemToList, browse14Svg, delete14Svg, removeItemFromList, SettingBlock, SettingRow, SettingActions, EntityId, mapIdListToEntityList, manage14Svg } from '@/widgets/appModules';
 import { SettingsType, isSettingsType, settingsTypeActionNames, settingsTypeNames, settingsTypeNamesCapital, settingsTypes } from '@/widgets/file-opener/settingsType';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export interface Settings {
   type: SettingsType,
   files: List<string>,
   folders: List<string>,
+  openIn: EntityId
 }
 
 export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
   type: isSettingsType(settings.type) ? settings.type : SettingsType.File,
   files: Array.isArray(settings.files) ? settings.files.map(path=>typeof path==='string'?path:'') : [''],
   folders: Array.isArray(settings.folders) ? settings.folders.map(path=>typeof path==='string'?path:'') : [''],
+  openIn: typeof settings.openIn === 'string' ? settings.openIn : '',
 })
 
-function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
+function SettingsEditorComp({settings, settingsApi, sharedState}: SettingsEditorReactComponentProps<Settings>) {
   const pathRefs = useRef<HTMLInputElement[]>([]);
   const {updateSettings, dialog} = settingsApi;
   const [triggerLastPathFocus, setTriggerLastPathFocus] = useState(false);
+
+  let {openIn} = settings;
+  const appList = useMemo(() => mapIdListToEntityList(sharedState.apps.apps, sharedState.apps.appIds), [sharedState.apps.appIds, sharedState.apps.apps])
+  const curApp = appList.find(item => item.id===openIn)
+  if(!curApp) {
+    openIn = '';
+  }
 
   useEffect(() => {
     if (triggerLastPathFocus) {
@@ -71,6 +80,8 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
       }
     }
   }
+
+  const { showAppManager } = dialog;
 
   return (
     <>
@@ -143,6 +154,41 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
             primary={true}
           ></Button>
         </div>
+      </SettingBlock>
+
+      <SettingBlock
+        titleForId='file-opener-openIn'
+        title={`Open ${settingsTypeNamesCapital[settings.type]}s in ...`}
+        moreInfo={`Use this option, if you want to open the ${settingsTypeNames[settings.type]}s in a specific app instead of the default one associated with them in the operating system.`}
+      >
+        <SettingRow>
+          <select id="file-opener-openIn" value={settings.openIn} onChange={e => {
+            updateSettings({
+              ...settings,
+              openIn: e.target.value
+            })
+          }}>
+            <option key='' value=''>Default App</option>
+            {
+              appList.map(app=>(
+                <option
+                  key={app.id}
+                  value={app.id}
+                >
+                  {app.settings.name}
+                </option>
+              ))
+            }
+          </select>
+          <SettingActions
+            actions={[{
+              id: 'MANAGE-APPS',
+              icon: manage14Svg,
+              title: 'Manage Apps',
+              doAction: async () => showAppManager()
+            }]}
+          />
+        </SettingRow>
       </SettingBlock>
     </>
   )

@@ -26,6 +26,7 @@ function setup() {
     getProcessInfo: jest.fn()
   }
   const shellProvider = mockShellProvider({
+    openApp: jest.fn(),
     openExternal: jest.fn(),
     openPath: jest.fn()
   });
@@ -196,6 +197,10 @@ describe('getWidgetApiUseCase()', () => {
     } = setup()
 
     const widgetApi = getWidgetApiUseCase(widgetId, false, () => undefined, () => undefined, ['shell']);
+
+    widgetApi.shell.openApp('app/path', ['arg1', 'arg2']);
+    expect(shellProvider.openApp).toBeCalledTimes(1);
+    expect(shellProvider.openApp).toBeCalledWith('app/path', ['arg1', 'arg2']);
 
     widgetApi.shell.openExternalUrl('test://url');
     expect(shellProvider.openExternal).toBeCalledTimes(1);

@@ -23,13 +23,17 @@ async function setup(initState: AppState) {
     showSaveFileDialog: jest.fn(),
   }
 
+  const openAppManagerUseCase = jest.fn();
+
   const getWidgetSettingsApiUseCase = createGetWidgetSettingsApiUseCase({
     appStore,
-    dialogProvider
+    dialogProvider,
+    openAppManagerUseCase
   });
   return {
     appStore,
     dialogProvider,
+    openAppManagerUseCase,
     getWidgetSettingsApiUseCase
   }
 }
@@ -123,7 +127,8 @@ describe('getWidgetSettingsApiUseCase()', () => {
   it('should correctly setup the dialog module', async () => {
     const {
       getWidgetSettingsApiUseCase,
-      dialogProvider
+      dialogProvider,
+      openAppManagerUseCase
     } = await setup(fixtureAppState({}))
 
     const settingsApi = getWidgetSettingsApiUseCase();
@@ -141,5 +146,9 @@ describe('getWidgetSettingsApiUseCase()', () => {
     expect(await settingsApi.dialog.showOpenDirDialog(odCfg)).toBe(odRes);
     expect(dialogProvider.showOpenDirDialog).toBeCalledTimes(1);
     expect(dialogProvider.showOpenDirDialog).toBeCalledWith(odCfg);
+
+    expect(openAppManagerUseCase).not.toHaveBeenCalled();
+    settingsApi.dialog.showAppManager();
+    expect(openAppManagerUseCase).toHaveBeenCalledTimes(1);
   })
 })

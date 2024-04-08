@@ -144,6 +144,15 @@ export const darkTheme = {
 
   settingsScreenPanelColor: '#CCCCCC',
 
+  appManagerListBackground: base.componentBackground,
+  appManagerListItemBackground: base.componentBackground,
+  appManagerListItemColor: base.componentColor,
+  appManagerListItemHoverBackground: '#2A2D2E',
+  appManagerListItemHoverColor: base.componentColor,
+  appManagerListItemSelectedBackground: '#37373D',
+  appManagerListItemSelectedColor: '#FFFFFF',
+  appManagerListItemDropAreaBackground: base.dropAreaBackground,
+
   projectManagerListBackground: base.componentBackground,
   projectManagerListItemBackground: base.componentBackground,
   projectManagerListItemColor: base.componentColor,
