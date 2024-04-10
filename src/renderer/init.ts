@@ -202,7 +202,7 @@ function createStore() {
         order: []
       },
       palette: {
-        widgetTypeIds: ['commander', 'file-opener', 'link-opener', 'note', 'to-do-list', 'webpage']
+        widgetTypeIds: ['commander', 'file-opener', 'link-opener', 'note', 'to-do-list', 'web-query', 'webpage']
       },
       projectSwitcher: {
         projectIds: [],
