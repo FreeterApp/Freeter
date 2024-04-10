@@ -10,6 +10,7 @@ import linkOpener from './link-opener';
 import note from './note';
 import toDoList from './to-do-list';
 import webpage from './webpage';
+import webQuery from './web-query';
 
 const widgetTypes = [
   commander,
@@ -18,6 +19,7 @@ const widgetTypes = [
   note,
   toDoList,
   webpage,
+  webQuery,
 ] as unknown as WidgetType<WidgetSettings>[];
 
 export default widgetTypes;
