@@ -8,6 +8,7 @@ import commander from './commander';
 import fileOpener from './file-opener';
 import linkOpener from './link-opener';
 import note from './note';
+import timer from './timer';
 import toDoList from './to-do-list';
 import webpage from './webpage';
 import webQuery from './web-query';
@@ -17,6 +18,7 @@ const widgetTypes = [
   fileOpener,
   linkOpener,
   note,
+  timer,
   toDoList,
   webpage,
   webQuery,
