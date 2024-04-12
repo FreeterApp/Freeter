@@ -7,6 +7,8 @@ import { Button, ReactComponent, WidgetReactComponentProps } from '@/widgets/app
 import { Settings } from './settings';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './widget.module.scss';
+import { useAudioFile } from '@/widgets/timer/useAudioFile';
+import { timerEndSoundFilesById } from '@/widgets/timer/audio/timer-end';
 
 function padTime(time: number) {
   return ('0' + time).slice(-2);
@@ -25,13 +27,16 @@ function WidgetComp({settings}: WidgetReactComponentProps<Settings>) {
 
   const msecs = settings.mins*60000
 
+  const endSound = useAudioFile(timerEndSoundFilesById[settings.endSound]?.path || '', settings.endSoundVol);
+
   const tick = useCallback(() => {
     const msecsLeft = endMsecs - Date.now();
     setMmss(msecsToMMSS(msecsLeft));
     if(msecsLeft<=0) {
+      endSound.play();
       setEndMsecs(0);
     }
-  }, [endMsecs])
+  }, [endMsecs, endSound])
 
   useEffect(() => {
     if (endMsecs>0) {

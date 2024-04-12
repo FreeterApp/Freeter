@@ -9,10 +9,8 @@ export function fixtureSettings(settings: Partial<Settings>): Settings {
   return {
     mins: 25,
     endDesktop: true,
-    endSound: 1,
+    endSound: '',
     endSoundVol: 80,
-    tickSound: 1,
-    tickSoundVol: 80,
     ...settings
   }
 }
