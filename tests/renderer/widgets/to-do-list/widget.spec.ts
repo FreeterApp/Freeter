@@ -131,18 +131,17 @@ describe('To-Do List Widget', () => {
         }
       }
     });
+    const user = userEvent.setup({ delay: null });
 
     await waitFor(() => {
       expect(screen.getByRole('list')).toBeInTheDocument();
     })
 
     const checkBox1 = screen.getByRole('checkbox', { name: 'Task 1' });
-    userEvent.click(checkBox1);
-    await waitFor(() => expect(checkBox1).toBeChecked());
+    await user.click(checkBox1);
 
     const checkBox3 = screen.getByRole('checkbox', { name: 'Task 3' });
-    userEvent.click(checkBox3);
-    await waitFor(() => expect(checkBox3).toBeChecked());
+    await user.click(checkBox3);
 
     const itemsAfterUpd = screen.getAllByRole('listitem');
     expect(within(itemsAfterUpd[0]).getByRole('checkbox', { name: 'Task 2' })).toBeChecked();
@@ -169,6 +168,7 @@ describe('To-Do List Widget', () => {
         }
       }
     });
+    const user = userEvent.setup({ delay: null });
 
     await waitFor(() => {
       expect(screen.getByRole('list')).toBeInTheDocument();
@@ -176,20 +176,17 @@ describe('To-Do List Widget', () => {
 
     const checkboxes = screen.getAllByRole('checkbox');
 
-    userEvent.click(checkboxes[0]);
-    await waitFor(() => expect(checkboxes[0]).toBeChecked());
+    await user.click(checkboxes[0]);
 
     act(() => jest.advanceTimersByTime(1000));
     expect(setJson).toBeCalledTimes(0);
 
-    userEvent.click(checkboxes[1]);
-    await waitFor(() => expect(checkboxes[1]).not.toBeChecked())
+    await user.click(checkboxes[1]);
 
     act(() => jest.advanceTimersByTime(2000));
     expect(setJson).toBeCalledTimes(0);
 
-    userEvent.click(checkboxes[2]);
-    await waitFor(() => expect(checkboxes[2]).toBeChecked())
+    await user.click(checkboxes[2]);
 
     act(() => jest.advanceTimersByTime(3000));
     expect(setJson).toBeCalledTimes(1);

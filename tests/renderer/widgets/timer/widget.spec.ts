@@ -17,14 +17,9 @@ function setupTimerWidgetSut(settings: Settings, optional?: SetupWidgetSutOption
   }
 }
 
-describe('Timer Widget', () => {
-  beforeEach(() => {
-    jest.useFakeTimers()
-  })
-  afterEach(() => {
-    jest.useRealTimers()
-  })
+jest.useFakeTimers()
 
+describe('Timer Widget', () => {
   it('should render "05:00", if mins=5', () => {
     setupTimerWidgetSut(fixtureSettings({ mins: 5 }));
 

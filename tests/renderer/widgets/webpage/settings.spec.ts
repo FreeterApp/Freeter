@@ -4,19 +4,13 @@
  */
 
 import { settingsEditorComp } from '@/widgets/webpage/settings';
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { setupSettingsSut } from '@tests/widgets/setupSut'
 import { fixtureSettings } from './fixtures';
 
-describe('Webpage Widget Settings', () => {
-  beforeEach(() => {
-    jest.useFakeTimers()
-  })
-  afterEach(() => {
-    jest.runOnlyPendingTimers()
-    jest.useRealTimers()
-  })
+jest.useFakeTimers()
 
+describe('Webpage Widget Settings', () => {
   it('should fill inputs with right values', () => {
     const settings = fixtureSettings({ url: 'https://www.url.com/', sessionScope: 'wgt', sessionPersist: 'temp', viewMode: 'desktop', autoReload: 3600 });
     setupSettingsSut(settingsEditorComp, settings);
@@ -31,10 +25,11 @@ describe('Webpage Widget Settings', () => {
   it('should allow to update "sessionScope" setting with an option select', async () => {
     const settings = fixtureSettings({ sessionScope: 'wgt' });
     const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
     const select = screen.getByRole('combobox', { name: /session scope/i })
 
-    userEvent.selectOptions(select, 'wfl');
-    await waitFor(() => expect((screen.getByRole('option', { name: 'Workflow' }) as HTMLOptionElement).selected).toBe(true))
+    await user.selectOptions(select, 'wfl');
+
     expect(getSettings()).toEqual({
       ...settings,
       sessionScope: 'wfl'
@@ -44,10 +39,11 @@ describe('Webpage Widget Settings', () => {
   it('should allow to update "sessionPersist" setting with an option select', async () => {
     const settings = fixtureSettings({ sessionPersist: 'persist' });
     const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
     const select = screen.getByRole('combobox', { name: /session persistence/i })
 
-    userEvent.selectOptions(select, 'temp');
-    await waitFor(() => expect((screen.getByRole('option', { name: 'Temporary' }) as HTMLOptionElement).selected).toBe(true))
+    await user.selectOptions(select, 'temp');
+
     expect(getSettings()).toEqual({
       ...settings,
       sessionPersist: 'temp'
@@ -57,10 +53,11 @@ describe('Webpage Widget Settings', () => {
   it('should allow to update "viewMode" setting with an option select', async () => {
     const settings = fixtureSettings({ viewMode: 'mobile' });
     const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
     const select = screen.getByRole('combobox', { name: /view mode/i })
 
-    userEvent.selectOptions(select, 'desktop');
-    await waitFor(() => expect((screen.getByRole('option', { name: 'Desktop' }) as HTMLOptionElement).selected).toBe(true))
+    await user.selectOptions(select, 'desktop');
+
     expect(getSettings()).toEqual({
       ...settings,
       viewMode: 'desktop'
@@ -70,17 +67,18 @@ describe('Webpage Widget Settings', () => {
   it('should allow to update "autoReload" setting with an option select', async () => {
     const settings = fixtureSettings({ autoReload: 10 });
     const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
     const select = screen.getByRole('combobox', { name: /Auto-Reload/i })
 
-    userEvent.selectOptions(select, '0');
-    await waitFor(() => expect((screen.getByRole('option', { name: 'Disabled' }) as HTMLOptionElement).selected).toBe(true))
+    await user.selectOptions(select, '0');
+
     expect(getSettings()).toEqual({
       ...settings,
       autoReload: 0
     });
 
-    userEvent.selectOptions(select, '300');
-    await waitFor(() => expect((screen.getByRole('option', { name: '5 Minutes' }) as HTMLOptionElement).selected).toBe(true))
+    await user.selectOptions(select, '300');
+
     expect(getSettings()).toEqual({
       ...settings,
       autoReload: 300
@@ -93,22 +91,20 @@ describe('Webpage Widget Settings', () => {
     const url3 = '.com'
     const settings = fixtureSettings({ url: '' });
     const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
     const input = screen.getByRole('textbox', { name: /url/i })
 
-    userEvent.type(input, url1);
-    await waitFor(() => expect(input).toHaveValue(url1))
+    await user.type(input, url1);
 
     act(() => jest.advanceTimersByTime(2000));
     expect(getSettings()).toEqual(settings);
 
-    userEvent.type(input, url2);
-    await waitFor(() => expect(input).toHaveValue(url1 + url2))
+    await user.type(input, url2);
 
     act(() => jest.advanceTimersByTime(2000));
     expect(getSettings()).toEqual(settings);
 
-    userEvent.type(input, url3);
-    await waitFor(() => expect(input).toHaveValue(url1 + url2 + url3))
+    await user.type(input, url3);
 
     act(() => jest.advanceTimersByTime(3000));
     expect(getSettings()).toEqual({
@@ -120,16 +116,16 @@ describe('Webpage Widget Settings', () => {
     const url = 'https://url.com';
     const settings = fixtureSettings({ url: '' });
     const { fireEvent, userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
     const input = screen.getByRole('textbox', { name: /url/i })
 
-    userEvent.type(input, url);
-    await waitFor(() => expect(input).toHaveValue(url))
+    await user.type(input, url);
     expect(getSettings()).toEqual(settings);
 
     fireEvent.blur(input);
-    await waitFor(() => expect(getSettings()).toEqual({
+    expect(getSettings()).toEqual({
       ...settings,
       url
-    }));
+    });
   })
 })

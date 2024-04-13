@@ -86,6 +86,7 @@ describe('Note Widget', () => {
         }
       }
     });
+    const user = userEvent.setup({ delay: null });
 
     await waitFor(() => {
       expect(screen.getByRole('textbox')).toBeInTheDocument();
@@ -93,20 +94,17 @@ describe('Note Widget', () => {
 
     const textbox = screen.getByRole('textbox');
 
-    userEvent.type(textbox, note1);
-    await waitFor(() => expect(textbox).toHaveValue(note1))
+    await user.type(textbox, note1);
 
     act(() => jest.advanceTimersByTime(1000));
     expect(setText).toBeCalledTimes(0);
 
-    userEvent.type(textbox, note2);
-    await waitFor(() => expect(textbox).toHaveValue(note1 + note2))
+    await user.type(textbox, note2);
 
     act(() => jest.advanceTimersByTime(2000));
     expect(setText).toBeCalledTimes(0);
 
-    userEvent.type(textbox, note3);
-    await waitFor(() => expect(textbox).toHaveValue(note1 + note2 + note3))
+    await user.type(textbox, note3);
 
     act(() => jest.advanceTimersByTime(3000));
     expect(setText).toBeCalledTimes(1);
