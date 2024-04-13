@@ -33,8 +33,8 @@ function WidgetComp({settings}: WidgetReactComponentProps<Settings>) {
     const msecsLeft = endMsecs - Date.now();
     setMmss(msecsToMMSS(msecsLeft));
     if(msecsLeft<=0) {
-      endSound.play();
       setEndMsecs(0);
+      endSound.play();
     }
   }, [endMsecs, endSound])
 

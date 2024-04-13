@@ -11,7 +11,6 @@ import { useCallback } from 'react';
 
 export interface Settings {
   mins: number;
-  endDesktop: boolean;
   endSound: string;
   endSoundVol: number;
 }
