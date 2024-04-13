@@ -166,7 +166,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       webviewEl.removeEventListener('did-navigate', handleDidNavigate);
       // webviewEl.removeEventListener('did-navigate-in-page', handleDidNavigateInPage);
       webviewEl.removeEventListener('did-finish-load', handleDidFinishLoad);
-    };
+          };
   }, [refreshActions]);
 
   useEffect(() => {
@@ -181,6 +181,8 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   return <>
     <webview
       ref={webviewRef}
+      // eslint-disable-next-line react/no-unknown-property
+      allowpopups={'' as unknown as boolean}
       // eslint-disable-next-line react/no-unknown-property
       partition={initPartition.current}
       // eslint-disable-next-line react/no-unknown-property

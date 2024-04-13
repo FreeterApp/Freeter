@@ -108,6 +108,36 @@ export function createRendererWindow(
   // prevent leaving the app page (by dragging an image for example)
   win.webContents.on('will-navigate', evt => evt.preventDefault());
 
+  // enable new windows in webview
+  win.webContents.on('did-attach-webview', (_, wc) => {
+    wc.setWindowOpenHandler((_details) => {
+      const { height, width, x, y } = win.getBounds();
+      const newW = width - 200;
+      const newH = height - 150;
+      const newX = x + Math.round((width - newW) / 2)
+      const newY = y + Math.round((height - newH) / 2)
+      return {
+        action: 'allow',
+        outlivesOpener: false,
+        overrideBrowserWindowOptions: {
+          width: newW,
+          height: newH,
+          x: newX,
+          y: newY,
+          minimizable: false,
+          frame: false,
+          thickFrame: true,
+          icon,
+          parent: win,
+          modal: true,
+          title: 'Freeter',
+          titleBarOverlay: true,
+          titleBarStyle: 'hidden'
+        }
+      }
+    })
+  })
+
   // and load the index.html of the app.
   win.loadURL(url);
   if (opts.devTools) {
