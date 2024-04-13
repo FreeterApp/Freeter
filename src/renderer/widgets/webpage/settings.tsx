@@ -18,7 +18,7 @@ function isSettingsSessionScope(val: unknown): val is SettingsSessionScope {
     return true;
   }
 
-  return true;
+  return false;
 }
 
 const settingsSessionPersist = ['persist', 'temp'] as const;
@@ -32,7 +32,7 @@ function isSettingsSessionPersist(val: unknown): val is SettingsSessionPersist {
     return true;
   }
 
-  return true;
+  return false;
 }
 
 const settingsViewMode = ['desktop', 'mobile'] as const;
@@ -46,7 +46,7 @@ function isSettingsViewMode(val: unknown): val is SettingsViewMode {
     return true;
   }
 
-  return true;
+  return false;
 }
 
 export interface Settings {
