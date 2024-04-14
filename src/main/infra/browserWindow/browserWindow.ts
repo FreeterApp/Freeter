@@ -125,6 +125,7 @@ export function createRendererWindow(
         icon,
         parent: win,
         title: 'Freeter',
+        // modal: true // modal hides maximize/close buttons on MacOS
       }
       switch (process.platform) {
         case 'linux': {
