@@ -213,6 +213,13 @@ if (!app.requestSingleInstanceLock()) {
         }
       )
 
+      app.on('browser-window-created', (_e, win) => {
+        // Disable menu in child windows
+        if (win !== appWindow) {
+          win.removeMenu();
+        }
+      });
+
       initTrayUseCase(appWindow);
     })
   });

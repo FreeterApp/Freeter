@@ -126,14 +126,24 @@ export function createRendererWindow(
         parent: win,
         title: 'Freeter',
       }
-      if (process.platform === 'win32') {
-        browserWinOpts = {
-          ...browserWinOpts,
-          frame: false,
-          thickFrame: true,
-          modal: true,
-          titleBarOverlay: true,
-          titleBarStyle: 'hidden'
+      switch (process.platform) {
+        case 'linux': {
+          browserWinOpts = {
+            ...browserWinOpts,
+            modal: true,
+          }
+          break;
+        }
+        case 'win32': {
+          browserWinOpts = {
+            ...browserWinOpts,
+            frame: false,
+            thickFrame: true,
+            modal: true,
+            titleBarOverlay: true,
+            titleBarStyle: 'hidden'
+          }
+          break;
         }
       }
       return {
