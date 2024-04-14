@@ -39,7 +39,7 @@ export function createActionBarItems(
     }
   }
 
-  return (!elWebview || !homeUrl) ? [] : [
+  return [
     {
       enabled: canGoHome(elWebview, homeUrl),
       icon: homeSvg,

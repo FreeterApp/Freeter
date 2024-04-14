@@ -89,9 +89,6 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       return undefined;
     }
 
-    const handleDidAttach = () => {
-      setWebviewIsReady(true);
-    }
     const handleDidStartLoading = () => {
       setIsLoading(true);
     }
@@ -115,7 +112,6 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     // };
 
     // Add event listeners
-    webviewEl.addEventListener('did-attach', handleDidAttach);
     webviewEl.addEventListener('did-start-loading', handleDidStartLoading);
     webviewEl.addEventListener('did-stop-loading', handleDidStopLoading);
     // webviewEl.addEventListener('did-fail-load', handleDidFailLoad);
@@ -123,7 +119,6 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
 
     return () => {
       // Remove event listeners
-      webviewEl.removeEventListener('did-attach', handleDidAttach);
       webviewEl.removeEventListener('did-start-loading', handleDidStartLoading);
       webviewEl.removeEventListener('did-stop-loading', handleDidStopLoading);
       // webviewEl.removeEventListener('did-fail-load', handleDidFailLoad);
@@ -141,6 +136,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     }
 
     const handleDomReady = () => {
+      setWebviewIsReady(true);
       refreshActions();
       // webviewEl.classList.add('is-bg-visible');
     }
