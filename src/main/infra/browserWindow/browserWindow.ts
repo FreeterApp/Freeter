@@ -116,7 +116,7 @@ export function createRendererWindow(
       const newH = height - 150;
       const newX = x + Math.round((width - newW) / 2)
       const newY = y + Math.round((height - newH) / 2)
-      let browserWinOpts: BrowserWindowConstructorOptions = {
+      const browserWinOpts: BrowserWindowConstructorOptions = {
         width: newW,
         height: newH,
         x: newX,
@@ -125,20 +125,6 @@ export function createRendererWindow(
         icon,
         parent: win,
         title: 'Freeter',
-        // modal: true // modal hides maximize/close buttons on MacOS
-      }
-      switch (process.platform) {
-        case 'win32': {
-          browserWinOpts = {
-            ...browserWinOpts,
-            frame: false,
-            thickFrame: true,
-            modal: true,
-            titleBarOverlay: true,
-            titleBarStyle: 'hidden'
-          }
-          break;
-        }
       }
       return {
         action: 'allow',
