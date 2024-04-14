@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { BrowserWindow as ElectronBrowserWindow, app } from 'electron';
+import { BrowserWindowConstructorOptions, BrowserWindow as ElectronBrowserWindow, app } from 'electron';
 import { BrowserWindow } from '@/application/interfaces/browserWindow'
 import { GetWindowStateUseCase } from '@/application/useCases/browserWindow/getWindowState';
 import { SetWindowStateUseCase } from '@/application/useCases/browserWindow/setWindowState';
@@ -116,24 +116,30 @@ export function createRendererWindow(
       const newH = height - 150;
       const newX = x + Math.round((width - newW) / 2)
       const newY = y + Math.round((height - newH) / 2)
-      return {
-        action: 'allow',
-        outlivesOpener: false,
-        overrideBrowserWindowOptions: {
-          width: newW,
-          height: newH,
-          x: newX,
-          y: newY,
-          minimizable: false,
+      let browserWinOpts: BrowserWindowConstructorOptions = {
+        width: newW,
+        height: newH,
+        x: newX,
+        y: newY,
+        minimizable: false,
+        icon,
+        parent: win,
+        title: 'Freeter',
+      }
+      if (process.platform === 'win32') {
+        browserWinOpts = {
+          ...browserWinOpts,
           frame: false,
           thickFrame: true,
-          icon,
-          parent: win,
           modal: true,
-          title: 'Freeter',
           titleBarOverlay: true,
           titleBarStyle: 'hidden'
         }
+      }
+      return {
+        action: 'allow',
+        outlivesOpener: false,
+        overrideBrowserWindowOptions: browserWinOpts
       }
     })
   })
