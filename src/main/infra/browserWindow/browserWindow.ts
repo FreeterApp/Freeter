@@ -128,13 +128,6 @@ export function createRendererWindow(
         // modal: true // modal hides maximize/close buttons on MacOS
       }
       switch (process.platform) {
-        case 'linux': {
-          browserWinOpts = {
-            ...browserWinOpts,
-            modal: true,
-          }
-          break;
-        }
         case 'win32': {
           browserWinOpts = {
             ...browserWinOpts,
