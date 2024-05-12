@@ -1,6 +1,6 @@
 <p align="center"><img src="https://raw.githubusercontent.com/FreeterApp/Freeter/master/resources/linux/freeter-icons/256x256.png" style="margin-right: 16px; width: 128px; height: 128px"/></p>
 
-**Freeter** is a free and open source organizer for those who work on the computer. Gather everything you need for work in one place, organized by projects and workflows, and have a quick access to them with a `Ctrl or Cmd`+`Shift`+`F` key press or a tray icon. Easily switch between projects and workflows, and stay focused on current things you need to do. For more info check the [**homepage**][home].
+**Freeter** is a free and open source organizer for those who work on the computer. Gather everything you need for work in one place, organized by projects and workflows, and have a quick access to them with a `Ctrl or Cmd`+`Shift`+`F` key press or a tray icon. Easily switch between projects and workflows, and stay focused on current things you need to do. For more info read the [**app story**][story] and check the [**homepage**][home].
 
 ---
 
@@ -41,4 +41,5 @@ Freeter is free software and may be redistributed under the terms specified in t
 [community]: https://community.freeter.io/
 [donate]: https://freeter.io/sponsor
 [roadmap]: https://community.freeter.io/topic/2/planned-features
+[story]: https://community.freeter.io/topic/14/how-i-boosted-my-productivity-while-working-on-multiple-projects
 [license]: https://github.com/FreeterApp/Freeter/blob/master/COPYING
