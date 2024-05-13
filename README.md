@@ -1,6 +1,6 @@
 <p align="center"><img src="https://raw.githubusercontent.com/FreeterApp/Freeter/master/resources/linux/freeter-icons/256x256.png" style="margin-right: 16px; width: 128px; height: 128px"/></p>
 
-**Freeter** is a free and open source organizer for those who work on the computer. Gather everything you need for work in one place, organized by projects and workflows, and have a quick access to them with a `Ctrl or Cmd`+`Shift`+`F` key press or a tray icon. Easily switch between projects and workflows, and stay focused on current things you need to do. For more info read the [**app story**][story] and check the [**homepage**][home].
+**Freeter** is a free and open source organizer for those who work on the computer. Gather everything you need for work in one place, organized by projects and workflows, and have a quick access to them with a `Ctrl or Cmd`+`Shift`+`F` key press or a tray icon. Easily switch between projects and workflows, and stay focused on current things you need to do. [**Read the post**][story] talking about the motivation for doing the project and how to get started.
 
 ---
 
@@ -18,7 +18,7 @@ Check out the [download page][download] for the latest ready-to-use installers f
 
 ## Run From Source Code
 
-Prerequisites:
+Prerequisites (for building the app, not needed for running):
 - [NodeJS](https://nodejs.org/en)
 - [Yarn 1 (Classic)](https://classic.yarnpkg.com/lang/en/)
 
