@@ -4,7 +4,7 @@
 
 ---
 
-[**Homepage**][home] | [**Download**][download] | [**Community**][community] | [**Donate**][donate] | [**Roadmap**][roadmap]
+[**Homepage**][home] | [**Download**][download] | [**Community**][community] | [**Donate**][donate] | [**Roadmap**][roadmap] | [**Feature Requests**][featurerequests] | [**Bug Reports**][bugreports]
 
 ## Supported Operating Systems
 
@@ -41,5 +41,7 @@ Freeter is free software and may be redistributed under the terms specified in t
 [community]: https://community.freeter.io/
 [donate]: https://freeter.io/sponsor
 [roadmap]: https://community.freeter.io/topic/2/planned-features
+[featurerequests]: https://community.freeter.io/category/6/feature-requests
+[bugreports]: https://community.freeter.io/category/7/bug-reports
 [story]: https://community.freeter.io/topic/14/how-i-boosted-my-productivity-while-working-on-multiple-projects
 [license]: https://github.com/FreeterApp/Freeter/blob/master/COPYING
