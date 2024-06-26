@@ -5,7 +5,7 @@
 
 import { debounce } from '@/widgets/helpers';
 import { ActionBar, ActionBarItems, ReactComponent, WidgetReactComponentProps, delete14Svg, moveItemInList } from '@/widgets/appModules';
-import styles from './widget.module.scss';
+import * as styles from './widget.module.scss';
 import { Settings } from './settings';
 import { DragEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createContextMenuFactory } from '@/widgets/to-do-list/contextMenu';
@@ -203,7 +203,7 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
           type="text"
           placeholder="Add an item"
           ref={addItemTopInputRef}
-          className={clsx(styles['todo-list-item-editor'], styles['todo-list-add-item-editor'], styles['is-top'])}
+          className={clsx(styles['todo-list-item-editor'], styles['todo-list-add-item-editor'])}
           onBlur={e=>addItemInputBlurHandler(e, true)}
           onKeyDown={e=>addItemInputKeyDownHandler(e, true)}
           maxLength={maxTextLength}

@@ -4,7 +4,7 @@
  */
 
 import clsx from 'clsx';
-import styles from '../settingsScreen.module.scss';
+import * as styles from '../settingsScreen.module.scss';
 
 export interface SettingRowProps extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>> {}
 

@@ -3,11 +3,11 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-// import styles from './app.module.scss';
+// import * as styles from './app.module.scss';
 import { AppViewModelHook } from './appViewModel';
 import './globals.scss';
 import React from 'react';
-import styles from './app.module.scss';
+import * as styles from './app.module.scss';
 import {SvgIcon} from '@/ui/components/basic/svgIcon';
 import { manage24Svg } from '@/ui/assets/images/appIcons';
 import { InAppNote } from '@/ui/components/basic/inAppNote';

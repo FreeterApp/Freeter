@@ -5,7 +5,7 @@
 
 import { ContextMenuEvent, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings } from './settings';
-import styles from './widget.module.scss';
+import * as styles from './widget.module.scss';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 // import { DidFailLoadEvent } from 'electron';
 import { createActionBarItems } from '@/widgets/webpage/actionBar';

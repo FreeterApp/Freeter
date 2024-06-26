@@ -6,7 +6,7 @@
 import { ShelfItemProps, useShelfItemViewModel } from '@/ui/components/topBar/shelf/shelfItemViewModel';
 import { WidgetComponent } from '@/ui/components/widget';
 import clsx from 'clsx';
-import styles from './shelf.module.scss';
+import * as styles from './shelf.module.scss';
 import { useRef } from 'react';
 
 type Deps = {

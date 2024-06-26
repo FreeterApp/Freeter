@@ -4,7 +4,7 @@
  */
 
 import clsx from 'clsx';
-import styles from './workflowSwitcher.module.scss';
+import * as styles from './workflowSwitcher.module.scss';
 import {WorkflowSwitcherItemProps, useWorkflowSwitcherItemViewModel} from './workflowSwitcherItemViewModel';
 import { ActionBar } from '@/ui/components/basic/actionBar';
 

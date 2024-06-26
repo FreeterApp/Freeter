@@ -4,7 +4,7 @@
  */
 
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
-import styles from './moreInfo.module.scss';
+import * as styles from './moreInfo.module.scss';
 import clsx from 'clsx';
 import { circleQuestion16Svg } from '@/ui/assets/images/appIcons';
 

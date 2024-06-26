@@ -8,7 +8,7 @@ import WidgetLayoutItemGhost from '@/ui/components/worktable/widgetLayout/widget
 import { WidgetLayoutViewModel, WidgetLayoutProps } from '@/ui/components/worktable/widgetLayout/widgetLayoutViewModel';
 import clsx from 'clsx';
 import { memo, useRef } from 'react';
-import styles from './widgetLayout.module.scss';
+import * as styles from './widgetLayout.module.scss';
 import { InAppNote } from '@/ui/components/basic/inAppNote';
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
 import { editMode24Svg } from '@/ui/assets/images/appIcons';
