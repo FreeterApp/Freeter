@@ -1,5 +1,0 @@
-node_modules
-build
-webpack.main.config.js
-webpack.preload.config.js
-webpack.renderer.config.js

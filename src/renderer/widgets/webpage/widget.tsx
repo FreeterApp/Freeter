@@ -177,11 +177,8 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   return <>
     <webview
       ref={webviewRef}
-      // eslint-disable-next-line react/no-unknown-property
       allowpopups={'' as unknown as boolean}
-      // eslint-disable-next-line react/no-unknown-property
       partition={initPartition.current}
-      // eslint-disable-next-line react/no-unknown-property
       useragent={userAgent}
       className={styles['webview']}
       tabIndex={0} // this enables the tab-navigation to widget action bar

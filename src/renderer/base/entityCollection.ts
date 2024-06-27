@@ -175,7 +175,6 @@ export function mapEntityCollection<T extends Entity, Y extends Entity>(
 ): EntityCollection<Y> {
   return Object.fromEntries(
     Object.values(collection).map(entity => {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const newEntity = callbackFn(entity!);
       return [newEntity.id, newEntity];
     })
