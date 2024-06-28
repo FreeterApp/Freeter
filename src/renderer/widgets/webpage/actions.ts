@@ -10,6 +10,7 @@ export const labelGoHome = 'Go to start page';
 export const labelGoBack = 'Go Back';
 export const labelGoForward = 'Go Forward';
 export const labelReload = 'Reload this page';
+export const labelHardReload = 'Hard reload this page';
 export const labelAutoReloadStart = 'Start auto-reload';
 export const labelAutoReloadStop = 'Stop auto-reload';
 export const labelOpenInBrowser = 'Open in web browser';
@@ -29,6 +30,7 @@ export const labelCopy = 'Copy';
 export const labelPaste = 'Paste';
 export const labelPasteAsPlainText = 'Paste as plain text';
 export const labelSelectAll = 'Select All';
+export const labelDevTools = 'Developer tools'
 
 
 export function canReload() {
@@ -40,6 +42,13 @@ export function reload(elWebview: Electron.WebviewTag) {
     elWebview.stop();
   }
   elWebview.reload();
+}
+
+export function hardReload(elWebview: Electron.WebviewTag) {
+  if (elWebview.isLoading()) {
+    elWebview.stop();
+  }
+  elWebview.reloadIgnoringCache();
 }
 
 export function canGoBack(elWebview: Electron.WebviewTag) {
@@ -102,4 +111,11 @@ export function saveLink(url: string, elWebview: Electron.WebviewTag) {
 
 export function copyLinkAddress(title: string, url: string, widgetApi: WidgetApi) {
   widgetApi.clipboard.writeBookmark(title, url);
+}
+
+export function openDevTools(elWebview: Electron.WebviewTag) {
+  if (elWebview.isDevToolsOpened()) {
+    elWebview.closeDevTools();
+  }
+  elWebview.openDevTools();
 }
