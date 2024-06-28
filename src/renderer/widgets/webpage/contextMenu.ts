@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { canGoBack, canGoForward, canGoHome, copyCurrentAddress, copyLinkAddress, goBack, goForward, goHome, labelAutoReloadStart, labelAutoReloadStop, labelCopy, labelCopyCurrentAddress, labelCopyImageAddress, labelCopyLinkAddress, labelCut, labelGoBack, labelGoForward, labelGoHome, labelOpenInBrowser, labelOpenLinkInBrowser, labelPaste, labelPasteAsPlainText, labelPrintPage, labelRedo, labelReload, labelSaveAs, labelSaveImageAs, labelSaveLinkAs, labelSelectAll, labelUndo, openCurrentInBrowser, openLinkInBrowser, printPage, reload, saveLink, savePage } from './actions';
+import { canGoBack, canGoForward, canGoHome, copyCurrentAddress, copyLinkAddress, goBack, goForward, goHome, labelAutoReloadStart, labelAutoReloadStop, labelCopy, labelCopyCurrentAddress, labelCopyImageAddress, labelCopyLinkAddress, labelCut, labelDevTools, labelGoBack, labelGoForward, labelGoHome, labelOpenInBrowser, labelOpenLinkInBrowser, labelPaste, labelPasteAsPlainText, labelPrintPage, labelRedo, labelReload, labelSaveAs, labelSaveImageAs, labelSaveLinkAs, labelSelectAll, labelUndo, openCurrentInBrowser, openDevTools, openLinkInBrowser, printPage, reload, saveLink, savePage } from './actions';
 import { WidgetApi, WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
 import { ContextMenuParams } from 'electron';
 
@@ -67,6 +67,13 @@ export function createContextMenuFactory(
         }, {
           doAction: async () => printPage(elWebview),
           label: labelPrintPage
+        }
+      ]
+
+      const devItems: WidgetMenuItem[] = [
+        {
+          doAction: async () => openDevTools(elWebview),
+          label: labelDevTools
         }
       ]
 
@@ -184,6 +191,11 @@ export function createContextMenuFactory(
           }
         }
       }
+
+      if (items.length > 0) {
+        items.push({ type: 'separator' })
+      }
+      items.push(...devItems);
     }
 
     return items;

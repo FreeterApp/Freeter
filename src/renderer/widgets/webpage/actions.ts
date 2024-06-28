@@ -29,6 +29,7 @@ export const labelCopy = 'Copy';
 export const labelPaste = 'Paste';
 export const labelPasteAsPlainText = 'Paste as plain text';
 export const labelSelectAll = 'Select All';
+export const labelDevTools = 'Developer tools'
 
 
 export function canReload() {
@@ -102,4 +103,11 @@ export function saveLink(url: string, elWebview: Electron.WebviewTag) {
 
 export function copyLinkAddress(title: string, url: string, widgetApi: WidgetApi) {
   widgetApi.clipboard.writeBookmark(title, url);
+}
+
+export function openDevTools(elWebview: Electron.WebviewTag) {
+  if (elWebview.isDevToolsOpened()) {
+    elWebview.closeDevTools();
+  }
+  elWebview.openDevTools();
 }
