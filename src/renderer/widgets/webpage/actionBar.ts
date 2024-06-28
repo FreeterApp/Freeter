@@ -20,23 +20,23 @@ export function createActionBarItems(
     return []
   }
 
-  let reloadItem: ActionBarItem;
-  if (autoReload > 0) {
-    reloadItem = {
-      enabled: canReload(),
-      icon: autoReloadStopped ? reloadStartSvg : reloadStopSvg,
-      id: 'RELOAD',
-      title: autoReloadStopped ? labelAutoReloadStart : labelAutoReloadStop,
-      doAction: async () => setAutoReloadStopped(!autoReloadStopped)
-    }
-  } else {
-    reloadItem = {
+  let reloadItems: ActionBarItem[] = [
+    {
       enabled: canReload(),
       icon: reloadSvg,
       id: 'RELOAD',
       title: labelReload,
       doAction: async () => reload(elWebview)
     }
+  ];
+  if (autoReload > 0) {
+    reloadItems = [{
+      enabled: canReload(),
+      icon: autoReloadStopped ? reloadStartSvg : reloadStopSvg,
+      id: 'AUTO-RELOAD',
+      title: autoReloadStopped ? labelAutoReloadStart : labelAutoReloadStop,
+      doAction: async () => setAutoReloadStopped(!autoReloadStopped)
+    }, ...reloadItems]
   }
 
   return [
@@ -61,7 +61,7 @@ export function createActionBarItems(
       title: labelGoForward,
       doAction: async () => goForward(elWebview)
     },
-    reloadItem,
+    ...reloadItems,
     {
       enabled: true,
       icon: openInBrowserSvg,

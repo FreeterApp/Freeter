@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { canGoBack, canGoForward, canGoHome, copyCurrentAddress, copyLinkAddress, goBack, goForward, goHome, labelAutoReloadStart, labelAutoReloadStop, labelCopy, labelCopyCurrentAddress, labelCopyImageAddress, labelCopyLinkAddress, labelCut, labelDevTools, labelGoBack, labelGoForward, labelGoHome, labelOpenInBrowser, labelOpenLinkInBrowser, labelPaste, labelPasteAsPlainText, labelPrintPage, labelRedo, labelReload, labelSaveAs, labelSaveImageAs, labelSaveLinkAs, labelSelectAll, labelUndo, openCurrentInBrowser, openDevTools, openLinkInBrowser, printPage, reload, saveLink, savePage } from './actions';
+import { canGoBack, canGoForward, canGoHome, copyCurrentAddress, copyLinkAddress, goBack, goForward, goHome, hardReload, labelAutoReloadStart, labelAutoReloadStop, labelCopy, labelCopyCurrentAddress, labelCopyImageAddress, labelCopyLinkAddress, labelCut, labelDevTools, labelGoBack, labelGoForward, labelGoHome, labelHardReload, labelOpenInBrowser, labelOpenLinkInBrowser, labelPaste, labelPasteAsPlainText, labelPrintPage, labelRedo, labelReload, labelSaveAs, labelSaveImageAs, labelSaveLinkAs, labelSelectAll, labelUndo, openCurrentInBrowser, openDevTools, openLinkInBrowser, printPage, reload, saveLink, savePage } from './actions';
 import { WidgetApi, WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
 import { ContextMenuParams } from 'electron';
 
@@ -26,17 +26,21 @@ export function createContextMenuFactory(
   return (_contextId, contextData) => {
     const items: WidgetMenuItem[] = []
     if (elWebview && homeUrl) {
-      let reloadItem: WidgetMenuItem;
-      if (autoReload > 0) {
-        reloadItem = {
-          doAction: async () => setAutoReloadStopped(!autoReloadStopped),
-          label: autoReloadStopped ? labelAutoReloadStart : labelAutoReloadStop
-        }
-      } else {
-        reloadItem = {
+      let reloadItems: WidgetMenuItem[] = [
+        {
           doAction: async () => reload(elWebview),
           label: labelReload
+        },
+        {
+          doAction: async () => hardReload(elWebview),
+          label: labelHardReload
         }
+      ];
+      if (autoReload > 0) {
+        reloadItems = [{
+          doAction: async () => setAutoReloadStopped(!autoReloadStopped),
+          label: autoReloadStopped ? labelAutoReloadStart : labelAutoReloadStop
+        }, ...reloadItems]
       }
       const defaultItems: WidgetMenuItem[] = [
         {
@@ -52,7 +56,7 @@ export function createContextMenuFactory(
           enabled: canGoForward(elWebview),
           label: labelGoForward
         },
-        reloadItem,
+        ...reloadItems,
         {
           type: 'separator'
         }, {
