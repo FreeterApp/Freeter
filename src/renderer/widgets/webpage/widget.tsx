@@ -146,21 +146,26 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     const handleDidNavigate = () => {
       refreshActions();
     }
-    // const handleDidNavigateInPage = () => {
-    //   refreshActions();
-    // }
+    const handleDidFrameNavigate = () => {
+      refreshActions();
+    }
+    const handleDidNavigateInPage = () => {
+      refreshActions();
+    }
 
     // Add event listeners
     webviewEl.addEventListener('dom-ready', handleDomReady);
     webviewEl.addEventListener('did-navigate', handleDidNavigate);
-    // webviewEl.addEventListener('did-navigate-in-page', handleDidNavigateInPage);
+    webviewEl.addEventListener('did-frame-navigate', handleDidFrameNavigate);
+    webviewEl.addEventListener('did-navigate-in-page', handleDidNavigateInPage);
     webviewEl.addEventListener('did-finish-load', handleDidFinishLoad);
 
     return () => {
       // Remove event listeners
       webviewEl.removeEventListener('dom-ready', handleDomReady);
       webviewEl.removeEventListener('did-navigate', handleDidNavigate);
-      // webviewEl.removeEventListener('did-navigate-in-page', handleDidNavigateInPage);
+      webviewEl.removeEventListener('did-frame-navigate', handleDidFrameNavigate);
+      webviewEl.removeEventListener('did-navigate-in-page', handleDidNavigateInPage);
       webviewEl.removeEventListener('did-finish-load', handleDidFinishLoad);
           };
   }, [refreshActions]);

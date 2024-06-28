@@ -5,7 +5,7 @@
 
 import { AppStore } from '@/application/interfaces/store';
 import { EntityId } from '@/base/entity';
-import { addOneToEntityCollection, removeManyFromEntityCollection } from '@/base/entityCollection';
+import { removeManyFromEntityCollection, setOneInEntityCollection } from '@/base/entityCollection';
 import { addOrMoveItemInList, limitListLength } from '@/base/list';
 import { getWorkflowEntityDeps } from '@/base/state/entities';
 
@@ -47,7 +47,7 @@ export function createCopyWorkflowUseCase({
         copy: {
           ...state.ui.copy,
           workflows: {
-            entities: addOneToEntityCollection(state.ui.copy.workflows.entities, {
+            entities: setOneInEntityCollection(state.ui.copy.workflows.entities, {
               id: workflow.id,
               deps: workflowDeps,
               entity: workflow

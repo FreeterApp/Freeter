@@ -18,6 +18,7 @@ export function registerProtocol(
       standard: true,
       secure: true,
       supportFetchAPI: true,
+      stream: true
     }
   }])
   app.whenReady().then(() => {

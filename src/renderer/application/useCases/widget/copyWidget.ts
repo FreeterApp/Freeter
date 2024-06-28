@@ -5,7 +5,7 @@
 
 import { AppStore } from '@/application/interfaces/store';
 import { EntityId } from '@/base/entity';
-import { addOneToEntityCollection, removeManyFromEntityCollection } from '@/base/entityCollection';
+import { removeManyFromEntityCollection, setOneInEntityCollection } from '@/base/entityCollection';
 import { addOrMoveItemInList, limitListLength } from '@/base/list';
 
 type Deps = {
@@ -45,7 +45,7 @@ export function createCopyWidgetUseCase({
         copy: {
           ...state.ui.copy,
           widgets: {
-            entities: addOneToEntityCollection(state.ui.copy.widgets.entities, {
+            entities: setOneInEntityCollection(state.ui.copy.widgets.entities, {
               id: widget.id,
               deps: {},
               entity: widget
