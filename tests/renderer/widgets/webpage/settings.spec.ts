@@ -12,13 +12,12 @@ jest.useFakeTimers()
 
 describe('Webpage Widget Settings', () => {
   it('should fill inputs with right values', () => {
-    const settings = fixtureSettings({ url: 'https://www.url.com/', sessionScope: 'wgt', sessionPersist: 'temp', viewMode: 'desktop', autoReload: 3600 });
+    const settings = fixtureSettings({ url: 'https://www.url.com/', sessionScope: 'wgt', sessionPersist: 'temp', autoReload: 3600 });
     setupSettingsSut(settingsEditorComp, settings);
 
     expect(screen.getByRole('textbox', { name: /url/i })).toHaveValue(settings.url);
     expect(screen.getByRole('combobox', { name: /session scope/i })).toHaveValue(settings.sessionScope);
     expect(screen.getByRole('combobox', { name: /session persistence/i })).toHaveValue(settings.sessionPersist);
-    expect(screen.getByRole('combobox', { name: /view mode/i })).toHaveValue(settings.viewMode);
     expect(screen.getByRole('combobox', { name: /Auto-Reload/i })).toHaveValue(settings.autoReload.toString());
   })
 
@@ -47,20 +46,6 @@ describe('Webpage Widget Settings', () => {
     expect(getSettings()).toEqual({
       ...settings,
       sessionPersist: 'temp'
-    });
-  })
-
-  it('should allow to update "viewMode" setting with an option select', async () => {
-    const settings = fixtureSettings({ viewMode: 'mobile' });
-    const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
-    const user = userEvent.setup({ delay: null });
-    const select = screen.getByRole('combobox', { name: /view mode/i })
-
-    await user.selectOptions(select, 'desktop');
-
-    expect(getSettings()).toEqual({
-      ...settings,
-      viewMode: 'desktop'
     });
   })
 

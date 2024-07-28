@@ -13,7 +13,6 @@ import { sanitizeUrl } from '@common/helpers/sanitizeUrl';
 import { createContextMenuFactory } from '@/widgets/webpage/contextMenu';
 import { ContextMenuEvent as ElectronContextMenuEvent } from 'electron';
 import { createPartition } from '@/widgets/webpage/partition';
-import { createUserAgent } from '@/widgets/webpage/userAgent';
 import { reload } from '@/widgets/webpage/actions';
 
 interface WebviewProps extends WidgetReactComponentProps<Settings> {
@@ -25,7 +24,7 @@ interface WebviewProps extends WidgetReactComponentProps<Settings> {
 }
 
 function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps) {
-  const {url, sessionScope, sessionPersist, viewMode, autoReload} = settings;
+  const {url, sessionScope, sessionPersist, autoReload} = settings;
 
   const partition = useMemo(() => createPartition(sessionPersist, sessionScope, env, id), [
     env, id, sessionScope, sessionPersist
@@ -33,17 +32,11 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
 
   const initPartition = useRef(partition)
 
-  const userAgent = useMemo(() => createUserAgent(viewMode, widgetApi.process), [
-    viewMode, widgetApi.process
-  ]);
-
-  const initViewMode = useRef(viewMode)
-
   useEffect(() => {
-    if(partition !== initPartition.current || viewMode !== initViewMode.current) {
+    if(partition !== initPartition.current) {
       onRequireRestart();
     }
-  }, [onRequireRestart, partition, viewMode])
+  }, [onRequireRestart, partition])
 
   const {updateActionBar, setContextMenuFactory} = widgetApi;
   const webviewRef = useRef<Electron.WebviewTag>(null);
@@ -184,7 +177,6 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       ref={webviewRef}
       allowpopups={'' as unknown as boolean}
       partition={initPartition.current}
-      useragent={userAgent}
       className={styles['webview']}
       tabIndex={0} // this enables the tab-navigation to widget action bar
       src={sanitUrl}

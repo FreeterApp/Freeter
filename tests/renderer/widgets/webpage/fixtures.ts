@@ -10,7 +10,6 @@ export function fixtureSettings(settings: Partial<Settings>): Settings {
     sessionPersist: 'persist',
     sessionScope: 'prj',
     url: 'https://some.url/',
-    viewMode: 'mobile',
     autoReload: 0,
     ...settings
   }

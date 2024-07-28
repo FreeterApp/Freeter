@@ -52,7 +52,7 @@
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
-    "electron": "^31.1.0",
+    "electron": "^31.3.0",
     "electron-builder": "^24.13.3",
     "eslint": "^9.5.0",
     "eslint-plugin-jest-dom": "^5.4.0",
