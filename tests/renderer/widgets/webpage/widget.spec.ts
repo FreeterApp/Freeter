@@ -73,14 +73,6 @@ describe('Webpage Widget', () => {
 
     expect(comp.container.getElementsByTagName('webview')[0]).not.toBe(elem);
   })
-  it('should re-render <webview> element in DOM, when viewMode changes', () => {
-    const { comp, setSettings } = setupWebpageWidgetSut(fixtureSettings({ viewMode: 'mobile' }));
-    const elem = comp.container.getElementsByTagName('webview')[0];
-
-    setSettings(fixtureSettings({ viewMode: 'desktop' }));
-
-    expect(comp.container.getElementsByTagName('webview')[0]).not.toBe(elem);
-  })
   describe('webview src attribute', () => {
     it('should be as specified by the url setting', () => {
       const testUrl = 'http://127.0.0.1/';

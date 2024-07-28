@@ -35,26 +35,11 @@ function isSettingsSessionPersist(val: unknown): val is SettingsSessionPersist {
   return false;
 }
 
-const settingsViewMode = ['desktop', 'mobile'] as const;
-export type SettingsViewMode = typeof settingsViewMode[number];
-function isSettingsViewMode(val: unknown): val is SettingsViewMode {
-  if (typeof val !== 'string') {
-    return false;
-  }
-
-  if (settingsViewMode.indexOf(val as SettingsViewMode)>-1) {
-    return true;
-  }
-
-  return false;
-}
-
 export interface Settings {
   autoReload: number;
   sessionPersist: SettingsSessionPersist;
   sessionScope: SettingsSessionScope;
   url: string;
-  viewMode: SettingsViewMode;
 }
 
 export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
@@ -62,7 +47,6 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
   sessionPersist: isSettingsSessionPersist(settings.sessionPersist) ? settings.sessionPersist : 'persist',
   sessionScope: isSettingsSessionScope(settings.sessionScope) ? settings.sessionScope : 'prj',
   url: typeof settings.url === 'string' ? settings.url : '',
-  viewMode: isSettingsViewMode(settings.viewMode) ? settings.viewMode : 'mobile',
 })
 
 const debounceUpdate3s = debounce((fn: () => void) => fn(), 3000);
@@ -127,21 +111,6 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
         })}>
           <option value="persist">Persistent</option>
           <option value="temp">Temporary</option>
-        </select>
-      </SettingBlock>
-
-      <SettingBlock
-        titleForId='webpage-view-mode'
-        title='View Mode'
-        moreInfo="By default, the widget will try to open a mobile version of a web app/site where it's supported, to have
-                 a compact size which better fits workflow tabs containing multiple various widget. In some cases it might not work on desktops as intended. To fix that switch the view mode from Mobile to Desktop mode."
-      >
-        <select id="webpage-view-mode" value={settings.viewMode} onChange={e => updateSettings({
-          ...settings,
-          viewMode: isSettingsViewMode(e.target.value) ? e.target.value : 'mobile'
-        })}>
-          <option value="desktop">Desktop</option>
-          <option value="mobile">Mobile</option>
         </select>
       </SettingBlock>
 

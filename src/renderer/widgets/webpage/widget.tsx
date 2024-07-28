@@ -24,7 +24,7 @@ interface WebviewProps extends WidgetReactComponentProps<Settings> {
 }
 
 function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps) {
-  const {url, sessionScope, sessionPersist, viewMode, autoReload} = settings;
+  const {url, sessionScope, sessionPersist, autoReload} = settings;
 
   const partition = useMemo(() => createPartition(sessionPersist, sessionScope, env, id), [
     env, id, sessionScope, sessionPersist
@@ -32,13 +32,11 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
 
   const initPartition = useRef(partition)
 
-  const initViewMode = useRef(viewMode)
-
   useEffect(() => {
-    if(partition !== initPartition.current || viewMode !== initViewMode.current) {
+    if(partition !== initPartition.current) {
       onRequireRestart();
     }
-  }, [onRequireRestart, partition, viewMode])
+  }, [onRequireRestart, partition])
 
   const {updateActionBar, setContextMenuFactory} = widgetApi;
   const webviewRef = useRef<Electron.WebviewTag>(null);
