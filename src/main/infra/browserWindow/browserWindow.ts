@@ -125,6 +125,9 @@ export function createRendererWindow(
         icon,
         parent: win,
         title: 'Freeter',
+        webPreferences: {
+          session: wc.session
+        }
       }
       return {
         action: 'allow',
