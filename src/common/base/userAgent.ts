@@ -3,14 +3,12 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { WidgetApi } from '@/widgets/appModules';
-import { SettingsViewMode } from '@/widgets/webpage/settings';
+import { ProcessInfo } from '@common/base/process';
 
-export function createUserAgent(viewMode: SettingsViewMode, wapiProcess: WidgetApi['process']) {
+export function createUserAgent(processInfo: ProcessInfo, asMobile: boolean) {
   let uaOS: string;
 
-  const processInfo = wapiProcess.getProcessInfo();
-  if (viewMode === 'mobile') {
+  if (asMobile) {
     uaOS = '(Linux; Android)';
   } else {
     switch (processInfo.os.name) {
@@ -33,7 +31,7 @@ export function createUserAgent(viewMode: SettingsViewMode, wapiProcess: WidgetA
     }
   }
 
-  const uaChrome = `Chrome/${processInfo.browser.ver}${viewMode === 'mobile' ? ' Mobile' : ''}`;
+  const uaChrome = `Chrome/${processInfo.browser.ver}${asMobile ? ' Mobile' : ''}`;
 
   return `Mozilla/5.0 ${uaOS} AppleWebKit/537.36 (KHTML, like Gecko) ${uaChrome} Safari/537.36`;
 }

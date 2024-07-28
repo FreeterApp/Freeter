@@ -30,6 +30,7 @@ import { createGetProcessInfoUseCase } from '@/application/useCases/process/getP
 import { createProcessProvider } from '@/infra/processProvider/processProvider';
 import { createWriteBookmarkIntoClipboardUseCase } from '@/application/useCases/clipboard/writeBookmarkIntoClipboard';
 import { createObjectManager } from '@common/base/objectManager';
+import { createUserAgent } from '@common/base/userAgent';
 import { createGetTextFromWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/getTextFromWidgetDataStorage';
 import { createSetTextInWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/setTextInWidgetDataStorage';
 import { createWidgetDataStorageControllers } from '@/controllers/widgetDataStorage';
@@ -91,9 +92,12 @@ if (!app.requestSingleInstanceLock()) {
   const globalShortcutProvider = createGlobalShortcutProvider();
 
   const processProvider = createProcessProvider();
-  const { isDevMode } = processProvider.getProcessInfo();
+  const processInfo = processProvider.getProcessInfo();
+  const { isDevMode } = processInfo;
 
   registerAppFileProtocol(isDevMode);
+
+  app.userAgentFallback = createUserAgent(processInfo, false);
 
   app.on('will-quit', () => {
     // Unregister global shortcuts

@@ -13,7 +13,6 @@ import { sanitizeUrl } from '@common/helpers/sanitizeUrl';
 import { createContextMenuFactory } from '@/widgets/webpage/contextMenu';
 import { ContextMenuEvent as ElectronContextMenuEvent } from 'electron';
 import { createPartition } from '@/widgets/webpage/partition';
-import { createUserAgent } from '@/widgets/webpage/userAgent';
 import { reload } from '@/widgets/webpage/actions';
 
 interface WebviewProps extends WidgetReactComponentProps<Settings> {
@@ -32,10 +31,6 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   ])
 
   const initPartition = useRef(partition)
-
-  const userAgent = useMemo(() => createUserAgent(viewMode, widgetApi.process), [
-    viewMode, widgetApi.process
-  ]);
 
   const initViewMode = useRef(viewMode)
 
@@ -184,7 +179,6 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       ref={webviewRef}
       allowpopups={'' as unknown as boolean}
       partition={initPartition.current}
-      useragent={userAgent}
       className={styles['webview']}
       tabIndex={0} // this enables the tab-navigation to widget action bar
       src={sanitUrl}
