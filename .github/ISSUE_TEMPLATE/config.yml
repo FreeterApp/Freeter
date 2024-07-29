@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Using Freeter
+    url: https://community.freeter.io/category/8/using-freeter
+    about: Looking for help with Freeter? Please ask and answer questions here.
+  - name: Bug reports
+    url: https://community.freeter.io/category/7/bug-reports
+    about: Found a bug? Report it here.
+  - name: Feature requests
+    url: https://community.freeter.io/category/6/feature-requests
+    about: Is there some feature you'd love to see added to Freeter? Post it here.
