@@ -100,7 +100,7 @@ export function createContextMenuFactory(
               doAction: async () => saveLink(contextData.linkURL, elWebview),
               label: labelSaveLinkAs
             }, {
-              doAction: async () => copyLinkAddress(contextData.linkText, contextData.linkURL, widgetApi),
+              doAction: async () => copyLinkAddress(contextData.linkURL, widgetApi),
               label: labelCopyLinkAddress
             }
           ]
@@ -121,7 +121,7 @@ export function createContextMenuFactory(
               //   doAction: async () => copy(elWebview),
               //   label: labelCopyImage
             }, {
-              doAction: async () => copyLinkAddress(contextData.titleText, contextData.srcURL, widgetApi),
+              doAction: async () => copyLinkAddress(contextData.srcURL, widgetApi),
               label: labelCopyImageAddress
             }
           ]
