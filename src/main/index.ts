@@ -96,12 +96,23 @@ if (!app.requestSingleInstanceLock()) {
 
   registerAppFileProtocol(isDevMode);
 
-  // The user-agent spoofing causes lots of ua-based issues,
-  // such as unsupoorted browser notes, login blocks, and
-  // failed verifications on captcha-less web challenge services
-  // (which require the same UA for both the webpage and web
-  // worker services)
-  // app.userAgentFallback = createUserAgent(processInfo, false);
+  // Some keypoints for the user-agent spoofing.
+  // 1. User agent cannot be modified on per website basis, as it will cause
+  //    failed verifications on captcha-less web challenge services (which
+  //    require the same UA for both the webpage and web worker services)
+  //    This is the highest priority as there are many websites depending
+  //    on the web challenge.
+  // 2. If it will be needed in the future to add some flexibility in the
+  //    UA control, then it might be done by changing UA on per-session basis,
+  //    in that case both the webpage and the web worker will share the same UA.
+  // 3. 'Electron' in the user agent causes "unsupported browser" error on some websites.
+  // 4. 'Electron' removal causes issues on some websites (such as google's ones).
+  //    For such websites we have to add exceptions and use the original UA.
+  // 5. Currently the original UA for the excepted websites is set on per-website
+  //    basis. This might break someday (see point 1), in that case consider
+  //    implementing the UA change on per-session basis (see point 2).
+  const uaOriginal = app.userAgentFallback;
+  app.userAgentFallback = app.userAgentFallback.replace(/[Ee]lectron.*?\s/g, '');
 
   app.on('will-quit', () => {
     // Unregister global shortcuts
@@ -212,6 +223,7 @@ if (!app.requestSingleInstanceLock()) {
         `${__dirname}/preload.js`,
         `${schemeFreeterFile}://${hostFreeterApp}/index.html`,
         isLinux ? join(app.getAppPath(), 'assets', 'app-icons', '256.png') : undefined,
+        uaOriginal,
         {
           getWindowStateUseCase,
           setWindowStateUseCase

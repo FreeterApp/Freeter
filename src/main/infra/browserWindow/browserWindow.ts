@@ -16,6 +16,11 @@ const defaultWinParams = {
   height: 700,
 }
 
+// urls requiring the original user-agent
+const reUrlsRequiringOriginalUA: RegExp[] = [
+  /^https?:\/\/(?:[a-z0-9-_]*\.)+google.com\/?/i // Google Apps
+]
+
 /**
  * BrowserWindow factory
  *
@@ -25,6 +30,7 @@ export function createRendererWindow(
   preload: string,
   url: string,
   icon: string | undefined,
+  uaOriginal: string,
   deps: {
     getWindowStateUseCase: GetWindowStateUseCase,
     setWindowStateUseCase: SetWindowStateUseCase,
@@ -107,6 +113,16 @@ export function createRendererWindow(
 
   // prevent leaving the app page (by dragging an image for example)
   win.webContents.on('will-navigate', evt => evt.preventDefault());
+
+  // set original user-agent for urls requiring it
+  win.webContents.on('will-attach-webview', (_, wp, params) => {
+    for (const re of reUrlsRequiringOriginalUA) {
+      if (params.src.match(re)) {
+        params.useragent = uaOriginal;
+        break;
+      }
+    }
+  })
 
   // enable new windows in webview
   win.webContents.on('did-attach-webview', (_, wc) => {
