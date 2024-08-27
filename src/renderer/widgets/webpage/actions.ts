@@ -109,8 +109,8 @@ export function saveLink(url: string, elWebview: Electron.WebviewTag) {
   elWebview.downloadURL(url);
 }
 
-export function copyLinkAddress(title: string, url: string, widgetApi: WidgetApi) {
-  widgetApi.clipboard.writeBookmark(title, url);
+export function copyLinkAddress(url: string, widgetApi: WidgetApi) {
+  widgetApi.clipboard.writeText(url);
 }
 
 export function openDevTools(elWebview: Electron.WebviewTag) {
