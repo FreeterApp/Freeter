@@ -30,6 +30,12 @@
     > div > * {
       margin-top: 12px;
     }
+    > div > fieldset {
+      &:not(:first-child) {
+        margin-top: 12px;
+      }
+      margin-left: 12px;
+    }
   }
   ul {
     margin:0;

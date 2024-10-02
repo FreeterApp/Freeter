@@ -3,6 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { memSaverConfigPrjActivateOnProjectSwitchOptions, memSaverConfigPrjInactiveAfterOptions } from '@/base/memSaver';
 import { ProjectSettings } from '@/base/project';
 import { useEffect, useRef } from 'react';
 export interface ProjectManagerSettingsProps {
@@ -17,6 +18,9 @@ export function useProjectManagerSettingsViewModel(props: ProjectManagerSettings
     settings,
     updateSettings
   } = props;
+
+  const inactiveAfterOptions = memSaverConfigPrjInactiveAfterOptions;
+  const activateOnProjectSwitchOptions = memSaverConfigPrjActivateOnProjectSwitchOptions;
 
   const isFirstRun = useRef(true);
   const refNameInput = useRef<HTMLInputElement>(null);
@@ -35,6 +39,8 @@ export function useProjectManagerSettingsViewModel(props: ProjectManagerSettings
   return {
     refNameInput,
     settings,
-    updateSettings
+    updateSettings,
+    inactiveAfterOptions,
+    activateOnProjectSwitchOptions
   };
 }

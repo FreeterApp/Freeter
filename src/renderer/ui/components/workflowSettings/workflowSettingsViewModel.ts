@@ -6,6 +6,7 @@
 import { CloseWorkflowSettingsUseCase } from '@/application/useCases/workflowSettings/closeWorkflowSettings';
 import { SaveWorkflowSettingsUseCase } from '@/application/useCases/workflowSettings/saveWorkflowSettings';
 import { UpdateWorkflowSettingsUseCase } from '@/application/useCases/workflowSettings/updateWorkflowSettings';
+import { memSaverConfigWflActivateOnProjectSwitchOptions, memSaverConfigWflInactiveAfterOptions } from '@/base/memSaver';
 import { WorkflowSettings } from '@/base/workflow';
 import { UseAppState } from '@/ui/hooks/appState';
 import { useCallback } from 'react';
@@ -30,6 +31,9 @@ export function createWorkflowSettingsViewModelHook({
       settings: state.ui.modalScreens.data.workflowSettings.workflow?.settings
     }))
 
+    const inactiveAfterOptions = memSaverConfigWflInactiveAfterOptions;
+    const activateOnProjectSwitchOptions = memSaverConfigWflActivateOnProjectSwitchOptions;
+
     const updateSettings = useCallback((updSettings: WorkflowSettings) => {
       updateWorkflowSettingsUseCase(updSettings);
     }, [])
@@ -47,6 +51,8 @@ export function createWorkflowSettingsViewModelHook({
       updateSettings,
       onOkClickHandler,
       onCancelClickHandler,
+      inactiveAfterOptions,
+      activateOnProjectSwitchOptions
     }
   }
 
