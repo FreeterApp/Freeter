@@ -8,6 +8,10 @@ import { deepFreeze } from '@common/helpers/deepFreeze';
 
 const appConfig: AppConfig = {
   mainHotkey: '',
+  memSaver: {
+    activateWorkflowsOnProjectSwitch: true,
+    workflowInactiveAfter: -1
+  },
   uiTheme: 'light'
 }
 
