@@ -115,7 +115,7 @@ describe('addWorkflowUseCase()', () => {
         },
         workflows: {
           ...initState.entities.workflows,
-          [newItemId]: expect.objectContaining({ id: newItemId, settings: { name: 'Workflow 2' } })
+          [newItemId]: expect.objectContaining({ id: newItemId, settings: { memSaver: {}, name: 'Workflow 2' } })
         }
       },
     }
@@ -170,7 +170,7 @@ describe('addWorkflowUseCase()', () => {
         },
         workflows: {
           ...initState.entities.workflows,
-          [newItemId]: expect.objectContaining({ id: newItemId, settings: { name: 'Workflow 3' } })
+          [newItemId]: expect.objectContaining({ id: newItemId, settings: expect.objectContaining({ name: 'Workflow 3' }) })
         }
       },
     }

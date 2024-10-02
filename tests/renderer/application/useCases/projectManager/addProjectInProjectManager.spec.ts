@@ -106,7 +106,7 @@ describe('addProjectInProjectManagerUseCase()', () => {
               ...initState.ui.modalScreens.data.projectManager,
               projects: {
                 ...initState.ui.modalScreens.data.projectManager.projects,
-                [newItemId]: expect.objectContaining({ id: newItemId, settings: { name: 'Project 3' } })
+                [newItemId]: expect.objectContaining({ id: newItemId, settings: { memSaver: {}, name: 'Project 3' } })
               },
               currentProjectId: newItemId,
               projectIds: [projectB.id, projectA.id, newItemId]

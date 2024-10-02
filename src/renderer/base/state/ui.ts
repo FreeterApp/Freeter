@@ -204,6 +204,10 @@ export function createUiState(): UiState {
     menuBar: true,
     appConfig: {
       mainHotkey: 'CmdOrCtrl+Shift+F',
+      memSaver: {
+        activateWorkflowsOnProjectSwitch: true,
+        workflowInactiveAfter: -1
+      },
       uiTheme: 'dark'
     },
     apps: {

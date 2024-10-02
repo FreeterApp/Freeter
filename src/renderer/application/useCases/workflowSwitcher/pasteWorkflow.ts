@@ -37,6 +37,7 @@ export function createPasteWorkflowUseCase({
 
     const [workflowClone, newWidgets] = await cloneWorkflowSubCase(entity, deps);
     const newWorkflow = updateWorkflowSettings(workflowClone, {
+      ...workflowClone.settings,
       name: generateCopyName(entity.settings.name, getAllWorkflowNamesFromWorkflowIdList(state.entities.workflows, currentProject.workflowIds))
     })
     const posIdx = findIndexOrUndef(currentProject.workflowIds, posByWorkflowId)

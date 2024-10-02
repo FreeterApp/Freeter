@@ -7,12 +7,16 @@ import { Project, ProjectSettings } from '@/base/project';
 import { makeFixture } from '@utils/makeFixture';
 
 const projectSettings: ProjectSettings[] = [{
+  memSaver: {},
   name: 'Project A',
 }, {
+  memSaver: {},
   name: 'Project B',
 }, {
+  memSaver: {},
   name: 'Project C',
 }, {
+  memSaver: {},
   name: 'Project D',
 }]
 

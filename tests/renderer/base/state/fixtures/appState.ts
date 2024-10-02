@@ -16,6 +16,10 @@ const appState: AppState = {
     menuBar: true,
     appConfig: {
       mainHotkey: '',
+      memSaver: {
+        activateWorkflowsOnProjectSwitch: true,
+        workflowInactiveAfter: -1
+      },
       uiTheme: 'light'
     },
     apps: {
