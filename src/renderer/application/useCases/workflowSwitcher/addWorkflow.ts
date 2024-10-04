@@ -4,9 +4,10 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflowSubCase';
 import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
-import { addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { addOneToEntityCollection, getOneFromEntityCollection, setOneInEntityCollection } from '@/base/entityCollection';
 import { addItemToList, findIndexOrUndef } from '@/base/list';
 import { getAllWorkflowNamesFromWorkflowIdList } from '@/base/state/actions/usedNames';
 import { generateWorkflowName } from '@/base/workflow';
@@ -28,16 +29,15 @@ export function createAddWorkflowUseCase({
     }
     const newWorkflow = createWorkflowSubCase(generateWorkflowName(getAllWorkflowNamesFromWorkflowIdList(state.entities.workflows, currentProject.workflowIds)))
 
+    const [updPrj] = setCurrentWorkflowSubCase(currentProject, newWorkflow.id);
+
     appStore.set({
       ...state,
       entities: {
         ...state.entities,
-        projects: updateOneInEntityCollection(state.entities.projects, {
-          id: currentProjectId,
-          changes: {
-            currentWorkflowId: newWorkflow.id,
-            workflowIds: addItemToList(currentProject.workflowIds, newWorkflow.id, findIndexOrUndef(currentProject.workflowIds, posByWorkflowId))
-          }
+        projects: setOneInEntityCollection(state.entities.projects, {
+          ...updPrj,
+          workflowIds: addItemToList(currentProject.workflowIds, newWorkflow.id, findIndexOrUndef(currentProject.workflowIds, posByWorkflowId))
         }),
         workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow)
       },

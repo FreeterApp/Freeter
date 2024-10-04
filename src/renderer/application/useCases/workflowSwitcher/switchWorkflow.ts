@@ -4,6 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflowSubCase';
 import { EntityId } from '@/base/entity';
 import { entityStateActions } from '@/base/state/actions';
 
@@ -17,12 +18,8 @@ export function createSwitchWorkflowUseCase({
     const state = appStore.get();
     const project = entityStateActions.projects.getOne(state, projectId);
     if (project) {
-      appStore.set(entityStateActions.projects.updateOne(state, {
-        id: projectId,
-        changes: {
-          currentWorkflowId: workflowId
-        }
-      }))
+      const [updPrj] = setCurrentWorkflowSubCase(project, workflowId);
+      appStore.set(entityStateActions.projects.setOne(state, updPrj))
     }
   }
 

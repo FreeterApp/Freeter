@@ -4,6 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { setCurrentProjectSubCase } from '@/application/useCases/projectSwitcher/subs/setCurrentProjectSubCase';
 import { EntityId } from '@/base/entity';
 
 type Deps = {
@@ -14,14 +15,12 @@ export function createSwitchProjectUseCase({
 }: Deps) {
   const useCase = (projectId: EntityId) => {
     const state = appStore.get();
+    const [updPrjSwitcher] = setCurrentProjectSubCase(state.ui.projectSwitcher, projectId);
     appStore.set({
       ...state,
       ui: {
         ...state.ui,
-        projectSwitcher: {
-          ...state.ui.projectSwitcher,
-          currentProjectId: projectId
-        }
+        projectSwitcher: updPrjSwitcher
       }
     })
   }

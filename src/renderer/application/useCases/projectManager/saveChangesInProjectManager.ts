@@ -5,10 +5,12 @@
 
 import { AppStore } from '@/application/interfaces/store';
 import { deleteProjectsSubCase } from '@/application/useCases/project/subs/deleteProjects';
+import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflowSubCase';
+import { setCurrentProjectSubCase } from '@/application/useCases/projectSwitcher/subs/setCurrentProjectSubCase';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
-import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, setOneInEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';
 import { modalScreensStateActions } from '@/base/state/actions';
 import { generateWorkflowName } from '@/base/workflow';
@@ -48,20 +50,21 @@ export function createSaveChangesInProjectManagerUseCase({
       for (const prjId of projectIds) {
         // init a workflow for each newly added, non-duplicate project
         if (!getOneFromEntityCollection(prevProjects, prjId) && !duplicateProjectIds[prjId]) {
-          const newWorkflow = createWorkflowSubCase(generateWorkflowName([]))
-          state = {
-            ...state,
-            entities: {
-              ...state.entities,
-              projects: updateOneInEntityCollection(state.entities.projects, {
-                id: prjId,
-                changes: {
-                  currentWorkflowId: newWorkflow.id,
+          const prj = getOneFromEntityCollection(state.entities.projects, prjId);
+          if (prj) {
+            const newWorkflow = createWorkflowSubCase(generateWorkflowName([]))
+            const [updPrj] = setCurrentWorkflowSubCase(prj, newWorkflow.id);
+            state = {
+              ...state,
+              entities: {
+                ...state.entities,
+                projects: setOneInEntityCollection(state.entities.projects, {
+                  ...updPrj,
                   workflowIds: [newWorkflow.id]
-                }
-              }),
-              workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow)
-            },
+                }),
+                workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow)
+              },
+            }
           }
         }
       }
@@ -81,13 +84,14 @@ export function createSaveChangesInProjectManagerUseCase({
           state.entities.projects,
           state.entities.workflows
         )
+        const [updPrjSwitcher] = setCurrentProjectSubCase(state.ui.projectSwitcher, updCurrentProjectId);
+
         state = {
           ...state,
           ui: {
             ...state.ui,
             projectSwitcher: {
-              ...state.ui.projectSwitcher,
-              currentProjectId: updCurrentProjectId,
+              ...updPrjSwitcher,
               projectIds: updProjectIdsList
             }
           },
@@ -143,14 +147,12 @@ export function createSaveChangesInProjectManagerUseCase({
       }
 
       if (findIdIndexOnList(state.ui.projectSwitcher.projectIds, state.ui.projectSwitcher.currentProjectId) < 0) {
+        const [updPrjSwitcher] = setCurrentProjectSubCase(state.ui.projectSwitcher, state.ui.projectSwitcher.projectIds[0] || '');
         state = {
           ...state,
           ui: {
             ...state.ui,
-            projectSwitcher: {
-              ...state.ui.projectSwitcher,
-              currentProjectId: state.ui.projectSwitcher.projectIds[0] || ''
-            }
+            projectSwitcher: updPrjSwitcher
           }
         }
       }

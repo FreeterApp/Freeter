@@ -4,9 +4,10 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflowSubCase';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { EntityId } from '@/base/entity';
-import { addManyToEntityCollection, addOneToEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { addManyToEntityCollection, addOneToEntityCollection, setOneInEntityCollection } from '@/base/entityCollection';
 import { addItemToList, findIndexOrUndef } from '@/base/list';
 import { getAllWorkflowNamesFromWorkflowIdList } from '@/base/state/actions/usedNames';
 import { generateCopyName } from '@/base/utils';
@@ -41,20 +42,19 @@ export function createPasteWorkflowUseCase({
       name: generateCopyName(entity.settings.name, getAllWorkflowNamesFromWorkflowIdList(state.entities.workflows, currentProject.workflowIds))
     })
     const posIdx = findIndexOrUndef(currentProject.workflowIds, posByWorkflowId)
+
+    const [updPrj] = setCurrentWorkflowSubCase(currentProject, newWorkflow.id);
+
     appStore.set({
       ...state,
       entities: {
         ...state.entities,
         workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow),
         widgets: addManyToEntityCollection(state.entities.widgets, newWidgets),
-        projects: updateOneInEntityCollection(state.entities.projects, {
-          id: currentProjectId,
-          changes: {
-            currentWorkflowId: newWorkflow.id,
-            workflowIds: addItemToList(currentProject.workflowIds, newWorkflow.id, posIdx)
-          }
+        projects: setOneInEntityCollection(state.entities.projects, {
+          ...updPrj,
+          workflowIds: addItemToList(currentProject.workflowIds, newWorkflow.id, posIdx)
         }),
-
       }
     });
   }
