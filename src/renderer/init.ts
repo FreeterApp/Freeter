@@ -178,6 +178,10 @@ function createStore() {
           list: []
         }
       },
+      memSaver: {
+        activeWorkflowIds: new Set(),
+        workflowTimeouts: {}
+      },
       modalScreens: {
         data: {
           appManager: {

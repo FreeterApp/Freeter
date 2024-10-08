@@ -183,6 +183,11 @@ export interface AppsState {
   appIds: EntityIdList;
 }
 
+export interface MemSaverState {
+  activeWorkflowIds: Set<EntityId>;
+  workflowTimeouts: Record<EntityId, NodeJS.Timeout>;
+}
+
 export interface UiState {
   editMode: boolean;
   menuBar: boolean;
@@ -190,6 +195,7 @@ export interface UiState {
   apps: AppsState;
   dragDrop: DragDropState;
   copy: CopyState;
+  memSaver: MemSaverState;
   modalScreens: ModalScreensState;
   palette: PaletteState;
   projectSwitcher: ProjectSwitcherState;
@@ -222,6 +228,10 @@ export function createUiState(): UiState {
         entities: {},
         list: []
       }
+    },
+    memSaver: {
+      activeWorkflowIds: new Set(),
+      workflowTimeouts: {}
     },
     modalScreens: {
       data: {
