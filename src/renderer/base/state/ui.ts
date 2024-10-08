@@ -184,7 +184,7 @@ export interface AppsState {
 }
 
 export interface MemSaverState {
-  activeWorkflowIds: Set<EntityId>;
+  activeWorkflowIds: EntityIdList;
   workflowTimeouts: Record<EntityId, NodeJS.Timeout>;
 }
 
@@ -230,7 +230,7 @@ export function createUiState(): UiState {
       }
     },
     memSaver: {
-      activeWorkflowIds: new Set(),
+      activeWorkflowIds: [],
       workflowTimeouts: {}
     },
     modalScreens: {

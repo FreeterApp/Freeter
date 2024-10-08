@@ -179,7 +179,7 @@ function createStore() {
         }
       },
       memSaver: {
-        activeWorkflowIds: new Set(),
+        activeWorkflowIds: [],
         workflowTimeouts: {}
       },
       modalScreens: {
