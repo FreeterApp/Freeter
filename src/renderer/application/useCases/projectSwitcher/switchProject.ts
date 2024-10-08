@@ -4,7 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
-import { setCurrentProjectSubCase } from '@/application/useCases/projectSwitcher/subs/setCurrentProjectSubCase';
+import { setCurrentProjectSubCase } from '@/application/useCases/projectSwitcher/subs/setCurrentProject';
 import { EntityId } from '@/base/entity';
 
 type Deps = {
