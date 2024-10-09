@@ -4,26 +4,29 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { DeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
 import { deleteProjectsSubCase } from '@/application/useCases/project/subs/deleteProjects';
 import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflow';
 import { setCurrentProjectSubCase } from '@/application/useCases/projectSwitcher/subs/setCurrentProject';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
-import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, setOneInEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
+import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';
-import { modalScreensStateActions } from '@/base/state/actions';
+import { entityStateActions, modalScreensStateActions } from '@/base/state/actions';
 import { generateWorkflowName } from '@/base/workflow';
 
 type Deps = {
   appStore: AppStore;
   cloneWorkflowSubCase: CloneWorkflowSubCase;
   createWorkflowSubCase: CreateWorkflowSubCase;
+  deactivateWorkflowUseCase: DeactivateWorkflowUseCase;
 }
 export function createSaveChangesInProjectManagerUseCase({
   appStore,
   cloneWorkflowSubCase,
   createWorkflowSubCase,
+  deactivateWorkflowUseCase,
 }: Deps) {
   const useCase = async () => {
     let state = appStore.get();
@@ -53,18 +56,14 @@ export function createSaveChangesInProjectManagerUseCase({
           const prj = getOneFromEntityCollection(state.entities.projects, prjId);
           if (prj) {
             const newWorkflow = createWorkflowSubCase(generateWorkflowName([]))
-            const [updPrj] = setCurrentWorkflowSubCase(prj, newWorkflow.id);
-            state = {
-              ...state,
-              entities: {
-                ...state.entities,
-                projects: setOneInEntityCollection(state.entities.projects, {
-                  ...updPrj,
-                  workflowIds: [newWorkflow.id]
-                }),
-                workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow)
-              },
-            }
+            state = entityStateActions.projects.updateOne(state, {
+              id: prj.id,
+              changes: {
+                workflowIds: [newWorkflow.id]
+              }
+            })
+            state = entityStateActions.workflows.addOne(state, newWorkflow)
+            state = setCurrentWorkflowSubCase(state, prjId, newWorkflow.id, false);
           }
         }
       }
@@ -84,14 +83,12 @@ export function createSaveChangesInProjectManagerUseCase({
           state.entities.projects,
           state.entities.workflows
         )
-        const [updPrjSwitcher] = setCurrentProjectSubCase(state.ui.projectSwitcher, updCurrentProjectId);
-
         state = {
           ...state,
           ui: {
             ...state.ui,
             projectSwitcher: {
-              ...updPrjSwitcher,
+              ...state.ui.projectSwitcher,
               projectIds: updProjectIdsList
             }
           },
@@ -102,6 +99,7 @@ export function createSaveChangesInProjectManagerUseCase({
             workflows: removeManyFromEntityCollection(state.entities.workflows, delWorkflowIds)
           },
         };
+        state = setCurrentProjectSubCase(updCurrentProjectId, deactivateWorkflowUseCase, state);
       }
 
       const arrToIdFromId = Object.entries(duplicateProjectIds);
@@ -147,14 +145,7 @@ export function createSaveChangesInProjectManagerUseCase({
       }
 
       if (findIdIndexOnList(state.ui.projectSwitcher.projectIds, state.ui.projectSwitcher.currentProjectId) < 0) {
-        const [updPrjSwitcher] = setCurrentProjectSubCase(state.ui.projectSwitcher, state.ui.projectSwitcher.projectIds[0] || '');
-        state = {
-          ...state,
-          ui: {
-            ...state.ui,
-            projectSwitcher: updPrjSwitcher
-          }
-        }
+        state = setCurrentProjectSubCase(state.ui.projectSwitcher.projectIds[0] || '', deactivateWorkflowUseCase, state);
       }
       appStore.set(state);
     }

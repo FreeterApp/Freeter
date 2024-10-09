@@ -186,7 +186,16 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const resizeLayoutItemStartUseCase = createResizeLayoutItemStartUseCase(deps);
   const resizeLayoutItemEndUseCase = createResizeLayoutItemEndUseCase(deps);
 
-  const switchProjectUseCase = createSwitchProjectUseCase(deps);
+  const deactivateWorkflowUseCase = createDeactivateWorkflowUseCase(deps);
+  const initMemSaverUseCase = createInitMemSaverUseCase({
+    ...deps,
+    deactivateWorkflowUseCase
+  })
+
+  const switchProjectUseCase = createSwitchProjectUseCase({
+    ...deps,
+    deactivateWorkflowUseCase
+  });
 
   const createWorkflowSubCase = createCreateWorkflowSubCase(deps)
 
@@ -258,7 +267,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase({
     ...deps,
     cloneWorkflowSubCase,
-    createWorkflowSubCase
+    createWorkflowSubCase,
+    deactivateWorkflowUseCase,
   });
   const switchProjectInProjectManagerUseCase = createSwitchProjectInProjectManagerUseCase(deps);
   const toggleDeletionInProjectManagerUseCase = createToggleDeletionInProjectManagerUseCase(deps);
@@ -397,11 +407,6 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const dragWorkflowFromWorkflowSwitcherUseCase = createDragWorkflowFromWorkflowSwitcherUseCase(deps);
   const dropOnWorkflowSwitcherUseCase = createDropOnWorkflowSwitcherUseCase(deps);
 
-  const deactivateWorkflowUseCase = createDeactivateWorkflowUseCase(deps);
-  const initMemSaverUseCase = createInitMemSaverUseCase({
-    ...deps,
-    deactivateWorkflowUseCase
-  })
   return {
     dragWidgetFromWorktableLayoutUseCase,
     dragOverWorktableLayoutUseCase,

@@ -35,6 +35,10 @@ const appState: AppState = {
         list: []
       }
     },
+    memSaver: {
+      activeWorkflowIds: [],
+      workflowTimeouts: {}
+    },
     modalScreens: {
       data: {
         appManager: { appIds: null, apps: null, currentAppId: '', deleteAppIds: null },

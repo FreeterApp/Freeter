@@ -7,7 +7,7 @@ import { AppStore } from '@/application/interfaces/store';
 import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflow';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { EntityId } from '@/base/entity';
-import { addManyToEntityCollection, addOneToEntityCollection, setOneInEntityCollection } from '@/base/entityCollection';
+import { addManyToEntityCollection, addOneToEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { addItemToList, findIndexOrUndef } from '@/base/list';
 import { getAllWorkflowNamesFromWorkflowIdList } from '@/base/state/actions/usedNames';
 import { generateCopyName } from '@/base/utils';
@@ -22,7 +22,7 @@ export function createPasteWorkflowUseCase({
   cloneWorkflowSubCase,
 }: Deps) {
   const useCase = async (workflowCopyId: EntityId, posByWorkflowId?: EntityId) => {
-    const state = appStore.get();
+    let state = appStore.get();
     const workflowCopyEntity = state.ui.copy.workflows.entities[workflowCopyId];
     if (!workflowCopyEntity) {
       return;
@@ -43,20 +43,24 @@ export function createPasteWorkflowUseCase({
     })
     const posIdx = findIndexOrUndef(currentProject.workflowIds, posByWorkflowId)
 
-    const [updPrj] = setCurrentWorkflowSubCase(currentProject, newWorkflow.id);
-
-    appStore.set({
+    state = {
       ...state,
       entities: {
         ...state.entities,
         workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow),
         widgets: addManyToEntityCollection(state.entities.widgets, newWidgets),
-        projects: setOneInEntityCollection(state.entities.projects, {
-          ...updPrj,
-          workflowIds: addItemToList(currentProject.workflowIds, newWorkflow.id, posIdx)
+        projects: updateOneInEntityCollection(state.entities.projects, {
+          id: currentProject.id,
+          changes: {
+            workflowIds: addItemToList(currentProject.workflowIds, newWorkflow.id, posIdx)
+          }
         }),
       }
-    });
+    };
+
+    state = setCurrentWorkflowSubCase(state, currentProject.id, newWorkflow.id, true);
+
+    appStore.set(state);
   }
 
   return useCase;

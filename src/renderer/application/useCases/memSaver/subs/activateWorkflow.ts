@@ -13,11 +13,13 @@ export function activateWorkflowSubCase(
   workflowId: EntityId,
   memSaver: MemSaverState
 ): MemSaverState {
-  memSaver = resetDelayedWorkflowDeactivationSubCase(workflowId, memSaver);
-  if (findIdIndexOnList(memSaver.activeWorkflowIds, workflowId) < 0) {
-    memSaver = {
-      ...memSaver,
-      activeWorkflowIds: addItemToList(memSaver.activeWorkflowIds, workflowId)
+  if (workflowId) {
+    memSaver = resetDelayedWorkflowDeactivationSubCase(workflowId, memSaver);
+    if (findIdIndexOnList(memSaver.activeWorkflowIds, workflowId) < 0) {
+      memSaver = {
+        ...memSaver,
+        activeWorkflowIds: addItemToList(memSaver.activeWorkflowIds, workflowId)
+      }
     }
   }
 

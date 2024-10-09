@@ -3,28 +3,37 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { activateWorkflowSubCase } from '@/application/useCases/memSaver/subs/activateWorkflow';
 import { EntityId } from '@/base/entity';
-import { Project } from '@/base/project';
+import { entityStateActions } from '@/base/state/actions';
+import { AppState } from '@/base/state/app';
 
 export function setCurrentWorkflowSubCase(
-  currentProject: Project,
-  currentWorkflowIdToSet: EntityId,
-): [
-    updatedProject: Project,
-  ] {
-  let updatedProject: Project
-  if (currentProject.currentWorkflowId !== currentWorkflowIdToSet) {
-    updatedProject = {
-      ...currentProject,
-      currentWorkflowId: currentWorkflowIdToSet
+  appState: AppState,
+  projectId: EntityId,
+  newCurrentWorkflowId: EntityId,
+  activate: boolean,
+): AppState {
+  const project = entityStateActions.projects.getOne(appState, projectId)
+  if (project) {
+    if (project.currentWorkflowId !== newCurrentWorkflowId) {
+      appState = entityStateActions.projects.updateOne(appState, {
+        id: projectId,
+        changes: {
+          currentWorkflowId: newCurrentWorkflowId
+        }
+      })
+      if (activate) {
+        appState = {
+          ...appState,
+          ui: {
+            ...appState.ui,
+            memSaver: activateWorkflowSubCase(newCurrentWorkflowId, appState.ui.memSaver)
+          }
+        }
+      }
     }
-
-    // When calling MemSaver there are edge cases when current/new id is '' (empty string)
-  } else {
-    updatedProject = currentProject;
   }
 
-  return [
-    updatedProject,
-  ]
+  return appState;
 }

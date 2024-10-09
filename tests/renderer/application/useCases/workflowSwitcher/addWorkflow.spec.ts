@@ -12,6 +12,7 @@ import { fixtureProjectAInColl } from '@tests/base/state/fixtures/entitiesState'
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowSettingsA, fixtureWorkflowSettingsB, fixtureWorkflowSettingsC } from '@tests/base/fixtures/workflow';
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
+import { fixtureMemSaver } from '@tests/base/state/fixtures/memSaver';
 
 const newItemId = 'NEW-ITEM-ID';
 
@@ -76,7 +77,7 @@ describe('addWorkflowUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should add a new workflow with a right name as a last item and a current item in the current project state, and return the id of the new item, when the posByWorkflow is not specified', async () => {
+  it('should add a new workflow with a right name as a last item, activate it in mem saver, and a current item in the current project state, and return the id of the new item, when the posByWorkflow is not specified', async () => {
     const workflowA = fixtureWorkflowA({ settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }) });
     const workflowB = fixtureWorkflowB({ settings: fixtureWorkflowSettingsB({ name: 'Workflow 2' }) });
     const workflowC = fixtureWorkflowC({ settings: fixtureWorkflowSettingsC({ name: 'Workflow 1' }) });
@@ -95,6 +96,9 @@ describe('addWorkflowUseCase()', () => {
         }
       },
       ui: {
+        memSaver: fixtureMemSaver({
+          activeWorkflowIds: [workflowA.id]
+        }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectB.id,
           projectIds: [projectA.id, projectB.id]
@@ -118,6 +122,13 @@ describe('addWorkflowUseCase()', () => {
           [newItemId]: expect.objectContaining({ id: newItemId, settings: { memSaver: {}, name: 'Workflow 2' } })
         }
       },
+      ui: {
+        ...initState.ui,
+        memSaver: {
+          ...initState.ui.memSaver,
+          activeWorkflowIds: [...initState.ui.memSaver.activeWorkflowIds, newItemId]
+        }
+      }
     }
     const {
       appStore,
@@ -131,7 +142,7 @@ describe('addWorkflowUseCase()', () => {
     expect(res).toBe(newItemId);
   })
 
-  it('should add a new workflow with a right name at the index of posByWorkflowId item as a current item in the current project state, and return the id of the new item, when the posByWorkflow is specified', async () => {
+  it('should add a new workflow with a right name at the index of posByWorkflowId item as a current item in the current project state, activate it in mem saver, and return the id of the new item, when the posByWorkflow is specified', async () => {
     const workflowA = fixtureWorkflowA({ settings: fixtureWorkflowSettingsA({ name: 'Workflow 1' }) });
     const workflowB = fixtureWorkflowB({ settings: fixtureWorkflowSettingsB({ name: 'Workflow 1' }) });
     const workflowC = fixtureWorkflowC({ settings: fixtureWorkflowSettingsC({ name: 'Workflow 2' }) });
@@ -150,6 +161,9 @@ describe('addWorkflowUseCase()', () => {
         }
       },
       ui: {
+        memSaver: fixtureMemSaver({
+          activeWorkflowIds: [workflowB.id]
+        }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectB.id,
           projectIds: [projectA.id, projectB.id]
@@ -173,6 +187,13 @@ describe('addWorkflowUseCase()', () => {
           [newItemId]: expect.objectContaining({ id: newItemId, settings: expect.objectContaining({ name: 'Workflow 3' }) })
         }
       },
+      ui: {
+        ...initState.ui,
+        memSaver: {
+          ...initState.ui.memSaver,
+          activeWorkflowIds: [...initState.ui.memSaver.activeWorkflowIds, newItemId]
+        }
+      }
     }
     const {
       appStore,

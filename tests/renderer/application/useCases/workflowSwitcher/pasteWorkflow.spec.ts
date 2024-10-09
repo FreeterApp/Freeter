@@ -19,6 +19,7 @@ import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workf
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 import { fixtureProjectA } from '@tests/base/fixtures/project';
 import { Workflow } from '@/base/workflow';
+import { fixtureMemSaver } from '@tests/base/state/fixtures/memSaver';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
@@ -88,7 +89,7 @@ describe('pasteWorkflowUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should add a clone of the copied workflow to entities and its id to the current project\'s workflow ids', async () => {
+  it('should add a clone of the copied workflow to entities, and add its id to the current project\'s workflow ids, activate it on mem saver and set as a current workflow in the project', async () => {
     const widgetA = fixtureWidgetA();
     const widgetAClone: Widget = { ...widgetA, id: widgetA.id + 'CLONE' }
     const workflowA = fixtureWorkflowA({ layout: [fixtureWidgetLayoutItemA({ widgetId: widgetA.id })] });
@@ -116,6 +117,9 @@ describe('pasteWorkflowUseCase()', () => {
             list: ['A']
           }
         }),
+        memSaver: fixtureMemSaver({
+          activeWorkflowIds: [workflowB.id]
+        }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectA.id
         })
@@ -140,6 +144,13 @@ describe('pasteWorkflowUseCase()', () => {
             workflowIds: [workflowB.id, workflowAClone.id, workflowC.id],
             currentWorkflowId: workflowAClone.id
           }
+        }
+      },
+      ui: {
+        ...initState.ui,
+        memSaver: {
+          ...initState.ui.memSaver,
+          activeWorkflowIds: [...initState.ui.memSaver.activeWorkflowIds, workflowAClone.id]
         }
       }
     }
