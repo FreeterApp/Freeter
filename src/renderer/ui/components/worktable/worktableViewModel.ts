@@ -19,7 +19,7 @@ export function createWorktableViewModelHook({
       isEditMode,
       currentProjectId,
       currentWorkflowId,
-      workflowIds,
+      activeWorkflowIds,
       resizingItem,
       dndDraggingFrom,
       dndDraggingWidgetType,
@@ -31,7 +31,7 @@ export function createWorktableViewModelHook({
       const { currentProjectId } = state.ui.projectSwitcher;
       const widgetCopies = state.ui.copy.widgets.entities;
       const currentWorkflowId = state.entities.projects[currentProjectId]?.currentWorkflowId;
-      const workflowIds = state.entities.projects[currentProjectId]?.workflowIds;
+      const activeWorkflowIds = state.ui.memSaver.activeWorkflowIds;
       const { resizingItem } = state.ui.worktable;
       const dndDraggingFrom = state.ui.dragDrop.from;
       const dndOverWorktableLayout = state.ui.dragDrop.over?.worktableLayout;
@@ -54,7 +54,7 @@ export function createWorktableViewModelHook({
         isEditMode,
         currentProjectId,
         currentWorkflowId,
-        workflowIds,
+        activeWorkflowIds,
         resizingItem,
         dndDraggingFrom,
         dndDraggingWidgetType,
@@ -64,17 +64,17 @@ export function createWorktableViewModelHook({
       }
     });
 
-    const workflows = useAppState.useEntityList(state => state.entities.workflows, workflowIds || []);
+    const activeWorkflows = useAppState.useEntityList(state => state.entities.workflows, activeWorkflowIds || []);
     const widgetTypes = useAppState.useEntityList(state => state.entities.widgetTypes, widgetTypeIds);
     const copiedWidgets = useAppState.useEntityList(state => state.ui.copy.widgets.entities, copiedWidgetIds);
 
-    const noWorkflows = workflows.length === 0;
+    const noWorkflows = activeWorkflows.length === 0;
 
     return {
       isEditMode,
       currentProjectId,
       currentWorkflowId,
-      workflows,
+      activeWorkflows,
       noWorkflows,
       resizingItem,
       dndDraggingFrom,

@@ -12,8 +12,9 @@ import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 import { fixtureProjectAInColl } from '@tests/base/state/fixtures/entitiesState';
-import { fixtureWorkflowA, fixtureWorkflowB } from '@tests/base/fixtures/workflow';
+import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC } from '@tests/base/fixtures/workflow';
 import { WidgetLayoutProps } from '@/ui/components/worktable/widgetLayout';
+import { fixtureMemSaver } from '@tests/base/state/fixtures/memSaver';
 
 const strWidgetLayout = 'WidgetLayout';
 const projectId = 'PROJECT-ID';
@@ -43,7 +44,7 @@ async function setup(
 }
 
 describe('<Worktable />', () => {
-  it('should not display "No Workflows" text, when there are workflows in the current project', async () => {
+  it('should not display "No Workflows" text, when there are workflows active in mem saver', async () => {
     const workflowA = fixtureWorkflowA();
     await setup(fixtureAppState({
       entities: {
@@ -56,6 +57,9 @@ describe('<Worktable />', () => {
       },
       ui: {
         editMode: false,
+        memSaver: fixtureMemSaver({
+          activeWorkflowIds: [workflowA.id]
+        }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,
         })
@@ -64,7 +68,7 @@ describe('<Worktable />', () => {
     expect(screen.queryByText(/The project does not have any workflows/i)).not.toBeInTheDocument();
   });
 
-  it('should display "No Workflows" text, when there are no workflows in the current project', async () => {
+  it('should display "No Workflows" text, when there are no workflows active in mem saver', async () => {
     await setup(fixtureAppState({
       entities: {
         projects: {
@@ -73,6 +77,9 @@ describe('<Worktable />', () => {
       },
       ui: {
         editMode: false,
+        memSaver: fixtureMemSaver({
+          activeWorkflowIds: []
+        }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,
         })
@@ -100,14 +107,25 @@ describe('<Worktable />', () => {
     expect(screen.getByText(/button at the Workflow Bar/i)).toBeInTheDocument();
   });
 
-  it('should display 0 WidgetLayout components, when there are no workflows in the current project', async () => {
+  it('should display 0 WidgetLayout components, when there are no workflows active in mem saver', async () => {
+    const workflowA = fixtureWorkflowA();
+    const workflowB = fixtureWorkflowB();
+    const workflowC = fixtureWorkflowC();
     await setup(fixtureAppState({
       entities: {
         projects: {
-          ...fixtureProjectAInColl({id: projectId, workflowIds: []})
+          ...fixtureProjectAInColl({id: projectId, workflowIds: [workflowA.id, workflowB.id]})
+        },
+        workflows: {
+          [workflowA.id]: workflowA,
+          [workflowB.id]: workflowB,
+          [workflowC.id]: workflowC,
         }
       },
       ui: {
+        memSaver: fixtureMemSaver({
+          activeWorkflowIds: []
+        }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,
         })
@@ -116,20 +134,25 @@ describe('<Worktable />', () => {
     expect(screen.queryAllByText(strWidgetLayout, {exact: false}).length).toBe(0);
   });
 
-  it('should display 2 WidgetLayout components, when there are 2 workflows in the current project', async () => {
+  it('should display 2 WidgetLayout components, when there are 2 workflows active in mem saver', async () => {
     const workflowA = fixtureWorkflowA();
     const workflowB = fixtureWorkflowB();
+    const workflowC = fixtureWorkflowC();
     await setup(fixtureAppState({
       entities: {
         projects: {
-          ...fixtureProjectAInColl({id: projectId, workflowIds: [workflowA.id, workflowB.id]})
+          ...fixtureProjectAInColl({id: projectId, workflowIds: [workflowA.id, workflowB.id, workflowC.id]})
         },
         workflows: {
           [workflowA.id]: workflowA,
-          [workflowB.id]: workflowB
+          [workflowB.id]: workflowB,
+          [workflowC.id]: workflowC,
         }
       },
       ui: {
+        memSaver: fixtureMemSaver({
+          activeWorkflowIds: [workflowA.id, workflowB.id]
+        }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,
         })
@@ -152,6 +175,9 @@ describe('<Worktable />', () => {
         }
       },
       ui: {
+        memSaver: fixtureMemSaver({
+          activeWorkflowIds: [workflowA.id, workflowB.id]
+        }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,
         })
