@@ -11,6 +11,7 @@ import { EntityIdList } from '@/base/entityList';
 import { List } from '@/base/list';
 import { Project } from '@/base/project';
 import { WidgetEntityDeps, WorkflowEntityDeps } from '@/base/state/entities';
+import { defaultUiThemeId } from '@/base/uiTheme';
 import { Widget, WidgetInEnv } from '@/base/widget';
 import { WidgetLayoutItemWH, WidgetLayoutItemXY } from '@/base/widgetLayout';
 import { WidgetList } from '@/base/widgetList';
@@ -214,7 +215,7 @@ export function createUiState(): UiState {
         activateWorkflowsOnProjectSwitch: true,
         workflowInactiveAfter: -1
       },
-      uiTheme: 'dark'
+      uiTheme: defaultUiThemeId
     },
     apps: {
       appIds: []
@@ -236,10 +237,10 @@ export function createUiState(): UiState {
     modalScreens: {
       data: {
         appManager: {
-          currentAppId: '',
-          deleteAppIds: null,
+          appIds: null,
           apps: null,
-          appIds: null
+          currentAppId: '',
+          deleteAppIds: null
         },
         applicationSettings: {
           appConfig: null
@@ -261,7 +262,7 @@ export function createUiState(): UiState {
       order: []
     },
     palette: {
-      widgetTypeIds: []
+      widgetTypeIds: ['commander', 'file-opener', 'link-opener', 'note', 'timer', 'to-do-list', 'web-query', 'webpage']
     },
     projectSwitcher: {
       currentProjectId: '',

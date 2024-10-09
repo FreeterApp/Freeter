@@ -42,7 +42,7 @@ import { createEditModeToggleComponent, createEditModeToggleViewModelHook } from
 import { createToggleEditModeUseCase } from '@/application/useCases/toggleEditMode';
 import { createToggleMenuBarUseCase } from '@/application/useCases/toggleMenuBar';
 import { createAppStore } from '@/data/appStore';
-import { AppState } from '@/base/state/app';
+import { createAppState } from '@/base/state/app';
 import { entityStateActions } from '@/base/state/actions';
 import { createAppStateHook } from '@/ui/hooks/appState';
 import { createAppStateStorage } from '@/data/appStateStorage';
@@ -126,7 +126,6 @@ import { createCloneWidgetToWidgetListSubCase } from '@/application/useCases/she
 import { createAddWidgetToShelfUseCase } from '@/application/useCases/shelf/addWidgetToShelf';
 import { createCreateWidgetSubCase } from '@/application/useCases/widget/subs/createWidget';
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
-import { defaultUiThemeId } from '@/base/uiTheme';
 import { createTopBarViewModelHook } from '@/ui/components/topBar/topBarViewModel';
 import { createAppManagerComponent, createAppManagerViewModelHook } from '@/ui/components/appManager';
 import { createAddAppInAppManagerUseCase } from '@/application/useCases/appManager/addAppInAppManager';
@@ -139,97 +138,23 @@ import { createUpdateAppsOrderInAppManagerUseCase } from '@/application/useCases
 import { createCloseAppManagerUseCase } from '@/application/useCases/appManager/closeAppManager';
 import { createOpenAppManagerUseCase } from '@/application/useCases/appManager/openAppManager';
 import { createShowOpenFileDialogUseCase } from '@/application/useCases/dialog/showOpenFileDialog';
+import { createInitMemSaverUseCase } from '@/application/useCases/memSaver/initMemSaver';
+import { createDeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
 }
 
 function createStore() {
-  let firstRunState: AppState = {
-    entities: {
-      apps: {},
-      projects: {},
-      widgets: {},
-      widgetTypes: {},
-      workflows: {}
-    },
-    ui: {
-      dragDrop: {},
-      editMode: false,
-      menuBar: true,
-      appConfig: {
-        mainHotkey: 'CmdOrCtrl+Shift+F',
-        memSaver: {
-          activateWorkflowsOnProjectSwitch: true,
-          workflowInactiveAfter: -1
-        },
-        uiTheme: defaultUiThemeId
-      },
-      apps: {
-        appIds: []
-      },
-      copy: {
-        widgets: {
-          entities: {},
-          list: []
-        },
-        workflows: {
-          entities: {},
-          list: []
-        }
-      },
-      memSaver: {
-        activeWorkflowIds: [],
-        workflowTimeouts: {}
-      },
-      modalScreens: {
-        data: {
-          appManager: {
-            appIds: null,
-            apps: null,
-            currentAppId: '',
-            deleteAppIds: null
-          },
-          applicationSettings: {
-            appConfig: null
-          },
-          projectManager: {
-            currentProjectId: '',
-            deleteProjectIds: null,
-            projects: null,
-            projectIds: null,
-            duplicateProjectIds: null
-          },
-          widgetSettings: {
-            widgetInEnv: null
-          },
-          workflowSettings: {
-            workflow: null
-          },
-        },
-        order: []
-      },
-      palette: {
-        widgetTypeIds: ['commander', 'file-opener', 'link-opener', 'note', 'timer', 'to-do-list', 'web-query', 'webpage']
-      },
-      projectSwitcher: {
-        projectIds: [],
-        currentProjectId: '',
-      },
-      shelf: {
-        widgetList: []
-      },
-      worktable: {}
-    }
-  };
+  const firstRunState = createAppState();
 
-  firstRunState = entityStateActions.widgetTypes.setAll(firstRunState, registry.getWidgetTypes());
+  const appState = entityStateActions.widgetTypes.setAll(firstRunState, registry.getWidgetTypes());
   const dataStorage = prepareDataStorageForRenderer(createAppDataStorage());
   const [appStore, appStoreForUi] = createAppStore({
     stateStorage: createAppStateStorage(
       dataStorage,
     )
-  }, firstRunState, () => { });
+  }, appState, () => { });
 
   return {
     appStore,
@@ -472,6 +397,11 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const dragWorkflowFromWorkflowSwitcherUseCase = createDragWorkflowFromWorkflowSwitcherUseCase(deps);
   const dropOnWorkflowSwitcherUseCase = createDropOnWorkflowSwitcherUseCase(deps);
 
+  const deactivateWorkflowUseCase = createDeactivateWorkflowUseCase(deps);
+  const initMemSaverUseCase = createInitMemSaverUseCase({
+    ...deps,
+    deactivateWorkflowUseCase
+  })
   return {
     dragWidgetFromWorktableLayoutUseCase,
     dragOverWorktableLayoutUseCase,
@@ -561,6 +491,9 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     pasteWidgetToWorkflowUseCase,
     copyWorkflowUseCase,
     pasteWorkflowUseCase,
+
+    deactivateWorkflowUseCase,
+    initMemSaverUseCase,
   }
 }
 
@@ -702,10 +635,11 @@ export async function init() {
   const store = createStore();
   const useCases = await createUseCases(store);
 
-  const { initAppMenuUseCase, initMainShortcutUseCase, initTrayMenuUseCase } = useCases;
+  const { initAppMenuUseCase, initMainShortcutUseCase, initTrayMenuUseCase, initMemSaverUseCase } = useCases;
   initMainShortcutUseCase();
   initAppMenuUseCase();
   initTrayMenuUseCase();
+  initMemSaverUseCase();
 
   const stateHooks = createUiHooks(store, useCases);
   const { App } = createUI(stateHooks, useCases);
