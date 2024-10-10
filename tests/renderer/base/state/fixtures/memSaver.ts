@@ -7,7 +7,7 @@ import { MemSaverState } from '@/base/state/ui';
 import { deepFreeze } from '@common/helpers/deepFreeze';
 
 const memSaverState: MemSaverState = {
-  activeWorkflowIds: [],
+  activeWorkflows: [],
   workflowTimeouts: {}
 }
 

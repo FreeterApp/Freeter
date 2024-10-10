@@ -36,7 +36,7 @@ const appState: AppState = {
       }
     },
     memSaver: {
-      activeWorkflowIds: [],
+      activeWorkflows: [],
       workflowTimeouts: {}
     },
     modalScreens: {

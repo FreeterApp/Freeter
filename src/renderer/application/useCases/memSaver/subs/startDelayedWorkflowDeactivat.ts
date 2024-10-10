@@ -18,7 +18,7 @@ export function startDelayedWorkflowDeactivationSubCase(
       ...memSaverState,
       workflowTimeouts: {
         ...memSaverState.workflowTimeouts,
-        [workflowId]: setTimeout(() => deactivateWorkflowUseCase(workflowId), delay)
+        [workflowId]: setTimeout(() => deactivateWorkflowUseCase(workflowId), delay * 60000)
       }
     }
   }

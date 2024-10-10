@@ -58,7 +58,9 @@ describe('<Worktable />', () => {
       ui: {
         editMode: false,
         memSaver: fixtureMemSaver({
-          activeWorkflowIds: [workflowA.id]
+          activeWorkflows: [
+            {prjId: projectId, wflId: workflowA.id},
+          ]
         }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,
@@ -78,7 +80,7 @@ describe('<Worktable />', () => {
       ui: {
         editMode: false,
         memSaver: fixtureMemSaver({
-          activeWorkflowIds: []
+          activeWorkflows: []
         }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,
@@ -124,7 +126,7 @@ describe('<Worktable />', () => {
       },
       ui: {
         memSaver: fixtureMemSaver({
-          activeWorkflowIds: []
+          activeWorkflows: []
         }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,
@@ -151,7 +153,10 @@ describe('<Worktable />', () => {
       },
       ui: {
         memSaver: fixtureMemSaver({
-          activeWorkflowIds: [workflowA.id, workflowB.id]
+          activeWorkflows: [
+            {prjId: projectId, wflId: workflowA.id},
+            {prjId: projectId, wflId: workflowB.id}
+          ]
         }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,
@@ -176,7 +181,10 @@ describe('<Worktable />', () => {
       },
       ui: {
         memSaver: fixtureMemSaver({
-          activeWorkflowIds: [workflowA.id, workflowB.id]
+          activeWorkflows: [
+            {prjId: projectId, wflId: workflowA.id},
+            {prjId: projectId, wflId: workflowB.id}
+          ]
         }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectId,

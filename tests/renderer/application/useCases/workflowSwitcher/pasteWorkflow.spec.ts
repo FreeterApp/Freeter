@@ -20,6 +20,7 @@ import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitch
 import { fixtureProjectA } from '@tests/base/fixtures/project';
 import { Workflow } from '@/base/workflow';
 import { fixtureMemSaver } from '@tests/base/state/fixtures/memSaver';
+import { createDeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
@@ -41,9 +42,11 @@ async function setup(initState: AppState) {
     cloneWidgetLayoutItemSubCase,
     idGenerator: workflowIdGeneratorMock
   })
+  const deactivateWorkflowUseCase = createDeactivateWorkflowUseCase({ appStore });
   const pasteWorkflowUseCase = createPasteWorkflowUseCase({
     appStore,
     cloneWorkflowSubCase,
+    deactivateWorkflowUseCase
   });
   return {
     appStore,
@@ -118,7 +121,9 @@ describe('pasteWorkflowUseCase()', () => {
           }
         }),
         memSaver: fixtureMemSaver({
-          activeWorkflowIds: [workflowB.id]
+          activeWorkflows: [
+            { prjId: projectA.id, wflId: workflowB.id },
+          ]
         }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectA.id
@@ -150,7 +155,10 @@ describe('pasteWorkflowUseCase()', () => {
         ...initState.ui,
         memSaver: {
           ...initState.ui.memSaver,
-          activeWorkflowIds: [...initState.ui.memSaver.activeWorkflowIds, workflowAClone.id]
+          activeWorkflows: [
+            ...initState.ui.memSaver.activeWorkflows,
+            { prjId: projectA.id, wflId: workflowAClone.id }
+          ]
         }
       }
     }

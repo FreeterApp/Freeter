@@ -5,20 +5,24 @@
 
 import { resetDelayedWorkflowDeactivationSubCase } from '@/application/useCases/memSaver/subs/resetDelayedWorkflowDeactivation';
 import { EntityId } from '@/base/entity';
-import { findIdIndexOnList } from '@/base/entityList';
 import { addItemToList } from '@/base/list';
+import { findItemIndexOnMemSaverWorkflowList } from '@/base/memSaver';
 import { MemSaverState } from '@/base/state/ui';
 
 export function activateWorkflowSubCase(
+  projectId: EntityId,
   workflowId: EntityId,
   memSaver: MemSaverState
 ): MemSaverState {
   if (workflowId) {
     memSaver = resetDelayedWorkflowDeactivationSubCase(workflowId, memSaver);
-    if (findIdIndexOnList(memSaver.activeWorkflowIds, workflowId) < 0) {
+    if (findItemIndexOnMemSaverWorkflowList(memSaver.activeWorkflows, workflowId) < 0) {
       memSaver = {
         ...memSaver,
-        activeWorkflowIds: addItemToList(memSaver.activeWorkflowIds, workflowId)
+        activeWorkflows: addItemToList(memSaver.activeWorkflows, {
+          prjId: projectId,
+          wflId: workflowId
+        })
       }
     }
   }

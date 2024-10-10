@@ -13,6 +13,7 @@ import { MemSaverState } from '@/base/state/ui';
 import { Workflow } from '@/base/workflow';
 
 export function activateProjectWorkflowsSubCase(
+  projectId: EntityId,
   projectWorkflows: EntityList<Workflow>,
   projectCurrentWorkflowId: EntityId,
   memSaverConfigApp: MemSaverConfigApp,
@@ -22,13 +23,13 @@ export function activateProjectWorkflowsSubCase(
 ): MemSaverState {
   for (const wfl of projectWorkflows) {
     if (wfl.id === projectCurrentWorkflowId) {
-      memSaver = activateWorkflowSubCase(wfl.id, memSaver);
+      memSaver = activateWorkflowSubCase(projectId, wfl.id, memSaver);
     } else {
       const { activateWorkflowsOnProjectSwitch, workflowInactiveAfter } = calcMemSaverConfig(memSaverConfigApp, memSaverConfigPrj, wfl.settings.memSaver);
       if (activateWorkflowsOnProjectSwitch && workflowInactiveAfter !== 0) {
-        memSaver = activateWorkflowSubCase(wfl.id, memSaver);
+        memSaver = activateWorkflowSubCase(projectId, wfl.id, memSaver);
         if (workflowInactiveAfter > 0) {
-          memSaver = startDelayedWorkflowDeactivationSubCase(wfl.id, () => deactivateWorkflowUseCase(wfl.id), workflowInactiveAfter, memSaver);
+          memSaver = startDelayedWorkflowDeactivationSubCase(wfl.id, deactivateWorkflowUseCase, workflowInactiveAfter, memSaver);
         }
       }
     }

@@ -5,7 +5,7 @@
 
 import { DeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
 import { activateProjectWorkflowsSubCase } from '@/application/useCases/memSaver/subs/activateProjectWorkflows';
-import { deactivateProjectWorkflowsSubCase } from '@/application/useCases/memSaver/subs/deactivateProjectWorkflows';
+import { scheduleProjectWorkflowsDeactivationSubCase } from '@/application/useCases/memSaver/subs/scheduleProjectWorkflowsDeactivation';
 import { EntityId } from '@/base/entity';
 import { mapIdListToEntityList } from '@/base/entityList';
 import { entityStateActions } from '@/base/state/actions';
@@ -25,6 +25,7 @@ export function setCurrentProjectSubCase(
         ui: {
           ...appState.ui,
           memSaver: activateProjectWorkflowsSubCase(
+            projectId,
             mapIdListToEntityList(appState.entities.workflows, project.workflowIds),
             project.currentWorkflowId,
             appState.ui.appConfig.memSaver,
@@ -42,7 +43,7 @@ export function setCurrentProjectSubCase(
         ...appState,
         ui: {
           ...appState.ui,
-          memSaver: deactivateProjectWorkflowsSubCase(
+          memSaver: scheduleProjectWorkflowsDeactivationSubCase(
             mapIdListToEntityList(appState.entities.workflows, curProject.workflowIds),
             appState.ui.appConfig.memSaver,
             curProject.settings.memSaver,

@@ -12,8 +12,10 @@ import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
+  const deactivateWorkflowUseCase = jest.fn();
   const switchWorkflowUseCase = createSwitchWorkflowUseCase({
-    appStore
+    appStore,
+    deactivateWorkflowUseCase
   });
   return {
     appStore,
@@ -52,7 +54,7 @@ describe('switchWorkflowUseCase()', () => {
       },
       ui: {
         memSaver: fixtureMemSaver({
-          activeWorkflowIds: []
+          activeWorkflows: []
         })
       }
     })
@@ -72,7 +74,10 @@ describe('switchWorkflowUseCase()', () => {
         ...initState.ui,
         memSaver: {
           ...initState.ui.memSaver,
-          activeWorkflowIds: [...initState.ui.memSaver.activeWorkflowIds, newWorkflowId]
+          activeWorkflows: [
+            ...initState.ui.memSaver.activeWorkflows,
+            { prjId: projectId, wflId: newWorkflowId }
+          ]
         }
       }
     }

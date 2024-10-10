@@ -5,7 +5,7 @@
 
 import { resetDelayedWorkflowDeactivationSubCase } from '@/application/useCases/memSaver/subs/resetDelayedWorkflowDeactivation';
 import { EntityId } from '@/base/entity';
-import { removeIdFromList } from '@/base/entityList';
+import { removeFromMemSaverWorkflowListById } from '@/base/memSaver';
 import { MemSaverState } from '@/base/state/ui';
 
 export function deactivateWorkflowSubCase(
@@ -15,7 +15,7 @@ export function deactivateWorkflowSubCase(
   memSaver = resetDelayedWorkflowDeactivationSubCase(workflowId, memSaver);
   memSaver = {
     ...memSaver,
-    activeWorkflowIds: removeIdFromList(memSaver.activeWorkflowIds, workflowId)
+    activeWorkflows: removeFromMemSaverWorkflowListById(memSaver.activeWorkflows, workflowId)
   }
 
   return memSaver;

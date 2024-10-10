@@ -199,10 +199,14 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
   const createWorkflowSubCase = createCreateWorkflowSubCase(deps)
 
-  const switchWorkflowUseCase = createSwitchWorkflowUseCase(deps);
+  const switchWorkflowUseCase = createSwitchWorkflowUseCase({
+    ...deps,
+    deactivateWorkflowUseCase
+  });
   const addWorkflowUseCase = createAddWorkflowUseCase({
     ...deps,
-    createWorkflowSubCase
+    createWorkflowSubCase,
+    deactivateWorkflowUseCase
   });
   const renameWorkflowUseCase = createRenameWorkflowUseCase(deps);
   const openWorkflowSettingsUseCase = createOpenWorkflowSettingsUseCase(deps);
@@ -376,7 +380,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const copyWorkflowUseCase = createCopyWorkflowUseCase(deps);
   const pasteWorkflowUseCase = createPasteWorkflowUseCase({
     ...deps,
-    cloneWorkflowSubCase
+    cloneWorkflowSubCase,
+    deactivateWorkflowUseCase,
   });
 
   const dragWidgetFromWorktableLayoutUseCase = createDragWidgetFromWorktableLayoutUseCase(deps);

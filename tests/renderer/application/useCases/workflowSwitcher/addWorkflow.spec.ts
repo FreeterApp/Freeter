@@ -13,6 +13,7 @@ import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitch
 import { fixtureWorkflowA, fixtureWorkflowB, fixtureWorkflowC, fixtureWorkflowSettingsA, fixtureWorkflowSettingsB, fixtureWorkflowSettingsC } from '@tests/base/fixtures/workflow';
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { fixtureMemSaver } from '@tests/base/state/fixtures/memSaver';
+import { createDeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
 
 const newItemId = 'NEW-ITEM-ID';
 
@@ -21,9 +22,11 @@ async function setup(initState: AppState) {
   const createWorkflowSubCase = createCreateWorkflowSubCase({
     idGenerator: () => newItemId,
   })
+  const deactivateWorkflowUseCase = createDeactivateWorkflowUseCase({ appStore })
   const addWorkflowUseCase = createAddWorkflowUseCase({
     appStore,
-    createWorkflowSubCase
+    createWorkflowSubCase,
+    deactivateWorkflowUseCase
   });
   return {
     appStore,
@@ -97,7 +100,9 @@ describe('addWorkflowUseCase()', () => {
       },
       ui: {
         memSaver: fixtureMemSaver({
-          activeWorkflowIds: [workflowA.id]
+          activeWorkflows: [
+            { prjId: projectB.id, wflId: workflowA.id },
+          ]
         }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectB.id,
@@ -126,7 +131,10 @@ describe('addWorkflowUseCase()', () => {
         ...initState.ui,
         memSaver: {
           ...initState.ui.memSaver,
-          activeWorkflowIds: [...initState.ui.memSaver.activeWorkflowIds, newItemId]
+          activeWorkflows: [
+            ...initState.ui.memSaver.activeWorkflows,
+            { prjId: projectB.id, wflId: newItemId }
+          ]
         }
       }
     }
@@ -162,7 +170,9 @@ describe('addWorkflowUseCase()', () => {
       },
       ui: {
         memSaver: fixtureMemSaver({
-          activeWorkflowIds: [workflowB.id]
+          activeWorkflows: [
+            { prjId: projectB.id, wflId: workflowB.id },
+          ]
         }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectB.id,
@@ -191,7 +201,10 @@ describe('addWorkflowUseCase()', () => {
         ...initState.ui,
         memSaver: {
           ...initState.ui.memSaver,
-          activeWorkflowIds: [...initState.ui.memSaver.activeWorkflowIds, newItemId]
+          activeWorkflows: [
+            ...initState.ui.memSaver.activeWorkflows,
+            { prjId: projectB.id, wflId: newItemId }
+          ]
         }
       }
     }

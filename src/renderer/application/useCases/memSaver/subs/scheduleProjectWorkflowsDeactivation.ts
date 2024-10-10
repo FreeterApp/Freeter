@@ -11,7 +11,7 @@ import { MemSaverConfigApp, MemSaverConfigPrj, calcMemSaverConfig } from '@/base
 import { MemSaverState } from '@/base/state/ui';
 import { Workflow } from '@/base/workflow';
 
-export function deactivateProjectWorkflowsSubCase(
+export function scheduleProjectWorkflowsDeactivationSubCase(
   projectWorkflows: EntityList<Workflow>,
   memSaverConfigApp: MemSaverConfigApp,
   memSaverConfigPrj: MemSaverConfigPrj,
@@ -21,7 +21,7 @@ export function deactivateProjectWorkflowsSubCase(
   for (const wfl of projectWorkflows) {
     const { workflowInactiveAfter } = calcMemSaverConfig(memSaverConfigApp, memSaverConfigPrj, wfl.settings.memSaver);
     if (workflowInactiveAfter > 0) {
-      memSaver = startDelayedWorkflowDeactivationSubCase(wfl.id, () => deactivateWorkflowUseCase(wfl.id), workflowInactiveAfter, memSaver);
+      memSaver = startDelayedWorkflowDeactivationSubCase(wfl.id, deactivateWorkflowUseCase, workflowInactiveAfter, memSaver);
     } else {
       memSaver = deactivateWorkflowSubCase(wfl.id, memSaver);
     }

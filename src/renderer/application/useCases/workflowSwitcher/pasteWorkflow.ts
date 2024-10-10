@@ -4,6 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { DeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
 import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflow';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { EntityId } from '@/base/entity';
@@ -16,10 +17,12 @@ import { updateWorkflowSettings } from '@/base/workflow';
 type Deps = {
   appStore: AppStore;
   cloneWorkflowSubCase: CloneWorkflowSubCase;
+  deactivateWorkflowUseCase: DeactivateWorkflowUseCase;
 }
 export function createPasteWorkflowUseCase({
   appStore,
   cloneWorkflowSubCase,
+  deactivateWorkflowUseCase,
 }: Deps) {
   const useCase = async (workflowCopyId: EntityId, posByWorkflowId?: EntityId) => {
     let state = appStore.get();
@@ -58,7 +61,7 @@ export function createPasteWorkflowUseCase({
       }
     };
 
-    state = setCurrentWorkflowSubCase(state, currentProject.id, newWorkflow.id, true);
+    state = setCurrentWorkflowSubCase(state, deactivateWorkflowUseCase, currentProject.id, newWorkflow.id, true);
 
     appStore.set(state);
   }

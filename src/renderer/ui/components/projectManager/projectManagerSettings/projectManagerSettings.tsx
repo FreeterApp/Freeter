@@ -4,6 +4,7 @@
  */
 
 import { convertStrToUndBool, convertStrToUndNum, convertUndBoolToStr, convertUndNumToStr } from '@/base/convTypes';
+import { sanitizePartialMemSaverConfig } from '@/base/memSaver';
 import { ProjectManagerSettingsProps, useProjectManagerSettingsViewModel } from '@/ui/components/projectManager/projectManagerSettings/projectManagerSettingsViewModel';
 import { SettingBlock } from '@/widgets/appModules';
 
@@ -42,10 +43,10 @@ export function ProjectManagerSettings(props: ProjectManagerSettingsProps) {
         >
           <select id="mem-saver-inactive" value={convertUndNumToStr(settings.memSaver.workflowInactiveAfter)} onChange={e => updateSettings({
             ...settings,
-            memSaver: {
+            memSaver: sanitizePartialMemSaverConfig({
               ...settings.memSaver,
               workflowInactiveAfter: convertStrToUndNum(e.target.value)
-            }
+            })
           })}>
             {inactiveAfterOptions.map(item=>(
               <option
@@ -62,10 +63,10 @@ export function ProjectManagerSettings(props: ProjectManagerSettingsProps) {
         >
           <select id="mem-saver-activate-on-project" value={convertUndBoolToStr(settings.memSaver.activateWorkflowsOnProjectSwitch)} onChange={e => updateSettings({
             ...settings,
-            memSaver: {
+            memSaver: sanitizePartialMemSaverConfig({
               ...settings.memSaver,
               activateWorkflowsOnProjectSwitch: convertStrToUndBool(e.target.value)
-            }
+            })
           })}>
             {activateOnProjectSwitchOptions.map(item=>(
               <option

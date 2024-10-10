@@ -4,6 +4,7 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { DeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
 import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflow';
 import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
@@ -15,10 +16,12 @@ import { generateWorkflowName } from '@/base/workflow';
 type Deps = {
   appStore: AppStore;
   createWorkflowSubCase: CreateWorkflowSubCase;
+  deactivateWorkflowUseCase: DeactivateWorkflowUseCase;
 }
 export function createAddWorkflowUseCase({
   appStore,
-  createWorkflowSubCase
+  createWorkflowSubCase,
+  deactivateWorkflowUseCase,
 }: Deps) {
   const useCase = (posByWorkflowId?: EntityId) => {
     let state = appStore.get();
@@ -43,7 +46,7 @@ export function createAddWorkflowUseCase({
       },
     }
 
-    state = setCurrentWorkflowSubCase(state, currentProject.id, newWorkflow.id, true);
+    state = setCurrentWorkflowSubCase(state, deactivateWorkflowUseCase, currentProject.id, newWorkflow.id, true);
 
     appStore.set(state);
 

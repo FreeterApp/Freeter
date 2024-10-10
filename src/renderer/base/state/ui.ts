@@ -9,6 +9,7 @@ import { Entity, EntityId } from '@/base/entity';
 import { EntityCollection } from '@/base/entityCollection';
 import { EntityIdList } from '@/base/entityList';
 import { List } from '@/base/list';
+import { MemSaverWorkflowList } from '@/base/memSaver';
 import { Project } from '@/base/project';
 import { WidgetEntityDeps, WorkflowEntityDeps } from '@/base/state/entities';
 import { defaultUiThemeId } from '@/base/uiTheme';
@@ -185,7 +186,7 @@ export interface AppsState {
 }
 
 export interface MemSaverState {
-  activeWorkflowIds: EntityIdList;
+  activeWorkflows: MemSaverWorkflowList;
   workflowTimeouts: Record<EntityId, NodeJS.Timeout>;
 }
 
@@ -231,7 +232,7 @@ export function createUiState(): UiState {
       }
     },
     memSaver: {
-      activeWorkflowIds: [],
+      activeWorkflows: [],
       workflowTimeouts: {}
     },
     modalScreens: {

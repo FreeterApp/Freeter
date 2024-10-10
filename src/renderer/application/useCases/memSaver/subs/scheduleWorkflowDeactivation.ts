@@ -23,7 +23,7 @@ export function scheduleWorkflowDeactivationSubCase(
   if (workflowInactiveAfter === 0) {
     memSaverState = deactivateWorkflowSubCase(workflowId, memSaverState);
   } else if (workflowInactiveAfter > 0) {
-    memSaverState = startDelayedWorkflowDeactivationSubCase(workflowId, () => deactivateWorkflowUseCase(workflowId), workflowInactiveAfter, memSaverState);
+    memSaverState = startDelayedWorkflowDeactivationSubCase(workflowId, deactivateWorkflowUseCase, workflowInactiveAfter, memSaverState);
   }
 
   return memSaverState;

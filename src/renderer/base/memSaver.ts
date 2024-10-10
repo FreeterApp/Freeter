@@ -3,6 +3,9 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { EntityId } from '@/base/entity';
+import { List, removeItemFromList } from '@/base/list';
+
 interface MemSaverConfig {
   /**
    * -1 - Project Switch
@@ -16,6 +19,12 @@ interface MemSaverConfig {
 export type MemSaverConfigApp = MemSaverConfig;
 export type MemSaverConfigPrj = Partial<MemSaverConfig>;
 export type MemSaverConfigWfl = Partial<MemSaverConfig>;
+
+export interface MemSaverWorkflow {
+  prjId: EntityId;
+  wflId: EntityId;
+}
+export type MemSaverWorkflowList = List<MemSaverWorkflow>;
 
 const memSaverConfigInactiveAfterVals = [
   -1,
@@ -90,4 +99,29 @@ export function sanitizeActivateWorkflowsOnProjectSwitch(val: unknown): boolean 
     return true;
   }
   return val;
+}
+
+export function sanitizePartialMemSaverConfig(memSaverConfig: Partial<MemSaverConfig>): Partial<MemSaverConfig> {
+  const sanRes = { ...memSaverConfig };
+  if (sanRes.activateWorkflowsOnProjectSwitch === undefined) {
+    delete sanRes.activateWorkflowsOnProjectSwitch;
+  }
+  if (sanRes.workflowInactiveAfter === undefined) {
+    delete sanRes.workflowInactiveAfter;
+  }
+  return sanRes;
+}
+
+export function findItemIndexOnMemSaverWorkflowList(list: MemSaverWorkflowList, id: EntityId): number {
+  return list.findIndex(item => item.wflId === id);
+}
+
+
+export function removeFromMemSaverWorkflowListById(list: MemSaverWorkflowList, wflId: EntityId): MemSaverWorkflowList {
+  const removeIdx = findItemIndexOnMemSaverWorkflowList(list, wflId);
+  if (removeIdx < 0) {
+    return list
+  }
+
+  return removeItemFromList(list, removeIdx);
 }

@@ -11,6 +11,7 @@ import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScr
 import { SettingBlock } from '@/widgets/appModules';
 import { memo } from 'react';
 import { convertStrToUndBool, convertStrToUndNum, convertUndBoolToStr, convertUndNumToStr } from '@/base/convTypes';
+import { sanitizePartialMemSaverConfig } from '@/base/memSaver';
 
 type Deps = {
   useWorkflowSettingsViewModel: WorkflowSettingsViewModelHook;
@@ -57,10 +58,10 @@ export function createWorkflowSettingsComponent({
             >
               <select id="mem-saver-inactive" value={convertUndNumToStr(settings.memSaver.workflowInactiveAfter)} onChange={e => updateSettings({
                 ...settings,
-                memSaver: {
+                memSaver: sanitizePartialMemSaverConfig({
                   ...settings.memSaver,
                   workflowInactiveAfter: convertStrToUndNum(e.target.value)
-                }
+                })
               })}>
                 {inactiveAfterOptions.map(item=>(
                   <option
@@ -77,10 +78,10 @@ export function createWorkflowSettingsComponent({
             >
               <select id="mem-saver-activate-on-project" value={convertUndBoolToStr(settings.memSaver.activateWorkflowsOnProjectSwitch)} onChange={e => updateSettings({
                 ...settings,
-                memSaver: {
+                memSaver: sanitizePartialMemSaverConfig({
                   ...settings.memSaver,
                   activateWorkflowsOnProjectSwitch: convertStrToUndBool(e.target.value)
-                }
+                })
               })}>
                 {activateOnProjectSwitchOptions.map(item=>(
                   <option

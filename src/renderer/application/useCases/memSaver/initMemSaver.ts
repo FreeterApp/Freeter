@@ -25,6 +25,7 @@ export function createInitMemSaverUseCase({
       const projectWorkflows = mapIdListToEntityList(appState.entities.workflows, currentProject.workflowIds);
 
       const newMemSaverState = activateProjectWorkflowsSubCase(
+        currentProject.id,
         projectWorkflows,
         currentProject.currentWorkflowId,
         appState.ui.appConfig.memSaver,

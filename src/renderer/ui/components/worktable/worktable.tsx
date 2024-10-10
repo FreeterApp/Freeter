@@ -23,7 +23,6 @@ export function createWorktableComponent({
 }: Deps) {
   function WorktableComponent() {
     const {
-      currentProjectId,
       currentWorkflowId,
       dndDraggingFrom,
       dndDraggingWidgetType,
@@ -53,11 +52,11 @@ export function createWorktableComponent({
       : <div
         className={styles.worktable}
       >
-        {activeWorkflows.map(wfl => {
+        {activeWorkflows.map(({wfl, prjId}) => {
           const isCurrentWorkflow = wfl.id === currentWorkflowId;
           return <WidgetLayout
             key={wfl.id}
-            projectId={currentProjectId}
+            projectId={prjId}
             workflowId={wfl.id}
             isVisible={isCurrentWorkflow}
             layoutItems={wfl.layout}

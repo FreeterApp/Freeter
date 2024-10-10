@@ -63,7 +63,7 @@ export function createSaveChangesInProjectManagerUseCase({
               }
             })
             state = entityStateActions.workflows.addOne(state, newWorkflow)
-            state = setCurrentWorkflowSubCase(state, prjId, newWorkflow.id, false);
+            state = setCurrentWorkflowSubCase(state, deactivateWorkflowUseCase, prjId, newWorkflow.id, false);
           }
         }
       }
