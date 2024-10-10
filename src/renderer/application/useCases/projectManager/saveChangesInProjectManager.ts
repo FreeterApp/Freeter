@@ -5,6 +5,7 @@
 
 import { AppStore } from '@/application/interfaces/store';
 import { DeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
+import { deactivateWorkflowSubCase } from '@/application/useCases/memSaver/subs/deactivateWorkflow';
 import { deleteProjectsSubCase } from '@/application/useCases/project/subs/deleteProjects';
 import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflow';
 import { setCurrentProjectSubCase } from '@/application/useCases/projectSwitcher/subs/setCurrentProject';
@@ -100,6 +101,19 @@ export function createSaveChangesInProjectManagerUseCase({
           },
         };
         state = setCurrentProjectSubCase(updCurrentProjectId, deactivateWorkflowUseCase, state);
+
+        // Deactivate deleted workflows in MemSaver
+        let memSaver = state.ui.memSaver;
+        for (const wflId of delWorkflowIds) {
+          memSaver = deactivateWorkflowSubCase(wflId, memSaver);
+        }
+        state = {
+          ...state,
+          ui: {
+            ...state.ui,
+            memSaver
+          }
+        }
       }
 
       const arrToIdFromId = Object.entries(duplicateProjectIds);

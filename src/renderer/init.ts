@@ -215,7 +215,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const updateWorkflowSettingsUseCase = createUpdateWorkflowSettingsUseCase(deps);
   const deleteWorkflowUseCase = createDeleteWorkflowUseCase({
     ...deps,
-    dialog: osDialogProvider
+    dialog: osDialogProvider,
+    deactivateWorkflowUseCase
   });
 
   const toggleEditModeUseCase = createToggleEditModeUseCase(deps);
