@@ -4,7 +4,7 @@
  */
 
 import { DeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
-import { startDelayedWorkflowDeactivationSubCase } from '@/application/useCases/memSaver/subs/startDelayedWorkflowDeactivat';
+import { startDelayedWorkflowDeactivationSubCase } from '@/application/useCases/memSaver/subs/startDelayedWorkflowDeactivation';
 import { deactivateWorkflowSubCase } from '@/application/useCases/memSaver/subs/deactivateWorkflow';
 import { EntityId } from '@/base/entity';
 import { MemSaverConfigApp, MemSaverConfigPrj, MemSaverConfigWfl, calcMemSaverConfig } from '@/base/memSaver';
