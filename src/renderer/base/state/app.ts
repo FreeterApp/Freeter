@@ -8,7 +8,7 @@ import { createEntitiesState, EntitiesState } from '@/base/state/entities';
 import { createUiState, UiState } from '@/base/state/ui';
 import { MigrateVersionedObject } from '@common/base/versionedObject';
 
-export const currentAppStateVersion = 1;
+export const currentAppStateVersion = 2;
 
 export interface AppState {
   entities: EntitiesState;
@@ -45,7 +45,7 @@ export function initAppStateWidgets(appState: AppState): AppState {
 }
 
 export function createPersistentAppState(appState: AppState) {
-  const { copy, dragDrop, editMode, palette, modalScreens, worktable, ...persistentUi } = appState.ui
+  const { copy, dragDrop, editMode, palette, memSaver, modalScreens, worktable, ...persistentUi } = appState.ui
   const { widgetTypes, /* widgets, */...persistentEntities } = appState.entities;
   return {
     // entities: {
@@ -82,4 +82,42 @@ export function mergeAppStateWithPersistentAppState(
   }
 }
 
-export const migrateAppState: MigrateVersionedObject<object, PersistentAppState> = (data) => data as PersistentAppState;
+export const migrateAppState: MigrateVersionedObject<object, PersistentAppState> = (fromData, fromVer) => {
+  console.log(fromVer);
+  let toData = {
+    ...fromData
+  } as PersistentAppState
+  if (fromVer < 2) {
+    toData = {
+      ...toData,
+      entities: {
+        ...toData.entities,
+        projects: mapEntityCollection(toData.entities.projects, prj => ({
+          ...prj,
+          settings: {
+            ...prj.settings,
+            memSaver: {}
+          }
+        })),
+        workflows: mapEntityCollection(toData.entities.workflows, wfl => ({
+          ...wfl,
+          settings: {
+            ...wfl.settings,
+            memSaver: {}
+          }
+        }))
+      },
+      ui: {
+        ...toData.ui,
+        appConfig: {
+          ...toData.ui.appConfig,
+          memSaver: {
+            activateWorkflowsOnProjectSwitch: true,
+            workflowInactiveAfter: -1
+          }
+        }
+      }
+    }
+  }
+  return toData;
+}

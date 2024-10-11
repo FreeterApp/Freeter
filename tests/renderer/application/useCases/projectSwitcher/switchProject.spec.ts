@@ -11,8 +11,10 @@ import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
+  const deactivateWorkflowUseCase = jest.fn();
   const switchProjectUseCase = createSwitchProjectUseCase({
-    appStore
+    appStore,
+    deactivateWorkflowUseCase
   });
   return {
     appStore,

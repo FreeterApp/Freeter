@@ -19,6 +19,8 @@ import { createCloneWidgetLayoutItemSubCase } from '@/application/useCases/workf
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 import { fixtureProjectA } from '@tests/base/fixtures/project';
 import { Workflow } from '@/base/workflow';
+import { fixtureMemSaver } from '@tests/base/state/fixtures/memSaver';
+import { createDeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
@@ -40,9 +42,11 @@ async function setup(initState: AppState) {
     cloneWidgetLayoutItemSubCase,
     idGenerator: workflowIdGeneratorMock
   })
+  const deactivateWorkflowUseCase = createDeactivateWorkflowUseCase({ appStore });
   const pasteWorkflowUseCase = createPasteWorkflowUseCase({
     appStore,
     cloneWorkflowSubCase,
+    deactivateWorkflowUseCase
   });
   return {
     appStore,
@@ -88,7 +92,7 @@ describe('pasteWorkflowUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   })
 
-  it('should add a clone of the copied workflow to entities and its id to the current project\'s workflow ids', async () => {
+  it('should add a clone of the copied workflow to entities, and add its id to the current project\'s workflow ids, activate it on mem saver and set as a current workflow in the project', async () => {
     const widgetA = fixtureWidgetA();
     const widgetAClone: Widget = { ...widgetA, id: widgetA.id + 'CLONE' }
     const workflowA = fixtureWorkflowA({ layout: [fixtureWidgetLayoutItemA({ widgetId: widgetA.id })] });
@@ -116,6 +120,11 @@ describe('pasteWorkflowUseCase()', () => {
             list: ['A']
           }
         }),
+        memSaver: fixtureMemSaver({
+          activeWorkflows: [
+            { prjId: projectA.id, wflId: workflowB.id },
+          ]
+        }),
         projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: projectA.id
         })
@@ -140,6 +149,16 @@ describe('pasteWorkflowUseCase()', () => {
             workflowIds: [workflowB.id, workflowAClone.id, workflowC.id],
             currentWorkflowId: workflowAClone.id
           }
+        }
+      },
+      ui: {
+        ...initState.ui,
+        memSaver: {
+          ...initState.ui.memSaver,
+          activeWorkflows: [
+            ...initState.ui.memSaver.activeWorkflows,
+            { prjId: projectA.id, wflId: workflowAClone.id }
+          ]
         }
       }
     }

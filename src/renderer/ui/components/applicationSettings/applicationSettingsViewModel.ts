@@ -8,6 +8,7 @@ import { GetMainHotkeyOptionsUseCase } from '@/application/useCases/applicationS
 import { SaveApplicationSettingsUseCase } from '@/application/useCases/applicationSettings/saveApplicationSettings';
 import { UpdateApplicationSettingsUseCase } from '@/application/useCases/applicationSettings/updateApplicationSettings';
 import { AppConfig } from '@/base/appConfig';
+import { memSaverConfigAppActivateOnProjectSwitchOptions, memSaverConfigAppInactiveAfterOptions } from '@/base/memSaver';
 import { uiThemes } from '@/base/uiTheme';
 import { UseAppState } from '@/ui/hooks/appState';
 import { useCallback } from 'react';
@@ -29,6 +30,8 @@ export function createApplicationSettingsViewModelHook({
 }: Deps) {
   const hotkeyOptions = getMainHotkeyOptionsUseCase();
   const uiThemeOptions = uiThemes;
+  const inactiveAfterOptions = memSaverConfigAppInactiveAfterOptions;
+  const activateOnProjectSwitchOptions = memSaverConfigAppActivateOnProjectSwitchOptions;
 
   function useViewModel() {
     const {
@@ -56,6 +59,8 @@ export function createApplicationSettingsViewModelHook({
       onOkClickHandler,
       onCancelClickHandler,
       uiThemeOptions,
+      inactiveAfterOptions,
+      activateOnProjectSwitchOptions
     }
   }
 

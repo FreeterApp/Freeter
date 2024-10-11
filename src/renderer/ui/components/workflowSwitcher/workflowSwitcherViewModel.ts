@@ -15,7 +15,7 @@ import { DragEvent, MouseEvent, useCallback, useMemo, useState } from 'react';
 import { ItemActionBarItemsFactory } from '@/ui/components/workflowSwitcher/workflowSwitcherItemViewModel';
 import { OpenWorkflowSettingsUseCase } from '@/application/useCases/workflowSettings/openWorkflowSettings';
 import { ActionBarItems } from '@/base/actionBar';
-import { add14Svg, delete14Svg, more14Svg } from '@/ui/assets/images/appIcons';
+import { add14Svg, delete14Svg, more14Svg, settings14Svg } from '@/ui/assets/images/appIcons';
 import { AddWorkflowUseCase } from '@/application/useCases/workflowSwitcher/addWorkflow';
 import { RenameWorkflowUseCase } from '@/application/useCases/workflowSwitcher/renameWorkflow';
 import { DeleteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/deleteWorkflow';
@@ -53,7 +53,7 @@ export function createWorkflowSwitcherViewModelHook({
   dragOverWorkflowSwitcherUseCase,
   dragWorkflowFromWorkflowSwitcherUseCase,
   dropOnWorkflowSwitcherUseCase,
-  // openWorkflowSettingsUseCase,
+  openWorkflowSettingsUseCase,
   addWorkflowUseCase,
   renameWorkflowUseCase,
   deleteWorkflowUseCase,
@@ -137,16 +137,14 @@ export function createWorkflowSwitcherViewModelHook({
     id,
     setItemIdInEditNameMode
   ) => [{
-
-    // Add this item when there are workflow settings besides the workflow name
-    //   enabled: true,
-    //   icon: settings14Svg,
-    //   id: 'WORKFLOW-SETTINGS',
-    //   title: 'Workflow Settings',
-    //   doAction: async () => {
-    //     openWorkflowSettingsUseCase(id);
-    //   }
-    // }, {
+    enabled: true,
+    icon: settings14Svg,
+    id: 'WORKFLOW-SETTINGS',
+    title: 'Workflow Settings',
+    doAction: async () => {
+      openWorkflowSettingsUseCase(id);
+    }
+  }, {
 
     enabled: true,
     icon: delete14Svg,
@@ -187,13 +185,12 @@ export function createWorkflowSwitcherViewModelHook({
     doAction: async () => {
       setItemIdInEditNameMode(id);
     }
-    // Add this item when there are workflow settings besides the workflow name
-    // }, {
-    //   enabled: true,
-    //   label: 'Workflow Settings',
-    //   doAction: async () => {
-    //     openWorkflowSettingsUseCase(id);
-    //   }
+  }, {
+    enabled: true,
+    label: 'Workflow Settings',
+    doAction: async () => {
+      openWorkflowSettingsUseCase(id);
+    }
   }, {
     type: 'separator'
   }, {

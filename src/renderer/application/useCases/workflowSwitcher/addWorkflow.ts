@@ -4,6 +4,8 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { DeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
+import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflow';
 import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
 import { addOneToEntityCollection, getOneFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
@@ -14,13 +16,15 @@ import { generateWorkflowName } from '@/base/workflow';
 type Deps = {
   appStore: AppStore;
   createWorkflowSubCase: CreateWorkflowSubCase;
+  deactivateWorkflowUseCase: DeactivateWorkflowUseCase;
 }
 export function createAddWorkflowUseCase({
   appStore,
-  createWorkflowSubCase
+  createWorkflowSubCase,
+  deactivateWorkflowUseCase,
 }: Deps) {
   const useCase = (posByWorkflowId?: EntityId) => {
-    const state = appStore.get();
+    let state = appStore.get();
     const { currentProjectId } = state.ui.projectSwitcher;
     const currentProject = getOneFromEntityCollection(state.entities.projects, currentProjectId);
     if (!currentProject) {
@@ -28,20 +32,23 @@ export function createAddWorkflowUseCase({
     }
     const newWorkflow = createWorkflowSubCase(generateWorkflowName(getAllWorkflowNamesFromWorkflowIdList(state.entities.workflows, currentProject.workflowIds)))
 
-    appStore.set({
+    state = {
       ...state,
       entities: {
         ...state.entities,
         projects: updateOneInEntityCollection(state.entities.projects, {
-          id: currentProjectId,
+          id: currentProject.id,
           changes: {
-            currentWorkflowId: newWorkflow.id,
             workflowIds: addItemToList(currentProject.workflowIds, newWorkflow.id, findIndexOrUndef(currentProject.workflowIds, posByWorkflowId))
           }
         }),
         workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow)
       },
-    })
+    }
+
+    state = setCurrentWorkflowSubCase(state, deactivateWorkflowUseCase, currentProject.id, newWorkflow.id, true);
+
+    appStore.set(state);
 
     return newWorkflow.id;
   }

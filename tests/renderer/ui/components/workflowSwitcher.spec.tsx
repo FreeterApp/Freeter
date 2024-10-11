@@ -37,7 +37,8 @@ async function setup(
   const dropOnWorkflowSwitcherUseCase = jest.fn();
   const openWorkflowSettingsUseCase = jest.fn();
   const createWorkflowSubCase = createCreateWorkflowSubCase({idGenerator: () => newWorkflowId})
-  const addWorkflowUseCase = opts?.mockAddWorkflowUseCase || createAddWorkflowUseCase({appStore, createWorkflowSubCase });
+  const deactivateWorkflowUseCase = jest.fn();
+  const addWorkflowUseCase = opts?.mockAddWorkflowUseCase || createAddWorkflowUseCase({appStore, createWorkflowSubCase, deactivateWorkflowUseCase });
   const renameWorkflowUseCase = jest.fn();
   const deleteWorkflowUseCase = jest.fn();
   const showContextMenuUseCase = jest.fn();

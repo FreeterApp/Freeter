@@ -9,8 +9,10 @@ import { Entity, EntityId } from '@/base/entity';
 import { EntityCollection } from '@/base/entityCollection';
 import { EntityIdList } from '@/base/entityList';
 import { List } from '@/base/list';
+import { MemSaverWorkflowList } from '@/base/memSaver';
 import { Project } from '@/base/project';
 import { WidgetEntityDeps, WorkflowEntityDeps } from '@/base/state/entities';
+import { defaultUiThemeId } from '@/base/uiTheme';
 import { Widget, WidgetInEnv } from '@/base/widget';
 import { WidgetLayoutItemWH, WidgetLayoutItemXY } from '@/base/widgetLayout';
 import { WidgetList } from '@/base/widgetList';
@@ -183,6 +185,11 @@ export interface AppsState {
   appIds: EntityIdList;
 }
 
+export interface MemSaverState {
+  activeWorkflows: MemSaverWorkflowList;
+  workflowTimeouts: Record<EntityId, NodeJS.Timeout>;
+}
+
 export interface UiState {
   editMode: boolean;
   menuBar: boolean;
@@ -190,6 +197,7 @@ export interface UiState {
   apps: AppsState;
   dragDrop: DragDropState;
   copy: CopyState;
+  memSaver: MemSaverState;
   modalScreens: ModalScreensState;
   palette: PaletteState;
   projectSwitcher: ProjectSwitcherState;
@@ -204,7 +212,11 @@ export function createUiState(): UiState {
     menuBar: true,
     appConfig: {
       mainHotkey: 'CmdOrCtrl+Shift+F',
-      uiTheme: 'dark'
+      memSaver: {
+        activateWorkflowsOnProjectSwitch: true,
+        workflowInactiveAfter: -1
+      },
+      uiTheme: defaultUiThemeId
     },
     apps: {
       appIds: []
@@ -219,13 +231,17 @@ export function createUiState(): UiState {
         list: []
       }
     },
+    memSaver: {
+      activeWorkflows: [],
+      workflowTimeouts: {}
+    },
     modalScreens: {
       data: {
         appManager: {
-          currentAppId: '',
-          deleteAppIds: null,
+          appIds: null,
           apps: null,
-          appIds: null
+          currentAppId: '',
+          deleteAppIds: null
         },
         applicationSettings: {
           appConfig: null
@@ -247,7 +263,7 @@ export function createUiState(): UiState {
       order: []
     },
     palette: {
-      widgetTypeIds: []
+      widgetTypeIds: ['commander', 'file-opener', 'link-opener', 'note', 'timer', 'to-do-list', 'web-query', 'webpage']
     },
     projectSwitcher: {
       currentProjectId: '',

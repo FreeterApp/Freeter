@@ -28,6 +28,7 @@ export function createRenameWorkflowUseCase({
           id: workflowId,
           changes: {
             settings: {
+              ...workflow.settings,
               name: newName
             }
           }

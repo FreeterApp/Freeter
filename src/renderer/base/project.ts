@@ -5,9 +5,11 @@
 
 import { Entity, EntityId } from '@/base/entity';
 import { EntityIdList } from '@/base/entityList';
+import { MemSaverConfigPrj } from '@/base/memSaver';
 import { generateUniqueName } from '@/base/utils';
 
 export interface ProjectSettings {
+  readonly memSaver: MemSaverConfigPrj;
   readonly name: string;
 }
 export interface Project extends Entity {
@@ -20,6 +22,7 @@ export function createProject(id: EntityId, projectName: string): Project {
   return {
     id,
     settings: {
+      memSaver: {},
       name: projectName,
     },
     workflowIds: [],

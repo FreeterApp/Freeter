@@ -4,24 +4,30 @@
  */
 
 import { AppStore } from '@/application/interfaces/store';
+import { DeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
+import { deactivateWorkflowSubCase } from '@/application/useCases/memSaver/subs/deactivateWorkflow';
 import { deleteProjectsSubCase } from '@/application/useCases/project/subs/deleteProjects';
+import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflow';
+import { setCurrentProjectSubCase } from '@/application/useCases/projectSwitcher/subs/setCurrentProject';
 import { CloneWorkflowSubCase } from '@/application/useCases/workflow/subs/cloneWorkflow';
 import { CreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
 import { EntityId } from '@/base/entity';
 import { addManyToEntityCollection, addOneToEntityCollection, getOneFromEntityCollection, removeManyFromEntityCollection, updateOneInEntityCollection } from '@/base/entityCollection';
 import { findIdIndexOnList } from '@/base/entityList';
-import { modalScreensStateActions } from '@/base/state/actions';
+import { entityStateActions, modalScreensStateActions } from '@/base/state/actions';
 import { generateWorkflowName } from '@/base/workflow';
 
 type Deps = {
   appStore: AppStore;
   cloneWorkflowSubCase: CloneWorkflowSubCase;
   createWorkflowSubCase: CreateWorkflowSubCase;
+  deactivateWorkflowUseCase: DeactivateWorkflowUseCase;
 }
 export function createSaveChangesInProjectManagerUseCase({
   appStore,
   cloneWorkflowSubCase,
   createWorkflowSubCase,
+  deactivateWorkflowUseCase,
 }: Deps) {
   const useCase = async () => {
     let state = appStore.get();
@@ -48,20 +54,17 @@ export function createSaveChangesInProjectManagerUseCase({
       for (const prjId of projectIds) {
         // init a workflow for each newly added, non-duplicate project
         if (!getOneFromEntityCollection(prevProjects, prjId) && !duplicateProjectIds[prjId]) {
-          const newWorkflow = createWorkflowSubCase(generateWorkflowName([]))
-          state = {
-            ...state,
-            entities: {
-              ...state.entities,
-              projects: updateOneInEntityCollection(state.entities.projects, {
-                id: prjId,
-                changes: {
-                  currentWorkflowId: newWorkflow.id,
-                  workflowIds: [newWorkflow.id]
-                }
-              }),
-              workflows: addOneToEntityCollection(state.entities.workflows, newWorkflow)
-            },
+          const prj = getOneFromEntityCollection(state.entities.projects, prjId);
+          if (prj) {
+            const newWorkflow = createWorkflowSubCase(generateWorkflowName([]))
+            state = entityStateActions.projects.updateOne(state, {
+              id: prj.id,
+              changes: {
+                workflowIds: [newWorkflow.id]
+              }
+            })
+            state = entityStateActions.workflows.addOne(state, newWorkflow)
+            state = setCurrentWorkflowSubCase(state, deactivateWorkflowUseCase, prjId, newWorkflow.id, false);
           }
         }
       }
@@ -87,7 +90,6 @@ export function createSaveChangesInProjectManagerUseCase({
             ...state.ui,
             projectSwitcher: {
               ...state.ui.projectSwitcher,
-              currentProjectId: updCurrentProjectId,
               projectIds: updProjectIdsList
             }
           },
@@ -98,6 +100,20 @@ export function createSaveChangesInProjectManagerUseCase({
             workflows: removeManyFromEntityCollection(state.entities.workflows, delWorkflowIds)
           },
         };
+        state = setCurrentProjectSubCase(updCurrentProjectId, deactivateWorkflowUseCase, state);
+
+        // Deactivate deleted workflows in MemSaver
+        let memSaver = state.ui.memSaver;
+        for (const wflId of delWorkflowIds) {
+          memSaver = deactivateWorkflowSubCase(wflId, memSaver);
+        }
+        state = {
+          ...state,
+          ui: {
+            ...state.ui,
+            memSaver
+          }
+        }
       }
 
       const arrToIdFromId = Object.entries(duplicateProjectIds);
@@ -143,16 +159,7 @@ export function createSaveChangesInProjectManagerUseCase({
       }
 
       if (findIdIndexOnList(state.ui.projectSwitcher.projectIds, state.ui.projectSwitcher.currentProjectId) < 0) {
-        state = {
-          ...state,
-          ui: {
-            ...state.ui,
-            projectSwitcher: {
-              ...state.ui.projectSwitcher,
-              currentProjectId: state.ui.projectSwitcher.projectIds[0] || ''
-            }
-          }
-        }
+        state = setCurrentProjectSubCase(state.ui.projectSwitcher.projectIds[0] || '', deactivateWorkflowUseCase, state);
       }
       appStore.set(state);
     }

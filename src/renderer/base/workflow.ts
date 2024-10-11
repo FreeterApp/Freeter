@@ -4,10 +4,12 @@
  */
 
 import { Entity, EntityId } from '@/base/entity';
+import { MemSaverConfigWfl } from '@/base/memSaver';
 import { generateUniqueName } from '@/base/utils';
 import { WidgetLayout } from '@/base/widgetLayout';
 
 export interface WorkflowSettings {
+  readonly memSaver: MemSaverConfigWfl;
   readonly name: string;
 }
 
@@ -21,6 +23,7 @@ export function createWorkflow(id: EntityId, name: string): Workflow {
     id,
     layout: [],
     settings: {
+      memSaver: {},
       name
     }
   };

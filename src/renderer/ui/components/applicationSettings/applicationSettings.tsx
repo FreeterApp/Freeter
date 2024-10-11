@@ -10,6 +10,7 @@ import * as settingsScreenStyles from '@/ui/components/basic/settingsScreen/sett
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { SettingBlock } from '@/widgets/appModules';
 import { memo } from 'react';
+import { convertBoolToStr, convertStrToBool } from '@/base/convTypes';
 
 type Deps = {
   useApplicationSettingsViewModel: ApplicationSettingsViewModelHook;
@@ -27,6 +28,8 @@ export function createApplicationSettingsComponent({
       onOkClickHandler,
       onCancelClickHandler,
       uiThemeOptions,
+      inactiveAfterOptions,
+      activateOnProjectSwitchOptions
     } = useApplicationSettingsViewModel();
 
     if (appConfig) {
@@ -61,6 +64,49 @@ export function createApplicationSettingsComponent({
                 <option key={item.id} value={item.id}>{item.name}</option>
               ))}
             </select>
+          </SettingBlock>
+
+          <SettingBlock
+            title='Memory Saver'
+            moreInfo='Freeter frees up memory from inactive workflows.
+                      This gives active workflows more computer resources and keeps Freeter
+                      fast. Your inactive workflows automatically become active again when
+                      you go back to them.'
+          >
+            <SettingBlock
+              titleForId='mem-saver-inactive'
+              title='Workflow becomes inactive after'
+              moreInfo='This setting defines when workflows become inactive.'
+            >
+              <select id="mem-saver-inactive" value={appConfig.memSaver.workflowInactiveAfter} onChange={e => updateSettings({
+                ...appConfig,
+                memSaver: {
+                  ...appConfig.memSaver,
+                  workflowInactiveAfter: Number.parseInt(e.target.value)
+                }
+              })}>
+                {inactiveAfterOptions.map(item=>(
+                  <option key={item.val} value={item.val}>{item.name}</option>
+                ))}
+              </select>
+            </SettingBlock>
+            <SettingBlock
+              titleForId='mem-saver-activate-on-project'
+              title='Activate all workflows when switching project'
+              moreInfo='When turned on, switching to a project will activate all of its workflows.'
+            >
+              <select id="mem-saver-activate-on-project" value={convertBoolToStr(appConfig.memSaver.activateWorkflowsOnProjectSwitch)} onChange={e => updateSettings({
+                ...appConfig,
+                memSaver: {
+                  ...appConfig.memSaver,
+                  activateWorkflowsOnProjectSwitch: convertStrToBool(e.target.value)
+                }
+              })}>
+                {activateOnProjectSwitchOptions.map(item=>(
+                  <option key={convertBoolToStr(item.val)} value={convertBoolToStr(item.val)}>{item.name}</option>
+                ))}
+              </select>
+            </SettingBlock>
           </SettingBlock>
         </div>
       </SettingsScreen>)

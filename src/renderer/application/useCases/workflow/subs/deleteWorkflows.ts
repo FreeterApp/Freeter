@@ -3,36 +3,59 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
+import { DeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
+import { deactivateWorkflowSubCase } from '@/application/useCases/memSaver/subs/deactivateWorkflow';
+import { setCurrentWorkflowSubCase } from '@/application/useCases/project/subs/setCurrentWorkflow';
 import { EntityId } from '@/base/entity';
-import { findIdIndexOnList, removeIdFromListAtIndex } from '@/base/entityList';
-import { Project } from '@/base/project';
-import { Workflow } from '@/base/workflow';
+import { EntityIdList, findIdIndexOnList, removeIdFromListAtIndex } from '@/base/entityList';
+import { entityStateActions } from '@/base/state/actions';
+import { AppState } from '@/base/state/app';
 
 export function deleteWorkflowsSubCase(
-  workflowsToDelete: Workflow[],
-  ownerProject: Project,
-): [updatedOwnerProject: Project, deletedWorkflowIds: EntityId[], deletedWidgetIds: EntityId[]] {
-  let { currentWorkflowId, workflowIds } = ownerProject;
+  workflowIdsToDelete: EntityIdList,
+  ownerProjectId: EntityId,
+  appState: AppState,
+  deactivateWorkflowUseCase: DeactivateWorkflowUseCase
+): AppState {
+  const ownerProject = entityStateActions.projects.getOne(appState, ownerProjectId);
+  if (ownerProject) {
+    let { workflowIds, currentWorkflowId } = ownerProject;
 
-  const delWorkflowIds: EntityId[] = [];
-  const delWorkflows: Workflow[] = [];
-  for (const workflow of workflowsToDelete) {
-    const workflowIdx = findIdIndexOnList(workflowIds, workflow.id);
-    if (workflowIdx > -1) {
-      delWorkflowIds.push(workflow.id);
-      delWorkflows.push(workflow);
-      workflowIds = removeIdFromListAtIndex(workflowIds, workflowIdx);
-      if (workflow.id === currentWorkflowId) {
-        currentWorkflowId = workflowIds[Math.min(workflowIdx, workflowIds.length - 1)] || ''
+    for (const wflId of workflowIdsToDelete) {
+      const removeIdx = findIdIndexOnList(workflowIds, wflId);
+      if (removeIdx > -1) {
+        const wfl = entityStateActions.workflows.getOne(appState, wflId);
+        workflowIds = removeIdFromListAtIndex(workflowIds, removeIdx);
+        if (wfl) {
+          // Delete widgets
+          const wflWidgetIdsToDelete = wfl.layout.map(item => item.widgetId);
+          appState = entityStateActions.widgets.removeMany(appState, wflWidgetIdsToDelete);
+
+          // Shift current workflow if needed
+          if (wflId === currentWorkflowId) {
+            currentWorkflowId = workflowIds[Math.min(removeIdx, workflowIds.length - 1)] || '';
+          }
+
+          // Deactivate deleted workflows
+          appState = {
+            ...appState,
+            ui: {
+              ...appState.ui,
+              memSaver: deactivateWorkflowSubCase(wflId, appState.ui.memSaver)
+            }
+          }
+        }
+        appState = entityStateActions.workflows.removeOne(appState, wflId);
       }
     }
+    appState = entityStateActions.projects.updateOne(appState, {
+      id: ownerProjectId,
+      changes: {
+        workflowIds,
+      }
+    })
+    appState = setCurrentWorkflowSubCase(appState, deactivateWorkflowUseCase, ownerProjectId, currentWorkflowId, true);
   }
 
-  const delWidgetIds = delWorkflows.flatMap(workflow => (workflow?.layout || []).map(item => item.widgetId));
-
-  return [{
-    ...ownerProject,
-    currentWorkflowId,
-    workflowIds
-  }, delWorkflowIds, delWidgetIds];
+  return appState;
 }

@@ -162,6 +162,7 @@ describe('duplicateProjectInProjectManagerUseCase()', () => {
                 [newPrjId]: expect.objectContaining({
                   id: newPrjId,
                   settings: {
+                    ...initState.ui.modalScreens.data.projectManager.projects![projectId]!.settings,
                     name: initState.ui.modalScreens.data.projectManager.projects![projectId]!.settings.name + ' Copy 1'
                   }
                 })

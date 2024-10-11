@@ -24,6 +24,7 @@ import { Widget } from '@/base/widget';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC } from '@tests/base/fixtures/widgetLayout';
 import { WidgetLayoutItem } from '@/base/widgetLayout';
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
+import { createDeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
 
 const newItemId = 'NEW-ITEM-ID';
 
@@ -50,11 +51,13 @@ async function setup(initState: AppState) {
   });
   const createWorkflowSubCase = createCreateWorkflowSubCase({
     idGenerator: workflowIdGeneratorMock
-  })
+  });
+  const deactivateWorkflowUseCase = createDeactivateWorkflowUseCase({ appStore });
   const saveChangesInProjectManagerUseCase = createSaveChangesInProjectManagerUseCase({
     appStore,
     cloneWorkflowSubCase,
     createWorkflowSubCase,
+    deactivateWorkflowUseCase,
   });
 
   return {

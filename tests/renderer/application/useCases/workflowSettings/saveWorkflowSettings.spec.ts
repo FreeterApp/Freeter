@@ -5,7 +5,7 @@
 
 import { createSaveWorkflowSettingsUseCase } from '@/application/useCases/workflowSettings/saveWorkflowSettings';
 import { AppState } from '@/base/state/app';
-import { fixtureWorkflowA } from '@tests/base/fixtures/workflow';
+import { fixtureWorkflowA, fixtureWorkflowSettingsA } from '@tests/base/fixtures/workflow';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureWorkflowSettings } from '@tests/base/state/fixtures/workflowSettings';
@@ -55,13 +55,14 @@ describe('saveWorkflowSettingsUseCase()', () => {
 
   it('should save the settings to Workflows state and reset Workflow Settings state', async () => {
     const workflow = fixtureWorkflowA({
-      settings: {
+      settings: fixtureWorkflowSettingsA({
         name: 'Name'
-      }
+      })
     });
     const workflowWithNewSettings: typeof workflow = {
       ...workflow,
       settings: {
+        ...workflow.settings,
         name: 'New Name'
       }
     }

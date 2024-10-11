@@ -23,14 +23,13 @@ export function createWorktableComponent({
 }: Deps) {
   function WorktableComponent() {
     const {
-      currentProjectId,
       currentWorkflowId,
       dndDraggingFrom,
       dndDraggingWidgetType,
       dndOverWorktableLayout,
       isEditMode,
       resizingItem,
-      workflows,
+      activeWorkflows,
       noWorkflows,
       widgetTypes,
       copiedWidgets,
@@ -53,11 +52,11 @@ export function createWorktableComponent({
       : <div
         className={styles.worktable}
       >
-        {workflows.map(wfl => { // all workflows' layouts are rendered intentionally, to run all widgets of a project
+        {activeWorkflows.map(({wfl, prjId}) => {
           const isCurrentWorkflow = wfl.id === currentWorkflowId;
           return <WidgetLayout
             key={wfl.id}
-            projectId={currentProjectId}
+            projectId={prjId}
             workflowId={wfl.id}
             isVisible={isCurrentWorkflow}
             layoutItems={wfl.layout}

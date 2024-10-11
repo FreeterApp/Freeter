@@ -5,7 +5,9 @@
 
 import { EntityId } from '@/base/entity';
 import { getOneFromEntityCollection } from '@/base/entityCollection';
+import { Workflow } from '@/base/workflow';
 import { UseAppState } from '@/ui/hooks/appState';
+import { useMemo } from 'react';
 
 type Deps = {
   useAppState: UseAppState;
@@ -17,9 +19,9 @@ export function createWorktableViewModelHook({
   function useWorktableViewModel() {
     const {
       isEditMode,
-      currentProjectId,
       currentWorkflowId,
-      workflowIds,
+      workflows,
+      _activeWorkflows,
       resizingItem,
       dndDraggingFrom,
       dndDraggingWidgetType,
@@ -31,7 +33,8 @@ export function createWorktableViewModelHook({
       const { currentProjectId } = state.ui.projectSwitcher;
       const widgetCopies = state.ui.copy.widgets.entities;
       const currentWorkflowId = state.entities.projects[currentProjectId]?.currentWorkflowId;
-      const workflowIds = state.entities.projects[currentProjectId]?.workflowIds;
+      const workflows = state.entities.workflows;
+      const _activeWorkflows = state.ui.memSaver.activeWorkflows;
       const { resizingItem } = state.ui.worktable;
       const dndDraggingFrom = state.ui.dragDrop.from;
       const dndOverWorktableLayout = state.ui.dragDrop.over?.worktableLayout;
@@ -52,9 +55,9 @@ export function createWorktableViewModelHook({
       const copiedWidgetIds = state.ui.copy.widgets.list;
       return {
         isEditMode,
-        currentProjectId,
         currentWorkflowId,
-        workflowIds,
+        workflows,
+        _activeWorkflows,
         resizingItem,
         dndDraggingFrom,
         dndDraggingWidgetType,
@@ -64,17 +67,28 @@ export function createWorktableViewModelHook({
       }
     });
 
-    const workflows = useAppState.useEntityList(state => state.entities.workflows, workflowIds || []);
+    const activeWorkflows = useMemo(
+      () => _activeWorkflows
+        .map(({ wflId, prjId }) => ({
+          prjId,
+          wfl: getOneFromEntityCollection(workflows, wflId)
+        }))
+        .filter(({ wfl }) => wfl !== undefined) as {
+          prjId: string;
+          wfl: Workflow;
+        }[],
+      [_activeWorkflows, workflows]
+    )
+
     const widgetTypes = useAppState.useEntityList(state => state.entities.widgetTypes, widgetTypeIds);
     const copiedWidgets = useAppState.useEntityList(state => state.ui.copy.widgets.entities, copiedWidgetIds);
 
-    const noWorkflows = workflows.length === 0;
+    const noWorkflows = activeWorkflows.length === 0;
 
     return {
       isEditMode,
-      currentProjectId,
       currentWorkflowId,
-      workflows,
+      activeWorkflows,
       noWorkflows,
       resizingItem,
       dndDraggingFrom,

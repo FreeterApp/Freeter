@@ -7,12 +7,15 @@ import { createSwitchWorkflowUseCase } from '@/application/useCases/workflowSwit
 import { AppState } from '@/base/state/app';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureProjectAInColl } from '@tests/base/state/fixtures/entitiesState';
+import { fixtureMemSaver } from '@tests/base/state/fixtures/memSaver';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 async function setup(initState: AppState) {
   const [appStore] = await fixtureAppStore(initState);
+  const deactivateWorkflowUseCase = jest.fn();
   const switchWorkflowUseCase = createSwitchWorkflowUseCase({
-    appStore
+    appStore,
+    deactivateWorkflowUseCase
   });
   return {
     appStore,
@@ -40,7 +43,7 @@ describe('switchWorkflowUseCase()', () => {
     expect(appStore.get()).toBe(expectState);
   });
 
-  it('should update current workflow id, when specified project exists', async () => {
+  it('should update current workflow id and activate it in mem saver, when specified project exists', async () => {
     const projectId = 'PROJECT-ID';
     const newWorkflowId = 'NEW-WORKFLOW-ID';
     const initState = fixtureAppState({
@@ -48,6 +51,11 @@ describe('switchWorkflowUseCase()', () => {
         projects: {
           ...fixtureProjectAInColl({ id: projectId })
         }
+      },
+      ui: {
+        memSaver: fixtureMemSaver({
+          activeWorkflows: []
+        })
       }
     })
     const expectState: AppState = {
@@ -60,6 +68,16 @@ describe('switchWorkflowUseCase()', () => {
             ...initState.entities.projects[projectId]!,
             currentWorkflowId: newWorkflowId
           }
+        }
+      },
+      ui: {
+        ...initState.ui,
+        memSaver: {
+          ...initState.ui.memSaver,
+          activeWorkflows: [
+            ...initState.ui.memSaver.activeWorkflows,
+            { prjId: projectId, wflId: newWorkflowId }
+          ]
         }
       }
     }

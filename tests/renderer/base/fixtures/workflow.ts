@@ -7,14 +7,19 @@ import { Workflow, WorkflowSettings } from '@/base/workflow';
 import { makeFixture } from '@utils/makeFixture';
 
 export const workflowSettings: WorkflowSettings[] = [{
+  memSaver: {},
   name: 'Workflow A',
 }, {
+  memSaver: {},
   name: 'Workflow B',
 }, {
+  memSaver: {},
   name: 'Workflow C',
 }, {
+  memSaver: {},
   name: 'Workflow D',
 }, {
+  memSaver: {},
   name: 'Workflow E',
 }]
 
