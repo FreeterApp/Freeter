@@ -146,6 +146,8 @@ function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRen
 }
 
 function createStore() {
+  const { promise: appStoreReady, resolve } = Promise.withResolvers<boolean>();
+
   const firstRunState = createAppState();
 
   const appState = entityStateActions.widgetTypes.setAll(firstRunState, registry.getWidgetTypes());
@@ -154,11 +156,14 @@ function createStore() {
     stateStorage: createAppStateStorage(
       dataStorage,
     )
-  }, appState, () => { });
+  }, appState, () => {
+    resolve(true);
+  });
 
   return {
     appStore,
     appStoreForUi,
+    appStoreReady,
   } as const;
 }
 
@@ -647,10 +652,12 @@ export async function init() {
   const useCases = await createUseCases(store);
 
   const { initAppMenuUseCase, initMainShortcutUseCase, initTrayMenuUseCase, initMemSaverUseCase } = useCases;
-  initMainShortcutUseCase();
-  initAppMenuUseCase();
-  initTrayMenuUseCase();
-  initMemSaverUseCase();
+  store.appStoreReady.then(_ => {
+    initMainShortcutUseCase();
+    initAppMenuUseCase();
+    initTrayMenuUseCase();
+    initMemSaverUseCase();
+  })
 
   const stateHooks = createUiHooks(store, useCases);
   const { App } = createUI(stateHooks, useCases);
