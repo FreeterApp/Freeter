@@ -5,7 +5,7 @@
 
 import { createUpdateProjectSettingsInProjectManagerUseCase } from '@/application/useCases/projectManager/updateProjectSettingsInProjectManager';
 import { AppState } from '@/base/state/app';
-import { fixtureProjectA, fixtureProjectB, fixtureProjectSettingsA } from '@tests/base/fixtures/project';
+import { fixtureProjectA, fixtureProjectB, fixtureProjectSettingsA, fixtureProjectSettingsB } from '@tests/base/fixtures/project';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureModalScreens, fixtureModalScreensData } from '@tests/base/state/fixtures/modalScreens';
 import { fixtureProjectManager } from '@tests/base/state/fixtures/projectManager';
@@ -48,16 +48,16 @@ describe('updateProjectSettingsInProjectManagerUseCase()', () => {
 
   it('should update the settings of a right project in Project Manager state', async () => {
     const project = fixtureProjectA({
-      settings: {
+      settings: fixtureProjectSettingsA({
         name: 'Name A'
-      },
+      }),
     });
     const projectB = fixtureProjectB();
     const projectWithNewSettings: typeof project = {
       ...project,
-      settings: {
+      settings: fixtureProjectSettingsB({
         name: 'Name B',
-      },
+      }),
     }
     const initState = fixtureAppState({
       entities: {

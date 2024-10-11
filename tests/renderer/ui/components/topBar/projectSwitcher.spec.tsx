@@ -19,8 +19,10 @@ async function setup(
   const [appStore, appStoreForUi] = await fixtureAppStore(appState);
   const useAppState = createAppStateHook(appStoreForUi);
 
+  const deactivateWorkflowUseCase = jest.fn();
   const switchProjectUseCase = jest.fn(createSwitchProjectUseCase({
-    appStore
+    appStore,
+    deactivateWorkflowUseCase
   }));
   const useProjectSwitcherViewModel = createProjectSwitcherViewModelHook({
     useAppState,

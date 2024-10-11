@@ -21,9 +21,11 @@ async function setup(initState: AppState, opts?: { mockShowMessageBoxRes?: numbe
     } as MessageBoxResult)
   })
 
+  const deactivateWorkflowUseCase = jest.fn();
   const deleteWorkflowUseCase = createDeleteWorkflowUseCase({
     appStore,
-    dialog: dialogProviderMock
+    dialog: dialogProviderMock,
+    deactivateWorkflowUseCase
   });
   return {
     appStore,
