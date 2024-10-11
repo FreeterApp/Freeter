@@ -3340,10 +3340,10 @@ electron@^23.1.2:
     "@types/node" "^16.11.26"
     extract-zip "^2.0.1"
 
-electron@^32.0.1:
-  version "32.0.1"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-32.0.1.tgz#8bfc186b81a645c6b3b12f91e71db4231fd0c934"
-  integrity sha512-5Hd5Jaf9niYVR2hZxoRd3gOrcxPOxQV1XPV5WaoSfT9jLJHFadhlKtuSDIk3U6rQZke+aC7GqPPAv55nWFCMsA==
+electron@^32.2.0:
+  version "32.2.0"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-32.2.0.tgz#40b17864be5f88c89f71045ac6f61b5d4a9c1919"
+  integrity sha512-Xy82QBQrEiQysoxsv6lnhHAcWNNe6vV6QqH3OPFXhEj/T9oAsBHEhZuuYHINSSsUE7zRSj+J9sNwJYOjisT0Vw==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^20.9.0"
