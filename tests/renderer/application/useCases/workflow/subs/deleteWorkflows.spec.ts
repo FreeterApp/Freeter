@@ -23,7 +23,7 @@ describe('deleteWorkflowsSubCase()', () => {
       }
     })
 
-    const newState = deleteWorkflowsSubCase(['WFL-2', 'WFL-3', 'WFL-NOT-IN-PROJECT'], 'PRJ-1', state)
+    const newState = deleteWorkflowsSubCase(['WFL-2', 'WFL-3', 'WFL-NOT-IN-PROJECT'], 'PRJ-1', state, () => { })
 
     expect(newState.entities.projects['PRJ-1']?.workflowIds).toEqual(['WFL-1', 'WFL-4'])
   })
@@ -40,7 +40,7 @@ describe('deleteWorkflowsSubCase()', () => {
       }
     })
 
-    const newState = deleteWorkflowsSubCase(['WFL-1'], 'PRJ-1', state)
+    const newState = deleteWorkflowsSubCase(['WFL-1'], 'PRJ-1', state, () => { })
 
     expect(newState.entities.projects['PRJ-1']?.currentWorkflowId).toEqual('WFL-2')
   })
@@ -59,7 +59,7 @@ describe('deleteWorkflowsSubCase()', () => {
       }
     })
 
-    const newState = deleteWorkflowsSubCase(['WFL-2', 'WFL-3', 'WFL-NOT-IN-PROJECT'], 'PRJ-1', state)
+    const newState = deleteWorkflowsSubCase(['WFL-2', 'WFL-3', 'WFL-NOT-IN-PROJECT'], 'PRJ-1', state, () => { })
 
     expect(newState.entities.projects['PRJ-1']?.currentWorkflowId).toEqual('WFL-1')
   })
@@ -78,7 +78,7 @@ describe('deleteWorkflowsSubCase()', () => {
       }
     })
 
-    const newState = deleteWorkflowsSubCase(['WFL-2', 'WFL-3', 'WFL-NOT-IN-PROJECT'], 'PRJ-1', state)
+    const newState = deleteWorkflowsSubCase(['WFL-2', 'WFL-3', 'WFL-NOT-IN-PROJECT'], 'PRJ-1', state, () => { })
 
     expect(newState.entities.workflows).toEqual({
       ['WFL-NOT-IN-PROJECT']: state.entities.workflows['WFL-NOT-IN-PROJECT']
@@ -106,7 +106,7 @@ describe('deleteWorkflowsSubCase()', () => {
       }
     })
 
-    const newState = deleteWorkflowsSubCase(['WFL-1', 'WFL-2', 'WFL-3', 'WFL-4'], 'PRJ-1', state)
+    const newState = deleteWorkflowsSubCase(['WFL-1', 'WFL-2', 'WFL-3', 'WFL-4'], 'PRJ-1', state, () => { })
 
     expect(newState.entities.widgets).toEqual({
       ['WGT-4']: state.entities.widgets['WGT-4']
