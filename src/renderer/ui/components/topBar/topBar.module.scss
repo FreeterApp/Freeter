@@ -8,17 +8,15 @@
   position: fixed;
   z-index: 3;
   background-color: var(--freeter-topBarBackground);
-  border-top: 1px solid var(--freeter-topBarBorder);
   border-bottom: 1px solid var(--freeter-topBarBorder);
   top: 0;
-  left: 0;
   right: 0;
 }
 
 .top-bar-section {
   box-sizing: border-box;
-  padding: 12px;
-  height: 60px;
+  padding: 0 12px;
+  height: 36px;
   display: flex;
   &:not(:last-child) {
     border-right: 1px solid var(--freeter-topBarBorder);
