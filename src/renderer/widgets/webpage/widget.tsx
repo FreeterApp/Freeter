@@ -24,7 +24,7 @@ interface WebviewProps extends WidgetReactComponentProps<Settings> {
 }
 
 function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps) {
-  const {url, sessionScope, sessionPersist, autoReload} = settings;
+  const {url, sessionScope, sessionPersist, autoReload, injectedCSS, injectedJS} = settings;
 
   const partition = useMemo(() => createPartition(sessionPersist, sessionScope, env, id), [
     env, id, sessionScope, sessionPersist
@@ -131,6 +131,8 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     const handleDomReady = () => {
       setWebviewIsReady(true);
       refreshActions();
+      injectedCSS && webviewEl.insertCSS(injectedCSS);
+      injectedJS && webviewEl.executeJavaScript(injectedJS);
       // webviewEl.classList.add('is-bg-visible');
     }
     const handleDidFinishLoad = () => {
