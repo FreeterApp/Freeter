@@ -18,7 +18,7 @@ const electronEventToAppEvent: (event: ElectronIpcMainEvent | ElectronIpcMainInv
   event => ({
     sender: event.sender,
     senderFrame: event.senderFrame,
-    isSenderFrameMain: event.senderFrame.parent === null,
+    isSenderFrameMain: event.senderFrame?.parent === null,
     getSenderBrowserWindow: () => getBrowserWindowFromEventSender(event.sender)
   });
 
