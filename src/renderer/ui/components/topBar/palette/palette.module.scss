@@ -14,10 +14,11 @@
 }
 
 .palette-tab {
+  position: relative;
   z-index:1;
   display: inline-block;
   font-family: 'Roboto Condensed';
-  padding: 22px 16px;
+  padding: 10px 12px;
   font-size: 16px;
   line-height: 16px;
   background-color: var(--freeter-paletteTabBackground);
@@ -34,10 +35,11 @@
   }
 }
 .palette-section {
+  position: absolute;
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y:auto;
-  width: 100%;
+  width: 180px;
   z-index:0;
   max-height: 500px;
   display: none;

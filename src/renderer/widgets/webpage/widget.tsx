@@ -24,7 +24,7 @@ interface WebviewProps extends WidgetReactComponentProps<Settings> {
 }
 
 function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps) {
-  const {url, sessionScope, sessionPersist, autoReload} = settings;
+  const {url, sessionScope, sessionPersist, autoReload, injectedCSS, injectedJS, userAgent, zoom} = settings;
 
   const partition = useMemo(() => createPartition(sessionPersist, sessionScope, env, id), [
     env, id, sessionScope, sessionPersist
@@ -131,7 +131,9 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     const handleDomReady = () => {
       setWebviewIsReady(true);
       refreshActions();
-      // webviewEl.classList.add('is-bg-visible');
+      injectedCSS && webviewEl.insertCSS(injectedCSS);
+      injectedJS && webviewEl.executeJavaScript(injectedJS);
+      zoom && webviewEl.setZoomFactor(zoom / 100);
     }
     const handleDidFinishLoad = () => {
       refreshActions();
@@ -180,6 +182,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       className={styles['webview']}
       tabIndex={0} // this enables the tab-navigation to widget action bar
       src={sanitUrl}
+      useragent={userAgent}
     ></webview>
     {isLoading && <div className={styles['loading']}>Loading...</div>}
   </>

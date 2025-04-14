@@ -8,9 +8,7 @@ import { WebContents } from '@/application/interfaces/webContents';
 
 export interface IpcMainEvent {
   sender: WebContents;
-  senderFrame: {
-    url: string;
-  }
+  senderFrame: { url: string; } | null;
   isSenderFrameMain: boolean;
   getSenderBrowserWindow(): BrowserWindow | null;
 }
