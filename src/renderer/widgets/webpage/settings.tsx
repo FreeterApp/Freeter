@@ -42,6 +42,7 @@ export interface Settings {
   url: string;
   injectedCSS: string;
   injectedJS: string;
+  userAgent: string;
 }
 
 export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
@@ -51,6 +52,7 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
   url: typeof settings.url === 'string' ? settings.url : '',
   injectedCSS: typeof settings.injectedCSS === 'string' ? settings.injectedCSS : '',
   injectedJS: typeof settings.injectedJS === 'string' ? settings.injectedJS : '',
+  userAgent: typeof settings.userAgent === 'string' ? settings.userAgent : '',
 })
 
 const debounceUpdate3s = debounce((fn: () => void) => fn(), 3000);
@@ -151,6 +153,14 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
         moreInfo='Inject the following JS script into the webpage.'
       >
         <textarea id="webpage-inject-js" value={settings.injectedJS} onChange={e => updateSettings({...settings, injectedJS: e.target.value})} placeholder="Type JS"></textarea>
+      </SettingBlock>
+
+      <SettingBlock
+        titleForId='webpage-user-agent'
+        title='User Agent'
+        moreInfo='Set the following User Agent string for the webpage.'
+      >
+        <input id="webpage-user-agent" type="text" value={settings.userAgent} onChange={e => updateSettings({...settings, userAgent: e.target.value})} placeholder="Type a User Agent string" />
       </SettingBlock>
     </>
   )
