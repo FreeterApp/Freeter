@@ -59,8 +59,19 @@ function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) 
 
       return (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setTypedQuery('');
-        shell.openExternalUrl(finalUrl);
+        if (settings.engine === 'webpages') {
+          document.querySelectorAll<HTMLIFrameElement>('webview').forEach((webview) => {
+            if (!webview.dataset.originalSrc && webview.src.includes(queryPlaceholder)) {
+              webview.dataset.originalSrc = webview.src;
+            }
+            if (webview.dataset.originalSrc) {
+              webview.src = webview.dataset.originalSrc.replaceAll(queryPlaceholder, queryForUrl);
+            }
+          });
+        } else {
+          setTypedQuery('');
+          shell.openExternalUrl(finalUrl);
+        }
       }
     }
   }, [notConfigNotes.length, queryTpl, shell, typedQuery, urlTpl])

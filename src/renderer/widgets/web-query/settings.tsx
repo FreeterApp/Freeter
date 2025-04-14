@@ -14,6 +14,7 @@ export interface SettingsEngine {
 
 const engineDdgo: SettingsEngine = {id: 'ddgo', name: 'DuckDuckGo', url: 'https://duckduckgo.com/?q=QUERY', descr: 'Search'};
 const engines: SettingsEngine[] = [
+  {id: 'webpages', name: 'Webpages in Worktable', url: '', descr: 'Search in webpages'},
   {id: 'bing', name: 'Bing', url: 'https://www.bing.com/search?q=QUERY', descr: 'Search'},
   {id: 'bing-imgs', name: 'Bing (Images)', url: 'https://www.bing.com/images/search?q=QUERY', descr: 'Search for images'},
   {id: 'bing-maps', name: 'Bing (Maps)', url: 'https://www.bing.com/maps/search?q=QUERY', descr: 'Search for maps'},
@@ -111,7 +112,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
       <SettingBlock
         titleForId='web-query-engine'
         title='Query Engine'
-        moreInfo='Pick one of the common engines to perform your queries with, or select Custom Engine to define your own engine.'
+        moreInfo='Pick one of the common engines to perform your queries with, select Custom Engine to define your own engine using URL Template, or select Webpages in Worktable to use Webpages in the same Worktable which have QUERY placeholder inside their URLs.'
       >
         <select id="web-query-engine" value={settings.engine} onChange={e => {
           updEngine(e.target.value)
