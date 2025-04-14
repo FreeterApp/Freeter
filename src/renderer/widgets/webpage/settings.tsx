@@ -40,6 +40,9 @@ export interface Settings {
   sessionPersist: SettingsSessionPersist;
   sessionScope: SettingsSessionScope;
   url: string;
+  injectedCSS: string;
+  injectedJS: string;
+  userAgent: string;
 }
 
 export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
@@ -47,6 +50,9 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
   sessionPersist: isSettingsSessionPersist(settings.sessionPersist) ? settings.sessionPersist : 'persist',
   sessionScope: isSettingsSessionScope(settings.sessionScope) ? settings.sessionScope : 'prj',
   url: typeof settings.url === 'string' ? settings.url : '',
+  injectedCSS: typeof settings.injectedCSS === 'string' ? settings.injectedCSS : '',
+  injectedJS: typeof settings.injectedJS === 'string' ? settings.injectedJS : '',
+  userAgent: typeof settings.userAgent === 'string' ? settings.userAgent : '',
 })
 
 const debounceUpdate3s = debounce((fn: () => void) => fn(), 3000);
@@ -131,6 +137,30 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
           <option value="600">10 Minutes</option>
           <option value="3600">60 Minutes</option>
         </select>
+      </SettingBlock>
+
+      <SettingBlock
+        titleForId='webpage-inject-css'
+        title='Inject CSS'
+        moreInfo='Inject the following CSS style into the webpage.'
+      >
+        <textarea id="webpage-inject-css" value={settings.injectedCSS} onChange={e => updateSettings({...settings, injectedCSS: e.target.value})} placeholder="Type CSS"></textarea>
+      </SettingBlock>
+
+      <SettingBlock
+        titleForId='webpage-inject-js'
+        title='Inject JS'
+        moreInfo='Inject the following JS script into the webpage.'
+      >
+        <textarea id="webpage-inject-js" value={settings.injectedJS} onChange={e => updateSettings({...settings, injectedJS: e.target.value})} placeholder="Type JS"></textarea>
+      </SettingBlock>
+
+      <SettingBlock
+        titleForId='webpage-user-agent'
+        title='User Agent'
+        moreInfo='Set the following User Agent string for the webpage.'
+      >
+        <input id="webpage-user-agent" type="text" value={settings.userAgent} onChange={e => updateSettings({...settings, userAgent: e.target.value})} placeholder="Type a User Agent string" />
       </SettingBlock>
     </>
   )

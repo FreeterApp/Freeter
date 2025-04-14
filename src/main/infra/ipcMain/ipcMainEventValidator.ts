@@ -12,6 +12,11 @@ export function createIpcMainEventValidator(channelPrefix: string, authority: st
       return false;
     }
 
+    if (!event.senderFrame) {
+      console.error('IpcMain event: No sender frame.')
+      return false;
+    }
+
     const { url } = event.senderFrame;
     const { isSenderFrameMain: isMainFrame } = event;
 
