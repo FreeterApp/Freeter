@@ -60,7 +60,7 @@ function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) 
       return (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (settings.engine === 'webpages') {
-          document.querySelectorAll<HTMLIFrameElement>('webview').forEach((webview) => {
+          document.querySelectorAll<HTMLIFrameElement>('[data-testid="widget-layout"]:not([inert]) webview').forEach((webview) => {
             if (!webview.dataset.originalSrc && webview.src.includes(queryPlaceholder)) {
               webview.dataset.originalSrc = webview.src;
             }
