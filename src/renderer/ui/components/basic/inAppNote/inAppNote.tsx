@@ -6,8 +6,7 @@
 import * as styles from './inAppNote.module.scss';
 import clsx from 'clsx';
 
-export interface InAppNoteProps extends React.PropsWithChildren<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>> {
-}
+export type InAppNoteProps = React.PropsWithChildren<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>>
 
 export const InAppNote = ({
   className,

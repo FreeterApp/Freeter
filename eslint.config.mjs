@@ -26,6 +26,7 @@ export default tseslint.config(
         args: 'after-used',
         ignoreRestSiblings: true,
         argsIgnorePattern: '^_',
+        caughtErrors: 'none'
       }],
 
       'max-len': ['error', {
