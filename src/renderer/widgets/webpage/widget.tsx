@@ -50,6 +50,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   const [cssInDom, setCssInDom] = useState<[string, string]|null>(null);
 
   const sanitUrl = useMemo(() => sanitizeUrl(url), [url]);
+  const sanitUA = useMemo(() => userAgent.trim(), [userAgent]);
 
   const refreshActions = useCallback(
     () => updateActionBar(
@@ -221,7 +222,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       tabIndex={0} // this enables the tab-navigation to widget action bar
       src={sanitUrl !== '' ? sanitUrl : undefined}
       // eslint-disable-next-line react/no-unknown-property
-      useragent={userAgent}
+      useragent={sanitUA !== '' ? sanitUA : undefined}
     ></webview>
     {isLoading && <div className={styles['loading']}>Loading...</div>}
   </>
