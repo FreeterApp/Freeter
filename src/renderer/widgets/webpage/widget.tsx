@@ -32,11 +32,15 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
 
   const initPartition = useRef(partition)
 
+  const reqRestartIfChanged = useMemo(() => ([injectedJS, userAgent]), [injectedJS, userAgent])
+
+  const initReqRestartIfChanged = useRef(reqRestartIfChanged)
+
   useEffect(() => {
-    if(partition !== initPartition.current) {
+    if(partition !== initPartition.current || reqRestartIfChanged !== initReqRestartIfChanged.current) {
       onRequireRestart();
     }
-  }, [onRequireRestart, partition])
+  }, [onRequireRestart, partition, reqRestartIfChanged])
 
   const {updateActionBar, setContextMenuFactory} = widgetApi;
   const webviewRef = useRef<Electron.WebviewTag>(null);

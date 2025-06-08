@@ -127,4 +127,92 @@ describe('Webpage Widget Settings', () => {
       injectedCSS: css
     });
   })
+
+  it('should allow to update "injected js" setting with a debounced (3s) text input', async () => {
+    const js1 = 'some';
+    const js2 = 'js';
+    const js3 = 'code'
+    const settings = fixtureSettings({ injectedJS: '' });
+    const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
+    const input = screen.getByRole('textbox', { name: /inject js/i })
+
+    await user.type(input, js1);
+
+    act(() => jest.advanceTimersByTime(2000));
+    expect(getSettings()).toEqual(settings);
+
+    await user.type(input, js2);
+
+    act(() => jest.advanceTimersByTime(2000));
+    expect(getSettings()).toEqual(settings);
+
+    await user.type(input, js3);
+
+    act(() => jest.advanceTimersByTime(3000));
+    expect(getSettings()).toEqual({
+      ...settings,
+      injectedJS: js1 + js2 + js3
+    });
+  })
+  it('should immediately update "injected js" setting on input blur', async () => {
+    const js = 'some js';
+    const settings = fixtureSettings({ injectedJS: '' });
+    const { fireEvent, userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
+    const input = screen.getByRole('textbox', { name: /inject js/i })
+
+    await user.type(input, js);
+    expect(getSettings()).toEqual(settings);
+
+    fireEvent.blur(input);
+    expect(getSettings()).toEqual({
+      ...settings,
+      injectedJS: js
+    });
+  })
+
+  it('should allow to update "user agent" setting with a debounced (3s) text input', async () => {
+    const ua1 = 'user';
+    const ua2 = 'agent';
+    const ua3 = 'line'
+    const settings = fixtureSettings({ userAgent: '' });
+    const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
+    const input = screen.getByRole('textbox', { name: /user agent/i })
+
+    await user.type(input, ua1);
+
+    act(() => jest.advanceTimersByTime(2000));
+    expect(getSettings()).toEqual(settings);
+
+    await user.type(input, ua2);
+
+    act(() => jest.advanceTimersByTime(2000));
+    expect(getSettings()).toEqual(settings);
+
+    await user.type(input, ua3);
+
+    act(() => jest.advanceTimersByTime(3000));
+    expect(getSettings()).toEqual({
+      ...settings,
+      userAgent: ua1 + ua2 + ua3
+    });
+  })
+  it('should immediately update "user agent" setting on input blur', async () => {
+    const ua = 'some useragent';
+    const settings = fixtureSettings({ userAgent: '' });
+    const { fireEvent, userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
+    const input = screen.getByRole('textbox', { name: /user agent/i })
+
+    await user.type(input, ua);
+    expect(getSettings()).toEqual(settings);
+
+    fireEvent.blur(input);
+    expect(getSettings()).toEqual({
+      ...settings,
+      userAgent: ua
+    });
+  })
 })
