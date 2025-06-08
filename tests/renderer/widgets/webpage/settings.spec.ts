@@ -113,4 +113,18 @@ describe('Webpage Widget Settings', () => {
       url
     });
   })
+
+  it('should immediately update "injected css" setting on input type', async () => {
+    const css = 'some css';
+    const settings = fixtureSettings({ injectedCSS: '' });
+    const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const user = userEvent.setup({ delay: null });
+    const input = screen.getByRole('textbox', { name: /inject css/i })
+
+    await user.type(input, css);
+    expect(getSettings()).toEqual({
+      ...settings,
+      injectedCSS: css
+    });
+  })
 })
