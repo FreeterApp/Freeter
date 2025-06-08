@@ -15,13 +15,13 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
 })
 
 function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
-  const urlRefs = useRef<HTMLInputElement[]>([]);
+  const urlRefs = useRef<Array<HTMLInputElement|null>>([]);
   const {updateSettings} = settingsApi;
   const [triggerLastUrlFocus, setTriggerLastUrlFocus] = useState(false);
 
   useEffect(() => {
     if (triggerLastUrlFocus) {
-      urlRefs.current[settings.urls.length-1].focus();
+      urlRefs.current[settings.urls.length-1]?.focus();
       setTriggerLastUrlFocus(false);
     }
   }, [settings.urls.length, triggerLastUrlFocus])
@@ -45,7 +45,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
         {settings.urls.map((url, i) => (
           <SettingRow key={i}>
             <input
-              ref={(el) => (urlRefs.current[i] = el!)}
+              ref={(el) => {urlRefs.current[i] = el}}
               id={'url'+i}
               type="text"
               value={url}

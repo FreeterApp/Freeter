@@ -116,7 +116,7 @@ export function createWidgetLayoutViewModelHook({
     submenu: buildPasteMenuItems(copiedWidgets, curWorkflowId)
   }]
 
-  function useWidgetLayoutViewModel(layoutEl: React.RefObject<HTMLDivElement>, props: WidgetLayoutProps) {
+  function useWidgetLayoutViewModel(layoutEl: HTMLDivElement | null, props: WidgetLayoutProps) {
     const {
       isVisible,
       isEditMode,

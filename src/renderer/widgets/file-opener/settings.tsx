@@ -22,7 +22,7 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
 })
 
 function SettingsEditorComp({settings, settingsApi, sharedState}: SettingsEditorReactComponentProps<Settings>) {
-  const pathRefs = useRef<HTMLInputElement[]>([]);
+  const pathRefs = useRef<Array<HTMLInputElement|null>>([]);
   const {updateSettings, dialog} = settingsApi;
   const [triggerLastPathFocus, setTriggerLastPathFocus] = useState(false);
 
@@ -35,7 +35,7 @@ function SettingsEditorComp({settings, settingsApi, sharedState}: SettingsEditor
 
   useEffect(() => {
     if (triggerLastPathFocus) {
-      pathRefs.current[(settings.type === SettingsType.Folder ? settings.folders.length : settings.files.length)-1].focus();
+      pathRefs.current[(settings.type === SettingsType.Folder ? settings.folders.length : settings.files.length)-1]?.focus();
       setTriggerLastPathFocus(false);
     }
   }, [settings.files.length, settings.folders.length, settings.type, triggerLastPathFocus])
@@ -117,7 +117,7 @@ function SettingsEditorComp({settings, settingsApi, sharedState}: SettingsEditor
         {(settings.type===SettingsType.Folder ? settings.folders : settings.files).map((path, i) => (
           <SettingRow key={`${settings.type}/${i}`}>
             <input
-              ref={(el) => (pathRefs.current[i] = el!)}
+              ref={(el) => {pathRefs.current[i] = el}}
               id={'path'+i}
               type="text"
               value={path}

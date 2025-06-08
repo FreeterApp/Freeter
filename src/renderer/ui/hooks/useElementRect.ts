@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { RectPx } from '@/ui/types/dimensions';
 
-export function useElementRect(elRef: React.RefObject<HTMLElement>, opts?: {
+export function useElementRect(el: HTMLElement | null, opts?: {
   useViewportRect?: boolean;
   defaultVal?: RectPx;
   refreshDep?: unknown;
@@ -14,7 +14,6 @@ export function useElementRect(elRef: React.RefObject<HTMLElement>, opts?: {
   const [elementRect, setElementRect] = useState<RectPx>(opts?.defaultVal || { xPx: 0, yPx: 0, wPx: 500, hPx: 500 });
 
   const refreshElementRect = useCallback(() => {
-    const el = elRef.current;
     if (el) {
       if (opts?.useViewportRect) {
         const rect = el.getBoundingClientRect();
@@ -33,7 +32,7 @@ export function useElementRect(elRef: React.RefObject<HTMLElement>, opts?: {
         });
       }
     }
-  }, [elRef, opts?.useViewportRect])
+  }, [el, opts?.useViewportRect])
 
   useEffect(() => {
     refreshElementRect();

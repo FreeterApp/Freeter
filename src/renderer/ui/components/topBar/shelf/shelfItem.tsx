@@ -33,7 +33,7 @@ export function createShelfItemComponent({
       onDragLeaveHandler,
       onDragOverHandler,
       onDropHandler,
-    } = useShelfItemViewModel(shelfItemEl, props);
+    } = useShelfItemViewModel(shelfItemEl.current, props);
 
     return (
       <li

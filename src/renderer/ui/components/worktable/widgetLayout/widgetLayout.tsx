@@ -47,7 +47,7 @@ export function createWidgetLayoutComponent({
       onItemResize,
       onItemResizeEnd,
       onContextMenu,
-    } = useWidgetLayoutViewModel(layoutEl, props);
+    } = useWidgetLayoutViewModel(layoutEl.current, props);
 
     return componentMounted ? (<>
       {isVisible && showNoWidgetsNote && (
@@ -70,7 +70,7 @@ export function createWidgetLayoutComponent({
         ref={layoutEl}
         onContextMenu={onContextMenu}
         data-testid="widget-layout"
-        {...{ inert: !isVisible ? '' : undefined }}
+        {...{ inert: !isVisible ? true : undefined }}
       >
         { ghostItemRect && <WidgetLayoutItemGhost
           w={ghostItemRect.w}
