@@ -43,6 +43,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   const [isLoading, setIsLoading] = useState(false);
   const [webviewIsReady, setWebviewIsReady] = useState(false);
   const [autoReloadStopped, setAutoReloadStopped] = useState(false);
+  const [cssInDom, setCssInDom] = useState<[string, string]|null>(null);
 
   const sanitUrl = useMemo(() => sanitizeUrl(url), [url]);
 
@@ -59,6 +60,31 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     ),
     [autoReload, autoReloadStopped, updateActionBar, url, webviewIsReady, widgetApi]
   );
+
+  const injectCSSInDOM = useCallback(
+    async (css: string, force: boolean) => {
+      if(webviewIsReady) {
+        // reinject not forced, css not changed
+        if (!force && cssInDom && cssInDom[1] === css) {
+          return;
+        }
+        const webviewEl = webviewRef.current;
+        if (!webviewEl) {
+          return;
+        }
+        if(cssInDom) {
+          webviewEl.removeInsertedCSS(cssInDom[0]);
+        }
+        if(css.trim()!=='') {
+          const k = await webviewEl.insertCSS(css);
+          setCssInDom([k, css]);
+        } else {
+          setCssInDom(null);
+        }
+      }
+    },
+    [cssInDom, webviewIsReady]
+  )
 
   useEffect(() => {
     setContextMenuFactory(
@@ -120,6 +146,10 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   }, []);
 
   useEffect(() => {
+    injectCSSInDOM(injectedCSS, false);
+  }, [injectedCSS, injectCSSInDOM]);
+
+  useEffect(() => {
     refreshActions();
 
     const webviewEl = webviewRef.current;
@@ -131,9 +161,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     const handleDomReady = () => {
       setWebviewIsReady(true);
       refreshActions();
-      if (injectedCSS) {
-        webviewEl.insertCSS(injectedCSS);
-      }
+      injectCSSInDOM(injectedCSS, true);
       if (injectedJS) {
         webviewEl.executeJavaScript(injectedJS);
       }
@@ -167,7 +195,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       webviewEl.removeEventListener('did-navigate-in-page', handleDidNavigateInPage);
       webviewEl.removeEventListener('did-finish-load', handleDidFinishLoad);
           };
-  }, [refreshActions]);
+  }, [injectCSSInDOM, injectedCSS, injectedJS, refreshActions]);
 
   useEffect(() => {
     if (autoReload>0 && !autoReloadStopped) {
@@ -181,11 +209,14 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
   return <>
     <webview
       ref={webviewRef}
+      // eslint-disable-next-line react/no-unknown-property
       allowpopups={'' as unknown as boolean}
+      // eslint-disable-next-line react/no-unknown-property
       partition={initPartition.current}
       className={styles['webview']}
       tabIndex={0} // this enables the tab-navigation to widget action bar
-      src={sanitUrl}
+      src={sanitUrl !== '' ? sanitUrl : undefined}
+      // eslint-disable-next-line react/no-unknown-property
       useragent={userAgent}
     ></webview>
     {isLoading && <div className={styles['loading']}>Loading...</div>}

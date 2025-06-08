@@ -160,7 +160,7 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
         title='User Agent'
         moreInfo='Set the following User Agent string for the webpage.'
       >
-        <input id="webpage-user-agent" type="text" value={settings.userAgent} onChange={e => updateSettings({...settings, userAgent: e.target.value})} placeholder="Type a User Agent string" />
+        <input id="webpage-user-agent" type="text" value={settings.userAgent} onChange={e => updateSettings({...settings, userAgent: e.target.value})} placeholder="Type User Agent string" />
       </SettingBlock>
     </>
   )
