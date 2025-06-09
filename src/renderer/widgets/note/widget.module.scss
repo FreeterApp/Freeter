@@ -12,3 +12,157 @@
   right: 0;
   bottom: 0;
 }
+
+:global {
+  .TinyMDE {
+    position: absolute;
+    border: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+
+    background-color: var(--freeter-textareaBackground);
+    color: var(--freeter-textareaColor);
+    font-size: 14px; //16px;
+    line-height: 20px; //24px;
+    outline: none;
+    padding:6px;//5px;
+  }
+
+  .TMBlankLine {
+    height:20px;//24px;
+  }
+
+  .TMH1, .TMSetextH1 {
+    font-size:20px;//22px;
+    line-height:28px;//32px;
+    font-weight:bold;
+    margin-bottom:6px;//8px;
+  }
+
+  .TMSetextH1 {
+    margin-bottom:0px;
+  }
+
+  .TMSetextH1Marker {
+    margin-bottom:6px;//8px;
+  }
+
+  .TMH2, .TMSetextH2 {
+    font-size:18px;//20px;
+    line-height:26px;//28px;
+    font-weight:bold;
+    margin-bottom:4px;
+  }
+
+  .TMMark_TMCode {
+    font-family:monospace;
+    font-size:.9em;
+  }
+
+  .TMFencedCodeBacktick, .TMFencedCodeTilde, .TMIndentedCode, .TMCode {
+    font-family:monospace;
+    font-size:.9em;
+    background-color:var(--freeter-componentBackground);//#e0e0e0;
+  }
+
+  .TMCodeFenceBacktickOpen, .TMCodeFenceTildeOpen {
+    border-bottom: 1px solid var(--freeter-textareaBorder);//#c0c0c0;
+    font-family: monospace;
+    font-size:.9em;
+  }
+
+  .TMCodeFenceBacktickClose, .TMCodeFenceTildeClose {
+    border-top: 1px solid var(--freeter-textareaBorder);//#c0c0c0;
+    font-family: monospace;
+    font-size:.9em;
+  }
+
+  .TMInfoString {
+    color: #0000ff;
+  }
+
+  .TMCode {
+    border:1px solid var(--freeter-textareaBorder);//#c0c0c0;
+    border-radius: 2px;
+  }
+
+  .TMBlockquote {
+    font-style: italic;
+    border-left:2px solid var(--freeter-textareaBorder);//#c0c0c0;
+    padding-left:8px;//10px;
+    margin-left:8px;//10px;
+  }
+
+  .TMMark {
+    color:#a0a0a0;
+  }
+
+  .TMMark_TMH1, .TMMark_TMH2 {
+    color: var(--freeter-primary60);//#ff8080;
+  }
+
+  .TMMark_TMUL, .TMMark_TMOL {
+    color: var(--freeter-primary60);//#ff8080;
+  }
+
+  .TMImage {
+    text-decoration: underline;
+    text-decoration-color: var(--freeter-componentColor60);//#00ff00;
+  }
+
+
+  .TMLink {
+    text-decoration: underline;
+    text-decoration-color: var(--freeter-componentColor60);//#0000ff;
+  }
+
+  .TMLinkLabel {
+    text-decoration: underline;
+    font-family: monospace;
+  }
+
+  .TMLinkLabel_Definition, .TMLinkLabel_Valid {
+    color: var(--freeter-componentColor40);//#40c040;
+  }
+
+  .TMLinkLabel_Invalid {
+    color: #ff0000;
+  }
+
+  .TMLinkTitle {
+    font-style:italic;
+  }
+
+  .TMLinkDestination, .TMAutolink {
+    text-decoration: underline;
+    color: var(--freeter-componentColor60);//#0000ff;
+  }
+
+  .TMHR {
+    position: relative;
+  }
+
+  .TMHR:before {
+    content: '';
+    position: absolute;
+    bottom: 50%;
+    left: 40%;
+    border-bottom: 2px solid var(--freeter-componentColor60);//#808080;
+    width: 20%;
+    z-index:0;
+  }
+
+  .TMHTML, .TMHTMLBlock {
+    font-family:monospace;
+    font-size:.9em;
+    color:var(--freeter-primary40);//#8000ff;
+  }
+
+  .TMHTMLBlock {
+    color:var(--freeter-primary30);//#6000c0;
+  }
+
+}

@@ -11,7 +11,6 @@ import { ChangeEventHandler, useCallback, useEffect, useMemo, useRef, useState }
 import { createContextMenuFactory, textAreaContextId } from '@/widgets/note/contextMenu';
 import { createActionBarItems } from '@/widgets/note/actionBar';
 import { Editor } from 'tiny-markdown-editor';
-import 'tiny-markdown-editor/dist/tiny-mde.min.css';
 
 const keyNote = 'note';
 

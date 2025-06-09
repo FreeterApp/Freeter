@@ -25,6 +25,27 @@ export const darkTheme = {
   componentBorder: base.componentBorder,
   componentColor: base.componentColor,
   dropAreaBackground: base.dropAreaBackground,
+  primary: `${base.primary}`,
+
+  primary90: `${base.primary}90`,
+  primary80: `${base.primary}80`,
+  primary70: `${base.primary}70`,
+  primary60: `${base.primary}60`,
+  primary50: `${base.primary}50`,
+  primary40: `${base.primary}40`,
+  primary30: `${base.primary}30`,
+  primary20: `${base.primary}20`,
+  primary10: `${base.primary}10`,
+
+  componentColor90: `${base.componentColor}90`,
+  componentColor80: `${base.componentColor}80`,
+  componentColor70: `${base.componentColor}70`,
+  componentColor60: `${base.componentColor}60`,
+  componentColor50: `${base.componentColor}50`,
+  componentColor40: `${base.componentColor}40`,
+  componentColor30: `${base.componentColor}30`,
+  componentColor20: `${base.componentColor}20`,
+  componentColor10: `${base.componentColor}10`,
 
   /**
    * Scroll Bar
