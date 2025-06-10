@@ -11,6 +11,7 @@ import { fireEvent, render, screen, act } from '@testing-library/react';
 import { fixtureProjectSettingsA } from '@tests/base/fixtures/project';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureProjectAInColl, fixtureProjectBInColl } from '@tests/base/state/fixtures/entitiesState';
+import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 
 async function setup(
@@ -63,10 +64,10 @@ describe('<ProjectSwitcher />', () => {
         }
       },
       ui: {
-        projectSwitcher: {
+        projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: idA,
           projectIds: [idA]
-        }
+        })
       }
     }))
     expect(screen.getByRole('combobox')).toBeEnabled();
@@ -84,10 +85,10 @@ describe('<ProjectSwitcher />', () => {
         }
       },
       ui: {
-        projectSwitcher: {
+        projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: idA,
           projectIds: [idA, idB]
-        }
+        })
       }
     }))
     expect(screen.getAllByRole('option').length).toBe(3);
@@ -102,10 +103,10 @@ describe('<ProjectSwitcher />', () => {
         }
       },
       ui: {
-        projectSwitcher: {
+        projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: idA,
           projectIds: [idA]
-        }
+        })
       }
     }))
     const elOpt = screen.getAllByRole('option')[0];
@@ -123,10 +124,10 @@ describe('<ProjectSwitcher />', () => {
         }
       },
       ui: {
-        projectSwitcher: {
+        projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: '',
           projectIds: [idA]
-        }
+        })
       }
     }))
 
@@ -143,10 +144,10 @@ describe('<ProjectSwitcher />', () => {
         }
       },
       ui: {
-        projectSwitcher: {
+        projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: 'NO-SUCH-ID',
           projectIds: [idA]
-        }
+        })
       }
     }))
 
@@ -163,10 +164,10 @@ describe('<ProjectSwitcher />', () => {
         }
       },
       ui: {
-        projectSwitcher: {
+        projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: idA,
           projectIds: [idA]
-        }
+        })
       }
     }))
 
@@ -184,10 +185,10 @@ describe('<ProjectSwitcher />', () => {
         }
       },
       ui: {
-        projectSwitcher: {
+        projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: idA,
           projectIds: [idB, idA]
-        }
+        })
       }
     }))
 
@@ -208,10 +209,10 @@ describe('<ProjectSwitcher />', () => {
         }
       },
       ui: {
-        projectSwitcher: {
+        projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: idB,
           projectIds: [idA, idB]
-        }
+        })
       }
     })
     const {appStore} = await setup(state)
@@ -244,10 +245,10 @@ describe('<ProjectSwitcher />', () => {
         }
       },
       ui: {
-        projectSwitcher: {
+        projectSwitcher: fixtureProjectSwitcher({
           currentProjectId: idA,
           projectIds: [idB, idA]
-        }
+        })
       }
     }))
 

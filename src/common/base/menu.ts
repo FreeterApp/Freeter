@@ -14,6 +14,7 @@ export interface MenuItemCommon<T extends MenuItemCommon<T>> {
   readonly label?: string;
   readonly role?: MenuItemRole;
   readonly type?: MenuItemType;
+  readonly checked?: boolean;
   readonly icon?: string;
   readonly enabled?: boolean;
   readonly submenu?: ReadonlyArray<T>;

@@ -11,6 +11,7 @@ import { fixtureAppStore } from '@tests/data/fixtures/appStore';
 import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureProjectAInColl, fixtureWorkflowAInColl } from '@tests/base/state/fixtures/entitiesState';
+import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
 
 const strEditModeToggle = 'Edit Mode Toggle';
 const strProjectSwitcher = 'Project Switcher';
@@ -80,10 +81,10 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
-          projectSwitcher: {
+          projectSwitcher: fixtureProjectSwitcher({
             projectIds: [projectId],
             currentProjectId: projectId
-          }
+          })
         }
       }));
       expect(screen.getByText(strPalette)).toBeInTheDocument();
@@ -97,10 +98,10 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
-          projectSwitcher: {
+          projectSwitcher: fixtureProjectSwitcher({
             projectIds: [],
             currentProjectId: ''
-          }
+          })
         }
       }));
       expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
@@ -115,10 +116,10 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
-          projectSwitcher: {
+          projectSwitcher: fixtureProjectSwitcher({
             projectIds: [projectId],
             currentProjectId: projectId
-          }
+          })
         }
       }));
       expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
@@ -132,10 +133,10 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
-          projectSwitcher: {
+          projectSwitcher: fixtureProjectSwitcher({
             projectIds: ['no such id'],
             currentProjectId: 'no such id'
-          }
+          })
         }
       }));
       expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
@@ -150,10 +151,10 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
-          projectSwitcher: {
+          projectSwitcher: fixtureProjectSwitcher({
             projectIds: [projectId],
             currentProjectId: projectId
-          }
+          })
         }
       }));
       expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
@@ -171,10 +172,10 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: false,
-          projectSwitcher: {
+          projectSwitcher: fixtureProjectSwitcher({
             projectIds: [projectId],
             currentProjectId: projectId
-          }
+          })
         }
       }));
       expect(screen.queryByText(strPalette)).not.toBeInTheDocument();

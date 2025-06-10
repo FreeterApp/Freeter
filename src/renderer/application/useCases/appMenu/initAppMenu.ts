@@ -14,6 +14,9 @@ import { OpenAboutUseCase } from '@/application/useCases/about/openAbout';
 import { ShellProvider } from '@/application/interfaces/shellProvider';
 import { OpenProjectManagerUseCase } from '@/application/useCases/projectManager/openProjectManager';
 import { OpenAppManagerUseCase } from '@/application/useCases/appManager/openAppManager';
+import { ProjectSwitcherPos } from '@/base/state/ui';
+import { ToggleTopBarUseCase } from '@/application/useCases/toggleTopBar';
+import { SetProjectSwitcherPositionUseCase } from '@/application/useCases/projectSwitcher/setProjectSwitcherPosition';
 
 const urlDownload = 'https://freeter.io/v2/download';
 const urlTwitter = 'https://twitter.com/FreeterApp';
@@ -28,6 +31,8 @@ type Deps = {
   shellProvider: ShellProvider;
   toggleEditModeUseCase: ToggleEditModeUseCase;
   toggleMenuBarUseCase: ToggleMenuBarUseCase;
+  toggleTopBarUseCase: ToggleTopBarUseCase;
+  setProjectSwitcherPositionUseCase: SetProjectSwitcherPositionUseCase;
   openApplicationSettingsUseCase: OpenApplicationSettingsUseCase;
   openAboutUseCase: OpenAboutUseCase;
   openProjectManagerUseCase: OpenProjectManagerUseCase;
@@ -42,6 +47,8 @@ export function createInitAppMenuUseCase({
   shellProvider,
   toggleEditModeUseCase,
   toggleMenuBarUseCase,
+  toggleTopBarUseCase,
+  setProjectSwitcherPositionUseCase,
   openApplicationSettingsUseCase,
   openAboutUseCase,
   openProjectManagerUseCase,
@@ -118,17 +125,61 @@ export function createInitAppMenuUseCase({
     ]
   }
 
-  const createMenuView: (editMode: boolean, menuBar: boolean) => MenuItem = (editMode, menuBar) => ({
+  const createMenuView: (
+    editMode: boolean,
+    menuBar: boolean,
+    topBar: boolean,
+    prjSwitcherPos: ProjectSwitcherPos,
+  ) => MenuItem = (editMode, menuBar, topBar, prjSwitcherPos) => ({
     label: '&View',
     submenu: [
-      { role: 'togglefullscreen' },
-      ...(!isMac
-        ? [{
-          label: menuBar ? 'Hide Menu Bar (ALT to restore)' : 'Show Menu Bar',
-          doAction: async () => toggleMenuBarUseCase()
-        }]
-        : []
-      ),
+      {
+        label: 'Appearance',
+        submenu: [
+          { role: 'togglefullscreen' },
+          ...(!isMac
+            ? [{
+              label: menuBar ? 'Hide Menu Bar (ALT to restore)' : 'Show Menu Bar',
+              doAction: async () => toggleMenuBarUseCase()
+            }]
+            : []
+          ),
+          {
+            label: topBar ? 'Hide Top Bar' : 'Show Top Bar',
+            doAction: async () => toggleTopBarUseCase()
+          },
+          itemSeparator,
+          {
+            label: 'Project Switcher Position',
+            submenu: [
+              {
+                label: 'On Top Bar',
+                type: 'radio',
+                checked: prjSwitcherPos === ProjectSwitcherPos.TopBar,
+                doAction: async () => setProjectSwitcherPositionUseCase(ProjectSwitcherPos.TopBar)
+              },
+              {
+                label: 'On Tab Bar (Left)',
+                type: 'radio',
+                checked: prjSwitcherPos === ProjectSwitcherPos.TabBarLeft,
+                doAction: async () => setProjectSwitcherPositionUseCase(ProjectSwitcherPos.TabBarLeft)
+              },
+              {
+                label: 'On Tab Bar (Right)',
+                type: 'radio',
+                checked: prjSwitcherPos === ProjectSwitcherPos.TabBarRight,
+                doAction: async () => setProjectSwitcherPositionUseCase(ProjectSwitcherPos.TabBarRight)
+              },
+              {
+                label: 'Hidden',
+                type: 'radio',
+                checked: prjSwitcherPos === ProjectSwitcherPos.Hidden,
+                doAction: async () => setProjectSwitcherPositionUseCase(ProjectSwitcherPos.Hidden)
+              },
+            ]
+          },
+        ]
+      },
       itemSeparator,
       {
         accelerator: 'CmdOrCtrl+E',
@@ -210,16 +261,20 @@ export function createInitAppMenuUseCase({
       isLoading: state.isLoading,
       editMode: state.ui.editMode,
       menuBar: state.ui.menuBar,
+      topBar: state.ui.topBar,
+      prjSwitcherPos: state.ui.projectSwitcher.pos
     }), ({
       isLoading,
       editMode,
-      menuBar
+      menuBar,
+      topBar,
+      prjSwitcherPos
     }) => {
       if (!isLoading) {
         appMenu.setMenu([
           (isMac ? menuApp : menuFile),
           menuEdit,
-          createMenuView(editMode, menuBar),
+          createMenuView(editMode, menuBar, topBar, prjSwitcherPos),
           menuHelp,
           ...(isDevMode
             ? [menuDev]

@@ -140,6 +140,8 @@ import { createOpenAppManagerUseCase } from '@/application/useCases/appManager/o
 import { createShowOpenFileDialogUseCase } from '@/application/useCases/dialog/showOpenFileDialog';
 import { createInitMemSaverUseCase } from '@/application/useCases/memSaver/initMemSaver';
 import { createDeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
+import { createToggleTopBarUseCase } from '@/application/useCases/toggleTopBar';
+import { createSetProjectSwitcherPositionUseCase } from '@/application/useCases/projectSwitcher/setProjectSwitcherPosition';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -226,6 +228,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
   const toggleEditModeUseCase = createToggleEditModeUseCase(deps);
   const toggleMenuBarUseCase = createToggleMenuBarUseCase(deps);
+  const toggleTopBarUseCase = createToggleTopBarUseCase(deps);
+  const setProjectSwitcherPositionUseCase = createSetProjectSwitcherPositionUseCase(deps);
 
   const clickContextMenuItemUseCase = createClickContextMenuItemUseCase();
   const osContextMenuProvider = createOsContextMenuProvider({ clickContextMenuItemUseCase });
@@ -327,6 +331,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     shellProvider,
     toggleEditModeUseCase,
     toggleMenuBarUseCase,
+    toggleTopBarUseCase,
+    setProjectSwitcherPositionUseCase,
     openApplicationSettingsUseCase,
     openAboutUseCase,
     openAppManagerUseCase,

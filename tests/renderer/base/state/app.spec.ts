@@ -122,6 +122,7 @@ describe('AppState', () => {
           appConfig: state.ui.appConfig,
           apps: state.ui.apps,
           menuBar: state.ui.menuBar,
+          topBar: state.ui.topBar,
           projectSwitcher: state.ui.projectSwitcher,
           shelf: state.ui.shelf
         }
@@ -166,6 +167,7 @@ describe('AppState', () => {
           appConfig: fixtureAppConfig({ mainHotkey: 'Accelerator' }),
           apps: fixtureApps({ appIds: ['APP1', 'APP2'] }),
           menuBar: false,
+          topBar: true,
           projectSwitcher: fixtureProjectSwitcher({ currentProjectId: 'B1', projectIds: ['B1', 'B2'] }),
           shelf: fixtureShelf({ widgetList: [{ id: 'A1', widgetId: 'A1' }] })
         }
