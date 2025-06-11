@@ -109,9 +109,17 @@ export function createInitAppMenuUseCase({
     ]
   }
 
-  const menuEdit: MenuItem = {
+  const createMenuEdit: (
+    editMode: boolean,
+  ) => MenuItem = (editMode) => ({
     label: '&Edit',
     submenu: [
+      {
+        accelerator: 'CmdOrCtrl+E',
+        label: `${editMode ? 'Disable' : 'Enable'} Edit Mode`,
+        doAction: async () => toggleEditModeUseCase()
+      },
+      itemSeparator,
       {
         role: 'undo'
       }, {
@@ -126,15 +134,14 @@ export function createInitAppMenuUseCase({
         role: 'selectAll'
       }
     ]
-  }
+  })
 
   const createMenuView: (
-    editMode: boolean,
     menuBar: boolean,
     topBar: boolean,
     prjSwitcherPos: ProjectSwitcherPos,
     editTogglePos: EditTogglePos,
-  ) => MenuItem = (editMode, menuBar, topBar, prjSwitcherPos, editTogglePos) => ({
+  ) => MenuItem = (menuBar, topBar, prjSwitcherPos, editTogglePos) => ({
     label: '&View',
     submenu: [
       {
@@ -212,12 +219,6 @@ export function createInitAppMenuUseCase({
             ]
           },
         ]
-      },
-      itemSeparator,
-      {
-        accelerator: 'CmdOrCtrl+E',
-        label: `${editMode ? 'Disable' : 'Enable'} Edit Mode`,
-        doAction: async () => toggleEditModeUseCase()
       },
       itemSeparator,
       {
@@ -308,8 +309,8 @@ export function createInitAppMenuUseCase({
       if (!isLoading) {
         appMenu.setMenu([
           (isMac ? menuApp : menuFile),
-          menuEdit,
-          createMenuView(editMode, menuBar, topBar, prjSwitcherPos, editTogglePos),
+          createMenuEdit(editMode),
+          createMenuView(menuBar, topBar, prjSwitcherPos, editTogglePos),
           menuHelp,
           ...(isDevMode
             ? [menuDev]
