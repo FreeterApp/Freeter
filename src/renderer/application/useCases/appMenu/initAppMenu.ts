@@ -14,9 +14,10 @@ import { OpenAboutUseCase } from '@/application/useCases/about/openAbout';
 import { ShellProvider } from '@/application/interfaces/shellProvider';
 import { OpenProjectManagerUseCase } from '@/application/useCases/projectManager/openProjectManager';
 import { OpenAppManagerUseCase } from '@/application/useCases/appManager/openAppManager';
-import { ProjectSwitcherPos } from '@/base/state/ui';
+import { EditTogglePos, ProjectSwitcherPos } from '@/base/state/ui';
 import { ToggleTopBarUseCase } from '@/application/useCases/toggleTopBar';
 import { SetProjectSwitcherPositionUseCase } from '@/application/useCases/projectSwitcher/setProjectSwitcherPosition';
+import { SetEditTogglePositionUseCase } from '@/application/useCases/setEditTogglePosition';
 
 const urlDownload = 'https://freeter.io/v2/download';
 const urlTwitter = 'https://twitter.com/FreeterApp';
@@ -33,6 +34,7 @@ type Deps = {
   toggleMenuBarUseCase: ToggleMenuBarUseCase;
   toggleTopBarUseCase: ToggleTopBarUseCase;
   setProjectSwitcherPositionUseCase: SetProjectSwitcherPositionUseCase;
+  setEditTogglePositionUseCase: SetEditTogglePositionUseCase;
   openApplicationSettingsUseCase: OpenApplicationSettingsUseCase;
   openAboutUseCase: OpenAboutUseCase;
   openProjectManagerUseCase: OpenProjectManagerUseCase;
@@ -49,6 +51,7 @@ export function createInitAppMenuUseCase({
   toggleMenuBarUseCase,
   toggleTopBarUseCase,
   setProjectSwitcherPositionUseCase,
+  setEditTogglePositionUseCase,
   openApplicationSettingsUseCase,
   openAboutUseCase,
   openProjectManagerUseCase,
@@ -130,7 +133,8 @@ export function createInitAppMenuUseCase({
     menuBar: boolean,
     topBar: boolean,
     prjSwitcherPos: ProjectSwitcherPos,
-  ) => MenuItem = (editMode, menuBar, topBar, prjSwitcherPos) => ({
+    editTogglePos: EditTogglePos,
+  ) => MenuItem = (editMode, menuBar, topBar, prjSwitcherPos, editTogglePos) => ({
     label: '&View',
     submenu: [
       {
@@ -175,6 +179,35 @@ export function createInitAppMenuUseCase({
                 type: 'radio',
                 checked: prjSwitcherPos === ProjectSwitcherPos.Hidden,
                 doAction: async () => setProjectSwitcherPositionUseCase(ProjectSwitcherPos.Hidden)
+              },
+            ]
+          },
+          {
+            label: 'Edit Mode Toggle Position',
+            submenu: [
+              {
+                label: 'On Top Bar',
+                type: 'radio',
+                checked: editTogglePos === EditTogglePos.TopBar,
+                doAction: async () => setEditTogglePositionUseCase(EditTogglePos.TopBar)
+              },
+              {
+                label: 'On Tab Bar (Left)',
+                type: 'radio',
+                checked: editTogglePos === EditTogglePos.TabBarLeft,
+                doAction: async () => setEditTogglePositionUseCase(EditTogglePos.TabBarLeft)
+              },
+              {
+                label: 'On Tab Bar (Right)',
+                type: 'radio',
+                checked: editTogglePos === EditTogglePos.TabBarRight,
+                doAction: async () => setEditTogglePositionUseCase(EditTogglePos.TabBarRight)
+              },
+              {
+                label: 'Hidden',
+                type: 'radio',
+                checked: editTogglePos === EditTogglePos.Hidden,
+                doAction: async () => setEditTogglePositionUseCase(EditTogglePos.Hidden)
               },
             ]
           },
@@ -262,19 +295,21 @@ export function createInitAppMenuUseCase({
       editMode: state.ui.editMode,
       menuBar: state.ui.menuBar,
       topBar: state.ui.topBar,
-      prjSwitcherPos: state.ui.projectSwitcher.pos
+      prjSwitcherPos: state.ui.projectSwitcher.pos,
+      editTogglePos: state.ui.editTogglePos,
     }), ({
       isLoading,
       editMode,
       menuBar,
       topBar,
-      prjSwitcherPos
+      prjSwitcherPos,
+      editTogglePos
     }) => {
       if (!isLoading) {
         appMenu.setMenu([
           (isMac ? menuApp : menuFile),
           menuEdit,
-          createMenuView(editMode, menuBar, topBar, prjSwitcherPos),
+          createMenuView(editMode, menuBar, topBar, prjSwitcherPos, editTogglePos),
           menuHelp,
           ...(isDevMode
             ? [menuDev]

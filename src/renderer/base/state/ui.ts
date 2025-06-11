@@ -198,11 +198,18 @@ export interface MemSaverState {
   workflowTimeouts: Record<EntityId, NodeJS.Timeout>;
 }
 
+export enum EditTogglePos {
+  Hidden = 0,
+  TopBar = 1,
+  TabBarLeft = 2,
+  TabBarRight = 3,
+}
 
 export interface UiState {
   editMode: boolean;
   menuBar: boolean;
   topBar: boolean;
+  editTogglePos: EditTogglePos;
   appConfig: AppConfig;
   apps: AppsState;
   dragDrop: DragDropState;
@@ -221,6 +228,7 @@ export function createUiState(): UiState {
     editMode: false,
     menuBar: true,
     topBar: false,
+    editTogglePos: EditTogglePos.TabBarRight,
     appConfig: {
       mainHotkey: 'CmdOrCtrl+Shift+F',
       memSaver: {

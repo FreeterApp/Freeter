@@ -40,7 +40,7 @@ export function createAppComponent({
                 <Worktable />
               </>
             : <InAppNote className={styles['no-projects']}>
-                {'You don\'t have any projects. Use the Manage Projects '} <SvgIcon svg={manage24Svg} className={styles['manage-icon']} /> {' button at the Top Bar to create a first one.'}
+                {'You don\'t have any projects. Use the Manage Projects '} <SvgIcon svg={manage24Svg} className={styles['manage-icon']} /> {' button above to create a first one.'}
               </InAppNote>
           }
         </div>

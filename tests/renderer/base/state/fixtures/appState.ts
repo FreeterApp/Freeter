@@ -4,7 +4,7 @@
  */
 
 import { AppState } from '@/base/state/app';
-import { ProjectSwitcherPos } from '@/base/state/ui';
+import { EditTogglePos, ProjectSwitcherPos } from '@/base/state/ui';
 import { StateInStore } from '@common/application/interfaces/store';
 import { deepFreeze } from '@common/helpers/deepFreeze';
 import { fixtureEntitiesState } from '@tests/base/state/fixtures/entitiesState';
@@ -16,6 +16,7 @@ const appState: AppState = {
     editMode: false,
     menuBar: true,
     topBar: true,
+    editTogglePos: EditTogglePos.TabBarRight,
     appConfig: {
       mainHotkey: '',
       memSaver: {
