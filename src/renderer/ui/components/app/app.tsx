@@ -27,12 +27,12 @@ export function createAppComponent({
   useAppViewModel
 }: Deps) {
   function App() {
-    const {modalScreens, hasModalScreens, hasProjects, contextMenuHandler, uiThemeId} = useAppViewModel();
+    const {modalScreens, hasModalScreens, hasProjects, contextMenuHandler, uiThemeId, hasTopBar} = useAppViewModel();
     return (
       <div onContextMenu={contextMenuHandler}>
         <UITheme themeId={uiThemeId} />
-        <div data-testid="main-screen" {...{ inert: hasModalScreens ? true : undefined }}>
-          <TopBar />
+        <div className={styles['main-screen']} data-testid="main-screen" {...{ inert: hasModalScreens ? true : undefined }}>
+          {hasTopBar && <TopBar />}
           {
             hasProjects
             ? <>
@@ -40,7 +40,7 @@ export function createAppComponent({
                 <Worktable />
               </>
             : <InAppNote className={styles['no-projects']}>
-                {'You don\'t have any projects. Use the Manage Projects '} <SvgIcon svg={manage24Svg} className={styles['manage-icon']} /> {' button above to create a first one.'}
+                {'You don\'t have any projects. Use the Manage Projects '} <SvgIcon svg={manage24Svg} className={styles['manage-icon']} /> {' button above (or under the View menu) to create a first one.'}
               </InAppNote>
           }
         </div>

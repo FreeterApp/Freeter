@@ -5,14 +5,11 @@
 
 .top-bar {
   display: flex;
-  position: fixed;
   z-index: 3;
   background-color: var(--freeter-topBarBackground);
   border-top: 1px solid var(--freeter-topBarBorder);
   border-bottom: 1px solid var(--freeter-topBarBorder);
-  top: 0;
-  left: 0;
-  right: 0;
+  margin-bottom: -1px;
 }
 
 .top-bar-section {

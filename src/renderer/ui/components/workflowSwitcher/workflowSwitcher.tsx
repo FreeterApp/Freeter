@@ -44,9 +44,9 @@ export function createWorkflowSwitcherComponent({
       dontShowActionBar,
     } = useWorkflowSwitcherViewModel();
 
-    return workflows ? (
+    return (
       <div className={styles['workflow-switcher-bar']}>
-        <div
+        {workflows && <div
           role="tablist"
           className={clsx(
             styles['workflow-switcher'],
@@ -85,9 +85,9 @@ export function createWorkflowSwitcherComponent({
             actionBarItems={actionBarItems}
             className={styles['workflow-switcher-action-bar']}
           ></ActionBar>
-        </div>
+        </div>}
       </div>
-    ) : <div/>
+    )
   }
 
   return memo(WorkflowSwitcher);

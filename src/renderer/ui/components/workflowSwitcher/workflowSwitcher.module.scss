@@ -6,27 +6,23 @@
 .workflow-switcher-bar {
   background-color: var(--freeter-workflowSwitcherBackground);
   border-bottom: 1px solid var(--freeter-workflowSwitcherBorder);
-  position: fixed;
   z-index: 2;
-  top: 62px;
-  left: 0;
-  right: 0;
   box-sizing: content-box;
   height: 36px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 .workflow-switcher {
+  flex-grow: 1;
   display: flex;
   margin: 0;
   padding: 0;
-  position: absolute;
   overflow-x: auto;
   overflow-y: hidden;
-  top: -1px;
-  left: 0px;
-  right: 0px;
-  bottom: -1px;
   box-sizing: content-box;
+  margin-bottom: -1px;
   &.is-drop-area {
     background-color: var(--freeter-workflowSwitcherDropAreaBackground);
   }

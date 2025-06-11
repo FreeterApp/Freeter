@@ -41,12 +41,12 @@ export function createWorktableComponent({
         ? <InAppNote className={styles['no-workflows']}>
             {'The project does not have any workflows. Enable Edit Mode with '}
             <SvgIcon svg={editMode24Svg} className={styles['edit-mode-icon']} />
-            {' button at the Top Bar to edit it.'}
+            {' button above (or under the Edit menu) to edit it.'}
           </InAppNote>
         : <InAppNote className={styles['no-workflows']}>
             {'Click '}
             <SvgIcon svg={add14Svg} className={styles['add-icon']} />
-            {' button at the Workflow Bar above to add a workflow to the project.'}
+            {' button at the Tab Bar above to add a workflow to the project.'}
           </InAppNote>
         )
       : <div
