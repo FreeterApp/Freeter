@@ -9,7 +9,6 @@
   background-color: var(--freeter-topBarBackground);
   border-top: 1px solid var(--freeter-topBarBorder);
   border-bottom: 1px solid var(--freeter-topBarBorder);
-  margin-bottom: -1px;
 }
 
 .top-bar-section {
@@ -33,4 +32,9 @@
 .top-bar-shelf-section {
   flex-grow: 1;
   position: relative;
+}
+
+.project-switcher {
+  height: 36px;
+  margin-right: 12px;
 }

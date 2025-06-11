@@ -14,6 +14,32 @@
   flex-direction: row;
 }
 
+.workflow-switcher-bar-section {
+  box-sizing: border-box;
+  padding: 0 6px;
+  display: flex;
+  &:not(:last-child) {
+    border-right: 1px solid var(--freeter-workflowSwitcherBorder);
+  }
+}
+
+.workflow-switcher-bar-palette-section {
+  padding: 0;
+}
+
+.workflow-switcher-bar-palette-section {
+  z-index: 1;
+}
+
+.workflow-switcher-bar-project-switcher-section {
+  align-items: center;
+  .project-switcher {
+    height: 32px;
+    line-height: 20px;
+    margin-right: 2px;
+  }
+}
+
 .workflow-switcher {
   flex-grow: 1;
   display: flex;
@@ -35,6 +61,7 @@
   height: 36px;
   margin: 0 24px 0 12px;
   min-width: 100px;
+  padding:0;
   &:first-child {
     padding-left: 12px;
   }
@@ -48,6 +75,7 @@
 .workflow-switcher-item {
   position: relative;
   display: inline-block;
+  margin-top: -1px;
   &:not(:first-child) {
     margin-left:-1px;
   }

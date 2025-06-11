@@ -4,8 +4,8 @@
  */
 
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import { createPaletteComponent } from '@/ui/components/topBar/palette/palette';
-import { createPaletteViewModelHook } from '@/ui/components/topBar/palette/paletteViewModel';
+import { createPaletteComponent } from '@/ui/components/palette/palette';
+import { createPaletteViewModelHook } from '@/ui/components/palette/paletteViewModel';
 import { createDragEndUseCase } from '@/application/useCases/dragDrop/dragEnd';
 import { createDragWidgetFromPaletteUseCase } from '@/application/useCases/dragDrop/dragWidgetFromPalette';
 import { createAppStateHook } from '@/ui/hooks/appState';

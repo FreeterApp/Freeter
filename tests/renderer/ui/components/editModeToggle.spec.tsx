@@ -4,7 +4,7 @@
  */
 
 import { render, screen } from '@testing-library/react';
-import { createEditModeToggleViewModelHook, createEditModeToggleComponent } from '@/ui/components/topBar/editModeToggle'
+import { createEditModeToggleViewModelHook, createEditModeToggleComponent } from '@/ui/components/editModeToggle'
 import userEvent from '@testing-library/user-event';
 import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';

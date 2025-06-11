@@ -5,7 +5,7 @@
 
 import { createSwitchProjectUseCase } from '@/application/useCases/projectSwitcher/switchProject';
 import { AppState } from '@/base/state/app';
-import { createProjectSwitcherComponent, createProjectSwitcherViewModelHook} from '@/ui/components/topBar/projectSwitcher';
+import { createProjectSwitcherComponent, createProjectSwitcherViewModelHook} from '@/ui/components/projectSwitcher';
 import { createAppStateHook } from '@/ui/hooks/appState';
 import { fireEvent, render, screen, act } from '@testing-library/react';
 import { fixtureProjectSettingsA } from '@tests/base/fixtures/project';

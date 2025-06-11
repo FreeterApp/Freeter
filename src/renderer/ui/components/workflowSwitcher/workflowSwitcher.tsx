@@ -9,12 +9,21 @@ import * as styles from './workflowSwitcher.module.scss';
 import { ActionBar } from '@/ui/components/basic/actionBar';
 import { WorkflowSwitcherItem } from '@/ui/components/workflowSwitcher/workflowSwitcherItem';
 import { memo } from 'react';
+import { ProjectSwitcherProps } from '@/ui/components/projectSwitcher';
 
 type Deps = {
+  EditModeToggle: React.FC;
+  ProjectSwitcher: React.FC<ProjectSwitcherProps>;
+  ManageProjectsButton: React.FC;
+  Palette: React.FC;
   useWorkflowSwitcherViewModel: WorkflowSwitcherViewModelHook;
 }
 
 export function createWorkflowSwitcherComponent({
+  EditModeToggle,
+  ProjectSwitcher,
+  ManageProjectsButton,
+  Palette,
   useWorkflowSwitcherViewModel
 }: Deps) {
   function WorkflowSwitcher() {
@@ -42,13 +51,35 @@ export function createWorkflowSwitcherComponent({
       actionBarItems,
       itemActionBarItemsFactory,
       dontShowActionBar,
+      showPrjSwitcherLeft,
+      showPalette,
+      showEditToggleLeft,
+      showPrjSwitcherRight,
+      showEditToggleRight,
     } = useWorkflowSwitcherViewModel();
 
     return (
       <div className={styles['workflow-switcher-bar']}>
+        {showPrjSwitcherLeft &&
+          <div className={clsx(styles['workflow-switcher-bar-section'], styles['workflow-switcher-bar-project-switcher-section'])}>
+            <ProjectSwitcher className={styles['project-switcher']} />
+            <ManageProjectsButton />
+          </div>
+        }
+        {showEditToggleLeft &&
+          <div className={styles['workflow-switcher-bar-section']}>
+            <EditModeToggle />
+          </div>
+        }
+        {showPalette &&
+          <div className={clsx(styles['workflow-switcher-bar-section'], styles['workflow-switcher-bar-palette-section'])}>
+            <Palette />
+          </div>
+        }
         {workflows && <div
           role="tablist"
           className={clsx(
+            styles['workflow-switcher-bar-section'],
             styles['workflow-switcher'],
             isEditMode && dndTargetListItemId === null && styles['is-drop-area'],
             dontShowActionBar && styles['dont-show-action-bar']
@@ -86,6 +117,18 @@ export function createWorkflowSwitcherComponent({
             className={styles['workflow-switcher-action-bar']}
           ></ActionBar>
         </div>}
+
+        {showPrjSwitcherRight &&
+          <div className={clsx(styles['workflow-switcher-bar-section'], styles['workflow-switcher-bar-project-switcher-section'])}>
+            <ProjectSwitcher className={styles['project-switcher']} />
+            <ManageProjectsButton />
+          </div>
+        }
+        {showEditToggleRight &&
+          <div className={styles['workflow-switcher-bar-section']}>
+            <EditModeToggle />
+          </div>
+        }
       </div>
     )
   }
