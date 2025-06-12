@@ -24,7 +24,7 @@ interface WebviewProps extends WidgetReactComponentProps<Settings> {
 }
 
 function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps) {
-  const {url, sessionScope, sessionPersist, autoReload} = settings;
+  const {url, sessionScope, sessionPersist, autoReload, injectedCSS, injectedJS, userAgent} = settings;
 
   const partition = useMemo(() => createPartition(sessionPersist, sessionScope, env, id), [
     env, id, sessionScope, sessionPersist

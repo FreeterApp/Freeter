@@ -40,6 +40,9 @@ export interface Settings {
   sessionPersist: SettingsSessionPersist;
   sessionScope: SettingsSessionScope;
   url: string;
+  injectedCSS: string;
+  injectedJS: string;
+  userAgent: string;
 }
 
 export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
@@ -47,6 +50,9 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
   sessionPersist: isSettingsSessionPersist(settings.sessionPersist) ? settings.sessionPersist : 'persist',
   sessionScope: isSettingsSessionScope(settings.sessionScope) ? settings.sessionScope : 'prj',
   url: typeof settings.url === 'string' ? settings.url : '',
+  injectedCSS: typeof settings.injectedCSS === 'string' ? settings.injectedCSS : '',
+  injectedJS: typeof settings.injectedJS === 'string' ? settings.injectedJS : '',
+  userAgent: typeof settings.userAgent === 'string' ? settings.userAgent : '',
 })
 
 const debounceUpdate3s = debounce((fn: () => void) => fn(), 3000);
