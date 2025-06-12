@@ -33,10 +33,10 @@ export function createAppComponent({
         <UITheme themeId={uiThemeId} />
         <div className={styles['main-screen']} data-testid="main-screen" {...{ inert: hasModalScreens ? true : undefined }}>
           {hasTopBar && <TopBar />}
+          <WorkflowSwitcher />
           {
             hasProjects
             ? <>
-                <WorkflowSwitcher />
                 <Worktable />
               </>
             : <InAppNote className={styles['no-projects']}>

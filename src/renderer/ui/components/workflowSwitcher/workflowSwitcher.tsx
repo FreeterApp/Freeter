@@ -82,7 +82,7 @@ export function createWorkflowSwitcherComponent({
         {showPrjSwitcherLeft && compPrjSwitcher}
         {showEditToggleLeft && compEditToggle}
         {showPaletteLeft && compPalette}
-        {workflows && <div
+        {workflows ? <div
           role="tablist"
           className={clsx(
             styles['workflow-switcher-bar-section'],
@@ -122,7 +122,14 @@ export function createWorkflowSwitcherComponent({
             actionBarItems={actionBarItems}
             className={styles['workflow-switcher-action-bar']}
           ></ActionBar>
-        </div>}
+        </div>
+        : <div
+            className={clsx(
+              styles['workflow-switcher-bar-section'],
+              styles['workflow-switcher'],
+            )}
+          ></div>
+        }
 
         {showPrjSwitcherRight && compPrjSwitcher}
         {showPaletteRight && compPalette}
