@@ -28,7 +28,7 @@ export interface WidgetLayoutItemProps {
   isEditable: boolean;
   isDragging: boolean;
   viewportSize: WHPx;
-  viewportElRef: React.RefObject<HTMLDivElement>;
+  viewportElRef: React.RefObject<HTMLDivElement | null>;
   onDragStart: (evt: DragEvent<HTMLElement>, itemId: string) => void;
   onDragEnd: (evt: DragEvent<HTMLElement>) => void;
   onResizeStart: (itemId: string, edges: WorktableStateResizingItemEdges) => void;
@@ -146,7 +146,7 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
   }, [
     isResizing, colWidth, rowHeight, resizing?.initialItemRectUnits,
     resizing?.fromPointPx, resizing?.draggingEdges.x, resizing?.draggingEdges.y,
-    resizing?.rectPx, onResize, viewportSize.wPx, resizingMinSize
+    resizing?.rectPx, onResize, resizingMinSize
   ])
 
   const onResizeMouseUpHandler = useCallback((evt: MouseEvent) => {

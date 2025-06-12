@@ -7,7 +7,7 @@ import { Entity } from '@/base/entity';
 import { EntityCollection } from '@/base/entityCollection';
 import { EntityIdList, EntityList, mapIdListToEntityList } from '@/base/entityList';
 import { AppState } from '@/base/state/app';
-import { useStoreWithEqualityFn } from 'zustand/traditional';
+import { useStoreWithEqualityFn as _useStoreWithEqualityFn } from 'zustand/traditional';
 import { StoreApi } from 'zustand/vanilla'
 import { shallow } from 'zustand/vanilla/shallow';
 
@@ -34,7 +34,7 @@ export function createAppStateHook(appStoreForUi: AppStoreForUi): UseAppState {
     selector: (state: AppState) => T,
     equals?: (a: T, b: T) => boolean
   ): T {
-    return useStoreWithEqualityFn(appStoreForUi, selector, equals)
+    return _useStoreWithEqualityFn(appStoreForUi, selector, equals)
   }
 
   const useAppState: UseAppState = selector => _useAppState(selector, shallow);

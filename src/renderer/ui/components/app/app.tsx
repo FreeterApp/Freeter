@@ -31,7 +31,7 @@ export function createAppComponent({
     return (
       <div onContextMenu={contextMenuHandler}>
         <UITheme themeId={uiThemeId} />
-        <div data-testid="main-screen" {...{ inert: hasModalScreens ? '' : undefined }}>
+        <div data-testid="main-screen" {...{ inert: hasModalScreens ? true : undefined }}>
           <TopBar />
           {
             hasProjects
@@ -46,7 +46,7 @@ export function createAppComponent({
         </div>
         {
           modalScreens.map(scr => (
-            scr && <div key={scr.id} data-testid="modal-screen" {...{ inert: !scr.isLast ? '' : undefined }}>
+            scr && <div key={scr.id} data-testid="modal-screen" {...{ inert: !scr.isLast ? true : undefined }}>
               {scr.comp}
             </div>
           ))

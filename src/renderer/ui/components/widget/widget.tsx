@@ -56,7 +56,7 @@ export function createWidgetComponent({
           className={styles['widget-header-action-bar']}
         ></ActionBar>
       </div>
-      <div className={styles['widget-body']} data-widget-context="" {...{ inert: editMode ? '' : undefined }}>
+      <div className={styles['widget-body']} data-widget-context="" {...{ inert: editMode ? true : undefined }}>
         <WidgetComp id={widget.id} env={env} settings={widget.settings} widgetApi={widgetApi} sharedState={sharedState}></WidgetComp>
       </div>
     </div>

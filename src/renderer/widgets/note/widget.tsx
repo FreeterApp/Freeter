@@ -11,7 +11,6 @@ import { ChangeEventHandler, useCallback, useEffect, useMemo, useRef, useState }
 import { createContextMenuFactory, textAreaContextId } from '@/widgets/note/contextMenu';
 import { createActionBarItems } from '@/widgets/note/actionBar';
 import { Editor } from 'tiny-markdown-editor';
-import 'tiny-markdown-editor/dist/tiny-mde.min.css';
 
 const keyNote = 'note';
 
@@ -29,6 +28,10 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
   }, [isLoaded, updateActionBar, setContextMenuFactory, widgetApi]);
 
   const saveNote = useMemo(() => debounce((note: string) => dataStorage.setText(keyNote, note), 3000), [dataStorage]);
+  const updNote = useCallback((note: string) => {
+    loadedNote.current = note;
+    saveNote(note);
+  }, [saveNote])
 
   const loadNote = useCallback(async function () {
     loadedNote.current = await dataStorage.getText(keyNote) || '';
@@ -37,24 +40,32 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
 
   const handleChange = useCallback<ChangeEventHandler<HTMLTextAreaElement>>((e) => {
     const newNote = e.target.value;
-    saveNote(newNote)
-  }, [saveNote])
+    updNote(newNote)
+  }, [updNote])
 
   useEffect(() => {
     loadNote();
   }, [loadNote])
 
   useEffect(() => {
-    if (settings.markdown && textAreaRef.current) {
-      const tinyMDE = new Editor({textarea: textAreaRef.current});
-      tinyMDE.addEventListener('change', (e) => saveNote(e.content));
-      (textAreaRef.current.nextSibling as HTMLElement).spellcheck = settings.spellCheck;
+    if (textAreaRef.current) {
+      if (settings.markdown) {
+        const tinyMDE = new Editor({textarea: textAreaRef.current});
+        tinyMDE.addEventListener('change', (e) => updNote(e.content));
+        (textAreaRef.current.nextSibling as HTMLElement).spellcheck = settings.spellCheck;
+      } else {
+        loadedNote.current = textAreaRef.current.value;
+        Array.from(textAreaRef.current.parentElement?.children || [])
+          .filter(child => child.classList.contains('TinyMDE'))
+          .forEach(child => child.remove());
+      }
     }
   })
 
   return (
     isLoaded
     ? <textarea
+        key={settings.markdown?'md':undefined} // resets element after disabling markdown
         ref={textAreaRef}
         className={styles['textarea']}
         defaultValue={loadedNote.current}

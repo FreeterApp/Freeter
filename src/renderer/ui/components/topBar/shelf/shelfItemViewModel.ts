@@ -29,7 +29,7 @@ export interface ShelfItemProps {
   onDrop: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
 }
 
-export function useShelfItemViewModel(shelfItemEl: React.RefObject<HTMLLIElement>, props: ShelfItemProps) {
+export function useShelfItemViewModel(shelfItemEl: HTMLLIElement | null, props: ShelfItemProps) {
   const {
     env, widget, widgetType, id, isEditMode, isDragging, isDropArea,
     onDragStart, onDragEnd, onDragEnter, onDragLeave, onDragOver,

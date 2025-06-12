@@ -61,18 +61,48 @@ const debounceUpdate3s = debounce((fn: () => void) => fn(), 3000);
 
 export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
   const {updateSettings} = settingsApi;
+
+  // TODO: refactor the updateUrl, updateInjectedJs, updateUserAgent
   const [url, setUrl] = useState(settings.url);
-  const updateUrl = useCallback((newUrl: string, debounce: boolean) => {
-    setUrl(newUrl);
-    const updateUrlInSettings = () => updateSettings({
+  const [injectedJs, setInjectedJs] = useState(settings.injectedJS);
+  const [userAgent, setUserAgent] = useState(settings.userAgent);
+  const updateUrl = useCallback((newVal: string, debounce: boolean) => {
+    setUrl(newVal);
+    const updateValInSettings = () => updateSettings({
       ...settings,
-      url: newUrl
+      url: newVal
     })
     if (debounce) {
-      debounceUpdate3s(updateUrlInSettings);
+      debounceUpdate3s(updateValInSettings);
     } else {
       debounceUpdate3s.cancel();
-      updateUrlInSettings();
+      updateValInSettings();
+    }
+  }, [settings, updateSettings])
+  const updateInjectedJs = useCallback((newVal: string, debounce: boolean) => {
+    setInjectedJs(newVal);
+    const updateValInSettings = () => updateSettings({
+      ...settings,
+      injectedJS: newVal
+    })
+    if (debounce) {
+      debounceUpdate3s(updateValInSettings);
+    } else {
+      debounceUpdate3s.cancel();
+      updateValInSettings();
+    }
+  }, [settings, updateSettings])
+  const updateUserAgent = useCallback((newVal: string, debounce: boolean) => {
+    setUserAgent(newVal);
+    const updateValInSettings = () => updateSettings({
+      ...settings,
+      userAgent: newVal
+    })
+    if (debounce) {
+      debounceUpdate3s(updateValInSettings);
+    } else {
+      debounceUpdate3s.cancel();
+      updateValInSettings();
     }
   }, [settings, updateSettings])
   return (
@@ -154,7 +184,7 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
         title='Inject JS'
         moreInfo='Inject the following JS script into the webpage.'
       >
-        <textarea id="webpage-inject-js" value={settings.injectedJS} onChange={e => updateSettings({...settings, injectedJS: e.target.value})} placeholder="Type JS"></textarea>
+        <textarea id="webpage-inject-js" value={injectedJs} onChange={e => updateInjectedJs(e.target.value, true)} onBlur={e=>updateInjectedJs(e.target.value, false)} placeholder="Type JS"></textarea>
       </SettingBlock>
 
       <SettingBlock
@@ -162,7 +192,7 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
         title='User Agent'
         moreInfo='Set the following User Agent string for the webpage.'
       >
-        <input id="webpage-user-agent" type="text" value={settings.userAgent} onChange={e => updateSettings({...settings, userAgent: e.target.value})} placeholder="Type a User Agent string" />
+        <input id="webpage-user-agent" type="text" value={userAgent} onChange={e => updateUserAgent(e.target.value, true)} onBlur={e=>updateUserAgent(e.target.value, false)} placeholder="Type User Agent string" />
       </SettingBlock>
 
       <SettingBlock

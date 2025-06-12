@@ -7,7 +7,7 @@ import { ReactComponent, SettingsEditorReactComponentProps, WidgetApi, WidgetRea
 import { render, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { fixtureProcessInfoLinux } from '@testscommon/base/fixtures/process';
-import { useState } from 'react';
+import { JSX, useState } from 'react';
 
 function setupSut<T>(
   compFactory: (settings: T, setVal: (newVal: T) => void, sharedState: SharedState) => JSX.Element,
