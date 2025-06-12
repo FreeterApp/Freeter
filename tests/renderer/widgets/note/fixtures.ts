@@ -8,6 +8,7 @@ import { Settings } from '@/widgets/note/settings';
 export function fixtureSettings(settings: Partial<Settings>): Settings {
   return {
     spellCheck: true,
+    markdown: true,
     ...settings
   }
 }

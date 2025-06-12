@@ -17,13 +17,13 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
 })
 
 function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
-  const cmdRefs = useRef<HTMLInputElement[]>([]);
+  const cmdRefs = useRef<Array<HTMLInputElement|null>>([]);
   const {updateSettings, dialog} = settingsApi;
   const [triggerLastCmdFocus, setTriggerLastCmdFocus] = useState(false);
 
   useEffect(() => {
     if (triggerLastCmdFocus) {
-      cmdRefs.current[settings.cmds.length-1].focus();
+      cmdRefs.current[settings.cmds.length-1]?.focus();
       setTriggerLastCmdFocus(false);
     }
   }, [settings.cmds.length, triggerLastCmdFocus])
@@ -52,7 +52,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
         {settings.cmds.map((cmd, i) => (
           <SettingRow key={i}>
             <input
-              ref={(el) => (cmdRefs.current[i] = el!)}
+              ref={(el) => {cmdRefs.current[i] = el}}
               id={'cmd'+i}
               type="text"
               value={cmd}

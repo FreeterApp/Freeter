@@ -11,6 +11,9 @@ export function fixtureSettings(settings: Partial<Settings>): Settings {
     sessionScope: 'prj',
     url: 'https://some.url/',
     autoReload: 0,
+    injectedCSS: '',
+    injectedJS: '',
+    userAgent: '',
     ...settings
   }
 }

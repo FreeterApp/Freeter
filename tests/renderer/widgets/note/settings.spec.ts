@@ -35,4 +35,24 @@ describe('Note Widget Settings', () => {
       spellCheck: true
     });
   })
+
+  it('should allow to update "markdown" setting with a checkbox', async () => {
+    const settings = fixtureSettings({ markdown: true });
+    const { userEvent, getSettings } = setupSettingsSut(settingsEditorComp, settings);
+    const checkbox = screen.getByRole('checkbox', { name: /Enable markdown/i })
+
+    await userEvent.click(checkbox);
+
+    expect(getSettings()).toEqual({
+      ...settings,
+      markdown: false
+    });
+
+    await userEvent.click(checkbox);
+
+    expect(getSettings()).toEqual({
+      ...settings,
+      markdown: true
+    });
+  })
 })

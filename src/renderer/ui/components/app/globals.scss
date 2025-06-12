@@ -121,6 +121,9 @@ input[type="checkbox"]:disabled {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
 ::-webkit-scrollbar-thumb {
   background-color: var(--freeter-scrollbarThumb);
   &:hover {

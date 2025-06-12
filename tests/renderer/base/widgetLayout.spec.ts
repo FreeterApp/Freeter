@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { createLayoutItem, createLayoutItemAtFreeArea, moveLayoutItem, removeLayoutItem, resizeLayoutItemByEdges, WidgetLayout, WidgetLayoutItem, WidgetLayoutItemRect, widgetLayoutMaxCols } from '@/base/widgetLayout';
+import { createLayoutItem, createLayoutItemAtFreeArea, moveLayoutItem, removeLayoutItem, resizeLayoutItemByEdges, WidgetLayout, WidgetLayoutItem, WidgetLayoutItemRect } from '@/base/widgetLayout';
 import { fixtureWidgetLayoutItemA, fixtureWidgetLayoutItemB, fixtureWidgetLayoutItemC, fixtureWidgetLayoutItemD } from '@tests/base/fixtures/widgetLayout';
 
 describe('WidgetLayout', () => {
@@ -72,22 +72,6 @@ describe('WidgetLayout', () => {
       const id = 'TEST-ID'
       const rect = { x: 1, y: -1, w: 1, h: 1 };
       const expectRect = { x: 1, y: 0, w: 1, h: 1 };
-      const widgetId = 'TEST-WIDGET-ID'
-      const layout: WidgetLayout = [fixtureWidgetLayoutItemA()];
-
-      const newItem = createLayoutItem(
-        layout,
-        { id, rect, widgetId }
-      )[1] as WidgetLayoutItem;
-
-      expect(newItem.rect).toEqual(expectRect);
-    })
-
-    it('should set max allowed x if x+w > layout columns', () => {
-      const id = 'TEST-ID'
-      const maxAllowedX = widgetLayoutMaxCols - 1;
-      const rect = { x: maxAllowedX + 1, y: 1, w: 1, h: 1 };
-      const expectRect = { x: maxAllowedX, y: 1, w: 1, h: 1 };
       const widgetId = 'TEST-WIDGET-ID'
       const layout: WidgetLayout = [fixtureWidgetLayoutItemA()];
 
@@ -267,36 +251,6 @@ describe('WidgetLayout', () => {
       expect(newLayout).toEqual(expectLayout);
     })
 
-    it('should set max allowed x if x+w > layout columns', () => {
-      const id = 'TEST-ID';
-      const w = 2;
-      const origXYW = { x: 1, y: 1, w };
-      const maxAllowedX = widgetLayoutMaxCols - w;
-      const newXY1 = {
-        x: maxAllowedX + 1,
-        y: 1
-      };
-      const newXY2 = {
-        x: maxAllowedX + 99,
-        y: 1
-      };
-      const expectXYW = { x: maxAllowedX, y: 1, w };
-      const origLayout: WidgetLayout = [
-        fixtureWidgetLayoutItemA({ id, rect: origXYW })
-      ];
-      const expectLayout: WidgetLayout = [{
-        ...origLayout[0],
-        rect: {
-          ...origLayout[0].rect,
-          ...expectXYW
-        }
-      }]
-      const newLayout1 = moveLayoutItem(origLayout, id, newXY1);
-      const newLayout2 = moveLayoutItem(origLayout, id, newXY2);
-
-      expect(newLayout1).toEqual(expectLayout);
-      expect(newLayout2).toEqual(expectLayout);
-    })
 
     it('should fix collisions', () => {
       const id = 'TEST-ID';
@@ -484,8 +438,7 @@ describe('WidgetLayout', () => {
       const id = 'TEST-ID';
       const origXW = { x: 3, w: 3 };
       const maxAllowedDelta = origXW.x;
-      const delta1 = { left: maxAllowedDelta + 1 };
-      const delta2 = { left: widgetLayoutMaxCols + 1 };
+      const delta = { left: maxAllowedDelta + 1 };
       const expectXW = { x: 0, w: origXW.w + maxAllowedDelta }
       const origLayout: WidgetLayout = [
         fixtureWidgetLayoutItemA({ id, rect: origXW }),
@@ -498,36 +451,9 @@ describe('WidgetLayout', () => {
         }
       }]
 
-      const newLayout1 = resizeLayoutItemByEdges(origLayout, id, delta1, { w: 1, h: 1 });
-      const newLayout2 = resizeLayoutItemByEdges(origLayout, id, delta2, { w: 1, h: 1 });
+      const newLayout = resizeLayoutItemByEdges(origLayout, id, delta, { w: 1, h: 1 });
 
-      expect(newLayout1).toEqual(expectedLayout);
-      expect(newLayout2).toEqual(expectedLayout);
-    })
-
-    it('should set max allowed w if x+w > layout columns', () => {
-      const id = 'TEST-ID';
-      const origXW = { x: 3, w: 3 };
-      const maxAllowedDelta = widgetLayoutMaxCols - origXW.w;
-      const delta1 = { right: maxAllowedDelta + 1 };
-      const delta2 = { right: widgetLayoutMaxCols + 1 };
-      const expectXW = { x: 3, w: widgetLayoutMaxCols - origXW.x }
-      const origLayout: WidgetLayout = [
-        fixtureWidgetLayoutItemA({ id, rect: origXW }),
-      ];
-      const expectedLayout: WidgetLayout = [{
-        ...origLayout[0],
-        rect: {
-          ...origLayout[0].rect,
-          ...expectXW
-        }
-      }]
-
-      const newLayout1 = resizeLayoutItemByEdges(origLayout, id, delta1, { w: 1, h: 1 });
-      const newLayout2 = resizeLayoutItemByEdges(origLayout, id, delta2, { w: 1, h: 1 });
-
-      expect(newLayout1).toEqual(expectedLayout);
-      expect(newLayout2).toEqual(expectedLayout);
+      expect(newLayout).toEqual(expectedLayout);
     })
 
     it('should set max allowed h if y < 0', () => {

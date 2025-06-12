@@ -93,7 +93,7 @@ describe('Webpage Widget', () => {
     it('should be empty, if url is invalid after prefixing with the https://', () => {
       const { webview } = setupWebpageWidgetSut(fixtureSettings({ url: ':' }));
 
-      expect(webview).toHaveAttribute('src', '');
+      expect(webview).not.toHaveAttribute('src');
     })
   })
   describe('webview partition attribute', () => {

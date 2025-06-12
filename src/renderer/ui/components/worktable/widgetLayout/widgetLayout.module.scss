@@ -12,8 +12,7 @@
 }
 
 .widgetLayout {
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow: scroll;
   visibility: hidden;
 
   &.is-drop-area * {
@@ -25,25 +24,26 @@
   }
 
   &:has(.is-maximized) {
-    overflow-y: hidden;
+    overflow: hidden;
   }
 
   &::-webkit-scrollbar{
-    width: 6px;
-    height: 6px;
+    display: none;
+    // width: 6px;
+    // height: 6px;
   }
-  &:not(:hover) {
-    &::-webkit-scrollbar{
-      display: none;
-    }
-  }
-  &::-webkit-scrollbar-thumb{
-    opacity: 0;
-    transition: opacity 200ms ease;
-  }
-  &:hover::-webkit-scrollbar-thumb{
-    opacity: 0;
-  }
+  // &:not(:hover) {
+  //   &::-webkit-scrollbar{
+  //     display: none;
+  //   }
+  // }
+  // &::-webkit-scrollbar-thumb{
+  //   opacity: 0;
+  //   transition: opacity 200ms ease;
+  // }
+  // &:hover::-webkit-scrollbar-thumb{
+  //   opacity: 0;
+  // }
 }
 
 .no-widgets {
@@ -75,7 +75,8 @@
     display: block;
     position: absolute;
     bottom: -6px;
-    width: 1px;
+    right: -6px;
+    width: 6px;
     height: 6px;
   }
 
