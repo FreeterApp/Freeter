@@ -381,11 +381,13 @@ export function createWorkflowSwitcherViewModelHook({
       showContextMenuUseCase(contextMenuItems);
     }, [copiedWorkflows, isEditMode])
 
-    const showPalette = topBarIsHidden && isEditMode && !!currentWorkflow;
     const showPrjSwitcherLeft = prjSwitcherPos === ProjectSwitcherPos.TabBarLeft;
     const showPrjSwitcherRight = prjSwitcherPos === ProjectSwitcherPos.TabBarRight;
     const showEditToggleLeft = editTogglePos === EditTogglePos.TabBarLeft;
     const showEditToggleRight = editTogglePos === EditTogglePos.TabBarRight;
+    const showPalette = isEditMode && !!currentWorkflow;
+    const showPaletteLeft = showPalette && showEditToggleLeft;
+    const showPaletteRight = showPalette && !showPaletteLeft && (showEditToggleRight || topBarIsHidden);
 
     return {
       isEditMode,
@@ -411,7 +413,8 @@ export function createWorkflowSwitcherViewModelHook({
       dontShowActionBar,
       onContextMenu,
       onItemContextMenu,
-      showPalette,
+      showPaletteLeft,
+      showPaletteRight,
       showPrjSwitcherLeft,
       showPrjSwitcherRight,
       showEditToggleLeft,

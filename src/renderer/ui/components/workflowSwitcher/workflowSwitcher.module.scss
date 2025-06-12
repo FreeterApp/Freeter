@@ -25,14 +25,13 @@
 
 .workflow-switcher-bar-palette-section {
   padding: 0;
-}
-
-.workflow-switcher-bar-palette-section {
   z-index: 1;
+  flex-shrink: 0;
 }
 
 .workflow-switcher-bar-project-switcher-section {
   align-items: center;
+  flex-shrink: 0;
   .project-switcher {
     height: 32px;
     line-height: 20px;

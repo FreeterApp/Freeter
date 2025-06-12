@@ -10,12 +10,13 @@ import { ActionBar } from '@/ui/components/basic/actionBar';
 import { WorkflowSwitcherItem } from '@/ui/components/workflowSwitcher/workflowSwitcherItem';
 import { memo } from 'react';
 import { ProjectSwitcherProps } from '@/ui/components/projectSwitcher';
+import { PaletteProps, PalettePropsPos } from '@/ui/components/palette';
 
 type Deps = {
   EditModeToggle: React.FC;
   ProjectSwitcher: React.FC<ProjectSwitcherProps>;
   ManageProjectsButton: React.FC;
-  Palette: React.FC;
+  Palette: React.FC<PaletteProps>;
   useWorkflowSwitcherViewModel: WorkflowSwitcherViewModelHook;
 }
 
@@ -52,30 +53,35 @@ export function createWorkflowSwitcherComponent({
       itemActionBarItemsFactory,
       dontShowActionBar,
       showPrjSwitcherLeft,
-      showPalette,
+      showPaletteLeft,
+      showPaletteRight,
       showEditToggleLeft,
       showPrjSwitcherRight,
       showEditToggleRight,
     } = useWorkflowSwitcherViewModel();
 
+    const compPrjSwitcher =
+      <div
+        className={clsx(styles['workflow-switcher-bar-section'], styles['workflow-switcher-bar-project-switcher-section'])}>
+          <ProjectSwitcher className={styles['project-switcher']} />
+          <ManageProjectsButton />
+      </div>
+
+    const compEditToggle =
+      <div className={styles['workflow-switcher-bar-section']}>
+        <EditModeToggle />
+      </div>
+
+    const compPalette =
+      <div className={clsx(styles['workflow-switcher-bar-section'], styles['workflow-switcher-bar-palette-section'])}>
+        <Palette pos={PalettePropsPos.TabBar}/>
+      </div>
+
     return (
       <div className={styles['workflow-switcher-bar']}>
-        {showPrjSwitcherLeft &&
-          <div className={clsx(styles['workflow-switcher-bar-section'], styles['workflow-switcher-bar-project-switcher-section'])}>
-            <ProjectSwitcher className={styles['project-switcher']} />
-            <ManageProjectsButton />
-          </div>
-        }
-        {showEditToggleLeft &&
-          <div className={styles['workflow-switcher-bar-section']}>
-            <EditModeToggle />
-          </div>
-        }
-        {showPalette &&
-          <div className={clsx(styles['workflow-switcher-bar-section'], styles['workflow-switcher-bar-palette-section'])}>
-            <Palette />
-          </div>
-        }
+        {showPrjSwitcherLeft && compPrjSwitcher}
+        {showEditToggleLeft && compEditToggle}
+        {showPaletteLeft && compPalette}
         {workflows && <div
           role="tablist"
           className={clsx(
@@ -118,17 +124,9 @@ export function createWorkflowSwitcherComponent({
           ></ActionBar>
         </div>}
 
-        {showPrjSwitcherRight &&
-          <div className={clsx(styles['workflow-switcher-bar-section'], styles['workflow-switcher-bar-project-switcher-section'])}>
-            <ProjectSwitcher className={styles['project-switcher']} />
-            <ManageProjectsButton />
-          </div>
-        }
-        {showEditToggleRight &&
-          <div className={styles['workflow-switcher-bar-section']}>
-            <EditModeToggle />
-          </div>
-        }
+        {showPrjSwitcherRight && compPrjSwitcher}
+        {showPaletteRight && compPalette}
+        {showEditToggleRight && compEditToggle}
       </div>
     )
   }

@@ -31,7 +31,7 @@ export function createTopBarViewModelHook({
     ])
 
     const currentWorkflow = workflows[projects[currentProjectId]?.currentWorkflowId || ''];
-    const showPalette = editMode && !!currentWorkflow;
+    const showPalette = editMode && !!currentWorkflow && (editTogglePos === EditTogglePos.TopBar || editTogglePos === EditTogglePos.Hidden);
     const showEditToggle = editTogglePos === EditTogglePos.TopBar;
     const showPrjSwitcher = prjSwitcherPos === ProjectSwitcherPos.TopBar;
     return {
