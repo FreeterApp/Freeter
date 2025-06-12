@@ -4,7 +4,7 @@
  */
 
 import { WorktableStateResizingItemEdges, WorktableStateResizingItemEdgeX, WorktableStateResizingItemEdgeY } from '@/base/state/ui';
-import { WidgetLayoutItemRect, widgetLayoutVisibleCols, widgetLayoutVisibleRows } from '@/base/widgetLayout';
+import { WidgetLayoutItemRect, widgetLayoutMaxCols, widgetLayoutVisibleRows } from '@/base/widgetLayout';
 import { itemRectUnitsToPx, itemWUnitsToPx, itemHUnitsToPx, calcGridColWidth, calcGridRowHeight, itemXPxToUnits, itemYPxToUnits, clamp } from '@/ui/components/worktable/widgetLayout/calcs';
 import { resizeEdgesByHandleId, ResizeHandleId } from '@/ui/components/worktable/widgetLayout/resizeHandles';
 import { RectPx, WHPx, XYPx } from '@/ui/types/dimensions';
@@ -83,7 +83,7 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
   if (resizing) {
     rectPx = resizing.rectPx;
   } else if (isMaximized) {
-    rectPx = itemRectUnitsToPx({ x: 0, y: 0, w: widgetLayoutVisibleCols, h: widgetLayoutVisibleRows }, colWidth, rowHeight);
+    rectPx = itemRectUnitsToPx({ x: 0, y: 0, w: widgetLayoutMaxCols, h: widgetLayoutVisibleRows }, colWidth, rowHeight);
     rectPx.yPx = rectPx.yPx + (viewportElRef.current?.scrollTop || 0);
   } else {
     rectPx = itemRectUnitsToPx({ x, y, w, h }, colWidth, rowHeight);
@@ -125,7 +125,11 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
         newRectPx.wPx = clamp(initialItemRectPx.wPx - deltaPx.x, minWPx, initialItemRightPx);
         newRectPx.xPx = clamp(initialItemRectPx.xPx + deltaPx.x, 0, initialItemRightPx - minWPx);
       } else {
-        newRectPx.wPx = Math.max(initialItemRectPx.wPx + deltaPx.x, minWPx);
+        newRectPx.wPx = clamp(
+          initialItemRectPx.wPx + deltaPx.x,
+          minWPx,
+          viewportSize.wPx - initialItemRectPx.xPx
+        );
       }
     }
     if (resizing.draggingEdges.y) {

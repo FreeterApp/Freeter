@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { WidgetLayoutItemRect, widgetLayoutVisibleCols, widgetLayoutVisibleRows } from '@/base/widgetLayout';
+import { WidgetLayoutItemRect, widgetLayoutMaxCols, widgetLayoutVisibleRows } from '@/base/widgetLayout';
 import { RectPx, WHPx, XYPx } from '@/ui/types/dimensions';
 
 const itemMargin: XYPx = { xPx: 6, yPx: 6 };
@@ -18,7 +18,7 @@ export function clamp(num: number, lowerBound: number, upperBound: number): numb
 }
 
 export function calcGridColWidth(viewportSize: WHPx): number {
-  return (viewportSize.wPx - itemMargin.xPx * (widgetLayoutVisibleCols - 1) - layoutPadding.xPx * 2) / widgetLayoutVisibleCols;
+  return (viewportSize.wPx - itemMargin.xPx * (widgetLayoutMaxCols - 1) - layoutPadding.xPx * 2) / widgetLayoutMaxCols;
 }
 
 export function calcGridRowHeight(viewportSize: WHPx): number {

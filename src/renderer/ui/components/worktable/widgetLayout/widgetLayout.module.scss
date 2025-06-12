@@ -12,7 +12,8 @@
 }
 
 .widgetLayout {
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
   visibility: hidden;
 
   &.is-drop-area * {
@@ -24,7 +25,7 @@
   }
 
   &:has(.is-maximized) {
-    overflow: hidden;
+    overflow-y: hidden;
   }
 
   &::-webkit-scrollbar{

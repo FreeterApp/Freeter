@@ -7,12 +7,10 @@ import { CreateSettingsState, ReactComponent, SettingBlock, SettingsEditorReactC
 
 export interface Settings {
   spellCheck: boolean;
-  markdown: boolean;
 }
 
 export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
   spellCheck: typeof settings.spellCheck === 'boolean' ? settings.spellCheck : false,
-  markdown: typeof settings.markdown === 'boolean' ? settings.markdown : false,
 })
 
 function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
@@ -30,21 +28,6 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
               spellCheck: !settings.spellCheck
             })}/>
             Enable spell checking
-          </label>
-        </div>
-      </SettingBlock>
-
-      <SettingBlock
-        titleForId='markdown'
-        title='Markdown'
-      >
-        <div>
-          <label>
-            <input type="checkbox" id="markdown" checked={settings.markdown} onChange={_=>updateSettings({
-              ...settings,
-              markdown: !settings.markdown
-            })}/>
-            Enable Markdown
           </label>
         </div>
       </SettingBlock>

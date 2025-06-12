@@ -10,8 +10,6 @@ import { Settings } from './settings';
 import { ChangeEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createContextMenuFactory, textAreaContextId } from '@/widgets/note/contextMenu';
 import { createActionBarItems } from '@/widgets/note/actionBar';
-import { Editor } from 'tiny-markdown-editor';
-import 'tiny-markdown-editor/dist/tiny-mde.min.css';
 
 const keyNote = 'note';
 
@@ -43,14 +41,6 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
   useEffect(() => {
     loadNote();
   }, [loadNote])
-
-  useEffect(() => {
-    if (settings.markdown && textAreaRef.current) {
-      const tinyMDE = new Editor({textarea: textAreaRef.current});
-      tinyMDE.addEventListener('change', (e) => saveNote(e.content));
-      (textAreaRef.current.nextSibling as HTMLElement).spellcheck = settings.spellCheck;
-    }
-  })
 
   return (
     isLoaded

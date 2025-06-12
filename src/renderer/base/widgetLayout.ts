@@ -6,7 +6,7 @@
 import { Entity, EntityId } from '@/base/entity';
 import { EntityList, findEntityIndexOnList, findEntityOnList, removeEntityFromListAtIndex, updateEntityOnList } from '@/base/entityList';
 
-export const widgetLayoutVisibleCols = 16;
+export const widgetLayoutMaxCols = 16;
 export const widgetLayoutVisibleRows = 8;
 
 
@@ -106,9 +106,9 @@ function _fixCollisions(
 }
 
 function _fixRect(rect: WidgetLayoutItemRect): WidgetLayoutItemRect {
-  const x = Math.max(0, rect.x);
+  const x = Math.max(0, Math.min(widgetLayoutMaxCols - rect.w, rect.x));
   const y = Math.max(0, rect.y);
-  const w = Math.max(0, rect.w);
+  const w = Math.max(0, Math.min(widgetLayoutMaxCols, rect.w))
   const h = Math.max(0, rect.h);
   return {
     x,
@@ -174,12 +174,13 @@ export function createLayoutItemAtFreeArea(
   if (sameIdItem) {
     return [layout, null];
   }
-  if (size.w > widgetLayoutVisibleCols) {
+
+  if (size.w > widgetLayoutMaxCols) {
     return [layout, null];
   }
   const sorted = _sortItems([...layout]);
   for (let y = 0; ; y++) {
-    for (let x = 0; x <= widgetLayoutVisibleCols - size.w;) {
+    for (let x = 0; x <= widgetLayoutMaxCols - size.w;) {
       const item: WidgetLayoutItem = { id, widgetId, rect: { x, y, ...size } };
       const collisions = _getCollisions(sorted, item);
       if (collisions.length < 1) {
@@ -251,7 +252,7 @@ export function resizeLayoutItemByEdges(
     h += deltaTop;
   }
   if (delta.right) {
-    const deltaRight = Math.max(minSize.w - w, delta.right);
+    const deltaRight = Math.min(widgetLayoutMaxCols - x - w, Math.max(minSize.w - w, delta.right));
     w += deltaRight;
   }
   if (delta.bottom) {
