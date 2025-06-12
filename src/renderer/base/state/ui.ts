@@ -287,7 +287,7 @@ export function createUiState(): UiState {
     projectSwitcher: {
       currentProjectId: '',
       projectIds: [],
-      pos: ProjectSwitcherPos.TabBarLeft,
+      pos: ProjectSwitcherPos.TabBarRight,
     },
     shelf: {
       widgetList: []
