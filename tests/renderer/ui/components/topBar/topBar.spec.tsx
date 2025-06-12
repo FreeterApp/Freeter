@@ -12,6 +12,7 @@ import { createAppStateHook } from '@/ui/hooks/appState';
 import { fixtureAppState } from '@tests/base/state/fixtures/appState';
 import { fixtureProjectAInColl, fixtureWorkflowAInColl } from '@tests/base/state/fixtures/entitiesState';
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher';
+import { EditTogglePos, ProjectSwitcherPos } from '@/base/state/ui';
 
 const strEditModeToggle = 'Edit Mode Toggle';
 const strProjectSwitcher = 'Project Switcher';
@@ -53,16 +54,60 @@ async function setup(
 }
 
 describe('<TopBar />', () => {
-  it('should display EditModeToggle', async() => {
-    await setup(fixtureAppState({}));
+  it('should not display EditModeToggle, when its pos!==TopBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        editTogglePos: EditTogglePos.TabBarLeft
+      }
+    }));
+    expect(screen.queryByText(strEditModeToggle)).not.toBeInTheDocument();
+  });
+  it('should display EditModeToggle, when its pos===TopBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        editTogglePos: EditTogglePos.TopBar
+      }
+    }));
     expect(screen.getByText(strEditModeToggle)).toBeInTheDocument();
   });
-  it('should display ProjectSwitcher', async() => {
-    await setup(fixtureAppState({}));
+  it('should not display ProjectSwitcher, when its pos!==TopBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          pos: ProjectSwitcherPos.TabBarLeft
+        })
+      }
+    }));
+    expect(screen.queryByText(strProjectSwitcher)).not.toBeInTheDocument();
+  });
+  it('should display ProjectSwitcher, when its pos===TopBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          pos: ProjectSwitcherPos.TopBar
+        })
+      }
+    }));
     expect(screen.getByText(strProjectSwitcher)).toBeInTheDocument();
   });
-  it('should display ManageProjectsButton', async() => {
-    await setup(fixtureAppState({}));
+  it('should not display ManageProjectsButton, when its pos!==TopBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          pos: ProjectSwitcherPos.TabBarLeft
+        })
+      }
+    }));
+    expect(screen.queryByText(strManageProjectsButton)).not.toBeInTheDocument();
+  });
+  it('should display ManageProjectsButton, when its pos===TopBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          pos: ProjectSwitcherPos.TopBar
+        })
+      }
+    }));
     expect(screen.getByText(strManageProjectsButton)).toBeInTheDocument();
   });
   it('should display Shelf', async() => {
@@ -71,7 +116,7 @@ describe('<TopBar />', () => {
   });
 
   describe('when edit mode is on', () => {
-    it('should display Palette, when the current project and the current workflow exist', async () => {
+    it('should display Palette, when its pos===TopBar, the current project and the current workflow exist', async () => {
       const workflowId = 'workflow-id';
       const projectId = 'project-id';
       await setup(fixtureAppState({
@@ -81,6 +126,7 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
+          editTogglePos: EditTogglePos.TopBar,
           projectSwitcher: fixtureProjectSwitcher({
             projectIds: [projectId],
             currentProjectId: projectId
@@ -88,6 +134,26 @@ describe('<TopBar />', () => {
         }
       }));
       expect(screen.getByText(strPalette)).toBeInTheDocument();
+    });
+
+    it('should not display Palette, when its pos!==TopBar, the current project and the current workflow exist', async () => {
+      const workflowId = 'workflow-id';
+      const projectId = 'project-id';
+      await setup(fixtureAppState({
+        entities: {
+          projects: fixtureProjectAInColl({id: projectId, workflowIds: [workflowId], currentWorkflowId: workflowId}),
+          workflows: fixtureWorkflowAInColl({id: workflowId})
+        },
+        ui: {
+          editMode: true,
+          editTogglePos: EditTogglePos.TabBarLeft,
+          projectSwitcher: fixtureProjectSwitcher({
+            projectIds: [projectId],
+            currentProjectId: projectId
+          })
+        }
+      }));
+      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
     });
 
     it('should not display Palette, when there are no projects', async () => {
@@ -98,6 +164,7 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
+          editTogglePos: EditTogglePos.TopBar,
           projectSwitcher: fixtureProjectSwitcher({
             projectIds: [],
             currentProjectId: ''
@@ -116,6 +183,7 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
+          editTogglePos: EditTogglePos.TopBar,
           projectSwitcher: fixtureProjectSwitcher({
             projectIds: [projectId],
             currentProjectId: projectId
@@ -133,6 +201,7 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
+          editTogglePos: EditTogglePos.TopBar,
           projectSwitcher: fixtureProjectSwitcher({
             projectIds: ['no such id'],
             currentProjectId: 'no such id'
@@ -151,6 +220,7 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: true,
+          editTogglePos: EditTogglePos.TopBar,
           projectSwitcher: fixtureProjectSwitcher({
             projectIds: [projectId],
             currentProjectId: projectId
@@ -172,6 +242,7 @@ describe('<TopBar />', () => {
         },
         ui: {
           editMode: false,
+          editTogglePos: EditTogglePos.TopBar,
           projectSwitcher: fixtureProjectSwitcher({
             projectIds: [projectId],
             currentProjectId: projectId

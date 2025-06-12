@@ -88,7 +88,7 @@ describe('<Worktable />', () => {
       },
     }));
     expect(screen.getByText(/The project does not have any workflows/i)).toBeInTheDocument();
-    expect(screen.queryByText(/button at the Workflow Bar/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/button at the Tab Bar/i)).not.toBeInTheDocument();
   });
 
   it('should replace "No Workflows" with "Click button" text, when edit mode is on', async () => {
@@ -106,7 +106,7 @@ describe('<Worktable />', () => {
       },
     }));
     expect(screen.queryByText(/The project does not have any workflows/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/button at the Workflow Bar/i)).toBeInTheDocument();
+    expect(screen.getByText(/button at the Tab Bar/i)).toBeInTheDocument();
   });
 
   it('should display 0 WidgetLayout components, when there are no workflows active in mem saver', async () => {

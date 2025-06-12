@@ -17,8 +17,18 @@ import { createAddWorkflowUseCase } from '@/application/useCases/workflowSwitche
 import userEvent from '@testing-library/user-event';
 import { fixtureWorktableNotResizing, fixtureWorktableResizingItem } from '@tests/base/state/fixtures/worktable';
 import { createCreateWorkflowSubCase } from '@/application/useCases/workflow/subs/createWorkflow';
+import { EditTogglePos, ProjectSwitcherPos } from '@/base/state/ui';
 
 const newWorkflowId = 'NEW-WORKFLOW-ID';
+
+const strEditModeToggle = 'Edit Mode Toggle';
+const strProjectSwitcher = 'Project Switcher';
+const strManageProjectsButton = 'Manage Projects Button';
+const strPalette = 'Palette';
+const mockEditModeToggle = () => <div>{strEditModeToggle}</div>;
+const mockProjectSwitcher = () => <div>{strProjectSwitcher}</div>;
+const mockManageProjectsButton = () => <div>{strManageProjectsButton}</div>
+const mockPalette = () => <div>{strPalette}</div>;
 
 async function setup(
   appState: AppState,
@@ -62,7 +72,11 @@ async function setup(
     pasteWorkflowUseCase,
   })
   const WorkflowSwitcher = createWorkflowSwitcherComponent({
-    useWorkflowSwitcherViewModel
+    useWorkflowSwitcherViewModel,
+    EditModeToggle: mockEditModeToggle,
+    ManageProjectsButton: mockManageProjectsButton,
+    Palette: mockPalette,
+    ProjectSwitcher: mockProjectSwitcher,
   })
   const comp = render(
     <WorkflowSwitcher/>
@@ -90,6 +104,201 @@ const dragItemId = 'DRAG-ITEM-ID';
 const overItemId = 'OVER-ITEM-ID';
 
 describe('<WorkflowSwitcher />', () => {
+  it('should not display EditModeToggle, when its pos!==TabBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        editTogglePos: EditTogglePos.TopBar
+      }
+    }));
+    expect(screen.queryByText(strEditModeToggle)).not.toBeInTheDocument();
+  });
+  it('should display EditModeToggle, when its pos===TabBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        editTogglePos: EditTogglePos.TabBarLeft
+      }
+    }));
+    expect(screen.getByText(strEditModeToggle)).toBeInTheDocument();
+  });
+  it('should not display ProjectSwitcher, when its pos!==TabBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          pos: ProjectSwitcherPos.TopBar
+        })
+      }
+    }));
+    expect(screen.queryByText(strProjectSwitcher)).not.toBeInTheDocument();
+  });
+  it('should display ProjectSwitcher, when its pos===TabBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          pos: ProjectSwitcherPos.TabBarLeft
+        })
+      }
+    }));
+    expect(screen.getByText(strProjectSwitcher)).toBeInTheDocument();
+  });
+  it('should not display ManageProjectsButton, when its pos!==TabBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          pos: ProjectSwitcherPos.TopBar
+        })
+      }
+    }));
+    expect(screen.queryByText(strManageProjectsButton)).not.toBeInTheDocument();
+  });
+  it('should display ManageProjectsButton, when its pos===TabBar', async() => {
+    await setup(fixtureAppState({
+      ui: {
+        projectSwitcher: fixtureProjectSwitcher({
+          pos: ProjectSwitcherPos.TabBarLeft
+        })
+      }
+    }));
+    expect(screen.getByText(strManageProjectsButton)).toBeInTheDocument();
+  });
+
+  describe('when edit mode is on', () => {
+    it('should display Palette, when its pos===TabBar, the current project and the current workflow exist', async () => {
+      const workflowId = 'workflow-id';
+      const projectId = 'project-id';
+      await setup(fixtureAppState({
+        entities: {
+          projects: fixtureProjectAInColl({id: projectId, workflowIds: [workflowId], currentWorkflowId: workflowId}),
+          workflows: fixtureWorkflowAInColl({id: workflowId})
+        },
+        ui: {
+          editMode: true,
+          editTogglePos: EditTogglePos.TabBarLeft,
+          projectSwitcher: fixtureProjectSwitcher({
+            projectIds: [projectId],
+            currentProjectId: projectId
+          })
+        }
+      }));
+      expect(screen.getByText(strPalette)).toBeInTheDocument();
+    });
+
+    it('should not display Palette, when its pos!==TabBar, the current project and the current workflow exist', async () => {
+      const workflowId = 'workflow-id';
+      const projectId = 'project-id';
+      await setup(fixtureAppState({
+        entities: {
+          projects: fixtureProjectAInColl({id: projectId, workflowIds: [workflowId], currentWorkflowId: workflowId}),
+          workflows: fixtureWorkflowAInColl({id: workflowId})
+        },
+        ui: {
+          editMode: true,
+          editTogglePos: EditTogglePos.TopBar,
+          projectSwitcher: fixtureProjectSwitcher({
+            projectIds: [projectId],
+            currentProjectId: projectId
+          })
+        }
+      }));
+      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
+    });
+
+    it('should not display Palette, when there are no projects', async () => {
+      await setup(fixtureAppState({
+        entities: {
+          projects: {},
+          workflows: fixtureWorkflowAInColl()
+        },
+        ui: {
+          editMode: true,
+          editTogglePos: EditTogglePos.TabBarLeft,
+          projectSwitcher: fixtureProjectSwitcher({
+            projectIds: [],
+            currentProjectId: ''
+          })
+        }
+      }));
+      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
+    });
+
+    it('should not display Palette, when there are no workflows', async () => {
+      const projectId = 'project-id';
+      await setup(fixtureAppState({
+        entities: {
+          projects: fixtureProjectAInColl({id: projectId, workflowIds: [], currentWorkflowId: ''}),
+          workflows: {}
+        },
+        ui: {
+          editMode: true,
+          editTogglePos: EditTogglePos.TabBarLeft,
+          projectSwitcher: fixtureProjectSwitcher({
+            projectIds: [projectId],
+            currentProjectId: projectId
+          })
+        }
+      }));
+      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
+    });
+
+    it('should not display Palette, when the current project does not exist', async () => {
+      await setup(fixtureAppState({
+        entities: {
+          projects: fixtureProjectAInColl(),
+          workflows: fixtureWorkflowAInColl()
+        },
+        ui: {
+          editMode: true,
+          editTogglePos: EditTogglePos.TabBarLeft,
+          projectSwitcher: fixtureProjectSwitcher({
+            projectIds: ['no such id'],
+            currentProjectId: 'no such id'
+          })
+        }
+      }));
+      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
+    });
+
+    it('should not display Palette, when the current workflow does not exist', async () => {
+      const projectId = 'project-id';
+      await setup(fixtureAppState({
+        entities: {
+          projects: fixtureProjectAInColl({id: projectId, workflowIds: ['no-such-id'], currentWorkflowId: 'no-such-id'}),
+          workflows: fixtureWorkflowAInColl()
+        },
+        ui: {
+          editMode: true,
+          editTogglePos: EditTogglePos.TabBarLeft,
+          projectSwitcher: fixtureProjectSwitcher({
+            projectIds: [projectId],
+            currentProjectId: projectId
+          })
+        }
+      }));
+      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
+    });
+  })
+
+  describe('when edit mode is off', () => {
+    it('should not display Palette', async () => {
+      const workflowId = 'workflow-id';
+      const projectId = 'project-id';
+      await setup(fixtureAppState({
+        entities: {
+          projects: fixtureProjectAInColl({id: projectId, workflowIds: [workflowId], currentWorkflowId: workflowId}),
+          workflows: fixtureWorkflowAInColl({id: workflowId})
+        },
+        ui: {
+          editMode: false,
+          editTogglePos: EditTogglePos.TabBarLeft,
+          projectSwitcher: fixtureProjectSwitcher({
+            projectIds: [projectId],
+            currentProjectId: projectId
+          })
+        }
+      }));
+      expect(screen.queryByText(strPalette)).not.toBeInTheDocument();
+    });
+  })
+
   describe('when current project does not exist', () => {
     it('should not display a tablist', async () => {
       await setup(fixtureAppState({}));
