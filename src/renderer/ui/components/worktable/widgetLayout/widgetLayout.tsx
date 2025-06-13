@@ -55,10 +55,10 @@ export function createWidgetLayoutComponent({
         ? <InAppNote className={styles['no-widgets']}>
             {'The workflow is empty. Enable Edit Mode with '}
             <SvgIcon svg={editMode24Svg} className={styles['edit-mode-icon']} />
-            {' button at the Top Bar to edit it.'}
+            {' button above (or under the Edit menu) to edit it.'}
           </InAppNote>
         : <InAppNote className={styles['no-widgets']}>
-            {'Click or drag a widget from the Add/Paste Widget at the Top Bar to add it to the workflow.'}
+            {'Click or drag a widget from the Add/Paste Widget above to add it to the workflow.'}
           </InAppNote>
       )}
       <div

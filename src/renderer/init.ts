@@ -15,8 +15,8 @@ import { createDropOnWorktableLayoutUseCase } from '@/application/useCases/dragD
 import { createResizeLayoutItemUseCase, createResizeLayoutItemEndUseCase, createResizeLayoutItemStartUseCase } from '@/application/useCases/worktable/resizeLayoutItem';
 import { uuidv4IdGenerator } from '@/infra/idGenerator/uuidv4IdGenerator';
 import { createAppComponent } from '@/ui/components/app';
-import { createPaletteComponent } from '@/ui/components/topBar/palette';
-import { createPaletteViewModelHook } from '@/ui/components/topBar/palette/paletteViewModel';
+import { createPaletteComponent } from '@/ui/components/palette';
+import { createPaletteViewModelHook } from '@/ui/components/palette/paletteViewModel';
 import { createTopBarComponent } from '@/ui/components/topBar';
 import { createShelfComponent, createShelfItemComponent } from '@/ui/components/topBar/shelf';
 import { createShelfViewModelHook } from '@/ui/components/topBar/shelf/shelfViewModel';
@@ -24,7 +24,7 @@ import { createWorktableComponent } from '@/ui/components/worktable';
 import { createWidgetLayoutComponent, createWidgetLayoutItemComponent } from '@/ui/components/worktable/widgetLayout';
 import { createWidgetLayoutViewModelHook } from '@/ui/components/worktable/widgetLayout/widgetLayoutViewModel';
 import { createWorkflowSwitcherComponent, createWorkflowSwitcherViewModelHook } from '@/ui/components/workflowSwitcher';
-import { createProjectSwitcherComponent, createProjectSwitcherViewModelHook } from '@/ui/components/topBar/projectSwitcher';
+import { createProjectSwitcherComponent, createProjectSwitcherViewModelHook } from '@/ui/components/projectSwitcher';
 import { createSwitchProjectUseCase } from '@/application/useCases/projectSwitcher/switchProject';
 import { createSwitchWorkflowUseCase } from '@/application/useCases/workflowSwitcher/switchWorkflow';
 import { createDragOverWorkflowSwitcherUseCase } from '@/application/useCases/dragDrop/dragOverWorkflowSwitcher';
@@ -38,7 +38,7 @@ import { createCloseWidgetSettingsUseCase } from '@/application/useCases/widgetS
 import { createSaveWidgetSettingsUseCase } from '@/application/useCases/widgetSettings/saveWidgetSettings';
 import { createWidgetByIdComponent } from '@/ui/components/widget/widgetById';
 import { createWidgetByIdViewModelHook } from '@/ui/components/widget/widgetByIdViewModel';
-import { createEditModeToggleComponent, createEditModeToggleViewModelHook } from '@/ui/components/topBar/editModeToggle';
+import { createEditModeToggleComponent, createEditModeToggleViewModelHook } from '@/ui/components/editModeToggle';
 import { createToggleEditModeUseCase } from '@/application/useCases/toggleEditMode';
 import { createToggleMenuBarUseCase } from '@/application/useCases/toggleMenuBar';
 import { createAppStore } from '@/data/appStore';
@@ -77,7 +77,7 @@ import { createToggleDeletionInProjectManagerUseCase } from '@/application/useCa
 import { createUpdateProjectSettingsInProjectManagerUseCase } from '@/application/useCases/projectManager/updateProjectSettingsInProjectManager';
 import { createUpdateProjectsOrderInProjectManagerUseCase } from '@/application/useCases/projectManager/updateProjectsOrderInProjectManager';
 import { createCloseProjectManagerUseCase } from '@/application/useCases/projectManager/closeProjectManager';
-import { createManageProjectsButtonComponent, createManageProjectsButtonViewModelHook } from '@/ui/components/topBar/manageProjectsButton';
+import { createManageProjectsButtonComponent, createManageProjectsButtonViewModelHook } from '@/ui/components/manageProjectsButton';
 import { createOpenProjectManagerUseCase } from '@/application/useCases/projectManager/openProjectManager';
 import { createAddWorkflowUseCase } from '@/application/useCases/workflowSwitcher/addWorkflow';
 import { createRenameWorkflowUseCase } from '@/application/useCases/workflowSwitcher/renameWorkflow';
@@ -140,6 +140,9 @@ import { createOpenAppManagerUseCase } from '@/application/useCases/appManager/o
 import { createShowOpenFileDialogUseCase } from '@/application/useCases/dialog/showOpenFileDialog';
 import { createInitMemSaverUseCase } from '@/application/useCases/memSaver/initMemSaver';
 import { createDeactivateWorkflowUseCase } from '@/application/useCases/memSaver/deactivateWorkflow';
+import { createToggleTopBarUseCase } from '@/application/useCases/toggleTopBar';
+import { createSetProjectSwitcherPositionUseCase } from '@/application/useCases/projectSwitcher/setProjectSwitcherPosition';
+import { createSetEditTogglePositionUseCase } from '@/application/useCases/setEditTogglePosition';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -226,6 +229,9 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
   const toggleEditModeUseCase = createToggleEditModeUseCase(deps);
   const toggleMenuBarUseCase = createToggleMenuBarUseCase(deps);
+  const toggleTopBarUseCase = createToggleTopBarUseCase(deps);
+  const setProjectSwitcherPositionUseCase = createSetProjectSwitcherPositionUseCase(deps);
+  const setEditTogglePositionUseCase = createSetEditTogglePositionUseCase(deps);
 
   const clickContextMenuItemUseCase = createClickContextMenuItemUseCase();
   const osContextMenuProvider = createOsContextMenuProvider({ clickContextMenuItemUseCase });
@@ -327,6 +333,9 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     shellProvider,
     toggleEditModeUseCase,
     toggleMenuBarUseCase,
+    toggleTopBarUseCase,
+    setProjectSwitcherPositionUseCase,
+    setEditTogglePositionUseCase,
     openApplicationSettingsUseCase,
     openAboutUseCase,
     openAppManagerUseCase,
@@ -602,7 +611,11 @@ function createUI(stateHooks: ReturnType<typeof createUiHooks>, useCases: Awaite
 
   const useWorkflowSwitcherViewModel = createWorkflowSwitcherViewModelHook(deps);
   const WorkflowSwitcher = createWorkflowSwitcherComponent({
-    useWorkflowSwitcherViewModel
+    useWorkflowSwitcherViewModel,
+    EditModeToggle,
+    ManageProjectsButton,
+    Palette,
+    ProjectSwitcher,
   })
   const useWorktableViewModel = createWorktableViewModelHook(deps);
   const Worktable = createWorktableComponent({

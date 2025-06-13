@@ -4,13 +4,11 @@
  */
 
 .project-switcher {
-  height: 36px;
   line-height: 24px;
   font-family: 'Roboto Condensed';
   font-size: 16px;
   min-width: 140px;
   max-width: 280px;
-  margin-right: 12px;
   option[disabled] {
     display: none;
   }

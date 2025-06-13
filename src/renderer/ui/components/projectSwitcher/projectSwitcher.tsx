@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { ProjectSwitcherViewModelHook } from '@/ui/components/topBar/projectSwitcher/projectSwitcherViewModel';
+import { ProjectSwitcherViewModelHook } from '@/ui/components/projectSwitcher/projectSwitcherViewModel';
 import clsx from 'clsx';
 import * as styles from './projectSwitcher.module.scss';
 
@@ -11,10 +11,14 @@ type Deps = {
   useProjectSwitcherViewModel: ProjectSwitcherViewModelHook
 }
 
+export type ProjectSwitcherProps = React.PropsWithChildren<React.DetailedHTMLProps<React.HTMLAttributes<HTMLSelectElement>, HTMLSelectElement>>;
+
 export function createProjectSwitcherComponent({
   useProjectSwitcherViewModel
 }: Deps) {
-  function ProjectSwitcher() {
+  function ProjectSwitcher({
+    className
+  }: ProjectSwitcherProps) {
     const {
       currentProjectId,
       projects,
@@ -25,7 +29,7 @@ export function createProjectSwitcherComponent({
     return (
       <select
         value={currentProjectId}
-        className={clsx(styles['project-switcher'])}
+        className={clsx(styles['project-switcher'], className)}
         disabled={noProjects}
         onChange={handleChange}
       >

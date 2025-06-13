@@ -22,7 +22,7 @@ import { DeleteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/d
 import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
 import { MenuItem, MenuItems } from '@common/base/menu';
 import { EntityList, mapIdListToEntityList } from '@/base/entityList';
-import { CopiedEntitiesItem } from '@/base/state/ui';
+import { CopiedEntitiesItem, EditTogglePos, ProjectSwitcherPos } from '@/base/state/ui';
 import { Workflow } from '@/base/workflow';
 import { WorkflowEntityDeps } from '@/base/state/entities';
 import { PasteWorkflowUseCase } from '@/application/useCases/workflowSwitcher/pasteWorkflow';
@@ -234,6 +234,10 @@ export function createWorkflowSwitcherViewModelHook({
       resizingItem,
       copiedWorkflowsEntitites,
       copiedWorkflowsList,
+      currentWorkflow,
+      topBarIsHidden,
+      editTogglePos,
+      prjSwitcherPos,
     } = useAppState(state => {
       const { editMode: isEditMode } = state.ui;
       const { currentProjectId } = state.ui.projectSwitcher;
@@ -244,6 +248,10 @@ export function createWorkflowSwitcherViewModelHook({
       const resizingItem = state.ui.worktable.resizingItem;
       const copiedWorkflowsEntitites = state.ui.copy.workflows.entities;
       const copiedWorkflowsList = state.ui.copy.workflows.list;
+      const currentWorkflow = state.entities.workflows[currentWorkflowId || ''];
+      const topBarIsHidden = !state.ui.topBar;
+      const editTogglePos = state.ui.editTogglePos;
+      const prjSwitcherPos = state.ui.projectSwitcher.pos;
       return {
         isEditMode,
         currentProjectId,
@@ -254,6 +262,10 @@ export function createWorkflowSwitcherViewModelHook({
         resizingItem,
         copiedWorkflowsEntitites,
         copiedWorkflowsList,
+        currentWorkflow,
+        topBarIsHidden,
+        editTogglePos,
+        prjSwitcherPos,
       }
     })
 
@@ -369,6 +381,13 @@ export function createWorkflowSwitcherViewModelHook({
       showContextMenuUseCase(contextMenuItems);
     }, [copiedWorkflows, isEditMode])
 
+    const showPrjSwitcherLeft = prjSwitcherPos === ProjectSwitcherPos.TabBarLeft;
+    const showPrjSwitcherRight = prjSwitcherPos === ProjectSwitcherPos.TabBarRight;
+    const showEditToggleLeft = editTogglePos === EditTogglePos.TabBarLeft;
+    const showEditToggleRight = editTogglePos === EditTogglePos.TabBarRight;
+    const showPalette = isEditMode && !!currentWorkflow;
+    const showPaletteLeft = showPalette && showEditToggleLeft;
+    const showPaletteRight = showPalette && !showPaletteLeft && (showEditToggleRight || topBarIsHidden);
 
     return {
       isEditMode,
@@ -394,6 +413,12 @@ export function createWorkflowSwitcherViewModelHook({
       dontShowActionBar,
       onContextMenu,
       onItemContextMenu,
+      showPaletteLeft,
+      showPaletteRight,
+      showPrjSwitcherLeft,
+      showPrjSwitcherRight,
+      showEditToggleLeft,
+      showEditToggleRight,
     }
   }
 

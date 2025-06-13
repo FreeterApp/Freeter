@@ -29,6 +29,9 @@ async function setup(initState: AppState, opts?: {
   })
   const toggleEditModeUseCase = jest.fn();
   const toggleMenuBarUseCase = jest.fn();
+  const toggleTopBarUseCase = jest.fn();
+  const setProjectSwitcherPositionUseCase = jest.fn();
+  const setEditTogglePositionUseCase = jest.fn();
   const openApplicationSettingsUseCase = jest.fn();
   const openAboutUseCase = jest.fn();
   const openAppManagerUseCase = jest.fn();
@@ -40,10 +43,13 @@ async function setup(initState: AppState, opts?: {
     shellProvider: shellProviderMock,
     toggleEditModeUseCase,
     toggleMenuBarUseCase,
+    toggleTopBarUseCase,
+    setProjectSwitcherPositionUseCase,
+    setEditTogglePositionUseCase,
     openApplicationSettingsUseCase,
     openAboutUseCase,
     openAppManagerUseCase,
-    openProjectManagerUseCase
+    openProjectManagerUseCase,
   });
   return {
     appStore,
@@ -52,6 +58,8 @@ async function setup(initState: AppState, opts?: {
     initAppMenuUseCase,
     toggleEditModeUseCase,
     toggleMenuBarUseCase,
+    toggleTopBarUseCase,
+    setProjectSwitcherPositionUseCase,
     openAboutUseCase,
   }
 }
@@ -65,7 +73,7 @@ describe('initAppMenuUseCase()', () => {
 
     initAppMenuUseCase();
 
-    expect(appMenuProviderMock.setAutoHide).toBeCalledTimes(1);
+    expect(appMenuProviderMock.setAutoHide).toHaveBeenCalledTimes(1);
   });
 
   it('should subscribe to state changes and call appMenu\'s setAutoHide() with right params, when the menuBar state value changes', async () => {
@@ -86,7 +94,7 @@ describe('initAppMenuUseCase()', () => {
       }
     })
 
-    expect(appMenuProviderMock.setAutoHide).toBeCalledTimes(2);
+    expect(appMenuProviderMock.setAutoHide).toHaveBeenCalledTimes(2);
     expect(appMenuProviderMock.setAutoHide).toHaveBeenNthCalledWith(2, false);
 
     appStore.set({
@@ -118,7 +126,7 @@ describe('initAppMenuUseCase()', () => {
       }
     })
 
-    expect(appMenuProviderMock.setAutoHide).toBeCalledTimes(1);
+    expect(appMenuProviderMock.setAutoHide).toHaveBeenCalledTimes(1);
   });
 
   it('should not call appMenu\'s setAutoHide(), when the new state has isLoading=true', async () => {
@@ -133,7 +141,7 @@ describe('initAppMenuUseCase()', () => {
 
     appStore.set({ ...state, isLoading: true, ui: { ...state.ui, menuBar: false } })
 
-    expect(appMenuProviderMock.setAutoHide).toBeCalledTimes(1);
+    expect(appMenuProviderMock.setAutoHide).toHaveBeenCalledTimes(1);
   });
 
   it('should call appMenu\'s setAutoHide(), when the new state has isLoading=undefined', async () => {
@@ -148,7 +156,7 @@ describe('initAppMenuUseCase()', () => {
 
     appStore.set({ ...state, ui: { ...state.ui, menuBar: false } })
 
-    expect(appMenuProviderMock.setAutoHide).toBeCalledTimes(2);
+    expect(appMenuProviderMock.setAutoHide).toHaveBeenCalledTimes(2);
   });
 
   it('should call appMenu\'s setMenu() right after call', async () => {
@@ -159,7 +167,7 @@ describe('initAppMenuUseCase()', () => {
 
     initAppMenuUseCase();
 
-    expect(appMenuProviderMock.setMenu).toBeCalledTimes(1);
+    expect(appMenuProviderMock.setMenu).toHaveBeenCalledTimes(1);
   });
 
   it('should subscribe to state changes and call appMenu\'s setMenu(), when the new state has changes the app menu depends on', async () => {
@@ -180,7 +188,7 @@ describe('initAppMenuUseCase()', () => {
       }
     })
 
-    expect(appMenuProviderMock.setMenu).toBeCalledTimes(2);
+    expect(appMenuProviderMock.setMenu).toHaveBeenCalledTimes(2);
   });
 
   it('should not call appMenu\'s setMenu(), when the new state does not have changes the app menu depends on', async () => {
@@ -197,7 +205,7 @@ describe('initAppMenuUseCase()', () => {
       ...state,
     })
 
-    expect(appMenuProviderMock.setMenu).toBeCalledTimes(1);
+    expect(appMenuProviderMock.setMenu).toHaveBeenCalledTimes(1);
   });
 
   it('should not call appMenu\'s setMenu(), when the new state has isLoading=true', async () => {
@@ -212,7 +220,7 @@ describe('initAppMenuUseCase()', () => {
 
     appStore.set({ ...state, isLoading: true, ui: { ...state.ui, editMode: false } })
 
-    expect(appMenuProviderMock.setMenu).toBeCalledTimes(1);
+    expect(appMenuProviderMock.setMenu).toHaveBeenCalledTimes(1);
   });
 
   it('should call appMenu\'s setMenu(), when the new state has isLoading=undefined', async () => {
@@ -227,6 +235,6 @@ describe('initAppMenuUseCase()', () => {
 
     appStore.set({ ...state, ui: { ...state.ui, editMode: false } })
 
-    expect(appMenuProviderMock.setMenu).toBeCalledTimes(2);
+    expect(appMenuProviderMock.setMenu).toHaveBeenCalledTimes(2);
   });
 })

@@ -12,6 +12,7 @@ import { fixtureAppAInColl, fixtureAppBInColl, fixtureProjectAInColl, fixturePro
 import { fixtureProjectSwitcher } from '@tests/base/state/fixtures/projectSwitcher'
 import { fixtureShelf } from '@tests/base/state/fixtures/shelf'
 import { fixtureApps } from '@tests/base/state/fixtures/apps';
+import { EditTogglePos } from '@/base/state/ui';
 
 type Settings = {
   prop: string;
@@ -122,6 +123,8 @@ describe('AppState', () => {
           appConfig: state.ui.appConfig,
           apps: state.ui.apps,
           menuBar: state.ui.menuBar,
+          topBar: state.ui.topBar,
+          editTogglePos: state.ui.editTogglePos,
           projectSwitcher: state.ui.projectSwitcher,
           shelf: state.ui.shelf
         }
@@ -166,6 +169,8 @@ describe('AppState', () => {
           appConfig: fixtureAppConfig({ mainHotkey: 'Accelerator' }),
           apps: fixtureApps({ appIds: ['APP1', 'APP2'] }),
           menuBar: false,
+          topBar: true,
+          editTogglePos: EditTogglePos.TabBarRight,
           projectSwitcher: fixtureProjectSwitcher({ currentProjectId: 'B1', projectIds: ['B1', 'B2'] }),
           shelf: fixtureShelf({ widgetList: [{ id: 'A1', widgetId: 'A1' }] })
         }

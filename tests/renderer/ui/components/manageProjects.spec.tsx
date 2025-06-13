@@ -4,7 +4,7 @@
  */
 
 import { render, screen } from '@testing-library/react';
-import { createManageProjectsButtonViewModelHook, createManageProjectsButtonComponent } from '@/ui/components/topBar/manageProjectsButton'
+import { createManageProjectsButtonViewModelHook, createManageProjectsButtonComponent } from '@/ui/components/manageProjectsButton'
 import userEvent from '@testing-library/user-event';
 
 async function setup() {

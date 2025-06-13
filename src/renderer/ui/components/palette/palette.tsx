@@ -13,10 +13,21 @@ type Deps = {
   usePaletteViewModel: PaletteViewModelHook
 }
 
+export enum PalettePropsPos {
+  TopBar = 1,
+  TabBar = 2
+}
+
+export interface PaletteProps extends React.PropsWithChildren<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>> {
+  pos: PalettePropsPos
+};
+
 export function createPaletteComponent({
   usePaletteViewModel
 }: Deps) {
-  function Palette() {
+  function Palette({
+    pos
+  }: PaletteProps) {
     const {
       onAddItemDragEnd,
       onAddItemDragStart,
@@ -33,7 +44,12 @@ export function createPaletteComponent({
 
     return (
       <div
-        className={clsx(styles.palette, hideSections && styles['hide-sections'])}
+        className={clsx(
+          styles.palette,
+          hideSections && styles['hide-sections'],
+          pos === PalettePropsPos.TabBar && styles['pos-tab-bar'],
+          pos === PalettePropsPos.TopBar && styles['pos-top-bar'],
+        )}
       >
         <span className={clsx(styles['palette-tab'], styles['palette-tab-add'])} tabIndex={0}>Add Widget</span>
         <span className={clsx(styles['palette-tab'], styles['palette-tab-paste'])} tabIndex={0}>Paste Widget</span>

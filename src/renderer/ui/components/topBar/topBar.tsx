@@ -7,12 +7,14 @@ import React, { memo } from 'react';
 import * as styles from './topBar.module.scss';
 import clsx from 'clsx';
 import { TopBarViewModelHook } from '@/ui/components/topBar/topBarViewModel';
+import { ProjectSwitcherProps } from '@/ui/components/projectSwitcher';
+import { PaletteProps, PalettePropsPos } from '@/ui/components/palette';
 
 type Deps = {
   EditModeToggle: React.FC;
-  ProjectSwitcher: React.FC;
+  ProjectSwitcher: React.FC<ProjectSwitcherProps>;
   ManageProjectsButton: React.FC;
-  Palette: React.FC;
+  Palette: React.FC<PaletteProps>;
   Shelf: React.FC;
   useTopBarViewModel: TopBarViewModelHook;
 }
@@ -26,25 +28,29 @@ export function createTopBarComponent({
   useTopBarViewModel,
 }: Deps) {
   function TopBar() {
-    const {showPalette} = useTopBarViewModel();
+    const {showPalette, showEditToggle, showPrjSwitcher} = useTopBarViewModel();
     return (
       <div className={styles['top-bar']}>
-        <div className={styles['top-bar-section']}>
-          <ProjectSwitcher />
-          <ManageProjectsButton />
-        </div>
-        {showPalette &&
-          <div className={clsx(styles['top-bar-section'], styles['top-bar-palette-section'])}>
-            <Palette />
+        {showPrjSwitcher &&
+          <div className={styles['top-bar-section']}>
+            <ProjectSwitcher className={styles['project-switcher']} />
+            <ManageProjectsButton />
           </div>
         }
-
         <div className={clsx(styles['top-bar-section'], styles['top-bar-shelf-section'])}>
           <Shelf />
         </div>
-        <div className={styles['top-bar-section']}>
-          <EditModeToggle />
-        </div>
+
+        {showPalette &&
+          <div className={clsx(styles['top-bar-section'], styles['top-bar-palette-section'])}>
+            <Palette pos={PalettePropsPos.TopBar} />
+          </div>
+        }
+        {showEditToggle &&
+          <div className={styles['top-bar-section']}>
+            <EditModeToggle />
+          </div>
+        }
       </div>
     )
   }

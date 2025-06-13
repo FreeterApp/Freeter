@@ -109,37 +109,9 @@ describe('<App />', () => {
     expect(screen.getByText(/You don't have any projects/i)).toBeInTheDocument();
   });
 
-  it('should display Workflow Switcher, when there are projects in the project switcher', async () => {
-    const projectId = 'PROJECT-ID';
-    await setup(fixtureAppState({
-      entities: {
-        projects: {
-          ...fixtureProjectAInColl({id: projectId})
-        }
-      },
-      ui: {
-        projectSwitcher: fixtureProjectSwitcher({
-          projectIds: [projectId]
-        })
-      }
-    }));
+  it('should display Workflow Switcher', async () => {
+    await setup(fixtureAppState({}));
     expect(screen.getByText(strWorkflowSwitcher)).toBeInTheDocument();
-  });
-
-  it('should not display Workflow Switcher, when there are no projects in the project switcher', async () => {
-    await setup(fixtureAppState({
-      entities: {
-        projects: {
-          ...fixtureProjectAInColl()
-        }
-      },
-      ui: {
-        projectSwitcher: fixtureProjectSwitcher({
-          projectIds: ['NO-SUCH-ID']
-        })
-      }
-    }));
-    expect(screen.queryByText(strWorkflowSwitcher)).not.toBeInTheDocument();
   });
 
   it('should display Worktable, when there are projects', async () => {

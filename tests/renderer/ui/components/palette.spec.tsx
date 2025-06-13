@@ -4,8 +4,8 @@
  */
 
 import { render, screen, fireEvent, within } from '@testing-library/react';
-import { createPaletteComponent } from '@/ui/components/topBar/palette/palette';
-import { createPaletteViewModelHook } from '@/ui/components/topBar/palette/paletteViewModel';
+import { createPaletteComponent, PalettePropsPos } from '@/ui/components/palette/palette';
+import { createPaletteViewModelHook } from '@/ui/components/palette/paletteViewModel';
 import { createDragEndUseCase } from '@/application/useCases/dragDrop/dragEnd';
 import { createDragWidgetFromPaletteUseCase } from '@/application/useCases/dragDrop/dragWidgetFromPalette';
 import { createAppStateHook } from '@/ui/hooks/appState';
@@ -20,7 +20,8 @@ import { fixtureWidgetA, fixtureWidgetB, fixtureWidgetC, fixtureWidgetD } from '
 import { fixtureWidgetTypeA } from '@tests/base/fixtures/widgetType';
 
 async function setup(
-  appState: AppState
+  appState: AppState,
+  palettePos = PalettePropsPos.TabBar
 ) {
   const [appStore, appStoreForUi] = await fixtureAppStore(appState);
   const useAppState = createAppStateHook(appStoreForUi);
@@ -49,7 +50,7 @@ async function setup(
     usePaletteViewModel
   })
   const comp = render(
-    <Palette/>
+    <Palette pos={palettePos}/>
   );
 
   return {

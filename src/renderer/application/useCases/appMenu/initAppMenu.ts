@@ -14,6 +14,10 @@ import { OpenAboutUseCase } from '@/application/useCases/about/openAbout';
 import { ShellProvider } from '@/application/interfaces/shellProvider';
 import { OpenProjectManagerUseCase } from '@/application/useCases/projectManager/openProjectManager';
 import { OpenAppManagerUseCase } from '@/application/useCases/appManager/openAppManager';
+import { EditTogglePos, ProjectSwitcherPos } from '@/base/state/ui';
+import { ToggleTopBarUseCase } from '@/application/useCases/toggleTopBar';
+import { SetProjectSwitcherPositionUseCase } from '@/application/useCases/projectSwitcher/setProjectSwitcherPosition';
+import { SetEditTogglePositionUseCase } from '@/application/useCases/setEditTogglePosition';
 
 const urlDownload = 'https://freeter.io/v2/download';
 const urlTwitter = 'https://twitter.com/FreeterApp';
@@ -28,6 +32,9 @@ type Deps = {
   shellProvider: ShellProvider;
   toggleEditModeUseCase: ToggleEditModeUseCase;
   toggleMenuBarUseCase: ToggleMenuBarUseCase;
+  toggleTopBarUseCase: ToggleTopBarUseCase;
+  setProjectSwitcherPositionUseCase: SetProjectSwitcherPositionUseCase;
+  setEditTogglePositionUseCase: SetEditTogglePositionUseCase;
   openApplicationSettingsUseCase: OpenApplicationSettingsUseCase;
   openAboutUseCase: OpenAboutUseCase;
   openProjectManagerUseCase: OpenProjectManagerUseCase;
@@ -42,6 +49,9 @@ export function createInitAppMenuUseCase({
   shellProvider,
   toggleEditModeUseCase,
   toggleMenuBarUseCase,
+  toggleTopBarUseCase,
+  setProjectSwitcherPositionUseCase,
+  setEditTogglePositionUseCase,
   openApplicationSettingsUseCase,
   openAboutUseCase,
   openProjectManagerUseCase,
@@ -99,9 +109,17 @@ export function createInitAppMenuUseCase({
     ]
   }
 
-  const menuEdit: MenuItem = {
+  const createMenuEdit: (
+    editMode: boolean,
+  ) => MenuItem = (editMode) => ({
     label: '&Edit',
     submenu: [
+      {
+        accelerator: 'CmdOrCtrl+E',
+        label: `${editMode ? 'Disable' : 'Enable'} Edit Mode`,
+        doAction: async () => toggleEditModeUseCase()
+      },
+      itemSeparator,
       {
         role: 'undo'
       }, {
@@ -116,24 +134,91 @@ export function createInitAppMenuUseCase({
         role: 'selectAll'
       }
     ]
-  }
+  })
 
-  const createMenuView: (editMode: boolean, menuBar: boolean) => MenuItem = (editMode, menuBar) => ({
+  const createMenuView: (
+    menuBar: boolean,
+    topBar: boolean,
+    prjSwitcherPos: ProjectSwitcherPos,
+    editTogglePos: EditTogglePos,
+  ) => MenuItem = (menuBar, topBar, prjSwitcherPos, editTogglePos) => ({
     label: '&View',
     submenu: [
-      { role: 'togglefullscreen' },
-      ...(!isMac
-        ? [{
-          label: menuBar ? 'Hide Menu Bar (ALT to restore)' : 'Show Menu Bar',
-          doAction: async () => toggleMenuBarUseCase()
-        }]
-        : []
-      ),
-      itemSeparator,
       {
-        accelerator: 'CmdOrCtrl+E',
-        label: `${editMode ? 'Disable' : 'Enable'} Edit Mode`,
-        doAction: async () => toggleEditModeUseCase()
+        label: 'Appearance',
+        submenu: [
+          { role: 'togglefullscreen' },
+          ...(!isMac
+            ? [{
+              label: menuBar ? 'Hide Menu Bar (ALT to restore)' : 'Show Menu Bar',
+              doAction: async () => toggleMenuBarUseCase()
+            }]
+            : []
+          ),
+          {
+            label: topBar ? 'Hide Top Bar' : 'Show Top Bar',
+            doAction: async () => toggleTopBarUseCase()
+          },
+          itemSeparator,
+          {
+            label: 'Project Switcher Position',
+            submenu: [
+              {
+                label: 'On Top Bar',
+                type: 'radio',
+                checked: prjSwitcherPos === ProjectSwitcherPos.TopBar,
+                doAction: async () => setProjectSwitcherPositionUseCase(ProjectSwitcherPos.TopBar)
+              },
+              {
+                label: 'On Tab Bar (Left)',
+                type: 'radio',
+                checked: prjSwitcherPos === ProjectSwitcherPos.TabBarLeft,
+                doAction: async () => setProjectSwitcherPositionUseCase(ProjectSwitcherPos.TabBarLeft)
+              },
+              {
+                label: 'On Tab Bar (Right)',
+                type: 'radio',
+                checked: prjSwitcherPos === ProjectSwitcherPos.TabBarRight,
+                doAction: async () => setProjectSwitcherPositionUseCase(ProjectSwitcherPos.TabBarRight)
+              },
+              {
+                label: 'Hidden',
+                type: 'radio',
+                checked: prjSwitcherPos === ProjectSwitcherPos.Hidden,
+                doAction: async () => setProjectSwitcherPositionUseCase(ProjectSwitcherPos.Hidden)
+              },
+            ]
+          },
+          {
+            label: 'Edit Mode Toggle Position',
+            submenu: [
+              {
+                label: 'On Top Bar',
+                type: 'radio',
+                checked: editTogglePos === EditTogglePos.TopBar,
+                doAction: async () => setEditTogglePositionUseCase(EditTogglePos.TopBar)
+              },
+              {
+                label: 'On Tab Bar (Left)',
+                type: 'radio',
+                checked: editTogglePos === EditTogglePos.TabBarLeft,
+                doAction: async () => setEditTogglePositionUseCase(EditTogglePos.TabBarLeft)
+              },
+              {
+                label: 'On Tab Bar (Right)',
+                type: 'radio',
+                checked: editTogglePos === EditTogglePos.TabBarRight,
+                doAction: async () => setEditTogglePositionUseCase(EditTogglePos.TabBarRight)
+              },
+              {
+                label: 'Hidden',
+                type: 'radio',
+                checked: editTogglePos === EditTogglePos.Hidden,
+                doAction: async () => setEditTogglePositionUseCase(EditTogglePos.Hidden)
+              },
+            ]
+          },
+        ]
       },
       itemSeparator,
       {
@@ -210,16 +295,22 @@ export function createInitAppMenuUseCase({
       isLoading: state.isLoading,
       editMode: state.ui.editMode,
       menuBar: state.ui.menuBar,
+      topBar: state.ui.topBar,
+      prjSwitcherPos: state.ui.projectSwitcher.pos,
+      editTogglePos: state.ui.editTogglePos,
     }), ({
       isLoading,
       editMode,
-      menuBar
+      menuBar,
+      topBar,
+      prjSwitcherPos,
+      editTogglePos
     }) => {
       if (!isLoading) {
         appMenu.setMenu([
           (isMac ? menuApp : menuFile),
-          menuEdit,
-          createMenuView(editMode, menuBar),
+          createMenuEdit(editMode),
+          createMenuView(menuBar, topBar, prjSwitcherPos, editTogglePos),
           menuHelp,
           ...(isDevMode
             ? [menuDev]

@@ -88,9 +88,17 @@ export interface ProjectManagerState {
   duplicateProjectIds: Record<EntityId, EntityId> | null;
 }
 
+export enum ProjectSwitcherPos {
+  Hidden = 0,
+  TopBar = 1,
+  TabBarLeft = 2,
+  TabBarRight = 3,
+}
+
 export interface ProjectSwitcherState {
   projectIds: EntityIdList;
   currentProjectId: EntityId;
+  pos: ProjectSwitcherPos;
 }
 
 export interface AppManagerState {
@@ -190,9 +198,18 @@ export interface MemSaverState {
   workflowTimeouts: Record<EntityId, NodeJS.Timeout>;
 }
 
+export enum EditTogglePos {
+  Hidden = 0,
+  TopBar = 1,
+  TabBarLeft = 2,
+  TabBarRight = 3,
+}
+
 export interface UiState {
   editMode: boolean;
   menuBar: boolean;
+  topBar: boolean;
+  editTogglePos: EditTogglePos;
   appConfig: AppConfig;
   apps: AppsState;
   dragDrop: DragDropState;
@@ -210,6 +227,8 @@ export function createUiState(): UiState {
     dragDrop: {},
     editMode: false,
     menuBar: true,
+    topBar: false,
+    editTogglePos: EditTogglePos.TabBarRight,
     appConfig: {
       mainHotkey: 'CmdOrCtrl+Shift+F',
       memSaver: {
@@ -267,7 +286,8 @@ export function createUiState(): UiState {
     },
     projectSwitcher: {
       currentProjectId: '',
-      projectIds: []
+      projectIds: [],
+      pos: ProjectSwitcherPos.TabBarRight,
     },
     shelf: {
       widgetList: []
