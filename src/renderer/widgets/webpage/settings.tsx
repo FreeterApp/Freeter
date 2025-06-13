@@ -43,6 +43,7 @@ export interface Settings {
   injectedCSS: string;
   injectedJS: string;
   userAgent: string;
+  zoom: number;
 }
 
 export const createSettingsState: CreateSettingsState<Settings> = (settings) => ({
@@ -53,6 +54,7 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
   injectedCSS: typeof settings.injectedCSS === 'string' ? settings.injectedCSS : '',
   injectedJS: typeof settings.injectedJS === 'string' ? settings.injectedJS : '',
   userAgent: typeof settings.userAgent === 'string' ? settings.userAgent : '',
+  zoom: typeof settings.zoom === 'number' ? settings.zoom : 100,
 })
 
 const debounceUpdate3s = debounce((fn: () => void) => fn(), 3000);
@@ -191,6 +193,14 @@ export function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactC
         moreInfo='Set the following User Agent string for the webpage.'
       >
         <input id="webpage-user-agent" type="text" value={userAgent} onChange={e => updateUserAgent(e.target.value, true)} onBlur={e=>updateUserAgent(e.target.value, false)} placeholder="Type User Agent string" />
+      </SettingBlock>
+
+      <SettingBlock
+        titleForId='webpage-zoom'
+        title='Zoom'
+        moreInfo='Set the zoom factor for the webpage.'
+      >
+        <input id="webpage-zoom" type="number" value={settings.zoom} onChange={e => updateSettings({...settings, zoom: +e.target.value})} min="50" max="300" step="10" /> %
       </SettingBlock>
     </>
   )
