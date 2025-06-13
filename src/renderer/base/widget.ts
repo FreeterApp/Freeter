@@ -28,6 +28,7 @@ export interface Widget<TSettings = WidgetSettings> extends Entity {
   readonly type: string;
   readonly coreSettings: WidgetCoreSettings;
   readonly settings: TSettings;
+  readonly exposedApi?: object;
 }
 
 interface WidgetEnvCommon {

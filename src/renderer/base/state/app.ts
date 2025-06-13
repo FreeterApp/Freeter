@@ -46,16 +46,15 @@ export function initAppStateWidgets(appState: AppState): AppState {
 
 export function createPersistentAppState(appState: AppState) {
   const { copy, dragDrop, editMode, palette, memSaver, modalScreens, worktable, ...persistentUi } = appState.ui
-  const { widgetTypes, /* widgets, */...persistentEntities } = appState.entities;
+  const { widgetTypes, widgets, ...persistentEntities } = appState.entities;
   return {
-    // entities: {
-    //   ...persistentEntities,
-    //   widgets: mapEntityCollection(widgets, widget => {
-    //     const { ...persistentWidget } = widget;
-    //     return persistentWidget
-    //   })
-    // },
-    entities: persistentEntities,
+    entities: {
+      ...persistentEntities,
+      widgets: mapEntityCollection(widgets, widget => {
+        const { exposedApi, ...persistentWidget } = widget;
+        return persistentWidget
+      })
+    },
     ui: persistentUi
   }
 }

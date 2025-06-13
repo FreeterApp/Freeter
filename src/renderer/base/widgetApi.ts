@@ -12,8 +12,15 @@ import { OpenDialogResult, OpenDirDialogConfig, OpenFileDialogConfig } from '@co
 interface WidgetApiCommon {
   readonly updateActionBar: (actionBarItems: ActionBarItems) => void;
   readonly setContextMenuFactory: (factory: WidgetContextMenuFactory) => void;
+  readonly exposeApi: (api: object) => void; // exposes api for consumption by other widgets via WidgetAPI.widgets
 }
 
+// Widget things available for use by other widgets via WidgetAPI.widgets
+export interface WidgetApiWidget<T extends object = object> {
+  id: EntityId;
+  name: string;
+  api: T; // api exposed by widget
+}
 interface WidgetApiModules {
   readonly clipboard: {
     writeBookmark: (title: string, url: string) => Promise<void>;
@@ -39,6 +46,9 @@ interface WidgetApiModules {
   readonly terminal: {
     execCmdLines: (cmdLines: ReadonlyArray<string>, cwd?: string) => void;
   }
+  readonly widgets: {
+    getWidgetsInCurrentWorkflow<T extends object>(widgetTypeId: string): ReadonlyArray<WidgetApiWidget<T>>;
+  }
 }
 
 export type WidgetApiModuleName = keyof WidgetApiModules;
@@ -47,10 +57,12 @@ export interface WidgetApi extends WidgetApiCommon, WidgetApiModules { }
 
 export type WidgetApiUpdateActionBarHandler = (actionBarItems: ActionBarItems) => void;
 export type WidgetApiSetContextMenuFactoryHandler = (factory: WidgetContextMenuFactory) => void;
+export type WidgetApiExposeApiHandler = (api: object) => void;
 export type WidgetApiCommonFactory = (
   widgetId: EntityId,
   updateActionBarHandler: WidgetApiUpdateActionBarHandler,
   setContextMenuFactoryHandler: WidgetApiSetContextMenuFactoryHandler,
+  exposeApiHandler: WidgetApiExposeApiHandler
 ) => WidgetApiCommon;
 type WidgetApiModuleFactory<N extends WidgetApiModuleName> = (widgetId: EntityId) => WidgetApiModules[N];
 export type WidgetApiModuleFactories = {
@@ -61,6 +73,7 @@ export type WidgetApiFactory = (
   widgetId: EntityId,
   updateActionBarHandler: WidgetApiUpdateActionBarHandler,
   setContextMenuFactoryHandler: WidgetApiSetContextMenuFactoryHandler,
+  exposeApiHandler: WidgetApiExposeApiHandler,
   availableModules: WidgetApiModuleName[]
 ) => WidgetApi;
 
@@ -69,9 +82,10 @@ export function createWidgetApiFactory(commonFactory: WidgetApiCommonFactory, mo
     widgetId: EntityId,
     updateActionBarHandler: WidgetApiUpdateActionBarHandler,
     setContextMenuFactoryHandler: WidgetApiSetContextMenuFactoryHandler,
+    exposeApiHandler: WidgetApiExposeApiHandler,
     availableModules: WidgetApiModuleName[]
   ) => ({
-    ...commonFactory(widgetId, updateActionBarHandler, setContextMenuFactoryHandler),
+    ...commonFactory(widgetId, updateActionBarHandler, setContextMenuFactoryHandler, exposeApiHandler),
     ...Object.fromEntries(availableModules.map(featName => ([featName, moduleFactories[featName](widgetId)])))
   } as WidgetApi);
 }

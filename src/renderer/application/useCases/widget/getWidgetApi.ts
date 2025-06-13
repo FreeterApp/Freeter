@@ -8,9 +8,10 @@ import { ProcessProvider } from '@/application/interfaces/processProvider';
 import { ShellProvider } from '@/application/interfaces/shellProvider';
 import { DataStorageRenderer } from '@/application/interfaces/dataStorage';
 import { EntityId } from '@/base/entity';
-import { WidgetApiModuleName, WidgetApiSetContextMenuFactoryHandler, WidgetApiUpdateActionBarHandler, createWidgetApiFactory } from '@/base/widgetApi';
+import { WidgetApiExposeApiHandler, WidgetApiModuleName, WidgetApiSetContextMenuFactoryHandler, WidgetApiUpdateActionBarHandler, createWidgetApiFactory } from '@/base/widgetApi';
 import { ObjectManager } from '@common/base/objectManager';
 import { TerminalProvider } from '@/application/interfaces/terminalProvider';
+import { GetWidgetsInCurrentWorkflowUseCase } from '@/application/useCases/widget/widgetApiWidgets/getWidgetsInCurrentWorkflow';
 
 interface Deps {
   clipboardProvider: ClipboardProvider;
@@ -18,6 +19,7 @@ interface Deps {
   processProvider: ProcessProvider;
   shellProvider: ShellProvider;
   terminalProvider: TerminalProvider;
+  getWidgetsInCurrentWorkflowUseCase: GetWidgetsInCurrentWorkflowUseCase;
 }
 function _createWidgetApiFactory({
   clipboardProvider,
@@ -25,15 +27,19 @@ function _createWidgetApiFactory({
   shellProvider,
   widgetDataStorageManager,
   terminalProvider,
+  getWidgetsInCurrentWorkflowUseCase,
 }: Deps, forPreview: boolean) {
   return createWidgetApiFactory(
-    (_widgetId, updateActionBarHandler, setWidgetContextMenuFactoryHandler) => ({
+    (_widgetId, updateActionBarHandler, setWidgetContextMenuFactoryHandler, exposeApiHandler) => ({
       updateActionBar: !forPreview ? (actionBarItems) => {
         updateActionBarHandler(actionBarItems);
       } : () => undefined,
       setContextMenuFactory: !forPreview ? (factory) => {
         setWidgetContextMenuFactoryHandler(factory);
-      } : () => undefined
+      } : () => undefined,
+      exposeApi: !forPreview ? (api) => {
+        exposeApiHandler(api)
+      } : () => undefined,
     }),
     {
       clipboard: () => ({
@@ -63,6 +69,9 @@ function _createWidgetApiFactory({
       terminal: () => ({
         execCmdLines: (cmdLines, cwd) => terminalProvider.execCmdLines(cmdLines, cwd)
       }),
+      widgets: () => ({
+        getWidgetsInCurrentWorkflow: (widgetTypeId) => getWidgetsInCurrentWorkflowUseCase(widgetTypeId)
+      })
     }
   )
 }
@@ -76,11 +85,12 @@ export function createGetWidgetApiUseCase(deps: Deps) {
     forPreview: boolean,
     updateActionBarHandler: WidgetApiUpdateActionBarHandler,
     setContextMenuFactoryHandler: WidgetApiSetContextMenuFactoryHandler,
+    exposeApiHandler: WidgetApiExposeApiHandler,
     requiredModules: WidgetApiModuleName[]
   ) {
     return forPreview
-      ? widgetApiPreviewFactory(widgetId, updateActionBarHandler, setContextMenuFactoryHandler, requiredModules)
-      : widgetApiFactory(widgetId, updateActionBarHandler, setContextMenuFactoryHandler, requiredModules);
+      ? widgetApiPreviewFactory(widgetId, updateActionBarHandler, setContextMenuFactoryHandler, exposeApiHandler, requiredModules)
+      : widgetApiFactory(widgetId, updateActionBarHandler, setContextMenuFactoryHandler, exposeApiHandler, requiredModules);
   }
 
   return getWidgetApiUseCase;
