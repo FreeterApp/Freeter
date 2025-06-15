@@ -90,6 +90,7 @@ export function setupWidgetSut<T>(reactComp: ReactComponent<WidgetReactComponent
   const widgetApi: WidgetApi = {
     updateActionBar: mockWidgetApi.updateActionBar || jest.fn(),
     setContextMenuFactory: mockWidgetApi.setContextMenuFactory || jest.fn(),
+    exposeApi: mockWidgetApi.exposeApi || jest.fn(),
     clipboard: {
       writeBookmark: jest.fn(),
       writeText: jest.fn(),
@@ -118,6 +119,10 @@ export function setupWidgetSut<T>(reactComp: ReactComponent<WidgetReactComponent
     terminal: {
       execCmdLines: jest.fn(),
       ...mockWidgetApi.terminal
+    },
+    widgets: {
+      getWidgetsInCurrentWorkflow: jest.fn(),
+      ...mockWidgetApi.widgets
     }
   };
   return {
