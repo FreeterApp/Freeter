@@ -19,18 +19,21 @@ export function createSetExposedApiUseCase({
     api: object
   ) {
     const state = appStore.get();
-    appStore.set({
-      ...state,
-      entities: {
-        ...state.entities,
-        widgets: updateOneInEntityCollection(state.entities.widgets, {
-          changes: {
-            exposedApi: api
-          },
-          id: widgetId
-        })
-      }
+    const newWidgets = updateOneInEntityCollection(state.entities.widgets, {
+      changes: {
+        exposedApi: api
+      },
+      id: widgetId
     })
+    if (newWidgets !== state.entities.widgets) {
+      appStore.set({
+        ...state,
+        entities: {
+          ...state.entities,
+          widgets: newWidgets
+        }
+      })
+    }
   }
 }
 
