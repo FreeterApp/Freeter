@@ -12,14 +12,14 @@ import { OpenDialogResult, OpenDirDialogConfig, OpenFileDialogConfig } from '@co
 interface WidgetApiCommon {
   readonly updateActionBar: (actionBarItems: ActionBarItems) => void;
   readonly setContextMenuFactory: (factory: WidgetContextMenuFactory) => void;
-  readonly exposeApi: (api: object) => void; // exposes api for consumption by other widgets via WidgetAPI.widgets
+  readonly exposeApi: <T extends object>(api: T) => void; // exposes api for consumption by other widgets via WidgetAPI.widgets
 }
 
 // Widget things available for use by other widgets via WidgetAPI.widgets
 export interface WidgetApiWidget<T extends object = object> {
   id: EntityId;
   name: string;
-  api: T; // api exposed by widget
+  api: Partial<T>; // api exposed by widget
 }
 interface WidgetApiModules {
   readonly clipboard: {

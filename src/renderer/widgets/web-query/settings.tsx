@@ -5,6 +5,20 @@
 
 import { CreateSettingsState, ReactComponent, SettingsEditorReactComponentProps, SettingBlock } from '@/widgets/appModules';
 
+export enum SettingsMode {
+  Browser = 1,
+  Webpages = 2,
+}
+const settingsModes = [SettingsMode.Browser, SettingsMode.Webpages] as const;
+function isSettingsMode(val: unknown): val is SettingsMode {
+  if (settingsModes.indexOf(val as SettingsMode)>-1) {
+    return true;
+  }
+
+  return false;
+}
+
+
 export interface SettingsEngine {
   id: string;
   name: string;
@@ -41,6 +55,7 @@ export const defaultEngine = engineDdgo;
 export const enginesById = Object.fromEntries(engines.map(item => [item.id, item]));
 
 export interface Settings {
+  mode: SettingsMode;
   engine: string;
   descr: string;
   query: string;
@@ -48,30 +63,41 @@ export interface Settings {
 }
 
 export const createSettingsState: CreateSettingsState<Settings> = (settings) => {
-  let engineObj: SettingsEngine | undefined;
-  if (typeof settings.engine === 'string') {
-    if (settings.engine !== '') {
-      engineObj = enginesById[settings.engine]
-      if (!engineObj) {
-        engineObj = defaultEngine;
-      }
-    }
-  } else {
-    engineObj = defaultEngine;
-  }
-  let engine: string;
+  const mode = isSettingsMode(settings.mode) ? settings.mode : SettingsMode.Browser;
   let descr: string;
   let url: string;
-  if (engineObj) {
-    engine = engineObj.id;
-    descr = '';
-    url = '';
+  let engine: string;
+
+  if(mode === SettingsMode.Browser) {
+    let engineObj: SettingsEngine | undefined;
+    if (typeof settings.engine === 'string') {
+      if (settings.engine !== '') {
+        engineObj = enginesById[settings.engine]
+        if (!engineObj) {
+          engineObj = defaultEngine;
+        }
+      }
+    } else {
+      engineObj = defaultEngine;
+    }
+
+    if (engineObj) {
+      engine = engineObj.id;
+      descr = '';
+      url = '';
+    } else {
+      engine = '';
+      descr = typeof settings.descr === 'string' ? settings.descr : '';
+      url = typeof settings.url === 'string' ? settings.url : '';
+    }
   } else {
     engine = '';
-    descr = typeof settings.descr === 'string' ? settings.descr : '';
-    url = typeof settings.url === 'string' ? settings.url : '';
+    descr = typeof settings.descr === 'string' ? settings.descr : 'Search';
+    url = '';
   }
+
   return {
+    mode: mode,
     engine,
     descr,
     url,
@@ -82,6 +108,14 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
 function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
   const {updateSettings} = settingsApi;
 
+  function updMode(newModeId: string) {
+    const val = Number.parseInt(newModeId);
+    updateSettings({
+      ...settings,
+      descr: (settings.mode === SettingsMode.Browser && enginesById[settings.engine]?.descr) || settings.descr,
+      mode: isSettingsMode(val) ? val : SettingsMode.Browser
+    })
+  }
   function updEngine(newEngineId: string) {
     if (newEngineId === '') {
       const curEngineObj = enginesById[settings.engine];
@@ -109,6 +143,22 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
   return (
     <>
       <SettingBlock
+        titleForId='web-query-mode'
+        title='Mode'
+        moreInfo={`By default, the widget performs queries using a Browser app.
+To run queries within webpage widgets in the same workflow, switch to Webpages mode.
+
+Make sure that any Webpage widget you want to use for queries includes the capitalized word QUERY in its URL setting. This acts as a placeholder and will be automatically replaced with the actual query entered in the Web Query widget.`}
+      >
+        <select id="web-query-mode" value={settings.mode} onChange={e => {
+          updMode(e.target.value)
+        }}>
+          <option value={SettingsMode.Browser}>Browser App</option>
+          <option value={SettingsMode.Webpages}>Webpage Widgets</option>
+        </select>
+      </SettingBlock>
+
+      {settings.mode === SettingsMode.Browser && <SettingBlock
         titleForId='web-query-engine'
         title='Query Engine'
         moreInfo='Pick one of the common engines to perform your queries with, or select Custom Engine to define your own engine.'
@@ -128,7 +178,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
             ))
           }
         </select>
-      </SettingBlock>
+      </SettingBlock>}
 
       <SettingBlock
         titleForId='web-query-descr'
@@ -136,7 +186,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
         moreInfo='A short description displayed in the query field.'
       >
         {
-          settings.engine===''
+          settings.mode !== SettingsMode.Browser || settings.engine===''
           ? <input
               id="web-query-descr"
               type="text"
@@ -152,7 +202,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
         }
       </SettingBlock>
 
-      <SettingBlock
+      {settings.mode === SettingsMode.Browser && <SettingBlock
         titleForId='web-query-url'
         title='URL Template'
         moreInfo='A template of a URL that will be opened to perform the query. Capitilized QUERY inside the url template is a placeholder that will be replaced with a query typed in the widget.'
@@ -172,7 +222,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
             />
           : <input id="web-query-url" type="text" disabled={true} value={enginesById[settings.engine]?.url || ''} />
         }
-      </SettingBlock>
+      </SettingBlock>}
 
       <SettingBlock
         titleForId='web-query-query'
