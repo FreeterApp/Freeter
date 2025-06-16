@@ -28,6 +28,6 @@ export interface WidgetType<TSettings = WidgetSettings> extends Entity {
   readonly widgetComp: WidgetTypeComponent;
   readonly settingsEditorComp: WidgetTypeComponent;
   readonly createSettingsState: CreateSettingsState<TSettings>;
-  readonly requiresApi?: WidgetApiModuleName[];
+  readonly requiresApi?: WidgetApiModuleName[]; // specifies WidgetAPI modules it requires access to
   readonly requiresState?: SharedStateSliceName[];
 }

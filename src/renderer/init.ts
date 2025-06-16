@@ -143,6 +143,8 @@ import { createDeactivateWorkflowUseCase } from '@/application/useCases/memSaver
 import { createToggleTopBarUseCase } from '@/application/useCases/toggleTopBar';
 import { createSetProjectSwitcherPositionUseCase } from '@/application/useCases/projectSwitcher/setProjectSwitcherPosition';
 import { createSetEditTogglePositionUseCase } from '@/application/useCases/setEditTogglePosition';
+import { createGetWidgetsInCurrentWorkflowUseCase } from '@/application/useCases/widget/widgetApiWidgets/getWidgetsInCurrentWorkflow';
+import { createSetExposedApiUseCase } from '@/application/useCases/widget/setExposedApi';
 
 function prepareDataStorageForRenderer(dataStorage: DataStorage): DataStorageRenderer {
   return setTextOnlyIfChanged(withJson(dataStorage));
@@ -246,6 +248,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     dialog: osDialogProvider
   })
 
+  const getWidgetsInCurrentWorkflowUseCase = createGetWidgetsInCurrentWorkflowUseCase(deps);
+
   const clipboardProvider = createClipboardProvider();
   const shellProvider = createShellProvider();
   const processProvider = await createProcessProvider();
@@ -260,6 +264,7 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
     shellProvider,
     widgetDataStorageManager,
     terminalProvider,
+    getWidgetsInCurrentWorkflowUseCase,
   })
   const deleteWidgetUseCase = createDeleteWidgetUseCase({
     ...deps,
@@ -427,6 +432,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
   const dragWorkflowFromWorkflowSwitcherUseCase = createDragWorkflowFromWorkflowSwitcherUseCase(deps);
   const dropOnWorkflowSwitcherUseCase = createDropOnWorkflowSwitcherUseCase(deps);
 
+  const setExposedApiUseCase = createSetExposedApiUseCase(deps);
+
   return {
     dragWidgetFromWorktableLayoutUseCase,
     dragOverWorktableLayoutUseCase,
@@ -519,6 +526,8 @@ async function createUseCases(store: ReturnType<typeof createStore>) {
 
     deactivateWorkflowUseCase,
     initMemSaverUseCase,
+
+    setExposedApiUseCase
   }
 }
 

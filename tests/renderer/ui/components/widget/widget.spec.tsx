@@ -47,16 +47,19 @@ async function setup({
   const showWidgetContextMenuUseCase = jest.fn();
   const copyWidgetUseCase = jest.fn();
   const showContextMenuUseCase = jest.fn();
+  const setExposedApiUseCase = jest.fn();
   const getWidgetApiUseCase = mocks?.getWidgetApiUseCase || (
     (
       _widgetId: string,
       _previewMode: boolean,
       updateActionBarHandler: (actionBarItems: ActionBarItems)=>void,
-      setContextMenuFactoryHandler: (contextMenuFactory: WidgetContextMenuFactory)=>void
+      setContextMenuFactoryHandler: (contextMenuFactory: WidgetContextMenuFactory)=>void,
+      exposeApiHandler: (api: object)=>void
     ) => {
       const widgetApi: Partial<WidgetApi> = {
         updateActionBar: (actionBarItems) => act(() => updateActionBarHandler(actionBarItems)),
-        setContextMenuFactory: (factory) => act(() => setContextMenuFactoryHandler(factory))
+        setContextMenuFactory: (factory) => act(() => setContextMenuFactoryHandler(factory)),
+        exposeApi: (api) => act(()=>exposeApiHandler(api))
       }
       return widgetApi as WidgetApi;
     }
@@ -70,6 +73,7 @@ async function setup({
     getWidgetApiUseCase,
     copyWidgetUseCase,
     showContextMenuUseCase,
+    setExposedApiUseCase,
   })
   const Widget = createWidgetComponent({
     useWidgetViewModel
@@ -639,8 +643,8 @@ describe('<Widget />', () => {
     const elButton = screen.getByRole('button', {name: /widget settings/i});
     fireEvent.click(elButton);
 
-    expect(openWidgetSettingsUseCase).toBeCalledTimes(1);
-    expect(openWidgetSettingsUseCase).toBeCalledWith(widgetId, expect.objectContaining<WidgetEnvAreaShelf>({
+    expect(openWidgetSettingsUseCase).toHaveBeenCalledTimes(1);
+    expect(openWidgetSettingsUseCase).toHaveBeenCalledWith(widgetId, expect.objectContaining<WidgetEnvAreaShelf>({
       area: 'shelf'
     }))
   })
@@ -670,8 +674,8 @@ describe('<Widget />', () => {
     const elButton = screen.getByRole('button', {name: /delete widget/i});
     fireEvent.click(elButton);
 
-    expect(deleteWidgetUseCase).toBeCalledTimes(1);
-    expect(deleteWidgetUseCase).toBeCalledWith(widgetId, env);
+    expect(deleteWidgetUseCase).toHaveBeenCalledTimes(1);
+    expect(deleteWidgetUseCase).toHaveBeenCalledWith(widgetId, env);
   })
 
   it('should display a warning and nothing else, if the widget has an unexisting type', async () => {
@@ -848,8 +852,8 @@ describe('<Widget />', () => {
       }
     });
 
-    expect(getWidgetApiUseCase).toBeCalledTimes(1);
-    expect(getWidgetApiUseCase).toBeCalledWith(widgetId, false, expect.any(Function), expect.any(Function), testRequiresApi);
+    expect(getWidgetApiUseCase).toHaveBeenCalledTimes(1);
+    expect(getWidgetApiUseCase).toHaveBeenCalledWith(widgetId, false, expect.any(Function), expect.any(Function), expect.any(Function), testRequiresApi);
     expect(screen.queryByText(getWidgetApiUseCaseRes)).toBeInTheDocument();
   })
 
@@ -876,8 +880,8 @@ describe('<Widget />', () => {
 
     fireEvent.contextMenu(screen.getByTestId(testId1));
 
-    expect(showWidgetContextMenuUseCase).toBeCalledTimes(1);
-    expect(showWidgetContextMenuUseCase).toBeCalledWith(widgetId, undefined, '', undefined);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledTimes(1);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledWith(widgetId, undefined, '', undefined);
   })
 
   it('should call showWidgetContextMenuUseCase with a contextMenuFactory set by the widget, when a context menu is called', async () => {
@@ -909,8 +913,8 @@ describe('<Widget />', () => {
 
     fireEvent.contextMenu(screen.getByTestId(testId1));
 
-    expect(showWidgetContextMenuUseCase).toBeCalledTimes(1);
-    expect(showWidgetContextMenuUseCase).toBeCalledWith(widgetId, contextMenuFactory, '', undefined);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledTimes(1);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledWith(widgetId, contextMenuFactory, '', undefined);
   })
 
   it('should call showWidgetContextMenuUseCase with contextId==="", when a context menu is called and no Comp elements have a data-widget-context attribute', async () => {
@@ -936,8 +940,8 @@ describe('<Widget />', () => {
 
     fireEvent.contextMenu(screen.getByTestId(testId1));
 
-    expect(showWidgetContextMenuUseCase).toBeCalledTimes(1);
-    expect(showWidgetContextMenuUseCase).toBeCalledWith(widgetId, undefined, '', undefined);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledTimes(1);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledWith(widgetId, undefined, '', undefined);
   })
 
   it('should call showWidgetContextMenuUseCase with contextId specified by "data-widget-context" attribute of an element where a context menu is called', async () => {
@@ -964,8 +968,8 @@ describe('<Widget />', () => {
 
     fireEvent.contextMenu(screen.getByTestId(testId1));
 
-    expect(showWidgetContextMenuUseCase).toBeCalledTimes(1);
-    expect(showWidgetContextMenuUseCase).toBeCalledWith(widgetId, undefined, contextId, undefined);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledTimes(1);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledWith(widgetId, undefined, contextId, undefined);
   })
 
   it('should call showWidgetContextMenuUseCase with contextId specified by "data-widget-context" attribute of a parent element, if an element where a context menu is called does not have it', async () => {
@@ -992,8 +996,8 @@ describe('<Widget />', () => {
 
     fireEvent.contextMenu(screen.getByTestId(testId1));
 
-    expect(showWidgetContextMenuUseCase).toBeCalledTimes(1);
-    expect(showWidgetContextMenuUseCase).toBeCalledWith(widgetId, undefined, contextId, undefined);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledTimes(1);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledWith(widgetId, undefined, contextId, undefined);
   })
 
   it('should call showWidgetContextMenuUseCase with contextData specified in Event object, when the widget fires a custom contextmenu event with `contextData` property', async () => {
@@ -1022,8 +1026,8 @@ describe('<Widget />', () => {
     evt.contextData = testContextData;
     fireEvent(screen.getByTestId(testId1), evt);
 
-    expect(showWidgetContextMenuUseCase).toBeCalledTimes(1);
-    expect(showWidgetContextMenuUseCase).toBeCalledWith(widgetId, undefined, '', testContextData);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledTimes(1);
+    expect(showWidgetContextMenuUseCase).toHaveBeenCalledWith(widgetId, undefined, '', testContextData);
   })
 
 })

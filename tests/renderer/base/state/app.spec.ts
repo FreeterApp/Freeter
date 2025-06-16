@@ -97,7 +97,7 @@ describe('AppState', () => {
 
   describe('createPersistentAppState', () => {
     it('creates PersistentAppState by picking props from AppState that should be persisted', () => {
-      const widgetA = fixtureWidgetA({});
+      const widgetA = fixtureWidgetA({ exposedApi: { some: 'object' } });
       const state = fixtureAppState({
         entities: {
           apps: fixtureAppAInColl(),
@@ -109,7 +109,7 @@ describe('AppState', () => {
           workflows: fixtureWorkflowAInColl()
         },
       });
-      const { ...persistentWidgetA } = widgetA;
+      const { exposedApi: _, ...persistentWidgetA } = widgetA;
       const expectPersistentState: PersistentAppState = {
         entities: {
           apps: state.entities.apps,

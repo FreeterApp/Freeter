@@ -14,6 +14,7 @@ import { createContextMenuFactory } from '@/widgets/webpage/contextMenu';
 import { ContextMenuEvent as ElectronContextMenuEvent } from 'electron';
 import { createPartition } from '@/widgets/webpage/partition';
 import { reload } from '@/widgets/webpage/actions';
+import { WebpageExposedApi } from '@/widgets/interfaces';
 
 interface WebviewProps extends WidgetReactComponentProps<Settings> {
   /**
@@ -42,7 +43,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
     }
   }, [onRequireRestart, partition, reqRestartIfChanged])
 
-  const {updateActionBar, setContextMenuFactory} = widgetApi;
+  const {updateActionBar, setContextMenuFactory, exposeApi} = widgetApi;
   const webviewRef = useRef<Electron.WebviewTag>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [webviewIsReady, setWebviewIsReady] = useState(false);
@@ -51,6 +52,13 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
 
   const sanitUrl = useMemo(() => sanitizeUrl(url), [url]);
   const sanitUA = useMemo(() => userAgent.trim(), [userAgent]);
+
+  useEffect(() => {
+    exposeApi<WebpageExposedApi>({
+      openUrl: (url: string) => webviewRef.current?.loadURL(url),
+      getUrl: () => url,
+    })
+  }, [exposeApi, url])
 
   const refreshActions = useCallback(
     () => updateActionBar(

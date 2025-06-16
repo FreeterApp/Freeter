@@ -19,6 +19,7 @@ import { EntityId } from '@/base/entity';
 import { CopyWidgetUseCase } from '@/application/useCases/widget/copyWidget';
 import { ShowContextMenuUseCase } from '@/application/useCases/contextMenu/showContextMenu';
 import { createSharedState } from '@/base/state/shared';
+import { SetExposedApiUseCase } from '@/application/useCases/widget/setExposedApi';
 
 type Deps = {
   useAppState: UseAppState;
@@ -28,6 +29,7 @@ type Deps = {
   openWidgetSettingsUseCase: OpenWidgetSettingsUseCase;
   deleteWidgetUseCase: DeleteWidgetUseCase;
   copyWidgetUseCase: CopyWidgetUseCase;
+  setExposedApiUseCase: SetExposedApiUseCase;
 }
 
 export interface WidgetProps {
@@ -56,6 +58,7 @@ export function createWidgetViewModelHook({
   openWidgetSettingsUseCase,
   deleteWidgetUseCase,
   copyWidgetUseCase,
+  setExposedApiUseCase,
 }: Deps) {
   function showMoreActions(
     id: EntityId,
@@ -156,6 +159,7 @@ export function createWidgetViewModelHook({
       !!env.isPreview,
       (items) => setActionBarItemsViewMode([...items, ...createActionBarCommonItemsViewMode(widgetType?.maximizable || false, maximizeAction)]),
       (factory: WidgetContextMenuFactory | undefined) => setContextMenuFactoryViewMode(() => factory),
+      (api) => setExposedApiUseCase(widget.id, api),
       widgetType?.requiresApi || []
     ), [env.isPreview, maximizeAction, widget.id, widgetType?.maximizable, widgetType?.requiresApi])
 
