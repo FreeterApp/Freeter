@@ -31,6 +31,7 @@ export function createWidgetLayoutComponent({
       isVisible,
       isEditMode,
       viewportSize,
+      viewportIsReady,
       viewLayoutItems,
       resizingItem,
       dndIsDropArea,
@@ -72,14 +73,14 @@ export function createWidgetLayoutComponent({
         data-testid="widget-layout"
         {...{ inert: !isVisible ? true : undefined }}
       >
-        { ghostItemRect && <WidgetLayoutItemGhost
+        { viewportIsReady && ghostItemRect && <WidgetLayoutItemGhost
           w={ghostItemRect.w}
           h={ghostItemRect.h}
           x={ghostItemRect.x}
           y={ghostItemRect.y}
           viewportSize={viewportSize}
         />}
-        {env && viewLayoutItems?.map(layoutItem => (
+        {viewportIsReady && env && viewLayoutItems?.map(layoutItem => (
           <WidgetLayoutItem
             key={layoutItem.id}
             id={layoutItem.id}

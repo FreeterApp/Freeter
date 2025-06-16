@@ -11,7 +11,7 @@ export function useElementRect(el: HTMLElement | null, opts?: {
   defaultVal?: RectPx;
   refreshDep?: unknown;
 }) {
-  const [elementRect, setElementRect] = useState<RectPx>(opts?.defaultVal || { xPx: 0, yPx: 0, wPx: 500, hPx: 500 });
+  const [elementRect, setElementRect] = useState<RectPx>(opts?.defaultVal || { xPx: 0, yPx: 0, wPx: 0, hPx: 0 });
 
   const refreshElementRect = useCallback(() => {
     if (el) {

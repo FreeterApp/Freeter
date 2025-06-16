@@ -131,6 +131,9 @@ export function createWidgetLayoutViewModelHook({
       copiedWidgets,
     } = props;
     const viewportSize = useElementRect(layoutEl);
+    // viewportSize inits with w/h=0/0 - do not render widgets until its ready to prevent a render with wrong sizes
+    const viewportIsReady = viewportSize.wPx > 0 && viewportSize.hPx > 0;
+
     const componentMounted = useComponentMounted();
 
     const [draggedLayoutItem, setDraggedLayoutItem] = useState<DraggedLayoutItem | null>(null);
@@ -303,6 +306,7 @@ export function createWidgetLayoutViewModelHook({
       isVisible,
       isEditMode,
       viewportSize,
+      viewportIsReady,
       viewLayoutItems,
       resizingItem,
       dndIsDropArea,
