@@ -16,6 +16,7 @@ export const labelAutoReloadStop = 'Stop auto-reload';
 export const labelOpenInBrowser = 'Open in web browser';
 export const labelSaveAs = 'Save as...';
 export const labelCopyCurrentAddress = 'Copy current address';
+export const labelZoom = 'Zoom';
 export const labelPrintPage = 'Print...';
 export const labelOpenLinkInBrowser = 'Open link in web browser';
 export const labelSaveLinkAs = 'Save link as...';
@@ -83,6 +84,10 @@ export function canGoHome(elWebview: Electron.WebviewTag, url: string) {
 
 export function goHome(elWebview: Electron.WebviewTag, homeUrl: string) {
   elWebview.loadURL(sanitizeUrl(homeUrl));
+}
+
+export function zoomPage(elWebview: Electron.WebviewTag, zoomFactor: number) {
+  elWebview.setZoomFactor(zoomFactor);
 }
 
 export function openCurrentInBrowser(elWebview: Electron.WebviewTag, widgetApi: WidgetApi) {

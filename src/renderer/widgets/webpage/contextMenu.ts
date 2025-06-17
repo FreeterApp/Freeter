@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { canGoBack, canGoForward, canGoHome, copyCurrentAddress, copyLinkAddress, goBack, goForward, goHome, hardReload, labelAutoReloadStart, labelAutoReloadStop, labelCopy, labelCopyCurrentAddress, labelCopyImageAddress, labelCopyLinkAddress, labelCut, labelDevTools, labelGoBack, labelGoForward, labelGoHome, labelHardReload, labelOpenInBrowser, labelOpenLinkInBrowser, labelPaste, labelPasteAsPlainText, labelPrintPage, labelRedo, labelReload, labelSaveAs, labelSaveImageAs, labelSaveLinkAs, labelSelectAll, labelUndo, openCurrentInBrowser, openDevTools, openLinkInBrowser, printPage, reload, saveLink, savePage } from './actions';
+import { canGoBack, canGoForward, canGoHome, copyCurrentAddress, copyLinkAddress, goBack, goForward, goHome, hardReload, labelAutoReloadStart, labelAutoReloadStop, labelCopy, labelCopyCurrentAddress, labelCopyImageAddress, labelCopyLinkAddress, labelCut, labelDevTools, labelGoBack, labelGoForward, labelGoHome, labelHardReload, labelOpenInBrowser, labelOpenLinkInBrowser, labelPaste, labelPasteAsPlainText, labelPrintPage, labelRedo, labelReload, labelSaveAs, labelSaveImageAs, labelSaveLinkAs, labelSelectAll, labelUndo, labelZoom, openCurrentInBrowser, openDevTools, openLinkInBrowser, printPage, reload, saveLink, savePage, zoomPage } from './actions';
 import { WidgetApi, WidgetContextMenuFactory, WidgetMenuItem } from '@/widgets/appModules';
 import { ContextMenuParams } from 'electron';
 
@@ -42,6 +42,14 @@ export function createContextMenuFactory(
           label: autoReloadStopped ? labelAutoReloadStart : labelAutoReloadStop
         }, ...reloadItems]
       }
+      const zoomItems: WidgetMenuItem[] =
+        ([5, 4, 3, 2.5, 2, '', 1.75, 1.5, 1.25, 1.1, 1, '', 0.9, 0.8, 0.75, 0.5, 0.33, 0.25] as const)
+          .map(val => (val ? {
+            type: 'checkbox',
+            label: `${Math.round(val * 100)}%`,
+            checked: elWebview.getZoomFactor() === val,
+            doAction: async () => zoomPage(elWebview, val)
+          } : { type: 'separator' }))
       const defaultItems: WidgetMenuItem[] = [
         {
           doAction: async () => goHome(elWebview, homeUrl),
@@ -58,6 +66,11 @@ export function createContextMenuFactory(
         },
         ...reloadItems,
         {
+          type: 'separator'
+        }, {
+          label: labelZoom,
+          submenu: zoomItems
+        }, {
           type: 'separator'
         }, {
           doAction: async () => openCurrentInBrowser(elWebview, widgetApi),
