@@ -85,14 +85,15 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
         if (!webviewEl) {
           return;
         }
-        if(cssInDom) {
-          webviewEl.removeInsertedCSS(cssInDom[0]);
-        }
+        const removeCss = cssInDom && cssInDom[0];
         if(css.trim()!=='') {
           const k = await webviewEl.insertCSS(css);
           setCssInDom([k, css]);
         } else {
           setCssInDom(null);
+        }
+        if(removeCss) {
+          webviewEl.removeInsertedCSS(removeCss);
         }
       }
     },
