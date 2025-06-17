@@ -6,33 +6,49 @@
 import { useCallback, useEffect, useState } from 'react';
 import { RectPx } from '@/ui/types/dimensions';
 
+const getElRect = (el: HTMLElement | null, useViewportRect: boolean) => {
+  if (el) {
+    if (useViewportRect) {
+      const rect = el.getBoundingClientRect();
+      return {
+        xPx: rect.left,
+        yPx: rect.top,
+        wPx: rect.width,
+        hPx: rect.height
+      };
+    } else {
+      return {
+        xPx: el.clientLeft,
+        yPx: el.clientTop,
+        wPx: el.clientWidth,
+        hPx: el.clientHeight
+      };
+    }
+  } else {
+    return {
+      xPx: 0,
+      yPx: 0,
+      wPx: 0,
+      hPx: 0
+    }
+  }
+}
+
 export function useElementRect(el: HTMLElement | null, opts?: {
   useViewportRect?: boolean;
   defaultVal?: RectPx;
   refreshDep?: unknown;
 }) {
-  const [elementRect, setElementRect] = useState<RectPx>(opts?.defaultVal || { xPx: 0, yPx: 0, wPx: 0, hPx: 0 });
+  const { xPx, yPx, wPx, hPx } = getElRect(el, !!opts?.useViewportRect);
+  const [elementRect, setElementRect] = useState<RectPx>(opts?.defaultVal || { xPx, yPx, wPx, hPx });
 
   const refreshElementRect = useCallback(() => {
-    if (el) {
-      if (opts?.useViewportRect) {
-        const rect = el.getBoundingClientRect();
-        setElementRect({
-          xPx: rect.left,
-          yPx: rect.top,
-          wPx: rect.width,
-          hPx: rect.height
-        });
-      } else {
-        setElementRect({
-          xPx: el.clientLeft,
-          yPx: el.clientTop,
-          wPx: el.clientWidth,
-          hPx: el.clientHeight
-        });
-      }
-    }
-  }, [el, opts?.useViewportRect])
+    setElementRect({ xPx, yPx, wPx, hPx })
+  }, [hPx, wPx, xPx, yPx])
+
+  if (elementRect.hPx !== hPx || elementRect.wPx !== wPx || elementRect.xPx !== xPx || elementRect.yPx !== yPx) {
+    refreshElementRect();
+  }
 
   useEffect(() => {
     refreshElementRect();
@@ -40,7 +56,6 @@ export function useElementRect(el: HTMLElement | null, opts?: {
 
   useEffect(() => {
     window.addEventListener('resize', refreshElementRect);
-    refreshElementRect();
     return () => {
       window.removeEventListener('resize', refreshElementRect);
     }
