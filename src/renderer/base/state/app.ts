@@ -76,7 +76,23 @@ export function mergeAppStateWithPersistentAppState(
     },
     ui: {
       ...appState.ui,
-      ...persistentAppState.ui
+      ...persistentAppState.ui,
+      appConfig: {
+        ...appState.ui.appConfig,
+        ...persistentAppState.ui.appConfig,
+      },
+      apps: {
+        ...appState.ui.apps,
+        ...persistentAppState.ui.apps,
+      },
+      projectSwitcher: {
+        ...appState.ui.projectSwitcher,
+        ...persistentAppState.ui.projectSwitcher,
+      },
+      shelf: {
+        ...appState.ui.shelf,
+        ...persistentAppState.ui.shelf,
+      },
     }
   }
 }
