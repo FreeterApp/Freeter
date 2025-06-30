@@ -14,7 +14,7 @@ const widgetType: WidgetType<Settings> = {
   name: 'Timer',
   minSize: {
     w: 1,
-    h: 2
+    h: 1
   },
   description: 'The Timer widget allows you to setup a simple countdown timer that starts with a click and notifies you when time is up.',
   createSettingsState,
