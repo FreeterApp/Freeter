@@ -5,7 +5,7 @@
 It lets you gather everything you need for work — in one place, organized by projects and workflows. Quickly access your setup via `Ctrl or Cmd`+`Shift`+`F` or from the tray icon.
 Switch effortlessly between workflows, stay focused on what matters now, and reduce context-switching.
 
-Curious about the motivation behind the project and how to get started? [**Read the full post here**][story].
+Curious about what the app does and how to get started? [**Read the full post here**][post-intro].
 
 ---
 
@@ -48,5 +48,5 @@ Freeter is free software and may be redistributed under the terms specified in t
 [roadmap]: https://community.freeter.io/topic/2/planned-features
 [featurerequests]: https://community.freeter.io/category/6/feature-requests
 [bugreports]: https://community.freeter.io/category/7/bug-reports
-[story]: https://community.freeter.io/topic/14/how-i-boosted-my-productivity-while-working-on-multiple-projects
+[post-intro]: https://freeter.io/blog/boost-your-productivity-while-managing-multiple-projects/
 [license]: https://github.com/FreeterApp/Freeter/blob/master/COPYING
