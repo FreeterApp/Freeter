@@ -20,13 +20,29 @@ interface SelectOption<T> {
   label: string;
 }
 
-const timerMinsOptions: SelectOption<number>[] = [];
+const timerMinsValues = new Set<number>();
 for (let mins = 5; mins <= 90; mins += 5) {
-  timerMinsOptions.push({
-    label: mins + ' minutes',
-    value: mins
-  });
+  timerMinsValues.add(mins);
 }
+for (let hour = 1; hour <= 10; hour++) {
+  timerMinsValues.add(hour * 60);
+}
+
+const sortedMins = Array.from(timerMinsValues).sort((a, b) => a - b);
+
+const timerMinsOptions: SelectOption<number>[] = sortedMins.map(mins => {
+  if (mins % 60 === 0 && mins > 0) {
+    const hours = mins / 60;
+    return {
+      label: `${hours} hour${hours > 1 ? 's' : ''}`,
+      value: mins
+    };
+  }
+  return {
+    label: `${mins} minutes`,
+    value: mins
+  };
+});
 
 export const endSoundOptions: SelectOption<string>[] = [
   {
