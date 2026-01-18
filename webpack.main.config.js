@@ -30,6 +30,9 @@ module.exports = {
     })]
   },
   target: 'electron-main',
+  externals: {
+    'node-pty': 'commonjs2 node-pty',
+  },
   module: {
     rules: [
       {

@@ -127,3 +127,22 @@ export type IpcShowBrowserWindowRes = void;
 export const ipcExecCmdLinesInTerminalChannel = makeIpcChannelName('exec-cmd-lines-in-terminal');
 export type IpcExecCmdLinesInTerminalArgs = [cmdLines: ReadonlyArray<string>, cwd?: string];
 export type IpcExecCmdLinesInTerminalRes = void;
+
+export const ipcTerminalPtyCreateChannel = makeIpcChannelName('terminal-pty-create');
+export type IpcTerminalPtyCreateArgs = [cols: number, rows: number, cwd?: string];
+export type IpcTerminalPtyCreateRes = string;
+
+export const ipcTerminalPtyWriteChannel = makeIpcChannelName('terminal-pty-write');
+export type IpcTerminalPtyWriteArgs = [sessionId: string, data: string];
+export type IpcTerminalPtyWriteRes = void;
+
+export const ipcTerminalPtyResizeChannel = makeIpcChannelName('terminal-pty-resize');
+export type IpcTerminalPtyResizeArgs = [sessionId: string, cols: number, rows: number];
+export type IpcTerminalPtyResizeRes = void;
+
+export const ipcTerminalPtyCloseChannel = makeIpcChannelName('terminal-pty-close');
+export type IpcTerminalPtyCloseArgs = [sessionId: string];
+export type IpcTerminalPtyCloseRes = void;
+
+export const ipcTerminalPtyDataChannel = makeIpcChannelName('terminal-pty-data');
+export type IpcTerminalPtyDataArgs = [sessionId: string, data: string];

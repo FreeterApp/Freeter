@@ -69,6 +69,8 @@ import { createChildProcessProvider } from '@/infra/childProcessProvider/childPr
 import { createOpenPathUseCase } from '@/application/useCases/shell/openPath';
 import { createCopyWidgetDataStorageUseCase } from '@/application/useCases/widgetDataStorage/copyWidgetDataStorage';
 import { createOpenAppUseCase } from '@/application/useCases/shell/openApp';
+import { createTerminalPtyControllers } from '@/controllers/terminalPty';
+import { TerminalPtyManager } from '@/infra/terminalPty/terminalPtyManager';
 
 let appWindow: BrowserWindow | null = null; // ref to the app window
 
@@ -176,6 +178,7 @@ if (!app.requestSingleInstanceLock()) {
     const execCmdLinesInTerminalUseCase = createExecCmdLinesInTerminalUseCase({ appsProvider, childProcessProvider, processProvider })
 
     const openAppUseCase = createOpenAppUseCase({ childProcessProvider, processProvider })
+    const terminalPtyManager = new TerminalPtyManager();
 
     registerControllers(ipcMain, [
       ...createAppDataStorageControllers({ getTextFromAppDataStorageUseCase, setTextInAppDataStorageUseCase }),
@@ -201,7 +204,8 @@ if (!app.requestSingleInstanceLock()) {
       ...createGlobalShortcutControllers({ setMainShortcutUseCase }),
       ...createTrayMenuControllers({ setTrayMenuUseCase }),
       ...createBrowserWindowControllers({ showBrowserWindowUseCase }),
-      ...createTerminalControllers({ execCmdLinesInTerminalUseCase })
+      ...createTerminalControllers({ execCmdLinesInTerminalUseCase }),
+      ...createTerminalPtyControllers({ terminalPtyManager })
     ])
 
     const [windowStore] = createWindowStore({

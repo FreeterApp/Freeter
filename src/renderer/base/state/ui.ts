@@ -282,7 +282,7 @@ export function createUiState(): UiState {
       order: []
     },
     palette: {
-      widgetTypeIds: ['commander', 'file-opener', 'link-opener', 'note', 'timer', 'to-do-list', 'web-query', 'webpage']
+      widgetTypeIds: ['commander', 'file-opener', 'link-opener', 'note', 'terminal', 'timer', 'to-do-list', 'web-query', 'webpage']
     },
     projectSwitcher: {
       currentProjectId: '',
