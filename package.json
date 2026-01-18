@@ -15,7 +15,7 @@
     "dev:preload": "cross-env NODE_ENV=development webpack --config webpack.preload.config.js",
     "dev:renderer": "cross-env NODE_ENV=development webpack-dev-server --config webpack.renderer.config.js",
     "dev:main": "cross-env NODE_ENV=development webpack --watch --config webpack.main.config.js",
-    "dev:run": "cross-env NODE_ENV=development nodemon --on-change-only --watch build/main.js --exec \"sleep 3 && electron ./build/main.js\"",
+    "dev:run": "cross-env NODE_ENV=development nodemon --on-change-only --watch build/main.js --exec \"sleep 3 && electron --gtk-version=3 ./build/main.js\"",
     "prod": "rimraf build && yarn run prod:assets && concurrently --names \"RENDERER,MAIN,PRELOAD\" -c \"blue.bold,magenta.bold,green.bold\" \"yarn run prod:renderer\" \"yarn run prod:main\" \"yarn run prod:preload\"",
     "prod:assets": "copyfiles --up 1 src/assets/**/* build/",
     "prod:preload": "cross-env NODE_ENV=production webpack --config webpack.preload.config.js",
@@ -95,7 +95,11 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/xterm": "^5.5.0",
     "clsx": "^2.1.1",
+    "node-pty": "^1.0.0",
+    "react-xtermjs": "^1.0.10",
     "uuid": "^10.0.0",
     "zustand": "^4.5.4"
   }
