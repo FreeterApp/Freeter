@@ -23,8 +23,8 @@ describe('WindowStateStorage', () => {
       mockedCreateStateStorage.mockImplementation(() => retVal);
 
       const gotVal = createWindowStateStorage(dataStorage);
-      expect(mockedCreateStateStorage).toBeCalledTimes(1);
-      expect(mockedCreateStateStorage).toBeCalledWith(
+      expect(mockedCreateStateStorage).toHaveBeenCalledTimes(1);
+      expect(mockedCreateStateStorage).toHaveBeenCalledWith(
         dataStorage,
         windowStateDataStoragKey,
         currentWindowStateVersion,

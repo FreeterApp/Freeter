@@ -31,7 +31,7 @@ describe('setAppMenuUseCase()', () => {
 
     await useCase(testItems, actionsTarget);
 
-    expect(appMenuProviderMock.setMenu).toBeCalledTimes(1);
-    expect(appMenuProviderMock.setMenu).toBeCalledWith(testItems, actionsTarget);
+    expect(appMenuProviderMock.setMenu).toHaveBeenCalledTimes(1);
+    expect(appMenuProviderMock.setMenu).toHaveBeenCalledWith(testItems, actionsTarget);
   });
 })

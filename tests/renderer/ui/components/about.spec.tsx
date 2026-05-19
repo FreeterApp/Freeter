@@ -57,11 +57,11 @@ describe('<About />', () => {
       name: /close/i
     });
 
-    expect(closeAboutUseCase).toBeCalledTimes(0);
+    expect(closeAboutUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(closeAboutUseCase).toBeCalledTimes(1);
+    expect(closeAboutUseCase).toHaveBeenCalledTimes( 1);
   })
 
   it('should display the version info returned by getAboutInfoUseCase', async () => {

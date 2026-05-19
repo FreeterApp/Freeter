@@ -3,25 +3,59 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export function useAudioFile(file: string, volume: number) {
-  const soundPlayer = useMemo(() => file !== '' ? new Audio() : null, [file]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   useEffect(() => {
-    if (soundPlayer) {
-      soundPlayer.src = file;
-      soundPlayer.volume = volume / 100;
-      soundPlayer.load();
-      return () => soundPlayer.pause();
+    let audio: HTMLAudioElement;
+    if (file) {
+      audio = new Audio(file);
+      audio.volume = volume / 100;
+      audio.load();
+
+      audioRef.current = audio;
+    } else {
+      audioRef.current?.pause();
+      audioRef.current = null;
     }
-    return undefined;
-  }, [soundPlayer, file, volume])
-  return useMemo(() => ({
-    play: () => {
-      if (soundPlayer) {
-        soundPlayer.currentTime = 0;
-        soundPlayer.play();
+
+    return () => {
+      if (audio) {
+        audio.pause();
       }
+    };
+  }, [file, volume]);
+
+  const play = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) {
+      return;
     }
-  }), [soundPlayer])
+
+    audio.currentTime = 0;
+    audio.play();
+  }, []);
+
+  return { play };
+
+  // const soundPlayer = useMemo(() => file !== '' ? new Audio() : null, [file]);
+  // useEffect(() => {
+  //   if (soundPlayer) {
+  //     soundPlayer.src = file;
+  //     soundPlayer.volume = volume / 100;
+  //     soundPlayer.load();
+  //     return () => soundPlayer.pause();
+  //   }
+  //   return undefined;
+  // }, [soundPlayer, file, volume])
+  // return useMemo(() => ({
+  //   play: () => {
+  //     if (soundPlayer) {
+  //       soundPlayer.currentTime = 0;
+  //       soundPlayer.play();
+  //     }
+  //   }
+  // }), [soundPlayer])
 }

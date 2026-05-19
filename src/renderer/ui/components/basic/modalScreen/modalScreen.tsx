@@ -4,7 +4,7 @@
  */
 
 import { Button, ButtonProps } from '@/ui/components/basic/button';
-import * as styles from './modalScreen.module.scss';
+import styles from './modalScreen.module.scss';
 import clsx from 'clsx';
 
 export interface ModalScreenProps extends React.PropsWithChildren<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>> {

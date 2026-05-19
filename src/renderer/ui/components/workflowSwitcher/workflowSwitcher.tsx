@@ -5,7 +5,7 @@
 
 import { WorkflowSwitcherViewModelHook } from '@/ui/components/workflowSwitcher/workflowSwitcherViewModel';
 import clsx from 'clsx';
-import * as styles from './workflowSwitcher.module.scss';
+import styles from './workflowSwitcher.module.scss';
 import { ActionBar } from '@/ui/components/basic/actionBar';
 import { WorkflowSwitcherItem } from '@/ui/components/workflowSwitcher/workflowSwitcherItem';
 import { memo } from 'react';

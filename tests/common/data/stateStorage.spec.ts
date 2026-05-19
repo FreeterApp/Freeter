@@ -32,7 +32,7 @@ describe('StateStorage', () => {
       const gotState = await stateStorage.loadState();
 
       expect(gotState).toEqual(state);
-      expect(migrate).not.toBeCalled();
+      expect(migrate).not.toHaveBeenCalled();
     })
 
     it('should migrate the state from DataStorage to the current version with the migrate function, when the stored version is outdated', async () => {
@@ -55,8 +55,8 @@ describe('StateStorage', () => {
       const gotState = await stateStorage.loadState();
 
       expect(gotState).toEqual(migrateToState);
-      expect(migrate).toBeCalled();
-      expect(migrate).toBeCalledWith(state, 1);
+      expect(migrate).toHaveBeenCalled();
+      expect(migrate).toHaveBeenCalledWith(state, 1);
     })
 
     it('should return null, when DataStorage does not have data with the specified state key', async () => {
@@ -166,8 +166,8 @@ describe('StateStorage', () => {
       const itemInStorage = await dataStorage.getJson(stateKeyInDataStorage) as VersionedObject<object>;
       expect(itemInStorage.ver).toBe(curVer);
       expect(itemInStorage.obj).toEqual(persistentState);
-      expect(persistentStateFactory).toBeCalledTimes(1);
-      expect(persistentStateFactory).toBeCalledWith(state);
+      expect(persistentStateFactory).toHaveBeenCalledTimes(1);
+      expect(persistentStateFactory).toHaveBeenCalledWith(state);
     })
   })
 })

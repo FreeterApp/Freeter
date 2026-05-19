@@ -26,8 +26,8 @@ describe('WindowStore', () => {
       mockedCreateStore.mockImplementation(() => retVal);
 
       const gotVal = createWindowStore(deps, initialState, onReady);
-      expect(mockedCreateStore).toBeCalledTimes(1);
-      expect(mockedCreateStore).toBeCalledWith(deps, initialState, prepareWindowState, mergeWindowStateWithPersistentWindowState, onReady);
+      expect(mockedCreateStore).toHaveBeenCalledTimes(1);
+      expect(mockedCreateStore).toHaveBeenCalledWith(deps, initialState, prepareWindowState, mergeWindowStateWithPersistentWindowState, onReady);
       expect(gotVal).toBe(retVal);
     })
   })

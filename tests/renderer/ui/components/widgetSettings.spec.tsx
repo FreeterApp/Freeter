@@ -351,11 +351,11 @@ describe('<WidgetSettings />', () => {
       name: /cancel/i
     });
 
-    expect(closeWidgetSettingsUseCase).toBeCalledTimes(0);
+    expect(closeWidgetSettingsUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(closeWidgetSettingsUseCase).toBeCalledTimes(1);
+    expect(closeWidgetSettingsUseCase).toHaveBeenCalledTimes( 1);
   })
 
   it('should call a right usecase with right params when clicking the save button', async () => {
@@ -389,11 +389,11 @@ describe('<WidgetSettings />', () => {
       name: /ok/i
     });
 
-    expect(saveWidgetSettingsUseCase).toBeCalledTimes(0);
+    expect(saveWidgetSettingsUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(saveWidgetSettingsUseCase).toBeCalledTimes(1);
+    expect(saveWidgetSettingsUseCase).toHaveBeenCalledTimes( 1);
   })
 
   it('should call getWidgetSettingsApiUseCase with right params and give access to the returned value as widgetSettingsApi in Comp', async () => {
@@ -434,8 +434,8 @@ describe('<WidgetSettings />', () => {
       }
     );
 
-    expect(getWidgetSettingsApiUseCase).toBeCalledTimes(1);
-    // expect(getWidgetSettingsApiUseCase).toBeCalledWith();
+    expect(getWidgetSettingsApiUseCase).toHaveBeenCalledTimes( 1);
+    // expect(getWidgetSettingsApiUseCase).toHaveBeenCalledWith();
     expect(screen.queryByText(getWidgetSettingsApiUseCaseRes)).toBeInTheDocument();
   })
 
@@ -498,8 +498,8 @@ describe('<WidgetSettings />', () => {
 
       await userEvent.type(input, addToName);
 
-      expect(updateWidgetCoreSettingsUseCase).toBeCalledTimes(1);
-      expect(updateWidgetCoreSettingsUseCase).toBeCalledWith({
+      expect(updateWidgetCoreSettingsUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateWidgetCoreSettingsUseCase).toHaveBeenCalledWith({
         ...coreSettings,
         name: curName+addToName
       })

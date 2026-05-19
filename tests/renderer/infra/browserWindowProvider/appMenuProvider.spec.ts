@@ -27,8 +27,8 @@ describe('BrowserWindowProvider', () => {
 
       await browserWindowProvider.show();
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcShowBrowserWindowChannel);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcShowBrowserWindowChannel);
     })
   })
 })

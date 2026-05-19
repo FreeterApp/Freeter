@@ -76,7 +76,7 @@ describe('Widget', () => {
 
       expect(() => {
         (widgetEnv as unknown as WidgetEnvAreaWorkflow).area = 'workflow';
-      }).toThrowError();
+      }).toThrow();
     })
   })
 

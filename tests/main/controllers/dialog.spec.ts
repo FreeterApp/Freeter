@@ -63,8 +63,8 @@ describe('DialogControllers', () => {
 
       handle(event, cfg);
 
-      expect(showMessageBoxUseCase).toBeCalledTimes(1);
-      expect(showMessageBoxUseCase).toBeCalledWith(win, cfg);
+      expect(showMessageBoxUseCase).toHaveBeenCalledTimes(1);
+      expect(showMessageBoxUseCase).toHaveBeenCalledWith(win, cfg);
     });
   })
 
@@ -87,8 +87,8 @@ describe('DialogControllers', () => {
 
       const res = await handle(event, cfg);
 
-      expect(showOpenFileDialogUseCase).toBeCalledTimes(1);
-      expect(showOpenFileDialogUseCase).toBeCalledWith(win, cfg);
+      expect(showOpenFileDialogUseCase).toHaveBeenCalledTimes(1);
+      expect(showOpenFileDialogUseCase).toHaveBeenCalledWith(win, cfg);
       expect(res).toBe(showOpenFileDialogUseCaseRes);
     });
   })
@@ -112,8 +112,8 @@ describe('DialogControllers', () => {
 
       const res = await handle(event, cfg);
 
-      expect(showOpenDirDialogUseCase).toBeCalledTimes(1);
-      expect(showOpenDirDialogUseCase).toBeCalledWith(win, cfg);
+      expect(showOpenDirDialogUseCase).toHaveBeenCalledTimes(1);
+      expect(showOpenDirDialogUseCase).toHaveBeenCalledWith(win, cfg);
       expect(res).toBe(showOpenDirDialogUseCaseRes);
     });
   })
@@ -137,8 +137,8 @@ describe('DialogControllers', () => {
 
       const res = await handle(event, cfg);
 
-      expect(showSaveFileDialogUseCase).toBeCalledTimes(1);
-      expect(showSaveFileDialogUseCase).toBeCalledWith(win, cfg);
+      expect(showSaveFileDialogUseCase).toHaveBeenCalledTimes(1);
+      expect(showSaveFileDialogUseCase).toHaveBeenCalledWith(win, cfg);
       expect(res).toBe(showSaveFileDialogUseCaseRes);
     });
   })

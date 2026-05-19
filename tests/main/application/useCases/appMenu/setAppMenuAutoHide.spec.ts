@@ -28,8 +28,8 @@ describe('setAppMenuAutoHideUseCase()', () => {
 
     await useCase(true, actionsWin);
 
-    expect(appMenuProviderMock.setAutoHide).toBeCalledTimes(1);
-    expect(appMenuProviderMock.setAutoHide).toBeCalledWith(true, actionsWin);
+    expect(appMenuProviderMock.setAutoHide).toHaveBeenCalledTimes(1);
+    expect(appMenuProviderMock.setAutoHide).toHaveBeenCalledWith(true, actionsWin);
 
     await useCase(false, actionsWin);
 

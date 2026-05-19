@@ -5,7 +5,7 @@
 
 import { debounce } from '@/widgets/helpers';
 import { ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
-import * as styles from './widget.module.scss';
+import styles from './widget.module.scss';
 import { Settings } from './settings';
 import { ChangeEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createContextMenuFactory, textAreaContextId } from '@/widgets/note/contextMenu';
@@ -17,7 +17,7 @@ const keyNote = 'note';
 function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) {
   const {updateActionBar, setContextMenuFactory, dataStorage} = widgetApi;
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const loadedNote = useRef('');
+  const [loadedNote, setLoadedNote] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -29,14 +29,9 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
 
   const saveNote = useMemo(() => debounce((note: string) => dataStorage.setText(keyNote, note), 3000), [dataStorage]);
   const updNote = useCallback((note: string) => {
-    loadedNote.current = note;
+    // setLoadedNote(note);
     saveNote(note);
   }, [saveNote])
-
-  const loadNote = useCallback(async function () {
-    loadedNote.current = await dataStorage.getText(keyNote) || '';
-    setIsLoaded(true);
-  }, [dataStorage]);
 
   const handleChange = useCallback<ChangeEventHandler<HTMLTextAreaElement>>((e) => {
     const newNote = e.target.value;
@@ -44,8 +39,12 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
   }, [updNote])
 
   useEffect(() => {
+    async function loadNote() {
+      setLoadedNote(await dataStorage.getText(keyNote) || '');
+      setIsLoaded(true);
+    }
     loadNote();
-  }, [loadNote])
+  }, [dataStorage])
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -54,13 +53,13 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
         tinyMDE.addEventListener('change', (e) => updNote(e.content));
         (textAreaRef.current.nextSibling as HTMLElement).spellcheck = settings.spellCheck;
       } else {
-        loadedNote.current = textAreaRef.current.value;
+        setLoadedNote(textAreaRef.current.value);
         Array.from(textAreaRef.current.parentElement?.children || [])
           .filter(child => child.classList.contains('TinyMDE'))
           .forEach(child => child.remove());
       }
     }
-  })
+  }, [settings.markdown, settings.spellCheck, updNote])
 
   return (
     isLoaded
@@ -68,7 +67,7 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
         key={settings.markdown?'md':undefined} // resets element after disabling markdown
         ref={textAreaRef}
         className={styles['textarea']}
-        defaultValue={loadedNote.current}
+        defaultValue={loadedNote}
         onChange={handleChange}
         placeholder='Write a note here'
         data-widget-context={textAreaContextId}

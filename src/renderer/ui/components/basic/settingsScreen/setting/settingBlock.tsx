@@ -4,7 +4,7 @@
  */
 
 import { MoreInfo } from '@/ui/components/basic/moreInfo';
-import * as styles from '../settingsScreen.module.scss';
+import styles from '../settingsScreen.module.scss';
 
 export interface SettingBlockProps extends React.PropsWithChildren {
   titleForId?: string;

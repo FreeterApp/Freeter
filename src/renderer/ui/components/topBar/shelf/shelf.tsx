@@ -6,7 +6,7 @@
 import { ShelfItemComponent } from '@/ui/components/topBar/shelf/shelfItem';
 import { ShelfViewModelHook } from '@/ui/components/topBar/shelf/shelfViewModel';
 import clsx from 'clsx';
-import * as styles from './shelf.module.scss';
+import styles from './shelf.module.scss';
 import { memo } from 'react';
 
 type Deps = {
@@ -27,7 +27,6 @@ export function createShelfComponent({
       widgetList,
       dndSourceListItemId,
       dndTargetListItemId,
-      scrollLeft,
       dontShowWidgets,
       onItemDragStart,
       onItemDragEnd,
@@ -58,15 +57,13 @@ export function createShelfComponent({
         onScroll={onScroll}
         onContextMenu={onContextMenu}
       >
-      {widgetList.map((item, orderNum) => {
+      {widgetList.map((item) => {
         const widget = widgetsById[item.widgetId];
         const widgetType = widget ? widgetTypesById[widget.type] : undefined;
         return <ShelfItem
           key={item.id}
           env={env}
           id={item.id}
-          orderNum={orderNum}
-          scrollLeft={scrollLeft}
           widget={widget}
           widgetType={widgetType}
           isEditMode={isEditMode}

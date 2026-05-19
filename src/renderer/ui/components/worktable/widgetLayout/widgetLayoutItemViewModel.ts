@@ -28,7 +28,7 @@ export interface WidgetLayoutItemProps {
   isEditable: boolean;
   isDragging: boolean;
   viewportSize: WHPx;
-  viewportElRef: React.RefObject<HTMLDivElement | null>;
+  viewportElRef: React.RefObject<HTMLElement | null>;
   onDragStart: (evt: DragEvent<HTMLElement>, itemId: string) => void;
   onDragEnd: (evt: DragEvent<HTMLElement>) => void;
   onResizeStart: (itemId: string, edges: WorktableStateResizingItemEdges) => void;
@@ -72,6 +72,7 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
 
   const [maximized, setMaximized] = useState(false);
   const [resizing, setResizing] = useState<ResizingState | null>(null);
+  const [scrollTop, setScrollTop] = useState(0);
   const isResizing = !!resizing;
 
   const colWidth = calcGridColWidth(viewportSize);
@@ -79,12 +80,18 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
 
   const isMaximized = maximized && !isEditable;
 
+  useEffect(() => {
+    if (viewportElRef.current) {
+      setScrollTop(viewportElRef.current.scrollTop);
+    }
+  }, [viewportElRef]);
+
   let rectPx: RectPx;
   if (resizing) {
     rectPx = resizing.rectPx;
   } else if (isMaximized) {
     rectPx = itemRectUnitsToPx({ x: 0, y: 0, w: widgetLayoutVisibleCols, h: widgetLayoutVisibleRows }, colWidth, rowHeight);
-    rectPx.yPx = rectPx.yPx + (viewportElRef.current?.scrollTop || 0);
+    rectPx.yPx = rectPx.yPx + scrollTop;
   } else {
     rectPx = itemRectUnitsToPx({ x, y, w, h }, colWidth, rowHeight);
   }
@@ -144,9 +151,8 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
       rectPx: newRectPx
     } : null));
   }, [
-    isResizing, colWidth, rowHeight, resizing?.initialItemRectUnits,
-    resizing?.fromPointPx, resizing?.draggingEdges.x, resizing?.draggingEdges.y,
-    resizing?.rectPx, onResize, resizingMinSize
+    isResizing, colWidth, rowHeight, resizing,
+    onResize, resizingMinSize
   ])
 
   const onResizeMouseUpHandler = useCallback((evt: MouseEvent) => {
@@ -165,7 +171,7 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
 
     onResizeEnd(deltaUnits);
     setResizing(null);
-  }, [isResizing, resizing?.fromPointPx, resizing?.draggingEdges, colWidth, rowHeight, onResizeEnd])
+  }, [isResizing, resizing, colWidth, rowHeight, onResizeEnd])
 
   const onResizeMouseDownHandler = useCallback((evt: ReactMouseEvent<HTMLDivElement>, handleId: ResizeHandleId) => {
     evt.preventDefault();
@@ -210,6 +216,8 @@ export function useWidgetLayoutItemViewModel(props: WidgetLayoutItemProps) {
       setMaximized(!maximized);
     }
   }), [maximized])
+
+  console.log(isDragging);
 
   return {
     env,

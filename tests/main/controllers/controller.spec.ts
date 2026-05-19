@@ -22,7 +22,7 @@ describe('Controller', () => {
 
       registerControllers(ipcMain, []);
 
-      expect(ipcMain.handle).not.toBeCalled();
+      expect(ipcMain.handle).not.toHaveBeenCalled();
     });
 
     it('should correctly setup handlers on specified ipcMain channels', () => {
@@ -37,7 +37,7 @@ describe('Controller', () => {
         { channel: channel2, handle: handle2 },
       ]);
 
-      expect(ipcMain.handle).toBeCalledTimes(2);
+      expect(ipcMain.handle).toHaveBeenCalledTimes(2);
       expect(ipcMain.handle).toHaveBeenNthCalledWith(1, channel1, handle1);
       expect(ipcMain.handle).toHaveBeenNthCalledWith(2, channel2, handle2);
     });

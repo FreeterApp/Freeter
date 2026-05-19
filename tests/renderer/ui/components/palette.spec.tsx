@@ -260,14 +260,14 @@ describe('<Palette />', () => {
 
     fireEvent.dragStart(elDrag);
 
-    expect(dragWidgetFromPaletteUseCase).toBeCalledTimes(1);
-    expect(dragWidgetFromPaletteUseCase).toBeCalledWith({'widgetTypeId': dragItemId});
-    expect(dragEndUseCase).toBeCalledTimes(0);
+    expect(dragWidgetFromPaletteUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragWidgetFromPaletteUseCase).toHaveBeenCalledWith({'widgetTypeId': dragItemId});
+    expect(dragEndUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.dragEnd(elDrag);
 
-    expect(dragWidgetFromPaletteUseCase).toBeCalledTimes(1);
-    expect(dragEndUseCase).toBeCalledTimes(1);
+    expect(dragWidgetFromPaletteUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragEndUseCase).toHaveBeenCalledTimes( 1);
   });
 
   it('should call right use case with right params, when clicking item on the Add Widget list', async () => {
@@ -301,12 +301,12 @@ describe('<Palette />', () => {
     const palAdd = screen.getByTestId('palette-add');
     const elClick = within(palAdd).queryAllByRole('listitem')[1];
 
-    expect(addWidgetToWorkflowUseCase).toBeCalledTimes(0);
+    expect(addWidgetToWorkflowUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elClick);
 
-    expect(addWidgetToWorkflowUseCase).toBeCalledTimes(1);
-    expect(addWidgetToWorkflowUseCase).toBeCalledWith(widgetTypeId, workflowId);
+    expect(addWidgetToWorkflowUseCase).toHaveBeenCalledTimes( 1);
+    expect(addWidgetToWorkflowUseCase).toHaveBeenCalledWith(widgetTypeId, workflowId);
   });
 
   it('should call right use cases with right params, when start/end dragging item from the Paste Widget list', async () => {
@@ -344,14 +344,14 @@ describe('<Palette />', () => {
 
     fireEvent.dragStart(elDrag);
 
-    expect(dragWidgetFromPaletteUseCase).toBeCalledTimes(1);
-    expect(dragWidgetFromPaletteUseCase).toBeCalledWith({'widgetCopyId': widgetB.id});
-    expect(dragEndUseCase).toBeCalledTimes(0);
+    expect(dragWidgetFromPaletteUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragWidgetFromPaletteUseCase).toHaveBeenCalledWith({'widgetCopyId': widgetB.id});
+    expect(dragEndUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.dragEnd(elDrag);
 
-    expect(dragWidgetFromPaletteUseCase).toBeCalledTimes(1);
-    expect(dragEndUseCase).toBeCalledTimes(1);
+    expect(dragWidgetFromPaletteUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragEndUseCase).toHaveBeenCalledTimes( 1);
   });
 
   it('should call right use case with right params, when clicking item on the Paste Widget list', async () => {
@@ -394,12 +394,12 @@ describe('<Palette />', () => {
     const palPaste = screen.getByTestId('palette-paste');
     const elClick = within(palPaste).queryAllByRole('listitem')[1];
 
-    expect(pasteWidgetToWorkflowUseCase).toBeCalledTimes(0);
+    expect(pasteWidgetToWorkflowUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elClick);
 
-    expect(pasteWidgetToWorkflowUseCase).toBeCalledTimes(1);
-    expect(pasteWidgetToWorkflowUseCase).toBeCalledWith(widgetB.id, workflowId);
+    expect(pasteWidgetToWorkflowUseCase).toHaveBeenCalledTimes( 1);
+    expect(pasteWidgetToWorkflowUseCase).toHaveBeenCalledWith(widgetB.id, workflowId);
   });
 
 })

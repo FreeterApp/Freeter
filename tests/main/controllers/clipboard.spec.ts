@@ -46,8 +46,8 @@ describe('ClipboardControllers', () => {
 
       handle(event, testTile, testUrl);
 
-      expect(writeBookmarkIntoClipboardUseCase).toBeCalledTimes(1);
-      expect(writeBookmarkIntoClipboardUseCase).toBeCalledWith(testTile, testUrl);
+      expect(writeBookmarkIntoClipboardUseCase).toHaveBeenCalledTimes(1);
+      expect(writeBookmarkIntoClipboardUseCase).toHaveBeenCalledWith(testTile, testUrl);
     });
   })
 
@@ -67,8 +67,8 @@ describe('ClipboardControllers', () => {
 
       handle(event, testText);
 
-      expect(writeTextIntoClipboardUseCase).toBeCalledTimes(1);
-      expect(writeTextIntoClipboardUseCase).toBeCalledWith(testText);
+      expect(writeTextIntoClipboardUseCase).toHaveBeenCalledTimes(1);
+      expect(writeTextIntoClipboardUseCase).toHaveBeenCalledWith(testText);
     });
   })
 })

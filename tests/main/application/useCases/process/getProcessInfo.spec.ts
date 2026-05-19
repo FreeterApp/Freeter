@@ -27,7 +27,7 @@ describe('getProcessInfoUseCase()', () => {
 
     const res = await useCase();
 
-    expect(processProviderMock.getProcessInfo).toBeCalledTimes(1);
+    expect(processProviderMock.getProcessInfo).toHaveBeenCalledTimes(1);
     expect(res).toBe(providerRetVal);
   });
 })

@@ -6,7 +6,7 @@
 import { Button, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings } from './settings';
 import { openFileSvg, openFolderSvg } from '@/widgets/file-opener/icons';
-import * as styles from './widget.module.scss';
+import styles from './widget.module.scss';
 import { SettingsType, settingsTypeNamesCapital } from '@/widgets/file-opener/settingsType';
 import { useCallback } from 'react';
 

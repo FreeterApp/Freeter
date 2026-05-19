@@ -7,8 +7,8 @@ import { WidgetLayoutItemComponent } from '@/ui/components/worktable/widgetLayou
 import WidgetLayoutItemGhost from '@/ui/components/worktable/widgetLayout/widgetLayoutItemGhost';
 import { WidgetLayoutViewModel, WidgetLayoutProps } from '@/ui/components/worktable/widgetLayout/widgetLayoutViewModel';
 import clsx from 'clsx';
-import { memo, useRef } from 'react';
-import * as styles from './widgetLayout.module.scss';
+import { memo } from 'react';
+import styles from './widgetLayout.module.scss';
 import { InAppNote } from '@/ui/components/basic/inAppNote';
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
 import { editMode24Svg } from '@/ui/assets/images/appIcons';
@@ -23,13 +23,12 @@ export function createWidgetLayoutComponent({
   useWidgetLayoutViewModel
 }: Deps) {
   function WidgetLayoutComponent(props: WidgetLayoutProps) {
-    const layoutEl = useRef<HTMLDivElement>(null);
-
     const {
       componentMounted,
       env,
       isVisible,
       isEditMode,
+      viewportElRef,
       viewportSize,
       viewLayoutItems,
       resizingItem,
@@ -47,9 +46,9 @@ export function createWidgetLayoutComponent({
       onItemResize,
       onItemResizeEnd,
       onContextMenu,
-    } = useWidgetLayoutViewModel(layoutEl.current, props);
+    } = useWidgetLayoutViewModel(props);
 
-    return componentMounted ? (<>
+    return componentMounted.current ? (<>
       {isVisible && showNoWidgetsNote && (
         !isEditMode
         ? <InAppNote className={styles['no-widgets']}>
@@ -67,7 +66,7 @@ export function createWidgetLayoutComponent({
         onDragLeave={onDragLeave}
         onDragOver={onDragOver}
         onDrop={onDrop}
-        ref={layoutEl}
+        ref={viewportElRef as React.RefObject<HTMLDivElement | null>}
         onContextMenu={onContextMenu}
         data-testid="widget-layout"
         {...{ inert: !isVisible ? true : undefined }}
@@ -90,7 +89,7 @@ export function createWidgetLayoutComponent({
             env={env}
             widgetId={layoutItem.widgetId}
             viewportSize={viewportSize}
-            viewportElRef={layoutEl}
+            viewportElRef={viewportElRef}
             resizingMinSize={resizingItem?.minSize}
             isEditable={isEditMode}
             isDragging={layoutItem.id===dndDraggingLayoutItemId}
@@ -105,7 +104,7 @@ export function createWidgetLayoutComponent({
     </>) : (
       <div
         className={styles.widgetLayout}
-        ref={layoutEl}
+        ref={viewportElRef as React.RefObject<HTMLDivElement | null>}
       />
     )
 

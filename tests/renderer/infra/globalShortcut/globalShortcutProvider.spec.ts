@@ -29,8 +29,8 @@ describe('globalShortcutProvider', () => {
 
       const gotRes = await globalShortcutProvider.setMainShortcut(accelerator);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcSetMainShortcutChannel, accelerator);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcSetMainShortcutChannel, accelerator);
       expect(gotRes).toBe(res);
     })
   })

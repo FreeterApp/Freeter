@@ -32,7 +32,7 @@ describe('osContextMenuProvider', () => {
 
       await contextMenuProvider.show(testItems);
 
-      expect(electronIpcRenderer.invoke).not.toBeCalled();
+      expect(electronIpcRenderer.invoke).not.toHaveBeenCalled();
     })
 
     it('should send a message to the main process via "popup-os-context-menu" channel with right args, when items is not empty', async () => {
@@ -47,8 +47,8 @@ describe('osContextMenuProvider', () => {
 
       await contextMenuProvider.show(testItems);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcPopupOsContextMenuChannel, expectItems);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcPopupOsContextMenuChannel, expectItems);
     })
 
     it('should not call clickContextMenuItemUseCase if a message sent to the main process via "popup-os-context-menu" channel returns undefined', async () => {
@@ -62,7 +62,7 @@ describe('osContextMenuProvider', () => {
 
       await contextMenuProvider.show(testItems);
 
-      expect(clickContextMenuItemUseCase).not.toBeCalled();
+      expect(clickContextMenuItemUseCase).not.toHaveBeenCalled();
     })
 
     it('should call clickContextMenuItemUseCase with a right menuItem if a message sent to the main process via "popup-os-context-menu" channel returns a MenuItem action id', async () => {
@@ -78,8 +78,8 @@ describe('osContextMenuProvider', () => {
 
       await contextMenuProvider.show(testItems);
 
-      expect(clickContextMenuItemUseCase).toBeCalledTimes(1);
-      expect(clickContextMenuItemUseCase).toBeCalledWith(testItem);
+      expect(clickContextMenuItemUseCase).toHaveBeenCalledTimes(1);
+      expect(clickContextMenuItemUseCase).toHaveBeenCalledWith(testItem);
     })
   })
 

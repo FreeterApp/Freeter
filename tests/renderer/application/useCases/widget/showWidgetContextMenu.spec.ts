@@ -39,7 +39,7 @@ describe('showWidgetContextMenuUseCase()', () => {
 
   //   useCase('NO-SUCH-ID', () => [], '', undefined);
 
-  //   expect(contextMenuProviderMock.show).not.toBeCalled();
+  //   expect(contextMenuProviderMock.show).not.toHaveBeenCalled();
   // })
 
   it('should do nothing, if contextMenuFactory is undefined', async () => {
@@ -50,7 +50,7 @@ describe('showWidgetContextMenuUseCase()', () => {
 
     useCase(widgetId, undefined, '', undefined);
 
-    expect(contextMenuProviderMock.show).not.toBeCalled();
+    expect(contextMenuProviderMock.show).not.toHaveBeenCalled();
   })
 
   it('should call contextMenuFactory with a specified contextId and then call show() of contextMenuProvider with items returned by contextMenuFactory', async () => {
@@ -69,7 +69,7 @@ describe('showWidgetContextMenuUseCase()', () => {
       contextData
     );
 
-    expect(contextMenuProviderMock.show).toBeCalledTimes(1);
-    expect(contextMenuProviderMock.show).toBeCalledWith(contextMenuItems);
+    expect(contextMenuProviderMock.show).toHaveBeenCalledTimes(1);
+    expect(contextMenuProviderMock.show).toHaveBeenCalledWith(contextMenuItems);
   });
 })

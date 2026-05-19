@@ -156,11 +156,11 @@ describe('<AppManager />', () => {
       name: /cancel/i
     });
 
-    expect(closeAppManagerUseCase).toBeCalledTimes(0);
+    expect(closeAppManagerUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(closeAppManagerUseCase).toBeCalledTimes(1);
+    expect(closeAppManagerUseCase).toHaveBeenCalledTimes( 1);
   })
 
   it('should call a right usecase with right params when clicking the ok button', async () => {
@@ -182,11 +182,11 @@ describe('<AppManager />', () => {
       name: /ok/i
     });
 
-    expect(saveChangesInAppManagerUseCase).toBeCalledTimes(0);
+    expect(saveChangesInAppManagerUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(saveChangesInAppManagerUseCase).toBeCalledTimes(1);
+    expect(saveChangesInAppManagerUseCase).toHaveBeenCalledTimes( 1);
   })
 
   describe('App List', () => {
@@ -368,8 +368,8 @@ describe('<AppManager />', () => {
       const elButton = screen.queryAllByRole('button', {name: /delete app/i})[1];
       fireEvent.click(elButton);
 
-      expect(toggleDeletionInAppManagerUseCase).toBeCalledTimes(1);
-      expect(toggleDeletionInAppManagerUseCase).toBeCalledWith(idB);
+      expect(toggleDeletionInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(toggleDeletionInAppManagerUseCase).toHaveBeenCalledWith(idB);
     })
 
     it('should display apps on the list in the right order', async () => {
@@ -448,8 +448,8 @@ describe('<AppManager />', () => {
 
       fireEvent.click(screen.getAllByRole('tab')[1]);
 
-      expect(switchAppInAppManagerUseCase).toBeCalledTimes(1);
-      expect(switchAppInAppManagerUseCase).toBeCalledWith(idB);
+      expect(switchAppInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(switchAppInAppManagerUseCase).toHaveBeenCalledWith(idB);
     })
 
     it('should display Add App button', async () => {
@@ -491,8 +491,8 @@ describe('<AppManager />', () => {
         name: /Add App/i
       }));
 
-      expect(addAppInAppManagerUseCase).toBeCalledTimes(1);
-      expect(addAppInAppManagerUseCase).toBeCalledWith();
+      expect(addAppInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(addAppInAppManagerUseCase).toHaveBeenCalledWith();
     })
 
     it('should correctly set the is-drop-rea class and call the update apps order usecase when draging & dropping an item', async () => {
@@ -545,10 +545,10 @@ describe('<AppManager />', () => {
       expect(tabEls[0]).not.toHaveClass(classIsDropArea);
       expect(tabEls[1]).not.toHaveClass(classIsDropArea);
       expect(tabEls[2]).toHaveClass(classIsDropArea);
-      expect(updateAppsOrderInAppManagerUseCase).toBeCalledTimes(0);
+      expect(updateAppsOrderInAppManagerUseCase).toHaveBeenCalledTimes( 0);
       fireEvent.drop(tabEls[2]);
-      expect(updateAppsOrderInAppManagerUseCase).toBeCalledTimes(1);
-      expect(updateAppsOrderInAppManagerUseCase).toBeCalledWith([idB, idC, idA]);
+      expect(updateAppsOrderInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateAppsOrderInAppManagerUseCase).toHaveBeenCalledWith([idB, idC, idA]);
       fireEvent.dragEnd(tabEls[0]);
 
       expect(tabEls[0]).not.toHaveClass(classIsDropArea);
@@ -604,9 +604,9 @@ describe('<AppManager />', () => {
       expect(tabEls[0]).not.toHaveClass(classIsDropArea);
       expect(tabEls[1]).not.toHaveClass(classIsDropArea);
       expect(tabEls[2]).not.toHaveClass(classIsDropArea);
-      expect(updateAppsOrderInAppManagerUseCase).toBeCalledTimes(0);
+      expect(updateAppsOrderInAppManagerUseCase).toHaveBeenCalledTimes( 0);
       fireEvent.drop(tabEls[2]);
-      expect(updateAppsOrderInAppManagerUseCase).toBeCalledTimes(0);
+      expect(updateAppsOrderInAppManagerUseCase).toHaveBeenCalledTimes( 0);
 
       expect(tabEls[0]).not.toHaveClass(classIsDropArea);
       expect(tabEls[1]).not.toHaveClass(classIsDropArea);
@@ -849,8 +849,8 @@ describe('<AppManager />', () => {
 
       await userEvent.type(input, addToName);
 
-      expect(updateAppSettingsInAppManagerUseCase).toBeCalledTimes(1);
-      expect(updateAppSettingsInAppManagerUseCase).toBeCalledWith(idA, {
+      expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledWith(idA, {
         ...settings,
         name: nameA+addToName
       })
@@ -884,8 +884,8 @@ describe('<AppManager />', () => {
 
       await userEvent.type(input, addToName);
 
-      expect(updateAppSettingsInAppManagerUseCase).toBeCalledTimes(1);
-      expect(updateAppSettingsInAppManagerUseCase).toBeCalledWith(idB, {
+      expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledWith(idB, {
         ...settings,
         name: nameB+addToName
       })
@@ -919,8 +919,8 @@ describe('<AppManager />', () => {
 
       await userEvent.type(input, addToPath);
 
-      expect(updateAppSettingsInAppManagerUseCase).toBeCalledTimes(1);
-      expect(updateAppSettingsInAppManagerUseCase).toBeCalledWith(idA, {
+      expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledWith(idA, {
         ...settings,
         execPath: execPathA+addToPath
       })
@@ -954,8 +954,8 @@ describe('<AppManager />', () => {
 
       await userEvent.type(input, addToPath);
 
-      expect(updateAppSettingsInAppManagerUseCase).toBeCalledTimes(1);
-      expect(updateAppSettingsInAppManagerUseCase).toBeCalledWith(idB, {
+      expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledWith(idB, {
         ...settings,
         execPath: execPathB+addToPath
       })
@@ -990,8 +990,8 @@ describe('<AppManager />', () => {
 
     await userEvent.type(input, addToPath);
 
-    expect(updateAppSettingsInAppManagerUseCase).toBeCalledTimes(1);
-    expect(updateAppSettingsInAppManagerUseCase).toBeCalledWith(idA, {
+    expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+    expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledWith(idA, {
       ...settings,
       cmdArgs: cmdArgsA+addToPath
     })
@@ -1025,8 +1025,8 @@ describe('<AppManager />', () => {
 
     await userEvent.type(input, addToPath);
 
-    expect(updateAppSettingsInAppManagerUseCase).toBeCalledTimes(1);
-    expect(updateAppSettingsInAppManagerUseCase).toBeCalledWith(idB, {
+    expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledTimes( 1);
+    expect(updateAppSettingsInAppManagerUseCase).toHaveBeenCalledWith(idB, {
       ...settings,
       cmdArgs: cmdArgsB+addToPath
     })

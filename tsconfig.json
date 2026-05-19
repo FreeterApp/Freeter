@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "noImplicitAny": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,

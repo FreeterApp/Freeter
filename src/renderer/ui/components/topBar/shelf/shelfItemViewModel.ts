@@ -12,8 +12,6 @@ import { CSSProperties, DragEvent, MouseEvent, useCallback, useMemo } from 'reac
 
 export interface ShelfItemProps {
   id: EntityId;
-  orderNum: number;
-  scrollLeft: number;
   env: WidgetEnvAreaShelf;
   widget?: Widget;
   widgetType?: WidgetType;
@@ -29,11 +27,11 @@ export interface ShelfItemProps {
   onDrop: (evt: DragEvent<HTMLElement>, itemId: EntityId) => void;
 }
 
-export function useShelfItemViewModel(shelfItemEl: HTMLLIElement | null, props: ShelfItemProps) {
+export function useShelfItemViewModel(props: ShelfItemProps) {
   const {
     env, widget, widgetType, id, isEditMode, isDragging, isDropArea,
     onDragStart, onDragEnd, onDragEnter, onDragLeave, onDragOver,
-    onDrop, onContextMenu, orderNum, scrollLeft,
+    onDrop, onContextMenu
   } = props;
 
   const widgetName = widget?.coreSettings.name || widgetType?.name || '';
@@ -71,10 +69,7 @@ export function useShelfItemViewModel(shelfItemEl: HTMLLIElement | null, props: 
   }, [id, onContextMenu])
 
 
-  const itemElRectRefreshDep = useMemo(() => ({ orderNum, scrollLeft, isEditMode }), [
-    orderNum, scrollLeft, isEditMode
-  ]);
-  const itemElRect = useElementRect(shelfItemEl, { useViewportRect: true, refreshDep: itemElRectRefreshDep });
+  const [itemElRef, itemElRect] = useElementRect({ useViewportRect: true });
 
   const windowSize = useWindowSize();
   const itemWidgetElRectStyle = useMemo(() => {
@@ -100,6 +95,7 @@ export function useShelfItemViewModel(shelfItemEl: HTMLLIElement | null, props: 
     isEditMode,
     isDragging,
     isDropArea,
+    itemWidgetElRef: itemElRef,
     itemWidgetElRectStyle,
     onContextMenuHandler,
     onDragStartHandler,

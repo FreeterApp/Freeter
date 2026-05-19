@@ -51,8 +51,8 @@ describe('AppMenuControllers', () => {
 
       handle(event, testItems);
 
-      expect(setAppMenuUseCase).toBeCalledTimes(1);
-      expect(setAppMenuUseCase).toBeCalledWith(testItems, webContents);
+      expect(setAppMenuUseCase).toHaveBeenCalledTimes(1);
+      expect(setAppMenuUseCase).toHaveBeenCalledWith(testItems, webContents);
     });
   })
 
@@ -74,8 +74,8 @@ describe('AppMenuControllers', () => {
 
       handle(event, true);
 
-      expect(setAppMenuAutoHideUseCase).toBeCalledTimes(1);
-      expect(setAppMenuAutoHideUseCase).toBeCalledWith(true, win);
+      expect(setAppMenuAutoHideUseCase).toHaveBeenCalledTimes(1);
+      expect(setAppMenuAutoHideUseCase).toHaveBeenCalledWith(true, win);
 
       handle(event, false);
 

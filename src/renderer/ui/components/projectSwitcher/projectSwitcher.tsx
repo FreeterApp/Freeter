@@ -5,7 +5,7 @@
 
 import { ProjectSwitcherViewModelHook } from '@/ui/components/projectSwitcher/projectSwitcherViewModel';
 import clsx from 'clsx';
-import * as styles from './projectSwitcher.module.scss';
+import styles from './projectSwitcher.module.scss';
 
 type Deps = {
   useProjectSwitcherViewModel: ProjectSwitcherViewModelHook

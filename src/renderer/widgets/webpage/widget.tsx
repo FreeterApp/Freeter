@@ -5,7 +5,7 @@
 
 import { ContextMenuEvent, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings } from './settings';
-import * as styles from './widget.module.scss';
+import styles from './widget.module.scss';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 // import { DidFailLoadEvent } from 'electron';
 import { createActionBarItems } from '@/widgets/webpage/actionBar';
@@ -226,7 +226,7 @@ function Webview({settings, widgetApi, onRequireRestart, env, id}: WebviewProps)
       // eslint-disable-next-line react/no-unknown-property
       allowpopups={'' as unknown as boolean}
       // eslint-disable-next-line react/no-unknown-property
-      partition={initPartition.current}
+      partition={partition}
       className={styles['webview']}
       tabIndex={0} // this enables the tab-navigation to widget action bar
       src={sanitUrl !== '' ? sanitUrl : undefined}

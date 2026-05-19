@@ -4,7 +4,7 @@
  */
 
 import { Button, CreateSettingsState, List, ReactComponent, SettingsEditorReactComponentProps, addItemToList, delete14Svg, removeItemFromList, SettingBlock, SettingRow, SettingActions } from '@/widgets/appModules';
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 export interface Settings {
   urls: List<string>,
@@ -17,14 +17,18 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
 function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
   const urlRefs = useRef<Array<HTMLInputElement|null>>([]);
   const {updateSettings} = settingsApi;
-  const [triggerLastUrlFocus, setTriggerLastUrlFocus] = useState(false);
+  const shouldFocusLastUrlRef = useRef(false);
 
-  useEffect(() => {
-    if (triggerLastUrlFocus) {
+  const triggerLastUrlFocus = () => {
+    shouldFocusLastUrlRef.current = true;
+  };
+
+  useLayoutEffect(() => {
+    if (shouldFocusLastUrlRef.current) {
       urlRefs.current[settings.urls.length-1]?.focus();
-      setTriggerLastUrlFocus(false);
+      shouldFocusLastUrlRef.current = false;
     }
-  }, [settings.urls.length, triggerLastUrlFocus])
+  }, [settings.urls.length]);
 
   const updateUrlsSetting = (urls: List<string>) => updateSettings({...settings, urls})
 
@@ -66,7 +70,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
           <Button
             onClick={_ => {
               addPath();
-              setTriggerLastUrlFocus(true);
+              triggerLastUrlFocus();
             }}
             caption={'Add a URL'}
             primary={true}

@@ -27,8 +27,8 @@ describe('openExternalUrlUseCase()', () => {
 
     const res = await useCase(testUrl);
 
-    expect(shellProviderMock.openExternal).toBeCalledTimes(1);
-    expect(shellProviderMock.openExternal).toBeCalledWith(testUrl);
+    expect(shellProviderMock.openExternal).toHaveBeenCalledTimes(1);
+    expect(shellProviderMock.openExternal).toHaveBeenCalledWith(testUrl);
     expect(res).toBe(providerRetVal);
   });
 
@@ -38,8 +38,8 @@ describe('openExternalUrlUseCase()', () => {
 
     await useCase(testUrl);
 
-    expect(shellProviderMock.openExternal).toBeCalledTimes(1);
-    expect(shellProviderMock.openExternal).toBeCalledWith('https://' + testUrl);
+    expect(shellProviderMock.openExternal).toHaveBeenCalledTimes(1);
+    expect(shellProviderMock.openExternal).toHaveBeenCalledWith('https://' + testUrl);
   });
 
   it('should not call openExternal(), when the url is invalid', async () => {
@@ -48,7 +48,7 @@ describe('openExternalUrlUseCase()', () => {
 
     await useCase(testUrl);
 
-    expect(shellProviderMock.openExternal).not.toBeCalled();
+    expect(shellProviderMock.openExternal).not.toHaveBeenCalled();
   });
 
 })

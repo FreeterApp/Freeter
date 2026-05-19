@@ -27,8 +27,8 @@ describe('openPathUseCase()', () => {
 
     const res = await useCase(testPath);
 
-    expect(shellProviderMock.openPath).toBeCalledTimes(1);
-    expect(shellProviderMock.openPath).toBeCalledWith(testPath);
+    expect(shellProviderMock.openPath).toHaveBeenCalledTimes(1);
+    expect(shellProviderMock.openPath).toHaveBeenCalledWith(testPath);
     expect(res).toBe(providerRetVal);
   });
 })

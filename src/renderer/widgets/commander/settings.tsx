@@ -4,7 +4,7 @@
  */
 
 import { Button, CreateSettingsState, List, ReactComponent, SettingsEditorReactComponentProps, addItemToList, browse14Svg, delete14Svg, removeItemFromList, SettingBlock, SettingRow, SettingActions } from '@/widgets/appModules';
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 
 export interface Settings {
   cmds: List<string>;
@@ -19,14 +19,18 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
 function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponentProps<Settings>) {
   const cmdRefs = useRef<Array<HTMLInputElement|null>>([]);
   const {updateSettings, dialog} = settingsApi;
-  const [triggerLastCmdFocus, setTriggerLastCmdFocus] = useState(false);
+  const shouldFocusLastCmdRef = useRef(false);
 
-  useEffect(() => {
-    if (triggerLastCmdFocus) {
-      cmdRefs.current[settings.cmds.length-1]?.focus();
-      setTriggerLastCmdFocus(false);
+  const triggerLastCmdFocus = () => {
+    shouldFocusLastCmdRef.current = true;
+  };
+
+  useLayoutEffect(() => {
+    if (shouldFocusLastCmdRef.current) {
+      cmdRefs.current[settings.cmds.length - 1]?.focus();
+      shouldFocusLastCmdRef.current = false;
     }
-  }, [settings.cmds.length, triggerLastCmdFocus])
+  }, [settings.cmds.length]);
 
   const updCwd = (settings: Settings, cwd: string) => updateSettings({...settings, cwd});
   const updCmd = (settings: Settings, i: number, cmd: string) => updateSettings({...settings, cmds: settings.cmds.map((_cmd, _i) => i!==_i ? _cmd : cmd)})
@@ -73,7 +77,7 @@ function SettingsEditorComp({settings, settingsApi}: SettingsEditorReactComponen
           <Button
             onClick={_ => {
               addCmd(settings);
-              setTriggerLastCmdFocus(true);
+              triggerLastCmdFocus();
             }}
             caption='Add a command-line'
             primary={true}

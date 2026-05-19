@@ -26,7 +26,7 @@ describe('showContextMenu()', () => {
 
     useCase(paramMenuItems);
 
-    expect(contextMenuMock.show).toBeCalledTimes(1);
-    expect(contextMenuMock.show).toBeCalledWith(paramMenuItems);
+    expect(contextMenuMock.show).toHaveBeenCalledTimes(1);
+    expect(contextMenuMock.show).toHaveBeenCalledWith(paramMenuItems);
   });
 })

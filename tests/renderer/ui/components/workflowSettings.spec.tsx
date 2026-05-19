@@ -124,11 +124,11 @@ describe('<WorkflowSettings />', () => {
       name: /cancel/i
     });
 
-    expect(closeWorkflowSettingsUseCase).toBeCalledTimes(0);
+    expect(closeWorkflowSettingsUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(closeWorkflowSettingsUseCase).toBeCalledTimes(1);
+    expect(closeWorkflowSettingsUseCase).toHaveBeenCalledTimes( 1);
   })
 
   it('should call a right usecase with right params when clicking the save button', async () => {
@@ -158,11 +158,11 @@ describe('<WorkflowSettings />', () => {
       name: /ok/i
     });
 
-    expect(saveWorkflowSettingsUseCase).toBeCalledTimes(0);
+    expect(saveWorkflowSettingsUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(saveWorkflowSettingsUseCase).toBeCalledTimes(1);
+    expect(saveWorkflowSettingsUseCase).toHaveBeenCalledTimes( 1);
   })
 
 
@@ -220,8 +220,8 @@ describe('<WorkflowSettings />', () => {
 
       await userEvent.type(input, addToName);
 
-      expect(updateWorkflowSettingsUseCase).toBeCalledTimes(1);
-      expect(updateWorkflowSettingsUseCase).toBeCalledWith({
+      expect(updateWorkflowSettingsUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateWorkflowSettingsUseCase).toHaveBeenCalledWith({
         ...settings,
         name: curName+addToName
       })

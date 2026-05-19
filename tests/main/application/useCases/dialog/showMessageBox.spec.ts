@@ -37,8 +37,8 @@ describe('showMessageBoxUseCase()', () => {
 
     const res = await useCase(win, cfg);
 
-    expect(dialogProviderMock.showMessageBox).toBeCalledTimes(1);
-    expect(dialogProviderMock.showMessageBox).toBeCalledWith(win, cfg);
+    expect(dialogProviderMock.showMessageBox).toHaveBeenCalledTimes(1);
+    expect(dialogProviderMock.showMessageBox).toHaveBeenCalledWith(win, cfg);
     expect(res).toBe(providerRetVal);
   });
 })

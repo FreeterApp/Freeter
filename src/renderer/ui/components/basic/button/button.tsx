@@ -4,7 +4,7 @@
  */
 
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
-import * as styles from './button.module.scss';
+import styles from './button.module.scss';
 import clsx from 'clsx';
 
 export interface ButtonProps extends Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, 'aria-pressed'> {

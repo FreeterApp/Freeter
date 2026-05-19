@@ -38,8 +38,8 @@ describe('setTrayMenuUseCase()', () => {
 
     await useCase(testItems, targetWin, actionsTarget);
 
-    expect(trayProviderMock.setMenu).toBeCalledTimes(1);
-    expect(trayProviderMock.setMenu).toBeCalledWith(expectItems, actionsTarget);
+    expect(trayProviderMock.setMenu).toHaveBeenCalledTimes(1);
+    expect(trayProviderMock.setMenu).toHaveBeenCalledWith(expectItems, actionsTarget);
   });
 
   it('should call setMenu() of trayProvider with right params, when items is not empty', async () => {
@@ -57,7 +57,7 @@ describe('setTrayMenuUseCase()', () => {
 
     await useCase(testItems, targetWin, actionsTarget);
 
-    expect(trayProviderMock.setMenu).toBeCalledTimes(1);
-    expect(trayProviderMock.setMenu).toBeCalledWith(expectItems, actionsTarget);
+    expect(trayProviderMock.setMenu).toHaveBeenCalledTimes(1);
+    expect(trayProviderMock.setMenu).toHaveBeenCalledWith(expectItems, actionsTarget);
   });
 })

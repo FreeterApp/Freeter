@@ -31,8 +31,8 @@ describe('setMainShortcutUseCase()', () => {
 
     const res = await useCase(accelerator, actionsWin);
 
-    expect(globalShortcutProviderMock.setMainShortcut).toBeCalledTimes(1);
-    expect(globalShortcutProviderMock.setMainShortcut).toBeCalledWith(accelerator, actionsWin);
+    expect(globalShortcutProviderMock.setMainShortcut).toHaveBeenCalledTimes(1);
+    expect(globalShortcutProviderMock.setMainShortcut).toHaveBeenCalledWith(accelerator, actionsWin);
     expect(res).toBe(providerRetVal);
   });
 })

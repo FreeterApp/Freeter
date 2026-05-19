@@ -22,13 +22,13 @@ jobs:
           node-version: 20
 
       - name: Install Deps
-        run: yarn install
+        run: npm install
 
       - name: Compile
-        run: yarn run prod
+        run: npm run prod
 
       - name: Package App and Draft New Release
-        run: yarn run cd:package-draft
+        run: npm run cd:package-draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -43,13 +43,13 @@ jobs:
           node-version: 20
 
       - name: Install Deps
-        run: yarn install
+        run: npm install
 
       - name: Compile
-        run: yarn run prod
+        run: npm run prod
 
       - name: Package App and Draft New Release
-        run: yarn run cd:package-draft
+        run: npm run cd:package-draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -64,12 +64,12 @@ jobs:
           node-version: 20
 
       - name: Install Deps
-        run: yarn install
+        run: npm install
 
       - name: Compile
-        run: yarn run prod
+        run: npm run prod
 
       - name: Package App and Draft New Release
-        run: yarn run cd:package-draft
+        run: npm run cd:package-draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

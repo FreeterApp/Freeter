@@ -56,8 +56,8 @@ describe('Commander Widget', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /execute Command-lines/i }))
 
-    expect(execCmdLines).toBeCalledTimes(1);
-    expect(execCmdLines).toBeCalledWith(['cmd1', 'cmd2'], 'some/dir');
+    expect(execCmdLines).toHaveBeenCalledTimes(1);
+    expect(execCmdLines).toHaveBeenCalledWith(['cmd1', 'cmd2'], 'some/dir');
   })
 
   it('should call execCmdLines with cwd=undefined, when cwd setting is empty', async () => {
@@ -75,7 +75,7 @@ describe('Commander Widget', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /execute Command-lines/i }))
 
-    expect(execCmdLines).toBeCalledTimes(1);
-    expect(execCmdLines).toBeCalledWith(['cmd1', 'cmd2'], undefined);
+    expect(execCmdLines).toHaveBeenCalledTimes(1);
+    expect(execCmdLines).toHaveBeenCalledWith(['cmd1', 'cmd2'], undefined);
   })
 })

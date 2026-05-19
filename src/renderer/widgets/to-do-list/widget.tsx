@@ -5,7 +5,7 @@
 
 import { debounce } from '@/widgets/helpers';
 import { ActionBar, ActionBarItems, ReactComponent, WidgetReactComponentProps, delete14Svg, moveItemInList } from '@/widgets/appModules';
-import * as styles from './widget.module.scss';
+import styles from './widget.module.scss';
 import { Settings } from './settings';
 import { DragEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createContextMenuFactory } from '@/widgets/to-do-list/contextMenu';
@@ -38,29 +38,28 @@ function WidgetComp({widgetApi, settings}: WidgetReactComponentProps<Settings>) 
 
   const saveData = useMemo(() => debounce((data: ToDoListState) => dataStorage.setJson(dataKey, data), 3000), [dataStorage]);
 
-  const loadData = useCallback(async function () {
-    const loadedData = await dataStorage.getJson(dataKey) as ToDoListState|undefined;
-    if (typeof loadedData === 'object' && loadedData && Array.isArray(loadedData.items) && typeof loadedData.nextItemId === 'number') {
-      const sanitizedData: ToDoListState = {
-        items: loadedData.items.map(({id, text, isDone }) => {
-          if(typeof id === 'number' && typeof text === 'string' && typeof isDone === 'boolean') {
-            return { id, text, isDone }
-          } else {
-            return undefined;
-          }
-        }).filter(item => item) as ToDoListItem[],
-        nextItemId: loadedData.nextItemId
-      }
-      setToDoList(sanitizedData);
-    }
-    setIsLoaded(true);
-  }, [dataStorage]);
-
   useEffect(() => {
+    async function loadData () {
+      const loadedData = await dataStorage.getJson(dataKey) as ToDoListState|undefined;
+      if (typeof loadedData === 'object' && loadedData && Array.isArray(loadedData.items) && typeof loadedData.nextItemId === 'number') {
+        const sanitizedData: ToDoListState = {
+          items: loadedData.items.map(({id, text, isDone }) => {
+            if(typeof id === 'number' && typeof text === 'string' && typeof isDone === 'boolean') {
+              return { id, text, isDone }
+            } else {
+              return undefined;
+            }
+          }).filter(item => item) as ToDoListItem[],
+          nextItemId: loadedData.nextItemId
+        }
+        setToDoList(sanitizedData);
+      }
+      setIsLoaded(true);
+    }
     if(!isLoaded) {
       loadData();
     }
-  }, [isLoaded, loadData])
+  }, [isLoaded, dataStorage])
 
   const setToDoListAndSave = useCallback((toDoList: ToDoListState)=>{
     setToDoList(toDoList);

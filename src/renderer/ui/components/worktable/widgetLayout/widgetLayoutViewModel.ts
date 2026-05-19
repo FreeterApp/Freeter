@@ -116,7 +116,7 @@ export function createWidgetLayoutViewModelHook({
     submenu: buildPasteMenuItems(copiedWidgets, curWorkflowId)
   }]
 
-  function useWidgetLayoutViewModel(layoutEl: HTMLDivElement | null, props: WidgetLayoutProps) {
+  function useWidgetLayoutViewModel(props: WidgetLayoutProps) {
     const {
       isVisible,
       isEditMode,
@@ -130,7 +130,7 @@ export function createWidgetLayoutViewModelHook({
       widgetTypes,
       copiedWidgets,
     } = props;
-    const viewportSize = useElementRect(layoutEl);
+    const [viewportElRef, viewportSize] = useElementRect();
     const componentMounted = useComponentMounted();
 
     const [draggedLayoutItem, setDraggedLayoutItem] = useState<DraggedLayoutItem | null>(null);
@@ -302,6 +302,7 @@ export function createWidgetLayoutViewModelHook({
       componentMounted,
       isVisible,
       isEditMode,
+      viewportElRef,
       viewportSize,
       viewLayoutItems,
       resizingItem,

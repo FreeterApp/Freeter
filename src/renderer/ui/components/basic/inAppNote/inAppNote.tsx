@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import * as styles from './inAppNote.module.scss';
+import styles from './inAppNote.module.scss';
 import clsx from 'clsx';
 
 export type InAppNoteProps = React.PropsWithChildren<React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>>

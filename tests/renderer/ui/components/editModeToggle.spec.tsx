@@ -64,6 +64,6 @@ describe('<EditModeToggle />', () => {
 
     await userEvent.click(screen.getByRole('button', {name: /edit mode/i}));
 
-    expect(toggleEditModeUseCase).toBeCalledTimes(1);
+    expect(toggleEditModeUseCase).toHaveBeenCalledTimes( 1);
   })
 })

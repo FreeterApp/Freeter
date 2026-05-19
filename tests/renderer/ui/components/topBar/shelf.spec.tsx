@@ -709,8 +709,8 @@ describe('<Shelf />', () => {
 
     fireEvent.dragStart(elDrag);
 
-    expect(dragWidgetFromTopBarListUseCase).toBeCalledTimes(1);
-    expect(dragWidgetFromTopBarListUseCase).toBeCalledWith(widgetId, dragItemId);
+    expect(dragWidgetFromTopBarListUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragWidgetFromTopBarListUseCase).toHaveBeenCalledWith(widgetId, dragItemId);
   });
 
   it('should not call a drag use case, when start dragging item and edit mode is off', async () => {
@@ -734,7 +734,7 @@ describe('<Shelf />', () => {
 
     fireEvent.dragStart(elDrag);
 
-    expect(dragWidgetFromTopBarListUseCase).not.toBeCalled();
+    expect(dragWidgetFromTopBarListUseCase).not.toHaveBeenCalled();
   });
 
   it('should call a drag over/leave use case with right params, when dragging item in/over/out Shelf', async () => {
@@ -756,18 +756,18 @@ describe('<Shelf />', () => {
     const elOver = screen.getByRole('list');
 
     fireEvent.dragEnter(elOver);
-    expect(dragLeaveTargetUseCase).toBeCalledTimes(0);
-    expect(dragOverTopBarListUseCase).toBeCalledTimes(1);
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledTimes( 0);
+    expect(dragOverTopBarListUseCase).toHaveBeenCalledTimes( 1);
 
     fireEvent.dragOver(elOver);
-    expect(dragLeaveTargetUseCase).toBeCalledTimes(0);
-    expect(dragOverTopBarListUseCase).toBeCalledTimes(2);
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledTimes( 0);
+    expect(dragOverTopBarListUseCase).toHaveBeenCalledTimes( 2);
 
     fireEvent.dragLeave(elOver);
-    expect(dragLeaveTargetUseCase).toBeCalledTimes(1);
-    expect(dragOverTopBarListUseCase).toBeCalledTimes(2);
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragOverTopBarListUseCase).toHaveBeenCalledTimes( 2);
 
-    expect(dragLeaveTargetUseCase).toBeCalledWith();
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledWith();
     expect(dragOverTopBarListUseCase.mock.calls).toEqual([
       [null],
       [null]
@@ -794,19 +794,19 @@ describe('<Shelf />', () => {
     const elOver = comp.container.querySelectorAll('li > [draggable]')[1];
 
     fireEvent.dragEnter(elOver);
-    expect(dragOverTopBarListUseCase).toBeCalledTimes(1);
+    expect(dragOverTopBarListUseCase).toHaveBeenCalledTimes( 1);
 
     fireEvent.dragOver(elOver);
-    expect(dragOverTopBarListUseCase).toBeCalledTimes(2);
+    expect(dragOverTopBarListUseCase).toHaveBeenCalledTimes( 2);
 
     fireEvent.dragLeave(elOver);
-    expect(dragLeaveTargetUseCase).toBeCalledTimes(1);
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledTimes( 1);
 
     expect(dragOverTopBarListUseCase.mock.calls).toEqual([
       [overItemId],
       [overItemId]
     ]);
-    expect(dragLeaveTargetUseCase).toBeCalledWith();
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledWith();
   });
 
   it('should call a drag end use case with right params, when end dragging item', async () => {
@@ -829,8 +829,8 @@ describe('<Shelf />', () => {
 
     fireEvent.dragEnd(elDrag);
 
-    expect(dragEndUseCase).toBeCalledTimes(1);
-    expect(dragEndUseCase).toBeCalledWith();
+    expect(dragEndUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragEndUseCase).toHaveBeenCalledWith();
   });
 
   it('should call a drop use case with right params, when dropping item over Shelf', async () => {
@@ -851,8 +851,8 @@ describe('<Shelf />', () => {
     const elOver = screen.getByRole('list');
 
     fireEvent.drop(elOver);
-    expect(dropOnTopBarListUseCase).toBeCalledTimes(1);
-    expect(dropOnTopBarListUseCase).toBeCalledWith(null);
+    expect(dropOnTopBarListUseCase).toHaveBeenCalledTimes( 1);
+    expect(dropOnTopBarListUseCase).toHaveBeenCalledWith(null);
   });
 
   it('should call a drop use case with right params, when dropping item over Shelf item', async () => {
@@ -874,8 +874,8 @@ describe('<Shelf />', () => {
     const elOver = comp.container.querySelectorAll('li > [draggable]')[1];
 
     fireEvent.drop(elOver);
-    expect(dropOnTopBarListUseCase).toBeCalledTimes(1);
-    expect(dropOnTopBarListUseCase).toBeCalledWith(overItemId);
+    expect(dropOnTopBarListUseCase).toHaveBeenCalledTimes( 1);
+    expect(dropOnTopBarListUseCase).toHaveBeenCalledWith(overItemId);
   });
 
 })

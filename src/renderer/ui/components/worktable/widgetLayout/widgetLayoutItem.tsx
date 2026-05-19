@@ -7,7 +7,7 @@ import { WidgetByIdComponent } from '@/ui/components/widget/widgetById';
 import { resizeHandleIds } from '@/ui/components/worktable/widgetLayout/resizeHandles';
 import { useWidgetLayoutItemViewModel, WidgetLayoutItemProps } from '@/ui/components/worktable/widgetLayout/widgetLayoutItemViewModel';
 import clsx from 'clsx';
-import * as styles from './widgetLayout.module.scss';
+import styles from './widgetLayout.module.scss';
 import { memo } from 'react';
 
 type Deps = {

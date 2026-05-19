@@ -95,7 +95,7 @@ describe('File Opener Widget', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /open files/i }))
 
-    expect(openPath).toBeCalledTimes(2);
+    expect(openPath).toHaveBeenCalledTimes(2);
     expect(openPath).toHaveBeenNthCalledWith(1, 'file/path1');
     expect(openPath).toHaveBeenNthCalledWith(2, 'file/path2');
   })
@@ -124,7 +124,7 @@ describe('File Opener Widget', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /open files/i }))
 
-    expect(openPath).toBeCalledTimes(2);
+    expect(openPath).toHaveBeenCalledTimes(2);
     expect(openPath).toHaveBeenNthCalledWith(1, 'file/path1');
     expect(openPath).toHaveBeenNthCalledWith(2, 'file/path2');
   })
@@ -172,7 +172,7 @@ describe('File Opener Widget', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /open folders/i }))
 
-    expect(openPath).toBeCalledTimes(2);
+    expect(openPath).toHaveBeenCalledTimes(2);
     expect(openPath).toHaveBeenNthCalledWith(1, 'folder/path1');
     expect(openPath).toHaveBeenNthCalledWith(2, 'folder/path2');
   })
@@ -201,7 +201,7 @@ describe('File Opener Widget', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /open folders/i }))
 
-    expect(openPath).toBeCalledTimes(2);
+    expect(openPath).toHaveBeenCalledTimes(2);
     expect(openPath).toHaveBeenNthCalledWith(1, 'folder/path1');
     expect(openPath).toHaveBeenNthCalledWith(2, 'folder/path2');
   })

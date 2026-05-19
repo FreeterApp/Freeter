@@ -35,8 +35,8 @@ describe('IpcMain', () => {
 
       ipcMain.on('chan', () => null);
 
-      expect(electronIpcMain.on).toBeCalledTimes(1);
-      expect(electronIpcMain.on).toBeCalledWith('chan', expect.anything());
+      expect(electronIpcMain.on).toHaveBeenCalledTimes(1);
+      expect(electronIpcMain.on).toHaveBeenCalledWith('chan', expect.anything());
     });
 
     describe('wrappedListener()', () => {
@@ -54,8 +54,8 @@ describe('IpcMain', () => {
 
         wrappedListener(electronEvent)
 
-        expect(ipcMainEventValidator).toBeCalledTimes(1);
-        expect(ipcMainEventValidator).toBeCalledWith('chan', event);
+        expect(ipcMainEventValidator).toHaveBeenCalledTimes(1);
+        expect(ipcMainEventValidator).toHaveBeenCalledWith('chan', event);
       });
 
       it('should call the original listener with right params, when the validator returns true', () => {
@@ -75,8 +75,8 @@ describe('IpcMain', () => {
 
         wrappedListener(electronEvent, arg1, arg2)
 
-        expect(listener).toBeCalledTimes(1);
-        expect(listener).toBeCalledWith(event, arg1, arg2);
+        expect(listener).toHaveBeenCalledTimes(1);
+        expect(listener).toHaveBeenCalledWith(event, arg1, arg2);
       });
 
       it('should not call the original listener, when the validator returns false', () => {
@@ -88,7 +88,7 @@ describe('IpcMain', () => {
 
         wrappedListener(event, 123)
 
-        expect(listener).toBeCalledTimes(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
     })
   })
@@ -99,8 +99,8 @@ describe('IpcMain', () => {
 
       ipcMain.once('chan', () => null);
 
-      expect(electronIpcMain.once).toBeCalledTimes(1);
-      expect(electronIpcMain.once).toBeCalledWith('chan', expect.anything());
+      expect(electronIpcMain.once).toHaveBeenCalledTimes(1);
+      expect(electronIpcMain.once).toHaveBeenCalledWith('chan', expect.anything());
     });
 
 
@@ -119,8 +119,8 @@ describe('IpcMain', () => {
 
         wrappedListener(electronEvent)
 
-        expect(ipcMainEventValidator).toBeCalledTimes(1);
-        expect(ipcMainEventValidator).toBeCalledWith('chan', event);
+        expect(ipcMainEventValidator).toHaveBeenCalledTimes(1);
+        expect(ipcMainEventValidator).toHaveBeenCalledWith('chan', event);
       });
 
       it('should call the original listener with right params, when the validator returns true', () => {
@@ -140,8 +140,8 @@ describe('IpcMain', () => {
 
         wrappedListener(electronEvent, arg1, arg2)
 
-        expect(listener).toBeCalledTimes(1);
-        expect(listener).toBeCalledWith(event, arg1, arg2);
+        expect(listener).toHaveBeenCalledTimes(1);
+        expect(listener).toHaveBeenCalledWith(event, arg1, arg2);
       });
 
       it('should not call the original listener, when the validator returns false', () => {
@@ -153,7 +153,7 @@ describe('IpcMain', () => {
 
         wrappedListener(event, 123)
 
-        expect(listener).toBeCalledTimes(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
     })
   })
@@ -164,8 +164,8 @@ describe('IpcMain', () => {
 
       ipcMain.handle('chan', async () => undefined);
 
-      expect(electronIpcMain.handle).toBeCalledTimes(1);
-      expect(electronIpcMain.handle).toBeCalledWith('chan', expect.anything());
+      expect(electronIpcMain.handle).toHaveBeenCalledTimes(1);
+      expect(electronIpcMain.handle).toHaveBeenCalledWith('chan', expect.anything());
     });
 
 
@@ -184,8 +184,8 @@ describe('IpcMain', () => {
 
         wrappedListener(electronEvent)
 
-        expect(ipcMainEventValidator).toBeCalledTimes(1);
-        expect(ipcMainEventValidator).toBeCalledWith('chan', event);
+        expect(ipcMainEventValidator).toHaveBeenCalledTimes(1);
+        expect(ipcMainEventValidator).toHaveBeenCalledWith('chan', event);
       });
 
       it('should call the original listener with right params, when the validator returns true', () => {
@@ -205,8 +205,8 @@ describe('IpcMain', () => {
 
         wrappedListener(electronEvent, arg1, arg2)
 
-        expect(listener).toBeCalledTimes(1);
-        expect(listener).toBeCalledWith(event, arg1, arg2);
+        expect(listener).toHaveBeenCalledTimes(1);
+        expect(listener).toHaveBeenCalledWith(event, arg1, arg2);
       });
 
       it('should not call the original listener and throw an error, when the validator returns false', async () => {
@@ -218,7 +218,7 @@ describe('IpcMain', () => {
 
         await expect(wrappedListener(event, 123)).rejects.toMatch(/handle()/);
 
-        expect(listener).toBeCalledTimes(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
     })
   })
@@ -229,8 +229,8 @@ describe('IpcMain', () => {
 
       ipcMain.removeHandler('chan');
 
-      expect(electronIpcMain.removeHandler).toBeCalledTimes(1);
-      expect(electronIpcMain.removeHandler).toBeCalledWith('chan');
+      expect(electronIpcMain.removeHandler).toHaveBeenCalledTimes(1);
+      expect(electronIpcMain.removeHandler).toHaveBeenCalledWith('chan');
     });
   })
 
@@ -240,7 +240,7 @@ describe('IpcMain', () => {
 
       ipcMain.removeListener('chan', () => null);
 
-      expect(electronIpcMain.removeListener).toBeCalledTimes(0);
+      expect(electronIpcMain.removeListener).toHaveBeenCalledTimes(0);
     });
 
     it('should not call Electron ipcMain\'s removeListener(), after removing listener', () => {
@@ -249,10 +249,10 @@ describe('IpcMain', () => {
       ipcMain.on('chan', fn);
 
       ipcMain.removeListener('chan', fn);
-      expect(electronIpcMain.removeListener).toBeCalledTimes(1);
+      expect(electronIpcMain.removeListener).toHaveBeenCalledTimes(1);
 
       ipcMain.removeListener('chan', fn);
-      expect(electronIpcMain.removeListener).toBeCalledTimes(1);
+      expect(electronIpcMain.removeListener).toHaveBeenCalledTimes(1);
     });
 
     it('should call Electron ipcMain\'s removeListener() with right params, when removing existing listener', () => {
@@ -265,11 +265,11 @@ describe('IpcMain', () => {
       const wrappedListener2 = (<jest.Mock>electronIpcMain.on).mock.calls[1][1];
 
       ipcMain.removeListener('chan', fn1);
-      expect(electronIpcMain.removeListener).toBeCalledTimes(1);
+      expect(electronIpcMain.removeListener).toHaveBeenCalledTimes(1);
       expect(electronIpcMain.removeListener).toHaveBeenNthCalledWith(1, 'chan', wrappedListener1);
 
       ipcMain.removeListener('chan', fn2);
-      expect(electronIpcMain.removeListener).toBeCalledTimes(2);
+      expect(electronIpcMain.removeListener).toHaveBeenCalledTimes(2);
       expect(electronIpcMain.removeListener).toHaveBeenNthCalledWith(2, 'chan', wrappedListener2);
     });
   })

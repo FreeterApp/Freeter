@@ -254,7 +254,7 @@ describe('<ProjectSwitcher />', () => {
 
     fireEvent.change(screen.getByRole('combobox'), { target: { value: idB } });
 
-    expect(switchProjectUseCase).toBeCalledTimes(1);
-    expect(switchProjectUseCase).toBeCalledWith(idB);
+    expect(switchProjectUseCase).toHaveBeenCalledTimes( 1);
+    expect(switchProjectUseCase).toHaveBeenCalledWith(idB);
   })
 })

@@ -69,8 +69,8 @@ describe('WidgetDataStorageControllers', () => {
 
       const res = await handle(event, widgetId, key);
 
-      expect(getTextFromWidgetDataStorageUseCase).toBeCalledTimes(1);
-      expect(getTextFromWidgetDataStorageUseCase).toBeCalledWith(widgetId, key);
+      expect(getTextFromWidgetDataStorageUseCase).toHaveBeenCalledTimes(1);
+      expect(getTextFromWidgetDataStorageUseCase).toHaveBeenCalledWith(widgetId, key);
       expect(res).toBe(getTextUseCaseRes);
     });
   })
@@ -92,8 +92,8 @@ describe('WidgetDataStorageControllers', () => {
 
       await handle(event, widgetId, key, text);
 
-      expect(setTextInWidgetDataStorageUseCase).toBeCalledTimes(1);
-      expect(setTextInWidgetDataStorageUseCase).toBeCalledWith(widgetId, key, text);
+      expect(setTextInWidgetDataStorageUseCase).toHaveBeenCalledTimes(1);
+      expect(setTextInWidgetDataStorageUseCase).toHaveBeenCalledWith(widgetId, key, text);
     });
   })
 
@@ -113,8 +113,8 @@ describe('WidgetDataStorageControllers', () => {
 
       await handle(event, widgetId, key);
 
-      expect(deleteInWidgetDataStorageUseCase).toBeCalledTimes(1);
-      expect(deleteInWidgetDataStorageUseCase).toBeCalledWith(widgetId, key);
+      expect(deleteInWidgetDataStorageUseCase).toHaveBeenCalledTimes(1);
+      expect(deleteInWidgetDataStorageUseCase).toHaveBeenCalledWith(widgetId, key);
     });
   })
 
@@ -133,8 +133,8 @@ describe('WidgetDataStorageControllers', () => {
 
       await handle(event, widgetId);
 
-      expect(clearWidgetDataStorageUseCase).toBeCalledTimes(1);
-      expect(clearWidgetDataStorageUseCase).toBeCalledWith(widgetId);
+      expect(clearWidgetDataStorageUseCase).toHaveBeenCalledTimes(1);
+      expect(clearWidgetDataStorageUseCase).toHaveBeenCalledWith(widgetId);
     });
   })
 
@@ -153,8 +153,8 @@ describe('WidgetDataStorageControllers', () => {
 
       const res = await handle(event, widgetId);
 
-      expect(getKeysFromWidgetDataStorageUseCase).toBeCalledTimes(1);
-      expect(getKeysFromWidgetDataStorageUseCase).toBeCalledWith(widgetId);
+      expect(getKeysFromWidgetDataStorageUseCase).toHaveBeenCalledTimes(1);
+      expect(getKeysFromWidgetDataStorageUseCase).toHaveBeenCalledWith(widgetId);
       expect(res).toBe(getKeysUseCaseRes);
     });
   })
@@ -175,8 +175,8 @@ describe('WidgetDataStorageControllers', () => {
 
       const res = await handle(event, srcWidgetId, destWidgetId);
 
-      expect(copyWidgetDataStorageUseCase).toBeCalledTimes(1);
-      expect(copyWidgetDataStorageUseCase).toBeCalledWith(srcWidgetId, destWidgetId);
+      expect(copyWidgetDataStorageUseCase).toHaveBeenCalledTimes(1);
+      expect(copyWidgetDataStorageUseCase).toHaveBeenCalledWith(srcWidgetId, destWidgetId);
       expect(res).toBe(copyUseCaseRes);
     });
   })

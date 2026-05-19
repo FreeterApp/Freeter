@@ -19,8 +19,8 @@ describe('setTextOnlyIfChanged', () => {
 
       const gotText = await dataStorage.getText(key);
 
-      expect(getText).toBeCalled();
-      expect(getText).toBeCalledWith(key);
+      expect(getText).toHaveBeenCalled();
+      expect(getText).toHaveBeenCalledWith(key);
       expect(gotText).toEqual(value);
     })
 
@@ -36,7 +36,7 @@ describe('setTextOnlyIfChanged', () => {
       await dataStorage.getText(key);
       await dataStorage.setText(key, value);
 
-      expect(setText).not.toBeCalled();
+      expect(setText).not.toHaveBeenCalled();
     })
   })
 
@@ -52,7 +52,7 @@ describe('setTextOnlyIfChanged', () => {
 
       await dataStorage.setText(key, value);
 
-      expect(setText).toBeCalled();
+      expect(setText).toHaveBeenCalled();
     })
 
     it('should remember a new text as a prev state and prevent setText calls for the same text', async () => {
@@ -66,11 +66,11 @@ describe('setTextOnlyIfChanged', () => {
 
       await dataStorage.setText(key, value);
 
-      expect(setText).toBeCalledTimes(1);
+      expect(setText).toHaveBeenCalledTimes(1);
 
       await dataStorage.setText(key, value);
 
-      expect(setText).toBeCalledTimes(1);
+      expect(setText).toHaveBeenCalledTimes(1);
     })
 
     it('should call DataStorage.setText with right params', async () => {
@@ -84,7 +84,7 @@ describe('setTextOnlyIfChanged', () => {
 
       await dataStorage.setText(key, value);
 
-      expect(setText).toBeCalledWith(key, value);
+      expect(setText).toHaveBeenCalledWith(key, value);
     })
   })
 
@@ -100,7 +100,7 @@ describe('setTextOnlyIfChanged', () => {
 
       await dataStorage.deleteItem(key);
 
-      expect(deleteItem).toBeCalledWith(key);
+      expect(deleteItem).toHaveBeenCalledWith(key);
     })
 
     it('should reset a prev state', async () => {
@@ -116,7 +116,7 @@ describe('setTextOnlyIfChanged', () => {
       await dataStorage.deleteItem(key);
       await dataStorage.setText(key, value);
 
-      expect(setText).toBeCalledTimes(2);
+      expect(setText).toHaveBeenCalledTimes(2);
     })
   })
 })

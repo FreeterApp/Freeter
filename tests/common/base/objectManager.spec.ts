@@ -14,8 +14,8 @@ describe('ObjectManager', () => {
       const objectManager = createObjectManager(objFactory, async () => true);
 
       const gotRes = await objectManager.getObject(testId);
-      expect(objFactory).toBeCalledTimes(1);
-      expect(objFactory).toBeCalledWith(testId);
+      expect(objFactory).toHaveBeenCalledTimes(1);
+      expect(objFactory).toHaveBeenCalledWith(testId);
       expect(gotRes).toBe(testRes);
     })
 
@@ -27,7 +27,7 @@ describe('ObjectManager', () => {
 
       await objectManager.getObject(testId);
       const gotRes = await objectManager.getObject(testId);
-      expect(objFactory).toBeCalledTimes(1);
+      expect(objFactory).toHaveBeenCalledTimes(1);
       expect(gotRes).toBe(testRes);
     })
 
@@ -43,7 +43,7 @@ describe('ObjectManager', () => {
       const gotRes1b = await objectManager.getObject(testId1);
       const gotRes2a = await objectManager.getObject(testId2);
       const gotRes2b = await objectManager.getObject(testId2);
-      expect(objFactory).toBeCalledTimes(2);
+      expect(objFactory).toHaveBeenCalledTimes(2);
       expect(gotRes1a).toBe(testRes1);
       expect(gotRes1b).toBe(testRes1);
       expect(gotRes2a).toBe(testRes2);

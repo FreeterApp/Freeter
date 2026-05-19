@@ -5,7 +5,7 @@
 
 import { RectPx, WHPx } from '@/ui/types/dimensions';
 import { itemRectUnitsToPx, calcGridColWidth, calcGridRowHeight } from './calcs';
-import * as styles from './widgetLayoutItemGhost.module.scss';
+import styles from './widgetLayoutItemGhost.module.scss';
 
 interface WidgetLayoutItemGhostProps {
   w: number;

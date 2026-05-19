@@ -414,8 +414,8 @@ describe('<WorkflowSwitcher />', () => {
       const elButton = screen.getByRole('button', {name: /add workflow/i});
       fireEvent.click(elButton);
 
-      expect(addWorkflowUseCase).toBeCalledTimes(1);
-      expect(addWorkflowUseCase).toBeCalledWith();
+      expect(addWorkflowUseCase).toHaveBeenCalledTimes( 1);
+      expect(addWorkflowUseCase).toHaveBeenCalledWith();
     })
 
     it('should not display the Name input field in tabs on init', async () => {
@@ -697,8 +697,8 @@ describe('<WorkflowSwitcher />', () => {
 
       await userEvent.type(nameInput, addToName);
 
-      expect(renameWorkflowUseCase).toBeCalledTimes(1);
-      expect(renameWorkflowUseCase).toBeCalledWith(newWorkflowId, 'Workflow 3' + addToName)
+      expect(renameWorkflowUseCase).toHaveBeenCalledTimes( 1);
+      expect(renameWorkflowUseCase).toHaveBeenCalledWith(newWorkflowId, 'Workflow 3' + addToName)
     })
 
 
@@ -881,8 +881,8 @@ describe('<WorkflowSwitcher />', () => {
     //   const elButton = screen.getByRole('button', {name: /workflow settings/i});
     //   fireEvent.click(elButton);
 
-    //   expect(openWorkflowSettingsUseCase).toBeCalledTimes(1);
-    //   expect(openWorkflowSettingsUseCase).toBeCalledWith(idWA);
+    //   expect(openWorkflowSettingsUseCase).toHaveBeenCalledTimes( 1);
+    //   expect(openWorkflowSettingsUseCase).toHaveBeenCalledWith(idWA);
     // })
 
     it('should call the delete workflow usecase with right params, when clicking the Delete Workflow button', async () => {
@@ -911,8 +911,8 @@ describe('<WorkflowSwitcher />', () => {
       const elButton = screen.getByRole('button', {name: /delete workflow/i});
       fireEvent.click(elButton);
 
-      expect(deleteWorkflowUseCase).toBeCalledTimes(1);
-      expect(deleteWorkflowUseCase).toBeCalledWith(idWA);
+      expect(deleteWorkflowUseCase).toHaveBeenCalledTimes( 1);
+      expect(deleteWorkflowUseCase).toHaveBeenCalledWith(idWA);
     })
 
     it('should set "aria-selected=true" for the current workflow tab', async () => {
@@ -1340,8 +1340,8 @@ describe('<WorkflowSwitcher />', () => {
 
     fireEvent.click(elSelected);
 
-    expect(switchWorkflowUseCase).toBeCalledTimes(1);
-    expect(switchWorkflowUseCase).toBeCalledWith(idP, idWA);
+    expect(switchWorkflowUseCase).toHaveBeenCalledTimes( 1);
+    expect(switchWorkflowUseCase).toHaveBeenCalledWith(idP, idWA);
   });
 
   it('should call a drag use case with right params, when start dragging a tab and edit mode is on', async () => {
@@ -1372,8 +1372,8 @@ describe('<WorkflowSwitcher />', () => {
 
     fireEvent.dragStart(elDrag);
 
-    expect(dragWorkflowFromWorkflowSwitcherUseCase).toBeCalledTimes(1);
-    expect(dragWorkflowFromWorkflowSwitcherUseCase).toBeCalledWith(idP, dragItemId);
+    expect(dragWorkflowFromWorkflowSwitcherUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragWorkflowFromWorkflowSwitcherUseCase).toHaveBeenCalledWith(idP, dragItemId);
   });
 
   it('should not call a drag use case , when start dragging a tab and edit mode is off', async () => {
@@ -1404,7 +1404,7 @@ describe('<WorkflowSwitcher />', () => {
 
     fireEvent.dragStart(elDrag);
 
-    expect(dragWorkflowFromWorkflowSwitcherUseCase).not.toBeCalled();
+    expect(dragWorkflowFromWorkflowSwitcherUseCase).not.toHaveBeenCalled();
   });
 
   it('should call a drag over/leave use case with right params, when dragging an item in/over/out Workflow Switcher', async () => {
@@ -1435,18 +1435,18 @@ describe('<WorkflowSwitcher />', () => {
     const elOver = screen.getByRole('tablist');
 
     fireEvent.dragEnter(elOver);
-    expect(dragLeaveTargetUseCase).toBeCalledTimes(0);
-    expect(dragOverWorkflowSwitcherUseCase).toBeCalledTimes(1);
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledTimes( 0);
+    expect(dragOverWorkflowSwitcherUseCase).toHaveBeenCalledTimes( 1);
 
     fireEvent.dragOver(elOver);
-    expect(dragLeaveTargetUseCase).toBeCalledTimes(0);
-    expect(dragOverWorkflowSwitcherUseCase).toBeCalledTimes(2);
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledTimes( 0);
+    expect(dragOverWorkflowSwitcherUseCase).toHaveBeenCalledTimes( 2);
 
     fireEvent.dragLeave(elOver);
-    expect(dragLeaveTargetUseCase).toBeCalledTimes(1);
-    expect(dragOverWorkflowSwitcherUseCase).toBeCalledTimes(2);
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragOverWorkflowSwitcherUseCase).toHaveBeenCalledTimes( 2);
 
-    expect(dragLeaveTargetUseCase).toBeCalledWith();
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledWith();
     expect(dragOverWorkflowSwitcherUseCase.mock.calls).toEqual([
       [null],
       [null]
@@ -1480,19 +1480,19 @@ describe('<WorkflowSwitcher />', () => {
     const elOver = screen.getAllByRole('tab')[1];
 
     fireEvent.dragEnter(elOver);
-    expect(dragOverWorkflowSwitcherUseCase).toBeCalledTimes(1);
+    expect(dragOverWorkflowSwitcherUseCase).toHaveBeenCalledTimes( 1);
 
     fireEvent.dragOver(elOver);
-    expect(dragOverWorkflowSwitcherUseCase).toBeCalledTimes(2);
+    expect(dragOverWorkflowSwitcherUseCase).toHaveBeenCalledTimes( 2);
 
     fireEvent.dragLeave(elOver);
-    expect(dragLeaveTargetUseCase).toBeCalledTimes(1);
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledTimes( 1);
 
     expect(dragOverWorkflowSwitcherUseCase.mock.calls).toEqual([
       [overItemId],
       [overItemId]
     ]);
-    expect(dragLeaveTargetUseCase).toBeCalledWith();
+    expect(dragLeaveTargetUseCase).toHaveBeenCalledWith();
   });
 
   it('should call a drag end use case with right params, when end dragging a tab', async () => {
@@ -1522,8 +1522,8 @@ describe('<WorkflowSwitcher />', () => {
 
     fireEvent.dragEnd(elDrag);
 
-    expect(dragEndUseCase).toBeCalledTimes(1);
-    expect(dragEndUseCase).toBeCalledWith();
+    expect(dragEndUseCase).toHaveBeenCalledTimes( 1);
+    expect(dragEndUseCase).toHaveBeenCalledWith();
   });
 
   it('should call a drop use case with right params, when dropping an item over Workflow Switcher', async () => {
@@ -1553,8 +1553,8 @@ describe('<WorkflowSwitcher />', () => {
     const elOver = screen.getByRole('tablist');
 
     fireEvent.drop(elOver);
-    expect(dropOnWorkflowSwitcherUseCase).toBeCalledTimes(1);
-    expect(dropOnWorkflowSwitcherUseCase).toBeCalledWith(idP, null);
+    expect(dropOnWorkflowSwitcherUseCase).toHaveBeenCalledTimes( 1);
+    expect(dropOnWorkflowSwitcherUseCase).toHaveBeenCalledWith(idP, null);
   });
 
   it('should call a drop use case with right params, when dropping an item over Workflow Switcher tab', async () => {
@@ -1583,7 +1583,7 @@ describe('<WorkflowSwitcher />', () => {
     const elOver = screen.getAllByRole('tab')[1];
 
     fireEvent.drop(elOver);
-    expect(dropOnWorkflowSwitcherUseCase).toBeCalledTimes(1);
-    expect(dropOnWorkflowSwitcherUseCase).toBeCalledWith(idP, overItemId);
+    expect(dropOnWorkflowSwitcherUseCase).toHaveBeenCalledTimes( 1);
+    expect(dropOnWorkflowSwitcherUseCase).toHaveBeenCalledWith(idP, overItemId);
   });
 })

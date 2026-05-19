@@ -48,8 +48,8 @@ describe('TrayMenuControllers', () => {
 
       handle(event, testItems);
 
-      expect(setTrayMenuUseCase).toBeCalledTimes(1);
-      expect(setTrayMenuUseCase).toBeCalledWith(testItems, win, webContents);
+      expect(setTrayMenuUseCase).toHaveBeenCalledTimes(1);
+      expect(setTrayMenuUseCase).toHaveBeenCalledWith(testItems, win, webContents);
     });
   })
 })

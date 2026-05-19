@@ -5,7 +5,7 @@
 
 import { Button, CreateSettingsState, List, ReactComponent, SettingsEditorReactComponentProps, addItemToList, browse14Svg, delete14Svg, removeItemFromList, SettingBlock, SettingRow, SettingActions, EntityId, mapIdListToEntityList, manage14Svg } from '@/widgets/appModules';
 import { SettingsType, isSettingsType, settingsTypeActionNames, settingsTypeNames, settingsTypeNamesCapital, settingsTypes } from '@/widgets/file-opener/settingsType';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 
 export interface Settings {
   type: SettingsType,
@@ -24,7 +24,18 @@ export const createSettingsState: CreateSettingsState<Settings> = (settings) => 
 function SettingsEditorComp({settings, settingsApi, sharedState}: SettingsEditorReactComponentProps<Settings>) {
   const pathRefs = useRef<Array<HTMLInputElement|null>>([]);
   const {updateSettings, dialog} = settingsApi;
-  const [triggerLastPathFocus, setTriggerLastPathFocus] = useState(false);
+  const shouldFocusLastPathRef = useRef(false);
+
+  const triggerLastPathFocus = () => {
+    shouldFocusLastPathRef.current = true;
+  };
+
+  useLayoutEffect(() => {
+    if (shouldFocusLastPathRef.current) {
+      pathRefs.current[(settings.type === SettingsType.Folder ? settings.folders.length : settings.files.length)-1]?.focus();
+      shouldFocusLastPathRef.current = false;
+    }
+  }, [settings.files.length, settings.folders.length, settings.type]);
 
   let {openIn} = settings;
   const appList = useMemo(() => mapIdListToEntityList(sharedState.apps.apps, sharedState.apps.appIds), [sharedState.apps.appIds, sharedState.apps.apps])
@@ -32,13 +43,6 @@ function SettingsEditorComp({settings, settingsApi, sharedState}: SettingsEditor
   if(!curApp) {
     openIn = '';
   }
-
-  useEffect(() => {
-    if (triggerLastPathFocus) {
-      pathRefs.current[(settings.type === SettingsType.Folder ? settings.folders.length : settings.files.length)-1]?.focus();
-      setTriggerLastPathFocus(false);
-    }
-  }, [settings.files.length, settings.folders.length, settings.type, triggerLastPathFocus])
 
   let updatePathsSetting: (paths: List<string>) => void;
   if (settings.type === SettingsType.Folder) {
@@ -148,7 +152,7 @@ function SettingsEditorComp({settings, settingsApi, sharedState}: SettingsEditor
           <Button
             onClick={_ => {
               addPath();
-              setTriggerLastPathFocus(true);
+              triggerLastPathFocus();
             }}
             caption={`Add a ${settingsTypeNames[settings.type]} path`}
             primary={true}

@@ -6,7 +6,7 @@
 import { Button, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings } from './settings';
 import { execCommandSvg } from '@/widgets/commander/icons';
-import * as styles from './widget.module.scss';
+import styles from './widget.module.scss';
 
 function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) {
   const { terminal } = widgetApi;

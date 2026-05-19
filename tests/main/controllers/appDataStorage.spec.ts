@@ -46,8 +46,8 @@ describe('AppDataStorageControllers', () => {
 
       const res = await handle(event, key);
 
-      expect(getTextFromAppDataStorageUseCase).toBeCalledTimes(1);
-      expect(getTextFromAppDataStorageUseCase).toBeCalledWith(key);
+      expect(getTextFromAppDataStorageUseCase).toHaveBeenCalledTimes(1);
+      expect(getTextFromAppDataStorageUseCase).toHaveBeenCalledWith(key);
       expect(res).toBe(getUseCaseRes);
     });
   })
@@ -68,8 +68,8 @@ describe('AppDataStorageControllers', () => {
 
       await handle(event, key, text);
 
-      expect(setTextInAppDataStorageUseCase).toBeCalledTimes(1);
-      expect(setTextInAppDataStorageUseCase).toBeCalledWith(key, text);
+      expect(setTextInAppDataStorageUseCase).toHaveBeenCalledTimes(1);
+      expect(setTextInAppDataStorageUseCase).toHaveBeenCalledWith(key, text);
     });
   })
 })

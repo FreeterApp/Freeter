@@ -4,7 +4,7 @@
  */
 
 import React, { memo } from 'react';
-import * as styles from './worktable.module.scss';
+import styles from './worktable.module.scss';
 import { WorktableViewModel } from '@/ui/components/worktable/worktableViewModel';
 import { WidgetLayoutProps } from '@/ui/components/worktable/widgetLayout';
 import { InAppNote } from '@/ui/components/basic/inAppNote';

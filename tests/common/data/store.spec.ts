@@ -46,8 +46,8 @@ describe('Store', () => {
             ...persState,
             ...prepProps
           });
-          expect(merge).toBeCalled();
-          expect(prepare).toBeCalled();
+          expect(merge).toHaveBeenCalled();
+          expect(prepare).toHaveBeenCalled();
           done();
         } catch (error) {
           done(error);
@@ -151,7 +151,7 @@ describe('Store', () => {
       const newState = { state: 'new state' } as StateInStore<object>;
       store.set(newState);
 
-      expect(stateStorage.saveState).not.toBeCalled();
+      expect(stateStorage.saveState).not.toHaveBeenCalled();
     })
 
     it('should save AppState into StateStorage, when Store is ready', done => {
@@ -164,8 +164,8 @@ describe('Store', () => {
         store.set(newState);
 
         try {
-          expect(stateStorage.saveState).toBeCalledTimes(1);
-          expect(stateStorage.saveState).toBeCalledWith(newState);
+          expect(stateStorage.saveState).toHaveBeenCalledTimes(1);
+          expect(stateStorage.saveState).toHaveBeenCalledWith(newState);
           done();
         } catch (e) {
           done(e);

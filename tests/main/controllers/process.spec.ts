@@ -40,7 +40,7 @@ describe('ProcessControllers', () => {
 
       const res = await handle(event);
 
-      expect(getProcessInfoUseCase).toBeCalledTimes(1);
+      expect(getProcessInfoUseCase).toHaveBeenCalledTimes(1);
       expect(res).toBe(getProcessInfoUseCaseRes);
     });
   })

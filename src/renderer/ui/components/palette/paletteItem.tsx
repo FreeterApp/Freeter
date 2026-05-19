@@ -4,7 +4,7 @@
  */
 
 import { useCallback } from 'react';
-import * as styles from './palette.module.scss';
+import styles from './palette.module.scss';
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
 import { MoreInfo } from '@/ui/components/basic/moreInfo';
 

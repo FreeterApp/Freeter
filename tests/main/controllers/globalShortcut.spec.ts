@@ -45,8 +45,8 @@ describe('GlobalShortcutControllers', () => {
 
       const res = await handle(event, accelerator);
 
-      expect(setMainShortcutUseCase).toBeCalledTimes(1);
-      expect(setMainShortcutUseCase).toBeCalledWith(accelerator, win);
+      expect(setMainShortcutUseCase).toHaveBeenCalledTimes(1);
+      expect(setMainShortcutUseCase).toHaveBeenCalledWith(accelerator, win);
       expect(res).toBe(setMainShortcutUseCaseRes);
     });
   })

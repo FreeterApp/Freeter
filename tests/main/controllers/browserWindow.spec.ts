@@ -42,8 +42,8 @@ describe('BrowserWindowControllers', () => {
 
       handle(event);
 
-      expect(showBrowserWindowUseCase).toBeCalledTimes(1);
-      expect(showBrowserWindowUseCase).toBeCalledWith(win);
+      expect(showBrowserWindowUseCase).toHaveBeenCalledTimes(1);
+      expect(showBrowserWindowUseCase).toHaveBeenCalledWith(win);
     });
   })
 })

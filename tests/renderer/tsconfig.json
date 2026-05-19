@@ -5,16 +5,17 @@
     "module": "ES6",
     "target": "ES2021",
     "jsx": "react-jsx",
-    "baseUrl": "../../",
     "paths": {
-      "@/*": ["src/renderer/*"],
-      "@common/*": ["src/common/*"],
-      "@tests/*": ["tests/renderer/*"],
-      "@testscommon/*": ["tests/common/*"],
-      "@utils/*": ["tests/utils/*"],
+      "@/*": ["../../src/renderer/*"],
+      "@common/*": ["../../src/common/*"],
+      "@tests/*": ["../../tests/renderer/*"],
+      "@testscommon/*": ["../../tests/common/*"],
+      "@utils/*": ["../../tests/utils/*"],
+      "*": ["../../*"]
     },
     "plugins": [{
       "name": "typescript-plugin-css-modules"
-    }]
+    }],
+    "types": ["jest"]
   }
 }

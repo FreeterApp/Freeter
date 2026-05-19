@@ -6,7 +6,7 @@
 import { Button, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings } from './settings';
 import { openLinkSvg } from '@/widgets/link-opener/icons';
-import * as styles from './widget.module.scss';
+import styles from './widget.module.scss';
 
 function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) {
   const { shell } = widgetApi;

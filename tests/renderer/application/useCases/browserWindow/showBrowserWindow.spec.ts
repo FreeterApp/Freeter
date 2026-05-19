@@ -23,6 +23,6 @@ describe('showBrowserWindowUseCase()', () => {
 
     useCase();
 
-    expect(browserWindowProviderMock.show).toBeCalledTimes(1);
+    expect(browserWindowProviderMock.show).toHaveBeenCalledTimes(1);
   });
 })

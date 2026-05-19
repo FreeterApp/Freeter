@@ -52,7 +52,7 @@ describe('Note Widget', () => {
       expect(screen.getByRole('textbox')).toBeInTheDocument();
     })
 
-    expect(getText).toBeCalledWith('note');
+    expect(getText).toHaveBeenCalledWith('note');
     expect(screen.getByRole<HTMLTextAreaElement>('textbox')).toHaveValue(testNote);
   })
 
@@ -70,7 +70,7 @@ describe('Note Widget', () => {
       expect(screen.getByRole('textbox')).toBeInTheDocument();
     })
 
-    expect(getText).toBeCalledWith('note');
+    expect(getText).toHaveBeenCalledWith('note');
     expect(screen.getByRole<HTMLTextAreaElement>('textbox')).toHaveValue('');
   })
 
@@ -97,17 +97,17 @@ describe('Note Widget', () => {
     await user.type(textbox, note1);
 
     act(() => jest.advanceTimersByTime(1000));
-    expect(setText).toBeCalledTimes(0);
+    expect(setText).toHaveBeenCalledTimes(0);
 
     await user.type(textbox, note2);
 
     act(() => jest.advanceTimersByTime(2000));
-    expect(setText).toBeCalledTimes(0);
+    expect(setText).toHaveBeenCalledTimes(0);
 
     await user.type(textbox, note3);
 
     act(() => jest.advanceTimersByTime(3000));
-    expect(setText).toBeCalledTimes(1);
-    expect(setText).toBeCalledWith('note', note1 + note2 + note3);
+    expect(setText).toHaveBeenCalledTimes(1);
+    expect(setText).toHaveBeenCalledWith('note', note1 + note2 + note3);
   })
 })

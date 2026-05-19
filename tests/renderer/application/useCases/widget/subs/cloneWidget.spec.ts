@@ -64,7 +64,7 @@ describe('cloneWidgetSubCase()', () => {
 
     await cloneWidgetSubCase(widget);
 
-    expect(widgetDataStorageManagerMock.copyObjectData).toBeCalledTimes(1);
-    expect(widgetDataStorageManagerMock.copyObjectData).toBeCalledWith(widget.id, widgetClone.id);
+    expect(widgetDataStorageManagerMock.copyObjectData).toHaveBeenCalledTimes(1);
+    expect(widgetDataStorageManagerMock.copyObjectData).toHaveBeenCalledWith(widget.id, widgetClone.id);
   })
 })

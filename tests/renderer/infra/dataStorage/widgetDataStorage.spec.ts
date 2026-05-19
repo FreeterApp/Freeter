@@ -22,8 +22,8 @@ describe('WidgetDataStorage', () => {
 
       const gotRes = await dataStorage.getText(key);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcWidgetDataStorageGetTextChannel, widgetId, key);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcWidgetDataStorageGetTextChannel, widgetId, key);
       expect(gotRes).toBe(res);
     })
   })
@@ -37,8 +37,8 @@ describe('WidgetDataStorage', () => {
 
       await dataStorage.setText(key, data);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcWidgetDataStorageSetTextChannel, widgetId, key, data);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcWidgetDataStorageSetTextChannel, widgetId, key, data);
     })
   })
 
@@ -50,8 +50,8 @@ describe('WidgetDataStorage', () => {
 
       await dataStorage.deleteItem(key);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcWidgetDataStorageDeleteChannel, widgetId, key);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcWidgetDataStorageDeleteChannel, widgetId, key);
     })
   })
 
@@ -62,8 +62,8 @@ describe('WidgetDataStorage', () => {
 
       await dataStorage.clear();
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcWidgetDataStorageClearChannel, widgetId);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcWidgetDataStorageClearChannel, widgetId);
     })
   })
 
@@ -76,8 +76,8 @@ describe('WidgetDataStorage', () => {
 
       const gotRes = await dataStorage.getKeys();
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcWidgetDataStorageGetKeysChannel, widgetId);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcWidgetDataStorageGetKeysChannel, widgetId);
       expect(gotRes).toBe(res);
     })
   })

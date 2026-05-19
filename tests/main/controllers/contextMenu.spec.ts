@@ -43,8 +43,8 @@ describe('ContextMenuControllers', () => {
 
       const res = await handle(event, testItems);
 
-      expect(popupContextMenuUseCase).toBeCalledTimes(1);
-      expect(popupContextMenuUseCase).toBeCalledWith(testItems);
+      expect(popupContextMenuUseCase).toHaveBeenCalledTimes(1);
+      expect(popupContextMenuUseCase).toHaveBeenCalledWith(testItems);
       expect(res).toBe(popupUseCaseRes);
     });
   })

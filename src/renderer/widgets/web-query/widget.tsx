@@ -5,8 +5,8 @@
 
 import { Button, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings, SettingsMode, defaultEngine, enginesById } from './settings';
-import * as styles from './widget.module.scss';
-import { FormEvent, useMemo, useState } from 'react';
+import styles from './widget.module.scss';
+import { SubmitEvent, useMemo, useState } from 'react';
 import { querySvg } from '@/widgets/web-query/icons';
 import { sanitizeUrl } from '@common/helpers/sanitizeUrl';
 import { WebpageExposedApi } from '@/widgets/interfaces';
@@ -57,14 +57,14 @@ function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) 
     return {descr, urlTpl, queryTpl, notConfigNotes}
   }, [settings.descr, settings.engine, settings.mode, settings.query, settings.url])
 
-  const onQuerySubmit = useMemo(() => {
+  const onQuerySubmit = (() => {
     if (notConfigNotes.length>0) {
-      return (_: FormEvent<HTMLFormElement>) => undefined;
+      return (_: SubmitEvent<HTMLFormElement>) => undefined;
     } else {
       const finalQuery = queryTpl === '' ? typedQuery : replaceQueryPlaceholder(queryTpl, typedQuery);
       const queryForUrl = encodeURIComponent(finalQuery);
 
-      return (e: FormEvent<HTMLFormElement>) => {
+      return (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         setTypedQuery('');
         switch (settings.mode) {
@@ -89,7 +89,7 @@ function WidgetComp({settings, widgetApi}: WidgetReactComponentProps<Settings>) 
         }
       }
     }
-  }, [notConfigNotes.length, queryTpl, settings.mode, shell, typedQuery, urlTpl, widgets])
+  })();
 
   return notConfigNotes.length===0
     ? <form onSubmit={onQuerySubmit} className={styles['web-query']}>

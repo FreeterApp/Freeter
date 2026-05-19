@@ -57,7 +57,7 @@ describe('Link Opener Widget', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /open links/i }))
 
-    expect(openExternalUrl).toBeCalledTimes(2);
+    expect(openExternalUrl).toHaveBeenCalledTimes(2);
     expect(openExternalUrl).toHaveBeenNthCalledWith(1, 'test://url1');
     expect(openExternalUrl).toHaveBeenNthCalledWith(2, 'test://url2');
   })

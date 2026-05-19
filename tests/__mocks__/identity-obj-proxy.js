@@ -10,6 +10,11 @@ module.exports = new Proxy({}, {
     if (key === '__esModule') {
       return true;
     }
-    return key;
+    // If the code looks for 'default' (common in ESM), return the proxy itself
+    if (key === 'default') {
+      return new Proxy({}, { get: (_, k) => k });
+    }
+    // Return the key as the class name, but only if it's a string
+    return typeof key === 'string' ? key : target[key];
   }
 })

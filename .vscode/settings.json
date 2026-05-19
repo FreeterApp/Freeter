@@ -22,5 +22,6 @@
 	},
 	"typescript.tsc.autoDetect": "off",
 	"typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.useFlatConfig": true
+	"eslint.useFlatConfig": true,
+	"js/ts.tsdk.path": "node_modules/typescript/lib"
 }

@@ -6,8 +6,8 @@
 import { WidgetComponent } from '@/ui/components/widget/widget';
 import { WidgetSettingsViewModelHook } from '@/ui/components/widgetSettings/widgetSettingsViewModel';
 import clsx from 'clsx';
-import * as styles from './widgetSettings.module.scss';
-import * as settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
+import styles from './widgetSettings.module.scss';
+import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { CoreSettings } from '@/ui/components/widgetSettings/coreSettings';
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { memo } from 'react';

@@ -27,7 +27,7 @@ describe('writeTextIntoClipboardUseCase()', () => {
 
     useCase(testText);
 
-    expect(clipboardProviderMock.writeText).toBeCalledTimes(1);
-    expect(clipboardProviderMock.writeText).toBeCalledWith(testText);
+    expect(clipboardProviderMock.writeText).toHaveBeenCalledTimes(1);
+    expect(clipboardProviderMock.writeText).toHaveBeenCalledWith(testText);
   });
 })

@@ -23,8 +23,8 @@ describe('AppStateStorage', () => {
       mockedCreateStateStorage.mockImplementation(() => retVal);
 
       const gotVal = createAppStateStorage(dataStorage);
-      expect(mockedCreateStateStorage).toBeCalledTimes(1);
-      expect(mockedCreateStateStorage).toBeCalledWith(
+      expect(mockedCreateStateStorage).toHaveBeenCalledTimes(1);
+      expect(mockedCreateStateStorage).toHaveBeenCalledWith(
         dataStorage,
         appStateDataStoragKey,
         currentAppStateVersion,

@@ -20,8 +20,8 @@ describe('ShellProvider', () => {
 
       shellProvider.openApp(testPath, testArgs);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcShellOpenAppChannel, testPath, testArgs);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcShellOpenAppChannel, testPath, testArgs);
     })
   })
 
@@ -32,8 +32,8 @@ describe('ShellProvider', () => {
 
       await shellProvider.openExternal(testUrl);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcShellOpenExternalUrlChannel, testUrl);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcShellOpenExternalUrlChannel, testUrl);
     })
   })
 
@@ -44,8 +44,8 @@ describe('ShellProvider', () => {
 
       await shellProvider.openPath(testPath);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcShellOpenPathChannel, testPath);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcShellOpenPathChannel, testPath);
     })
   })
 });

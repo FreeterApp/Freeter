@@ -37,8 +37,8 @@ describe('showSaveFileDialogUseCase()', () => {
 
     const res = await useCase(win, cfg);
 
-    expect(dialogProviderMock.showSaveFileDialog).toBeCalledTimes(1);
-    expect(dialogProviderMock.showSaveFileDialog).toBeCalledWith(win, cfg);
+    expect(dialogProviderMock.showSaveFileDialog).toHaveBeenCalledTimes(1);
+    expect(dialogProviderMock.showSaveFileDialog).toHaveBeenCalledWith(win, cfg);
     expect(res).toBe(providerRetVal);
   });
 })

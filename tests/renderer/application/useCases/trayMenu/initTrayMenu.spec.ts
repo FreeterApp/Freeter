@@ -41,7 +41,7 @@ describe('initTrayMenuUseCase()', () => {
 
     initTrayMenuUseCase();
 
-    expect(trayMenuProviderMock.setMenu).toBeCalledTimes(1);
+    expect(trayMenuProviderMock.setMenu).toHaveBeenCalledTimes(1);
   });
 
   it('should subscribe to state changes and call trayMenu\'s setMenu(), when the new state has changes the tray menu depends on', async () => {
@@ -65,7 +65,7 @@ describe('initTrayMenuUseCase()', () => {
       }
     })
 
-    expect(trayMenuProviderMock.setMenu).toBeCalledTimes(2);
+    expect(trayMenuProviderMock.setMenu).toHaveBeenCalledTimes(2);
   });
 
   it('should not call trayMenu\'s setMenu(), when the new state does not have changes the tray menu depends on', async () => {
@@ -86,7 +86,7 @@ describe('initTrayMenuUseCase()', () => {
       }
     })
 
-    expect(trayMenuProviderMock.setMenu).toBeCalledTimes(1);
+    expect(trayMenuProviderMock.setMenu).toHaveBeenCalledTimes(1);
   });
 
   it('should not call trayMenu\'s setMenu(), when the new state has isLoading=true', async () => {
@@ -111,7 +111,7 @@ describe('initTrayMenuUseCase()', () => {
       }
     })
 
-    expect(trayMenuProviderMock.setMenu).toBeCalledTimes(1);
+    expect(trayMenuProviderMock.setMenu).toHaveBeenCalledTimes(1);
   });
 
   it('should call trayMenu\'s setMenu(), when the new state has isLoading=undefined', async () => {
@@ -135,6 +135,6 @@ describe('initTrayMenuUseCase()', () => {
       }
     })
 
-    expect(trayMenuProviderMock.setMenu).toBeCalledTimes(2);
+    expect(trayMenuProviderMock.setMenu).toHaveBeenCalledTimes(2);
   });
 })

@@ -30,8 +30,8 @@ describe('popupContextMenuUseCase()', () => {
 
     const res = await useCase(testItems);
 
-    expect(contextMenuProviderMock.popup).toBeCalledTimes(1);
-    expect(contextMenuProviderMock.popup).toBeCalledWith(testItems);
+    expect(contextMenuProviderMock.popup).toHaveBeenCalledTimes(1);
+    expect(contextMenuProviderMock.popup).toHaveBeenCalledWith(testItems);
     expect(res).toBe(providerRetVal);
   });
 })

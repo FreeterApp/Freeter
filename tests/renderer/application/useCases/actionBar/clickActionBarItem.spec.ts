@@ -17,7 +17,7 @@ describe('clickActionBarItemUseCase()', () => {
 
     clickActionBarItemUseCase(actionBarItems, 'NO-SUCH-ID');
 
-    expect(doActionFn).not.toBeCalled();
+    expect(doActionFn).not.toHaveBeenCalled();
   })
 
   it('should exec doAction, if both a widget id and an actionBarItem id exist', async () => {
@@ -28,6 +28,6 @@ describe('clickActionBarItemUseCase()', () => {
 
     clickActionBarItemUseCase(actionBarItems, actionId);
 
-    expect(doActionFn).toBeCalledTimes(1);
+    expect(doActionFn).toHaveBeenCalledTimes(1);
   })
 })

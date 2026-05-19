@@ -4,7 +4,7 @@
  */
 
 import { ActionBar } from '@/ui/components/basic/actionBar';
-import * as styles from './appManagerListItem.module.scss';
+import styles from './appManagerListItem.module.scss';
 import { AppManagerListItemProps, useAppManagerListItemViewModel } from '@/ui/components/appManager/appManagerList/appManagerListItemViewModel';
 import clsx from 'clsx';
 

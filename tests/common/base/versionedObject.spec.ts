@@ -49,7 +49,7 @@ describe('VersionedObject', () => {
 
       unwrapVersionedObject(verObj, someVer, testMigrate);
 
-      expect(testMigrate).not.toBeCalled();
+      expect(testMigrate).not.toHaveBeenCalled();
     })
 
     it('should call the provided migrate function with right args and return its value, if the version is not equal to VersionedObject\'s version', () => {
@@ -69,7 +69,7 @@ describe('VersionedObject', () => {
 
       const unwrappedObj = unwrapVersionedObject(verObj, ver2, migrate);
 
-      expect(migrate).toBeCalledWith(obj, ver1);
+      expect(migrate).toHaveBeenCalledWith(obj, ver1);
       expect(unwrappedObj).toBe(migrateToObj);
     })
   })

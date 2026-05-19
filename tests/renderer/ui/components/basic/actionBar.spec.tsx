@@ -85,7 +85,7 @@ describe('<ActionBar />', () => {
     const elButton = screen.getByTitle(testTitle);
     await userEvent.click(elButton);
 
-    expect(action).not.toBeCalled();
+    expect(action).not.toHaveBeenCalled();
   })
 
   it('should exec the doAction when clicking an ActionBarItem', async () => {
@@ -103,6 +103,6 @@ describe('<ActionBar />', () => {
     const elButton = screen.getByTitle(testTitle);
     await userEvent.click(elButton);
 
-    expect(action).toBeCalledTimes(1);
+    expect(action).toHaveBeenCalledTimes( 1);
   })
 })

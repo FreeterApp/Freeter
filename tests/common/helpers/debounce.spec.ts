@@ -16,7 +16,7 @@ describe('debounce', () => {
       debouncedFn()
       jest.advanceTimersByTime(1000);
 
-      expect(fn).not.toBeCalled();
+      expect(fn).not.toHaveBeenCalled();
     })
 
     it('should call the function after 2 secs, when delay is 2 secs', () => {
@@ -26,7 +26,7 @@ describe('debounce', () => {
       debouncedFn()
       jest.advanceTimersByTime(2000);
 
-      expect(fn).toBeCalled();
+      expect(fn).toHaveBeenCalled();
     })
 
     it('should call the function one time after a series of calls, with args from a last call', () => {
@@ -39,18 +39,18 @@ describe('debounce', () => {
       debouncedFn(...args1)
       jest.advanceTimersByTime(1000);
 
-      expect(fn).not.toBeCalled();
+      expect(fn).not.toHaveBeenCalled();
 
       debouncedFn(...args2)
       jest.advanceTimersByTime(1000);
 
-      expect(fn).not.toBeCalled();
+      expect(fn).not.toHaveBeenCalled();
 
       debouncedFn(...args3)
       jest.advanceTimersByTime(2000);
 
-      expect(fn).toBeCalledTimes(1);
-      expect(fn).toBeCalledWith(...args3);
+      expect(fn).toHaveBeenCalledTimes(1);
+      expect(fn).toHaveBeenCalledWith(...args3);
     })
   })
 
@@ -63,7 +63,7 @@ describe('debounce', () => {
       debouncedFn.cancel();
       jest.advanceTimersByTime(2000);
 
-      expect(fn).not.toBeCalled();
+      expect(fn).not.toHaveBeenCalled();
     })
   })
 })

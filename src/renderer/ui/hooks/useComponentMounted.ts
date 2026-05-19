@@ -3,17 +3,18 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 export function useComponentMounted() {
-  const [componentMounted, setComponentMounted] = useState(false);
+  const mountedRef = useRef(false);
 
   useEffect(() => {
-    setComponentMounted(true);
+    mountedRef.current = true;
+
     return () => {
-      setComponentMounted(false);
-    }
+      mountedRef.current = false;
+    };
   }, []);
 
-  return componentMounted;
+  return mountedRef;
 }

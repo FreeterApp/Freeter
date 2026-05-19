@@ -5,8 +5,8 @@
 
 import { WorkflowSettingsViewModelHook } from '@/ui/components/workflowSettings/workflowSettingsViewModel';
 import clsx from 'clsx';
-import * as styles from './workflowSettings.module.scss';
-import * as settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
+import styles from './workflowSettings.module.scss';
+import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { SettingBlock } from '@/widgets/appModules';
 import { memo } from 'react';

@@ -26,8 +26,8 @@ describe('AppStore', () => {
       mockedCreateStore.mockImplementation(() => retVal);
 
       const gotVal = createAppStore(deps, initialState, onReady);
-      expect(mockedCreateStore).toBeCalledTimes(1);
-      expect(mockedCreateStore).toBeCalledWith(deps, initialState, initAppStateWidgets, mergeAppStateWithPersistentAppState, onReady);
+      expect(mockedCreateStore).toHaveBeenCalledTimes(1);
+      expect(mockedCreateStore).toHaveBeenCalledWith(deps, initialState, initAppStateWidgets, mergeAppStateWithPersistentAppState, onReady);
       expect(gotVal).toBe(retVal);
     })
   })

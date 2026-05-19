@@ -5,7 +5,7 @@
 
 import { ActionBar } from '@/ui/components/basic/actionBar';
 import { WidgetProps, WidgetViewModelHook } from '@/ui/components/widget/widgetViewModel';
-import * as styles from './widget.module.scss';
+import styles from './widget.module.scss';
 import clsx from 'clsx';
 import { memo } from 'react';
 

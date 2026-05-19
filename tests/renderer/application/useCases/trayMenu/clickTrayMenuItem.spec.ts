@@ -21,6 +21,6 @@ describe('clickTrayMenuItemUseCase()', () => {
 
     useCase(testItem);
 
-    expect(testDoAction).toBeCalledTimes(1);
+    expect(testDoAction).toHaveBeenCalledTimes(1);
   });
 })

@@ -6,7 +6,7 @@
 import { Button, ReactComponent, WidgetReactComponentProps } from '@/widgets/appModules';
 import { Settings } from './settings';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import * as styles from './widget.module.scss';
+import styles from './widget.module.scss';
 import { useAudioFile } from '@/widgets/timer/useAudioFile';
 import { timerEndSoundFilesById } from '@/widgets/timer/audio/timer-end';
 

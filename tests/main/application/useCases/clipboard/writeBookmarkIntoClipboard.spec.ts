@@ -28,7 +28,7 @@ describe('writeBookmarkIntoClipboardUseCase()', () => {
 
     useCase(testTitle, testUrl);
 
-    expect(clipboardProviderMock.writeBookmark).toBeCalledTimes(1);
-    expect(clipboardProviderMock.writeBookmark).toBeCalledWith(testTitle, testUrl);
+    expect(clipboardProviderMock.writeBookmark).toHaveBeenCalledTimes(1);
+    expect(clipboardProviderMock.writeBookmark).toHaveBeenCalledWith(testTitle, testUrl);
   });
 })

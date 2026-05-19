@@ -64,7 +64,7 @@ describe('deleteWorkflowUseCase()', () => {
     await deleteWorkflowUseCase(workflowId1);
 
     expect(appStore.get()).toBe(expectState);
-    expect(dialogProviderMock.showMessageBox).not.toBeCalled();
+    expect(dialogProviderMock.showMessageBox).not.toHaveBeenCalled();
   })
 
   it('should do nothing, if the selected project does not exist', async () => {
@@ -96,7 +96,7 @@ describe('deleteWorkflowUseCase()', () => {
     await deleteWorkflowUseCase(workflowId1);
 
     expect(appStore.get()).toBe(expectState);
-    expect(dialogProviderMock.showMessageBox).not.toBeCalled();
+    expect(dialogProviderMock.showMessageBox).not.toHaveBeenCalled();
   })
 
   it('should do nothing, if the specified workflow does not exist', async () => {
@@ -129,7 +129,7 @@ describe('deleteWorkflowUseCase()', () => {
     await deleteWorkflowUseCase('NO-SUCH-ID');
 
     expect(appStore.get()).toBe(expectState);
-    expect(dialogProviderMock.showMessageBox).not.toBeCalled();
+    expect(dialogProviderMock.showMessageBox).not.toHaveBeenCalled();
   })
 
   it('should show a message box asking for a Ok/Cancel confirmation', async () => {
@@ -162,8 +162,8 @@ describe('deleteWorkflowUseCase()', () => {
     await deleteWorkflowUseCase(workflowId1);
 
     expect(appStore.get()).toBe(expectState);
-    expect(dialogProviderMock.showMessageBox).toBeCalled();
-    expect(dialogProviderMock.showMessageBox).toBeCalledWith(expect.objectContaining({ buttons: ['Ok', 'Cancel'] } as MessageBoxConfig));
+    expect(dialogProviderMock.showMessageBox).toHaveBeenCalled();
+    expect(dialogProviderMock.showMessageBox).toHaveBeenCalledWith(expect.objectContaining({ buttons: ['Ok', 'Cancel'] } as MessageBoxConfig));
   })
 
   it('should do nothing, when the message box returns "Cancel"', async () => {

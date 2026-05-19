@@ -36,6 +36,6 @@ describe('<ManageProjectsButton />', () => {
 
     await userEvent.click(screen.getByRole('button', {name: /manage projects/i}));
 
-    expect(openProjectManagerUseCase).toBeCalledTimes(1);
+    expect(openProjectManagerUseCase).toHaveBeenCalledTimes( 1);
   })
 })

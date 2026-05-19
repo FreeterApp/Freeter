@@ -30,8 +30,8 @@ describe('osDialogProvider', () => {
 
       const gotRes = await dialogProvider.showMessageBox(testCfg);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcShowOsMessageBoxChannel, testCfg);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcShowOsMessageBoxChannel, testCfg);
       expect(gotRes).toBe(testRes);
     })
   })
@@ -45,8 +45,8 @@ describe('osDialogProvider', () => {
 
       const gotRes = await dialogProvider.showOpenFileDialog(testCfg);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcShowOsOpenFileDialogChannel, testCfg);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcShowOsOpenFileDialogChannel, testCfg);
       expect(gotRes).toBe(testRes);
     })
   })
@@ -60,8 +60,8 @@ describe('osDialogProvider', () => {
 
       const gotRes = await dialogProvider.showSaveFileDialog(testCfg);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcShowOsSaveFileDialogChannel, testCfg);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcShowOsSaveFileDialogChannel, testCfg);
       expect(gotRes).toBe(testRes);
     })
   })
@@ -75,8 +75,8 @@ describe('osDialogProvider', () => {
 
       const gotRes = await dialogProvider.showOpenDirDialog(testCfg);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcShowOsOpenDirDialogChannel, testCfg);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcShowOsOpenDirDialogChannel, testCfg);
       expect(gotRes).toBe(testRes);
     })
   })

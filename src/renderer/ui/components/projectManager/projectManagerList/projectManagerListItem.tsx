@@ -4,7 +4,7 @@
  */
 
 import { ActionBar } from '@/ui/components/basic/actionBar';
-import * as styles from './projectManagerListItem.module.scss';
+import styles from './projectManagerListItem.module.scss';
 import { ProjectManagerListItemProps, useProjectManagerListItemViewModel } from '@/ui/components/projectManager/projectManagerList/projectManagerListItemViewModel';
 import clsx from 'clsx';
 

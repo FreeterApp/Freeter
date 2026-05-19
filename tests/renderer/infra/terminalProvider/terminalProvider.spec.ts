@@ -20,8 +20,8 @@ describe('TerminalProvider', () => {
 
       await terminalProvider.execCmdLines(testCmds, testCwd);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcExecCmdLinesInTerminalChannel, testCmds, testCwd);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcExecCmdLinesInTerminalChannel, testCmds, testCwd);
     })
   })
 });

@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import * as styles from './appManagerList.module.scss';
+import styles from './appManagerList.module.scss';
 import { Button } from '@/ui/components/basic/button';
 import { AppManagerListItem } from '@/ui/components/appManager/appManagerList/appManagerListItem';
 import { AppManagerListProps, useAppManagerListViewModel } from '@/ui/components/appManager/appManagerList/appManagerListViewModel';

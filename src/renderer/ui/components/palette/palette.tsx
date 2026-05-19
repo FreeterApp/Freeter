@@ -5,7 +5,7 @@
 
 import { PaletteViewModelHook } from './paletteViewModel';
 import clsx from 'clsx';
-import * as styles from './palette.module.scss';
+import styles from './palette.module.scss';
 import PaletteItem from './paletteItem';
 import { memo } from 'react';
 

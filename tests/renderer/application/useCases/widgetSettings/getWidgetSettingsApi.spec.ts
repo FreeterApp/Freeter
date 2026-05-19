@@ -137,15 +137,15 @@ describe('getWidgetSettingsApiUseCase()', () => {
     const ofRes = { ofRes: 'ofRes' } as unknown as OpenDialogResult;
     dialogProvider.showOpenFileDialog.mockResolvedValue(ofRes)
     expect(await settingsApi.dialog.showOpenFileDialog(ofCfg)).toBe(ofRes);
-    expect(dialogProvider.showOpenFileDialog).toBeCalledTimes(1);
-    expect(dialogProvider.showOpenFileDialog).toBeCalledWith(ofCfg);
+    expect(dialogProvider.showOpenFileDialog).toHaveBeenCalledTimes(1);
+    expect(dialogProvider.showOpenFileDialog).toHaveBeenCalledWith(ofCfg);
 
     const odCfg = { odCfg: 'odCfg' } as unknown as OpenDirDialogConfig;
     const odRes = { odRes: 'odRes' } as unknown as OpenDialogResult;
     dialogProvider.showOpenDirDialog.mockResolvedValue(odRes)
     expect(await settingsApi.dialog.showOpenDirDialog(odCfg)).toBe(odRes);
-    expect(dialogProvider.showOpenDirDialog).toBeCalledTimes(1);
-    expect(dialogProvider.showOpenDirDialog).toBeCalledWith(odCfg);
+    expect(dialogProvider.showOpenDirDialog).toHaveBeenCalledTimes(1);
+    expect(dialogProvider.showOpenDirDialog).toHaveBeenCalledWith(odCfg);
 
     expect(openAppManagerUseCase).not.toHaveBeenCalled();
     settingsApi.dialog.showAppManager();

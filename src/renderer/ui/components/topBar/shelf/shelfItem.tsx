@@ -6,8 +6,7 @@
 import { ShelfItemProps, useShelfItemViewModel } from '@/ui/components/topBar/shelf/shelfItemViewModel';
 import { WidgetComponent } from '@/ui/components/widget';
 import clsx from 'clsx';
-import * as styles from './shelf.module.scss';
-import { useRef } from 'react';
+import styles from './shelf.module.scss';
 
 type Deps = {
   Widget: WidgetComponent;
@@ -17,7 +16,6 @@ export function createShelfItemComponent({
   Widget
 }: Deps) {
   function Component(props: ShelfItemProps) {
-    const shelfItemEl = useRef<HTMLLIElement>(null);
     const {
       widget,
       widgetName,
@@ -25,6 +23,7 @@ export function createShelfItemComponent({
       isEditMode,
       // isDragging,
       isDropArea,
+      itemWidgetElRef,
       itemWidgetElRectStyle,
       onContextMenuHandler,
       onDragStartHandler,
@@ -33,7 +32,7 @@ export function createShelfItemComponent({
       onDragLeaveHandler,
       onDragOverHandler,
       onDropHandler,
-    } = useShelfItemViewModel(shelfItemEl.current, props);
+    } = useShelfItemViewModel(props);
 
     return (
       <li
@@ -44,7 +43,7 @@ export function createShelfItemComponent({
         )}
         onContextMenu={onContextMenuHandler}
         tabIndex={0}
-        ref={shelfItemEl}
+        ref={itemWidgetElRef as React.RefObject<HTMLLIElement | null>}
       >
         <div
           className={styles['shelf-item-caption']}

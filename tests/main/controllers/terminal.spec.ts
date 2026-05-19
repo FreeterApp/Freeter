@@ -40,8 +40,8 @@ describe('AppsControllers', () => {
 
       handle(event, testCmdLines, testCwd);
 
-      expect(execCmdLinesInTerminalUseCase).toBeCalledTimes(1);
-      expect(execCmdLinesInTerminalUseCase).toBeCalledWith(testCmdLines, testCwd);
+      expect(execCmdLinesInTerminalUseCase).toHaveBeenCalledTimes(1);
+      expect(execCmdLinesInTerminalUseCase).toHaveBeenCalledWith(testCmdLines, testCwd);
     });
   })
 })

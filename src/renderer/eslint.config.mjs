@@ -6,7 +6,7 @@ export default [
   ...base,
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat['jsx-runtime'],
-  reactHooks.configs['recommended-latest'],
+  reactHooks.configs.flat.recommended,
   {
     languageOptions: {
       globals: {

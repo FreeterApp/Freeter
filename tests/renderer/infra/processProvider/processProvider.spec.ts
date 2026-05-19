@@ -18,8 +18,8 @@ describe('ProcessProvider', () => {
 
     createProcessProvider();
 
-    expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-    expect(electronIpcRenderer.invoke).toBeCalledWith(ipcGetProcessInfoChannel);
+    expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+    expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcGetProcessInfoChannel);
   })
 
   it('should deep freeze the process info', async () => {
@@ -45,7 +45,7 @@ describe('ProcessProvider', () => {
 
       const gotVal = processProvider.getProcessInfo();
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
       expect(gotVal).toBe(res);
     })
   })

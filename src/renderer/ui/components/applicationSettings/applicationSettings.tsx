@@ -5,8 +5,8 @@
 
 import { ApplicationSettingsViewModelHook } from '@/ui/components/applicationSettings/applicationSettingsViewModel';
 import clsx from 'clsx';
-import * as styles from './applicationSettings.module.scss';
-import * as settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
+import styles from './applicationSettings.module.scss';
+import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { SettingBlock } from '@/widgets/appModules';
 import { memo } from 'react';

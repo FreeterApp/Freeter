@@ -28,7 +28,7 @@ describe('AppMenuProvider', () => {
   it('should setup a listener on "click-app-menu-action" channel', async () => {
     setup();
 
-    expect(electronIpcRenderer.on).toBeCalledTimes(1);
+    expect(electronIpcRenderer.on).toHaveBeenCalledTimes(1);
     expect((<jest.MockedFunction<typeof electronIpcRenderer.on>>electronIpcRenderer.on).mock.calls[0][0]).toBe(ipcClickAppMenuActionChannel);
   })
 
@@ -45,8 +45,8 @@ describe('AppMenuProvider', () => {
 
       await appMenuProvider.setMenu(testItems);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcSetAppMenuChannel, expectItems);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcSetAppMenuChannel, expectItems);
     })
 
     it('should call clickAppMenuItemUseCase with the right params, when the main process sends a message via "click-app-menu-action" channel', async () => {
@@ -60,8 +60,8 @@ describe('AppMenuProvider', () => {
       const onListener = (<jest.MockedFunction<typeof electronIpcRenderer.on>>electronIpcRenderer.on).mock.calls[0][1]
       onListener(1);
 
-      expect(clickAppMenuItemUseCase).toBeCalledTimes(1);
-      expect(clickAppMenuItemUseCase).toBeCalledWith(testItems[2]);
+      expect(clickAppMenuItemUseCase).toHaveBeenCalledTimes(1);
+      expect(clickAppMenuItemUseCase).toHaveBeenCalledWith(testItems[2]);
     })
   })
 
@@ -72,8 +72,8 @@ describe('AppMenuProvider', () => {
 
       await appMenuProvider.setAutoHide(true);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcSetAppMenuAutoHideChannel, true);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcSetAppMenuAutoHideChannel, true);
 
       await appMenuProvider.setAutoHide(false);
 

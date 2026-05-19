@@ -5,8 +5,8 @@
 
 import { ProjectManagerViewModelHook } from '@/ui/components/projectManager/projectManagerViewModel';
 import clsx from 'clsx';
-import * as styles from './projectManager.module.scss';
-import * as settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
+import styles from './projectManager.module.scss';
+import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { ProjectManagerSettings } from '@/ui/components/projectManager/projectManagerSettings';
 import { ProjectManagerList } from '@/ui/components/projectManager/projectManagerList';

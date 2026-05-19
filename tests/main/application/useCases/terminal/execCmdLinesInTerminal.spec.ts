@@ -42,7 +42,7 @@ describe('execCmdLinesInTerminalUseCase()', () => {
 
     useCase(testCmdLines, testCwd);
 
-    expect(childProcessProviderMock.spawnDetached).toBeCalledTimes(2);
+    expect(childProcessProviderMock.spawnDetached).toHaveBeenCalledTimes(2);
     expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(1, testTerminal, ['-e', 'bash', '-c', '"cmd line 1; exec bash"'], { cwd: testCwd, shell: true });
     expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(2, testTerminal, ['-e', 'bash', '-c', '"cmd \\"str \\\\\\"sub str\\\\\\"\\" 2; exec bash"'], { cwd: testCwd, shell: true });
   });
@@ -55,7 +55,7 @@ describe('execCmdLinesInTerminalUseCase()', () => {
 
     useCase(testCmdLines, testCwd);
 
-    expect(childProcessProviderMock.spawnDetached).toBeCalledTimes(2);
+    expect(childProcessProviderMock.spawnDetached).toHaveBeenCalledTimes(2);
     expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(1, 'cmd.exe', ['/s', '/k', `"${testCmdLines[0]}"`], { cwd: testCwd, shell: true });
     expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(2, 'cmd.exe', ['/s', '/k', `"${testCmdLines[1]}"`], { cwd: testCwd, shell: true });
   });
@@ -69,7 +69,7 @@ describe('execCmdLinesInTerminalUseCase()', () => {
 
     useCase(testCmdLines, testCwd);
 
-    expect(childProcessProviderMock.spawnDetached).toBeCalledTimes(2);
+    expect(childProcessProviderMock.spawnDetached).toHaveBeenCalledTimes(2);
     expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(1, 'osascript', ['-e', expect.stringMatching(new RegExp(`tell application \\"Terminal\\".*do script \\"cd ${testCwd} && ${expectCmdLines[0]}\\"`, 's'))], { cwd: testCwd });
     expect(childProcessProviderMock.spawnDetached).toHaveBeenNthCalledWith(2, 'osascript', ['-e', expect.stringMatching(new RegExp(`tell application \\"Terminal\\".*do script \\"cd ${testCwd} && ${expectCmdLines[1]}\\"`, 's'))], { cwd: testCwd });
   });

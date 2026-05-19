@@ -58,7 +58,7 @@ describe('deleteWidgetUseCase()', () => {
     await deleteWidgetUseCase('NO-SUCH-ID', fixtureWidgetEnvAreaShelf());
 
     expect(appStore.get()).toBe(expectState);
-    expect(dialogProviderMock.showMessageBox).not.toBeCalled();
+    expect(dialogProviderMock.showMessageBox).not.toHaveBeenCalled();
   })
 
   it('should show a message box asking for a Ok/Cancel confirmation', async () => {
@@ -79,8 +79,8 @@ describe('deleteWidgetUseCase()', () => {
 
     await deleteWidgetUseCase(widgetId1, fixtureWidgetEnvAreaShelf());
 
-    expect(dialogProviderMock.showMessageBox).toBeCalled();
-    expect(dialogProviderMock.showMessageBox).toBeCalledWith(expect.objectContaining({ buttons: ['Ok', 'Cancel'] } as MessageBoxConfig));
+    expect(dialogProviderMock.showMessageBox).toHaveBeenCalled();
+    expect(dialogProviderMock.showMessageBox).toHaveBeenCalledWith(expect.objectContaining({ buttons: ['Ok', 'Cancel'] } as MessageBoxConfig));
   })
 
   it('should do nothing, when the message box returns "Cancel"', async () => {

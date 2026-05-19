@@ -37,8 +37,8 @@ describe('showOpenDirDialogUseCase()', () => {
 
     const res = await useCase(win, cfg);
 
-    expect(dialogProviderMock.showOpenDirDialog).toBeCalledTimes(1);
-    expect(dialogProviderMock.showOpenDirDialog).toBeCalledWith(win, cfg);
+    expect(dialogProviderMock.showOpenDirDialog).toHaveBeenCalledTimes(1);
+    expect(dialogProviderMock.showOpenDirDialog).toHaveBeenCalledWith(win, cfg);
     expect(res).toBe(providerRetVal);
   });
 })

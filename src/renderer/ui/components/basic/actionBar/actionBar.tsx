@@ -5,7 +5,7 @@
 
 import { ActionBarProps, useActionBarViewModel } from '@/ui/components/basic/actionBar/actionBarViewModel';
 import clsx from 'clsx';
-import * as styles from './actionBar.module.scss';
+import styles from './actionBar.module.scss';
 import { Button } from '@/ui/components/basic/button';
 import { memo } from 'react';
 

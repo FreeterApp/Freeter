@@ -5,7 +5,7 @@
 
 import { AboutViewModelHook } from '@/ui/components/about/aboutViewModel';
 import { ModalScreen } from '@/ui/components/basic/modalScreen';
-import * as styles from '@/ui/components/about/about.module.scss'
+import styles from '@/ui/components/about/about.module.scss'
 import { SvgIcon } from '@/ui/components/basic/svgIcon';
 import { logo150Svg } from '@/ui/assets/images/appIcons';
 

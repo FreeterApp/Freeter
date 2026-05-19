@@ -4,10 +4,11 @@
     "lib": ["es2021"],
     "module": "CommonJS",
     "target": "es2021",
-    "baseUrl": "../../",
     "paths": {
-      "@common/*": ["src/common/*"],
-      "@utils/*": ["tests/utils/*"],
-    }
+      "@common/*": ["../../src/common/*"],
+      "@utils/*": ["../../tests/utils/*"],
+      "*": ["../../*"]
+    },
+    "types": ["jest"]
   }
 }

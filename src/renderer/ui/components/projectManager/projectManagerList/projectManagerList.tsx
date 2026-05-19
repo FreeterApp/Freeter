@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import * as styles from './projectManagerList.module.scss';
+import styles from './projectManagerList.module.scss';
 import { Button } from '@/ui/components/basic/button';
 import { ProjectManagerListItem } from '@/ui/components/projectManager/projectManagerList/projectManagerListItem';
 import { ProjectManagerListProps, useProjectManagerListViewModel } from '@/ui/components/projectManager/projectManagerList/projectManagerListViewModel';

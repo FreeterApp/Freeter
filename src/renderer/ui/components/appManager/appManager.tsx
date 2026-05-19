@@ -5,8 +5,8 @@
 
 import { AppManagerViewModelHook } from '@/ui/components/appManager/appManagerViewModel';
 import clsx from 'clsx';
-import * as styles from './appManager.module.scss';
-import * as settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
+import styles from './appManager.module.scss';
+import settingsScreenStyles from '@/ui/components/basic/settingsScreen/settingsScreen.module.scss'
 import { SettingsScreen } from '@/ui/components/basic/settingsScreen/settingsScreen';
 import { AppManagerSettings } from '@/ui/components/appManager/appManagerSettings';
 import { AppManagerList } from '@/ui/components/appManager/appManagerList';

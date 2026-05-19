@@ -4,7 +4,7 @@
  */
 
 import React, { memo } from 'react';
-import * as styles from './topBar.module.scss';
+import styles from './topBar.module.scss';
 import clsx from 'clsx';
 import { TopBarViewModelHook } from '@/ui/components/topBar/topBarViewModel';
 import { ProjectSwitcherProps } from '@/ui/components/projectSwitcher';

@@ -46,6 +46,6 @@ describe('makeFixture', () => {
 
     const testObj = fixture({ key1: 'val2' })
 
-    expect(() => testObj.key1 = 'val3').toThrowError();
+    expect(() => testObj.key1 = 'val3').toThrow();
   });
 });

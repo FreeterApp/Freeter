@@ -20,8 +20,8 @@ describe('ClipboardProvider', () => {
 
       await clipboardProvider.writeBookmark(testTitle, testUrl);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcWriteBookmarkIntoClipboardChannel, testTitle, testUrl);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcWriteBookmarkIntoClipboardChannel, testTitle, testUrl);
     })
   })
 
@@ -32,8 +32,8 @@ describe('ClipboardProvider', () => {
 
       await clipboardProvider.writeText(testText);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcWriteTextIntoClipboardChannel, testText);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcWriteTextIntoClipboardChannel, testText);
     })
   })
 });

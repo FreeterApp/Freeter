@@ -114,11 +114,11 @@ describe('<ApplicationSettings />', () => {
       name: /cancel/i
     });
 
-    expect(closeApplicationSettingsUseCase).toBeCalledTimes(0);
+    expect(closeApplicationSettingsUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(closeApplicationSettingsUseCase).toBeCalledTimes(1);
+    expect(closeApplicationSettingsUseCase).toHaveBeenCalledTimes( 1);
   })
 
   it('should call a right usecase with right params when clicking the save button', async () => {
@@ -138,11 +138,11 @@ describe('<ApplicationSettings />', () => {
       name: /ok/i
     });
 
-    expect(saveApplicationSettingsUseCase).toBeCalledTimes(0);
+    expect(saveApplicationSettingsUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(saveApplicationSettingsUseCase).toBeCalledTimes(1);
+    expect(saveApplicationSettingsUseCase).toHaveBeenCalledTimes( 1);
   })
 
   describe('Settings Controls', () => {
@@ -200,8 +200,8 @@ describe('<ApplicationSettings />', () => {
 
       await userEvent.selectOptions(select, hotkeyOptions[1].caption);
 
-      expect(updateApplicationSettingsUseCase).toBeCalledTimes(1);
-      expect(updateApplicationSettingsUseCase).toBeCalledWith({
+      expect(updateApplicationSettingsUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateApplicationSettingsUseCase).toHaveBeenCalledWith({
         ...appConfig,
         mainHotkey: hotkeyOptions[1].value
       })

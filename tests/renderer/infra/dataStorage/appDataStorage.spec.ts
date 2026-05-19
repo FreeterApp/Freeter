@@ -21,8 +21,8 @@ describe('AppDataStorage', () => {
 
       const gotRes = await dataStorage.getText(key);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcAppDataStorageGetTextChannel, key);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcAppDataStorageGetTextChannel, key);
       expect(gotRes).toBe(res);
     })
   })
@@ -35,8 +35,8 @@ describe('AppDataStorage', () => {
 
       await dataStorage.setText(key, data);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcAppDataStorageSetTextChannel, key, data);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcAppDataStorageSetTextChannel, key, data);
     })
   })
 
@@ -47,8 +47,8 @@ describe('AppDataStorage', () => {
 
       await dataStorage.deleteItem(key);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcAppDataStorageDeleteChannel, key);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcAppDataStorageDeleteChannel, key);
     })
   })
 
@@ -58,8 +58,8 @@ describe('AppDataStorage', () => {
 
       await dataStorage.clear();
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcAppDataStorageClearChannel);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcAppDataStorageClearChannel);
     })
   })
 
@@ -71,8 +71,8 @@ describe('AppDataStorage', () => {
 
       const gotRes = await dataStorage.getKeys();
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcAppDataStorageGetKeysChannel);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcAppDataStorageGetKeysChannel);
       expect(gotRes).toBe(res);
     })
   })

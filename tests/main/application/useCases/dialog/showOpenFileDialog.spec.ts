@@ -37,8 +37,8 @@ describe('showOpenFileDialogUseCase()', () => {
 
     const res = await useCase(win, cfg);
 
-    expect(dialogProviderMock.showOpenFileDialog).toBeCalledTimes(1);
-    expect(dialogProviderMock.showOpenFileDialog).toBeCalledWith(win, cfg);
+    expect(dialogProviderMock.showOpenFileDialog).toHaveBeenCalledTimes(1);
+    expect(dialogProviderMock.showOpenFileDialog).toHaveBeenCalledWith(win, cfg);
     expect(res).toBe(providerRetVal);
   });
 })

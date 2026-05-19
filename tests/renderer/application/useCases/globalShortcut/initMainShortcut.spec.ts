@@ -38,7 +38,7 @@ describe('initMainShortcutUseCase()', () => {
 
     initMainShortcutUseCase();
 
-    expect(globalShortcutProviderMock.setMainShortcut).toBeCalledTimes(1);
+    expect(globalShortcutProviderMock.setMainShortcut).toHaveBeenCalledTimes(1);
   });
 
   it('should subscribe to state changes and call mainShortcut\'s setMainShortcut() with right params, when the mainHotkey state value changes', async () => {
@@ -63,7 +63,7 @@ describe('initMainShortcutUseCase()', () => {
       }
     })
 
-    expect(globalShortcutProviderMock.setMainShortcut).toBeCalledTimes(2);
+    expect(globalShortcutProviderMock.setMainShortcut).toHaveBeenCalledTimes(2);
     expect(globalShortcutProviderMock.setMainShortcut).toHaveBeenNthCalledWith(2, accelerator);
   });
 
@@ -85,7 +85,7 @@ describe('initMainShortcutUseCase()', () => {
       }
     })
 
-    expect(globalShortcutProviderMock.setMainShortcut).toBeCalledTimes(1);
+    expect(globalShortcutProviderMock.setMainShortcut).toHaveBeenCalledTimes(1);
   });
 
   it('should not call mainShortcut\'s setMainShortcut(), when the new state has isLoading=true', async () => {
@@ -100,7 +100,7 @@ describe('initMainShortcutUseCase()', () => {
 
     appStore.set({ ...state, isLoading: true, ui: { ...state.ui, appConfig: { ...state.ui.appConfig, mainHotkey: 'accelerator' } } })
 
-    expect(globalShortcutProviderMock.setMainShortcut).toBeCalledTimes(1);
+    expect(globalShortcutProviderMock.setMainShortcut).toHaveBeenCalledTimes(1);
   });
 
   it('should call mainShortcut\'s setMainShortcut(), when the new state has isLoading=undefined', async () => {
@@ -115,7 +115,7 @@ describe('initMainShortcutUseCase()', () => {
 
     appStore.set({ ...state, ui: { ...state.ui, appConfig: { ...state.ui.appConfig, mainHotkey: 'accelerator' } } })
 
-    expect(globalShortcutProviderMock.setMainShortcut).toBeCalledTimes(2);
+    expect(globalShortcutProviderMock.setMainShortcut).toHaveBeenCalledTimes(2);
   });
 
 })

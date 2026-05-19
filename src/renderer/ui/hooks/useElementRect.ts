@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { RectPx } from '@/ui/types/dimensions';
 
 const getElRect = (el: HTMLElement | null, useViewportRect: boolean) => {
@@ -34,32 +34,30 @@ const getElRect = (el: HTMLElement | null, useViewportRect: boolean) => {
   }
 }
 
-export function useElementRect(el: HTMLElement | null, opts?: {
+export function useElementRect(opts?: {
   useViewportRect?: boolean;
   defaultVal?: RectPx;
-  refreshDep?: unknown;
 }) {
-  const { xPx, yPx, wPx, hPx } = getElRect(el, !!opts?.useViewportRect);
-  const [elementRect, setElementRect] = useState<RectPx>(opts?.defaultVal || { xPx, yPx, wPx, hPx });
+  const ref = useRef<HTMLElement>(null);
+  const [rect, setRect] = useState<RectPx>(opts?.defaultVal || getElRect(null, !!opts?.useViewportRect))
 
-  const refreshElementRect = useCallback(() => {
-    setElementRect({ xPx, yPx, wPx, hPx })
-  }, [hPx, wPx, xPx, yPx])
+  useLayoutEffect(() => {
+    const updateRect = () => {
+      if (ref.current) {
+        setRect(getElRect(ref.current, !!opts?.useViewportRect));
+      }
+    };
 
-  if (elementRect.hPx !== hPx || elementRect.wPx !== wPx || elementRect.xPx !== xPx || elementRect.yPx !== yPx) {
-    refreshElementRect();
-  }
+    updateRect();
+    // Re-measure on window resize or scroll if needed
+    window.addEventListener('resize', updateRect);
 
-  useEffect(() => {
-    refreshElementRect();
-  }, [refreshElementRect, opts?.refreshDep])
-
-  useEffect(() => {
-    window.addEventListener('resize', refreshElementRect);
     return () => {
-      window.removeEventListener('resize', refreshElementRect);
-    }
-  }, [refreshElementRect]);
+      window.removeEventListener('resize', updateRect);
+    };
+  }, [opts?.useViewportRect]);
 
-  return elementRect;
+  console.log(rect);
+
+  return [ref, rect] as const;
 }

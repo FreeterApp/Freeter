@@ -154,11 +154,11 @@ describe('<ProjectManager />', () => {
       name: /cancel/i
     });
 
-    expect(closeProjectManagerUseCase).toBeCalledTimes(0);
+    expect(closeProjectManagerUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(closeProjectManagerUseCase).toBeCalledTimes(1);
+    expect(closeProjectManagerUseCase).toHaveBeenCalledTimes( 1);
   })
 
   it('should call a right usecase with right params when clicking the ok button', async () => {
@@ -180,11 +180,11 @@ describe('<ProjectManager />', () => {
       name: /ok/i
     });
 
-    expect(saveChangesInProjectManagerUseCase).toBeCalledTimes(0);
+    expect(saveChangesInProjectManagerUseCase).toHaveBeenCalledTimes( 0);
 
     fireEvent.click(elButton);
 
-    expect(saveChangesInProjectManagerUseCase).toBeCalledTimes(1);
+    expect(saveChangesInProjectManagerUseCase).toHaveBeenCalledTimes( 1);
   })
 
   describe('Project List', () => {
@@ -366,8 +366,8 @@ describe('<ProjectManager />', () => {
       const elButton = screen.queryAllByRole('button', {name: /delete project/i})[1];
       fireEvent.click(elButton);
 
-      expect(toggleDeletionInProjectManagerUseCase).toBeCalledTimes(1);
-      expect(toggleDeletionInProjectManagerUseCase).toBeCalledWith(idB);
+      expect(toggleDeletionInProjectManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(toggleDeletionInProjectManagerUseCase).toHaveBeenCalledWith(idB);
     })
 
     it('should display projects on the list in the right order', async () => {
@@ -446,8 +446,8 @@ describe('<ProjectManager />', () => {
 
       fireEvent.click(screen.getAllByRole('tab')[1]);
 
-      expect(switchProjectInProjectManagerUseCase).toBeCalledTimes(1);
-      expect(switchProjectInProjectManagerUseCase).toBeCalledWith(idB);
+      expect(switchProjectInProjectManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(switchProjectInProjectManagerUseCase).toHaveBeenCalledWith(idB);
     })
 
     it('should display Add Project button', async () => {
@@ -489,8 +489,8 @@ describe('<ProjectManager />', () => {
         name: /Add Project/i
       }));
 
-      expect(addProjectInProjectManagerUseCase).toBeCalledTimes(1);
-      expect(addProjectInProjectManagerUseCase).toBeCalledWith();
+      expect(addProjectInProjectManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(addProjectInProjectManagerUseCase).toHaveBeenCalledWith();
     })
 
     it('should correctly set the is-drop-rea class and call the update projects order usecase when draging & dropping an item', async () => {
@@ -543,10 +543,10 @@ describe('<ProjectManager />', () => {
       expect(tabEls[0]).not.toHaveClass(classIsDropArea);
       expect(tabEls[1]).not.toHaveClass(classIsDropArea);
       expect(tabEls[2]).toHaveClass(classIsDropArea);
-      expect(updateProjectsOrderInProjectManagerUseCase).toBeCalledTimes(0);
+      expect(updateProjectsOrderInProjectManagerUseCase).toHaveBeenCalledTimes( 0);
       fireEvent.drop(tabEls[2]);
-      expect(updateProjectsOrderInProjectManagerUseCase).toBeCalledTimes(1);
-      expect(updateProjectsOrderInProjectManagerUseCase).toBeCalledWith([idB, idC, idA]);
+      expect(updateProjectsOrderInProjectManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateProjectsOrderInProjectManagerUseCase).toHaveBeenCalledWith([idB, idC, idA]);
       fireEvent.dragEnd(tabEls[0]);
 
       expect(tabEls[0]).not.toHaveClass(classIsDropArea);
@@ -602,9 +602,9 @@ describe('<ProjectManager />', () => {
       expect(tabEls[0]).not.toHaveClass(classIsDropArea);
       expect(tabEls[1]).not.toHaveClass(classIsDropArea);
       expect(tabEls[2]).not.toHaveClass(classIsDropArea);
-      expect(updateProjectsOrderInProjectManagerUseCase).toBeCalledTimes(0);
+      expect(updateProjectsOrderInProjectManagerUseCase).toHaveBeenCalledTimes( 0);
       fireEvent.drop(tabEls[2]);
-      expect(updateProjectsOrderInProjectManagerUseCase).toBeCalledTimes(0);
+      expect(updateProjectsOrderInProjectManagerUseCase).toHaveBeenCalledTimes( 0);
 
       expect(tabEls[0]).not.toHaveClass(classIsDropArea);
       expect(tabEls[1]).not.toHaveClass(classIsDropArea);
@@ -835,8 +835,8 @@ describe('<ProjectManager />', () => {
 
       await userEvent.type(input, addToName);
 
-      expect(updateProjectSettingsInProjectManagerUseCase).toBeCalledTimes(1);
-      expect(updateProjectSettingsInProjectManagerUseCase).toBeCalledWith(idA, {
+      expect(updateProjectSettingsInProjectManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateProjectSettingsInProjectManagerUseCase).toHaveBeenCalledWith(idA, {
         ...settings,
         name: nameA+addToName
       })
@@ -870,8 +870,8 @@ describe('<ProjectManager />', () => {
 
       await userEvent.type(input, addToName);
 
-      expect(updateProjectSettingsInProjectManagerUseCase).toBeCalledTimes(1);
-      expect(updateProjectSettingsInProjectManagerUseCase).toBeCalledWith(idB, {
+      expect(updateProjectSettingsInProjectManagerUseCase).toHaveBeenCalledTimes( 1);
+      expect(updateProjectSettingsInProjectManagerUseCase).toHaveBeenCalledWith(idB, {
         ...settings,
         name: nameB+addToName
       })

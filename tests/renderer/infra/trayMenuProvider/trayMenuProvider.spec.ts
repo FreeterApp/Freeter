@@ -28,7 +28,7 @@ describe('TrayMenuProvider', () => {
   it('should setup a listener on "click-tray-menu-action" channel', async () => {
     setup();
 
-    expect(electronIpcRenderer.on).toBeCalledTimes(1);
+    expect(electronIpcRenderer.on).toHaveBeenCalledTimes(1);
     expect((<jest.MockedFunction<typeof electronIpcRenderer.on>>electronIpcRenderer.on).mock.calls[0][0]).toBe(ipcClickTrayMenuActionChannel);
   })
 
@@ -45,8 +45,8 @@ describe('TrayMenuProvider', () => {
 
       await trayMenuProvider.setMenu(testItems);
 
-      expect(electronIpcRenderer.invoke).toBeCalledTimes(1);
-      expect(electronIpcRenderer.invoke).toBeCalledWith(ipcSetTrayMenuChannel, expectItems);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledTimes(1);
+      expect(electronIpcRenderer.invoke).toHaveBeenCalledWith(ipcSetTrayMenuChannel, expectItems);
     })
 
     it('should call clickTrayMenuItemUseCase with the right params, when the main process sends a message via "click-tray-menu-action" channel', async () => {
@@ -60,8 +60,8 @@ describe('TrayMenuProvider', () => {
       const onListener = (<jest.MockedFunction<typeof electronIpcRenderer.on>>electronIpcRenderer.on).mock.calls[0][1]
       onListener(1);
 
-      expect(clickTrayMenuItemUseCase).toBeCalledTimes(1);
-      expect(clickTrayMenuItemUseCase).toBeCalledWith(testItems[2]);
+      expect(clickTrayMenuItemUseCase).toHaveBeenCalledTimes(1);
+      expect(clickTrayMenuItemUseCase).toHaveBeenCalledWith(testItems[2]);
     })
   })
 })
