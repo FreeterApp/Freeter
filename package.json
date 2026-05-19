@@ -46,7 +46,7 @@
     "lint:tests:utils": "cd tests && cd utils && eslint \"**/*.{ts,tsx}\"",
     "lint:tests:utils:fix": "cd tests && cd utils && eslint \"**/*.{ts,tsx}\" --fix",
     "cd:package-draft": "npm run package",
-    "draft-release": "npm version && git push && git push --tags"
+    "draft-release": "read -p 'Enter version: ' ver && npm version $ver && git push && git push --tags"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
