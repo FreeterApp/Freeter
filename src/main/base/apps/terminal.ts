@@ -3,7 +3,7 @@
  * GNU General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
  */
 
-const escBackslashesDblQuotes = (str: string) => str.replace(/[\\"]/g, '\\$&');
+const escBackslashesDblQuotes = (str: string) => str.replace(/[\\"$`]/g, '\\$&');
 const escBashCmdLine = escBackslashesDblQuotes;
 const escAppleScriptCmdLine = escBackslashesDblQuotes;
 

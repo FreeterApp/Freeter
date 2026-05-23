@@ -62,7 +62,7 @@ export async function createFileDataStorage(dataType: 'string', storageDirPath: 
     deleteItem: async (key) => {
       const filePath = storageKeyToFilePath(normStorageDirPath, key);
       if (filePath) {
-        rm(filePath)
+        await rm(filePath)
       }
     },
     getText: async (key) => {
@@ -81,7 +81,7 @@ export async function createFileDataStorage(dataType: 'string', storageDirPath: 
       try {
         const filePath = storageKeyToFilePath(normStorageDirPath, key);
         if (filePath) {
-          return await writeFile(join(normStorageDirPath, key), data, { encoding: 'utf-8' })
+          return await writeFile(filePath, data, { encoding: 'utf-8' })
         } else {
           return undefined;
         }
