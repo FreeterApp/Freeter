@@ -25,15 +25,14 @@ Check out the [download page][download] for the latest ready-to-use installers f
 
 Prerequisites (for building the app, not needed for running):
 - [NodeJS](https://nodejs.org/en)
-- [Yarn 1 (Classic)](https://classic.yarnpkg.com/lang/en/)
 
 Steps:
 1. Download the source code from the [download page][download] or [GitHub releases page](https://github.com/FreeterApp/Freeter/releases).
 2. Unpack the downloaded file.
 3. Execute commands:
-    1. `yarn` (install dependencies)
-    2. `yarn run prod` (compile the code)
-    3. `yarn run package` (package the app)
+    1. `npm install` (install dependencies)
+    2. `npm run prod` (compile the code)
+    3. `npm run package` (package the app)
 
 Done. The built package comes into the `./dist` folder.
 
